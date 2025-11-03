@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dynamic Worlds - 认知陷阱教育平台，帮助您理解和克服思维局限">
+    <meta name="keywords" content="认知陷阱,失败逻辑,系统思维,决策训练">
+    <meta name="author" content="Dynamic Worlds Team">
+
+    <title>Dynamic Worlds - 认知陷阱教育平台</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#2563eb">
+
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/game-styles.css">
+
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="assets/js/app.js" as="script">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                    <circle cx="24" cy="24" r="20" stroke="#2563eb" stroke-width="2"/>
+                    <path d="M16 24 L22 30 L32 18" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <p class="loading-text">正在加载认知世界...</p>
+            <div class="loading-progress">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" class="app-container">
+        <!-- Navigation Header -->
+        <header class="app-header">
+            <nav class="nav-container">
+                <div class="nav-brand">
+                    <svg class="brand-icon" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <circle cx="16" cy="16" r="14" stroke="#2563eb" stroke-width="2"/>
+                        <path d="M10 16 L14 20 L22 12" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="brand-text">Dynamic Worlds</span>
+                </div>
+
+                <div class="nav-menu">
+                    <button class="nav-item active" data-page="home">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                        </svg>
+                        <span>首页</span>
+                    </button>
+
+                    <button class="nav-item" data-page="scenarios">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
+                        </svg>
+                        <span>场景</span>
+                    </button>
+
+                    <button class="nav-item" data-page="progress">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                        </svg>
+                        <span>进度</span>
+                    </button>
+
+                    <button class="nav-item" data-page="achievements">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 2.038 0l.078.079 1.739 1.739 1.938 2.844c1.199 1.105 2.298 2.29 3.537 3.294a1.011 1.011 0 0 1.341-.558l.008-.008 2.938-2.938 1.105 1.105 2.29 2.29 3.294 3.537a1.011 1.011 0 0 1.341-.558l.008-.008 2.938-2.938c1.199-1.105 2.29-2.29 3.537-3.294a1.011 1.011 0 0 1-.558-.341z"/>
+                            <path d="M10.121 12.796a1.007 1.007 0 0 0-1.424 1.425l-.009.008a1.009 1.009 0 0 0-1.424 1.424l.009-.008z"/>
+                        </svg>
+                        <span>成就</span>
+                    </button>
+
+                    <button class="nav-item" data-page="leaderboard">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a1 1 0 001 1h6a1 1 0 001-1V5a1 1 0 00-1-1H3zm12 0a1 1 0 00-1 1v8a1 1 0 001 1h6a1 1 0 001-1V5a1 1 0 00-1-1h-6z" clip-rule="evenodd"/>
+                            <path fill-rule="evenodd" d="M2 12.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm13.5 0a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>排行</span>
+                    </button>
+
+                    <button class="nav-item" data-page="about">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>了解更多</span>
+                    </button>
+
+                    <button class="nav-item" data-page="book">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.823a7.96 7.96 0 00-4.5-1.423c-.775.38-1.588.896-1.96 1.69-.6.753-1.336 1.791-1.69 2.915-.46 1.13.595 2.502 1.96 3.894a7.96 7.96 0 004.5 1.423c.775-.38 1.588-.896 1.96-1.69.6-.753 1.336-1.791 1.69-2.915.46-1.13-.595-2.502-1.96-3.894a7.968 7.968 0 0010.5 4c1.255 0 2.443-.29 3.5-.823.775-.38 1.588-.896 1.96-1.69.6-.753 1.336-1.791 1.69-2.915.46-1.13.595-2.502 1.96-3.894z"/>
+                            <path d="M12.5 12c0 .414-.336.75-.75.75s-.75-.336-.75-.75.336-.75.75-.75.336.75.75.75.336.75.75-.336.75-.75.75z"/>
+                        </svg>
+                        <span>失败的逻辑</span>
+                    </button>
+
+                    <button class="nav-item" data-page="profile">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>我的</span>
+                    </button>
+                </div>
+
+                <div class="nav-actions">
+                    <button class="sync-button" id="sync-button" title="同步数据">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="app-main">
+            <!-- Home Page -->
+            <div id="home-page" class="page active">
+                <div class="page-container">
+                    <section class="hero-section">
+                        <div class="hero-content">
+                            <h1 class="hero-title">
+                                探索认知的
+                                <span class="highlight">盲点</span>
+                            </h1>
+                            <p class="hero-description">
+                                通过互动式决策游戏，体验<a href="#book" onclick="NavigationManager.navigateTo('book')" style="color: #2563eb; text-decoration: underline;">《失败的逻辑》</a>揭示的人类思维局限，
+                                在安全的环境中学习和成长。
+                            </p>
+                            <div class="hero-actions">
+                                <button class="btn btn-primary btn-large" id="start-journey">
+                                    开始认知之旅
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                                <button class="btn btn-outline btn-large" id="learn-more">
+                                    了解更多
+                                </button>
+                            </div>
+                        </div>
+                        <div class="hero-visual">
+                            <div class="cognitive-bubbles">
+                                <div class="bubble bubble-1">线性思维</div>
+                                <div class="bubble bubble-2">时间延迟</div>
+                                <div class="bubble bubble-3">错误归因</div>
+                                <div class="bubble bubble-4">确认偏误</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="features-section">
+                        <div class="section-header">
+                            <h2 class="section-title">为什么选择 Dynamic Worlds？</h2>
+                            <p class="section-subtitle">基于认知科学的创新学习方法</p>
+                        </div>
+                        <div class="features-grid">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                                        <circle cx="16" cy="16" r="14" stroke="#2563eb" stroke-width="2"/>
+                                        <path d="M12 16 L14 18 L20 12" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                <h3 class="feature-title">体验式学习</h3>
+                                <p class="feature-description">
+                                    通过实践而非理论来理解认知偏差，在模拟环境中体验决策的复杂性。
+                                </p>
+                            </div>
+
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                                        <rect x="8" y="8" width="16" height="16" rx="2" stroke="#2563eb" stroke-width="2"/>
+                                        <path d="M12 4 L12 8 M20 4 L20 8 M12 24 L12 28 M20 24 L20 28 M4 12 L8 12 M4 20 L8 20 M24 12 L28 12 M24 20 L28 20" stroke="#2563eb" stroke-width="2"/>
+                                    </svg>
+                                </div>
+                                <h3 class="feature-title">安全失败</h3>
+                                <p class="feature-description">
+                                    在虚拟环境中体验失败的后果，无需承担真实世界的风险和代价。
+                                </p>
+                            </div>
+
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                                        <path d="M16 8 L20 12 L16 16 M12 20 L8 24 L12 28" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <circle cx="16" cy="16" r="2" fill="#2563eb"/>
+                                    </svg>
+                                </div>
+                                <h3 class="feature-title">认知觉醒</h3>
+                                <p class="feature-description">
+                                    创造"恍然大悟"的时刻，揭示您思维中的盲点和局限性。
+                                </p>
+                            </div>
+
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                                        <circle cx="16" cy="16" r="14" stroke="#2563eb" stroke-width="2"/>
+                                        <path d="M16 10 C16 10, 20 12, 20 16 C20 20, 16 22, 16 22 M16 10 C16 10, 12 12, 12 16 C12 20, 16 22, 16 22" stroke="#2563eb" stroke-width="2"/>
+                                        <circle cx="16" cy="8" r="2" fill="#2563eb"/>
+                                        <circle cx="16" cy="24" r="2" fill="#2563eb"/>
+                                        <circle cx="8" cy="16" r="2" fill="#2563eb"/>
+                                        <circle cx="24" cy="16" r="2" fill="#2563eb"/>
+                                    </svg>
+                                </div>
+                                <h3 class="feature-title">系统思维</h3>
+                                <p class="feature-description">
+                                    培养整体性和长期性的思考方式，理解复杂系统中各要素的相互关系。
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="stats-section">
+                        <div class="stats-container">
+                            <div class="stat-item">
+                                <div class="stat-number" data-target="1000">0</div>
+                                <div class="stat-label">活跃用户</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" data-target="12">0</div>
+                                <div class="stat-label">认知场景</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" data-target="85">0</div>
+                                <div class="stat-label">学习效果%</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" data-target="95">0</div>
+                                <div class="stat-label">推荐率%</div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Scenarios Page -->
+            <div id="scenarios-page" class="page">
+                <div class="page-container">
+                    <section class="page-header">
+                        <h1 class="page-title">认知场景</h1>
+                        <p class="page-subtitle">选择一个场景开始您的认知训练</p>
+                    </section>
+
+                    <div class="scenarios-grid" id="scenarios-grid">
+                        <!-- Scenarios will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Page -->
+            <div id="progress-page" class="page">
+                <div class="page-container">
+                    <section class="page-header">
+                        <h1 class="page-title">学习进度</h1>
+                        <p class="page-subtitle">追踪您的认知成长历程</p>
+                    </section>
+
+                    <div class="progress-dashboard">
+                        <div class="progress-overview">
+                            <div class="progress-card">
+                                <h3>总体进度</h3>
+                                <div class="circular-progress">
+                                    <svg class="progress-ring" width="120" height="120">
+                                        <circle class="progress-ring-bg" cx="60" cy="60" r="52"/>
+                                        <circle class="progress-ring-fill" cx="60" cy="60" r="52"/>
+                                    </svg>
+                                    <div class="progress-text">0%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profile-page" class="page">
+                <div class="page-container">
+                    <section class="page-header">
+                        <h1 class="page-title">个人中心</h1>
+                        <p class="page-subtitle">管理您的账户和偏好设置</p>
+                    </section>
+
+                    <div class="profile-content">
+                        <!-- Profile content will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements Page -->
+            <div id="achievements-page" class="page">
+                <div class="page-container">
+                    <section class="page-header">
+                        <h1 class="page-title">成就系统</h1>
+                        <p class="page-subtitle">查看您的成就和进度对比</p>
+                    </section>
+
+                    <div class="achievements-content">
+                        <!-- Achievements content will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Page -->
+            <div id="leaderboard-page" class="page">
+                <div class="page-container">
+                    <section class="page-header">
+                        <h1 class="page-title">排行榜</h1>
+                        <p class="page-subtitle">与其他用户比较学习进度</p>
+                    </section>
+
+                    <div class="leaderboard-content">
+                        <!-- Leaderboard content will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Page -->
+            <div id="about-page" class="page">
+                <div class="page-container">
+                    <section class="page-header">
+                        <h1 class="page-title">了解更多</h1>
+                        <p class="page-subtitle">探索AI认知盲点与多智能体可信系统</p>
+                    </section>
+
+                    <div class="about-content">
+                        <section class="about-intro">
+                            <div class="about-hero">
+                                <div class="about-visual">
+                                    <div class="cognitive-network">
+                                        <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
+                                            <!-- Central node representing AI consciousness -->
+                                            <circle cx="100" cy="100" r="25" fill="#2563eb" opacity="0.8"/>
+                                            <circle cx="100" cy="100" r="35" stroke="#2563eb" stroke-width="2" opacity="0.4"/>
+
+                                            <!-- Cognitive blind spots around the center -->
+                                            <circle cx="60" cy="60" r="15" fill="#ef4444" opacity="0.3"/>
+                                            <circle cx="140" cy="60" r="15" fill="#ef4444" opacity="0.3"/>
+                                            <circle cx="60" cy="140" r="15" fill="#ef4444" opacity="0.3"/>
+                                            <circle cx="140" cy="140" r="15" fill="#ef4444" opacity="0.3"/>
+
+                                            <!-- Connection lines showing relationships -->
+                                            <line x1="100" y1="100" x2="60" y2="60" stroke="#2563eb" stroke-width="1" opacity="0.6"/>
+                                            <line x1="100" y1="100" x2="140" y2="60" stroke="#2563eb" stroke-width="1" opacity="0.6"/>
+                                            <line x1="100" y1="100" x2="60" y2="140" stroke="#2563eb" stroke-width="1" opacity="0.6"/>
+                                            <line x1="100" y1="100" x2="140" y2="140" stroke="#2563eb" stroke-width="1" opacity="0.6"/>
+
+                                            <!-- Connecting lines between blind spots -->
+                                            <line x1="60" y1="60" x2="140" y2="60" stroke="#ef4444" stroke-width="1" opacity="0.4"/>
+                                            <line x1="60" y1="140" x2="140" y2="140" stroke="#ef4444" stroke-width="1" opacity="0.4"/>
+                                            <line x1="60" y1="60" x2="60" y2="140" stroke="#ef4444" stroke-width="1" opacity="0.4"/>
+                                            <line x1="140" y1="60" x2="140" y2="140" stroke="#ef4444" stroke-width="1" opacity="0.4"/>
+
+                                            <!-- Outer network connections -->
+                                            <circle cx="40" cy="100" r="8" fill="#10b981" opacity="0.6"/>
+                                            <circle cx="160" cy="100" r="8" fill="#10b981" opacity="0.6"/>
+                                            <circle cx="100" cy="40" r="8" fill="#10b981" opacity="0.6"/>
+                                            <circle cx="100" cy="160" r="8" fill="#10b981" opacity="0.6"/>
+
+                                            <!-- Connections to outer network -->
+                                            <line x1="100" y1="100" x2="40" y2="100" stroke="#10b981" stroke-width="1" opacity="0.6"/>
+                                            <line x1="100" y1="100" x2="160" y2="100" stroke="#10b981" stroke-width="1" opacity="0.6"/>
+                                            <line x1="100" y1="100" x2="100" y2="40" stroke="#10b981" stroke-width="1" opacity="0.6"/>
+                                            <line x1="100" y1="100" x2="100" y2="160" stroke="#10b981" stroke-width="1" opacity="0.6"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="about-info">
+                                    <h2 class="about-title">AI认知盲点与可信认知系统</h2>
+                                    <p class="about-subtitle">从人类认知局限到人工智能系统思维的跨越</p>
+                                    <div class="about-meta">
+                                        <span class="about-focus">认知科学 · AI系统 · 多智能体协同</span>
+                                        <span class="about-lab">由 <a href="https://agentpsy.com" target="_blank" style="color: #2563eb; text-decoration: none; font-weight: 600;">AgentPsy.com AI人格实验室</a> 呈现</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="cognitive-blindness">
+                            <h3>从人类认知盲点到AI认知局限</h3>
+                            <div class="blindness-grid">
+                                <div class="blindness-card">
+                                    <h4>人类认知盲点</h4>
+                                    <div class="comparison">
+                                        <div class="human-side">
+                                            <h5>人类特点</h5>
+                                            <ul>
+                                                <li><strong>确认偏误</strong> - 选择性寻找支持性证据</li>
+                                                <li><strong>线性思维</strong> - 难以理解复杂非线性关系</li>
+                                                <li><strong>短期导向</strong> - 忽视长期后果和延迟效应</li>
+                                                <li><strong>信息过载</strong> - 处理复杂信息的能力有限</li>
+                                                <li><strong>情感影响</strong> - 情绪状态影响决策判断</li>
+                                            </ul>
+                                        </div>
+                                        <div class="vs-divider">
+                                            <div class="vs-circle">VS</div>
+                                        </div>
+                                        <div class="ai-side">
+                                            <h5>AI对应局限</h5>
+                                            <ul>
+                                                <li><strong>训练数据偏误</strong> - 模型继承训练数据的偏见</li>
+                                                <li><strong>架构局限</strong> - 网络结构限制认知深度</li>
+                                                <li><strong>上下文窗口</strong> - 短期记忆限制长期推理</li>
+                                                <li><strong>计算复杂度</strong> - 实时处理的资源约束</li>
+                                                <li><strong>目标函数偏移</strong> - 优化目标偏离真实意图</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="blindness-card">
+                                    <h4>认知系统的共同挑战</h4>
+                                    <div class="common-challenges">
+                                        <div class="challenge-item">
+                                            <div class="challenge-icon">🎯</div>
+                                            <div class="challenge-content">
+                                                <h5>目标不确定性</h5>
+                                                <p>人类和AI都面临目标定义模糊、优先级冲突的挑战</p>
+                                            </div>
+                                        </div>
+                                        <div class="challenge-item">
+                                            <div class="challenge-icon">🔄</div>
+                                            <div class="challenge-content">
+                                                <h5>反馈延迟</h5>
+                                                <p>行动结果的延迟反馈导致学习效率低下</p>
+                                            </div>
+                                        </div>
+                                        <div class="challenge-item">
+                                            <div class="challenge-icon">🌊</div>
+                                            <div class="challenge-content">
+                                                <h5>系统复杂性</h5>
+                                                <p>多变量交互导致预测和控制困难</p>
+                                            </div>
+                                        </div>
+                                        <div class="challenge-item">
+                                            <div class="challenge-icon">🔮</div>
+                                            <div class="challenge-content">
+                                                <h5>不确定性管理</h5>
+                                                <p>信息不完整时如何做出最优决策</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="failure-logic-significance">
+                            <h3>失败逻辑实验的深层意义</h3>
+                            <div class="significance-content">
+                                <div class="significance-narrative">
+                                    <div class="narrative-block">
+                                        <h4>认知觉醒的第一步</h4>
+                                        <p>"失败的逻辑"不仅揭示了人类思维的局限，更为我们理解AI认知系统的构建提供了深刻洞见。通过体验人类在复杂系统中的决策失误，我们能够更好地设计和构建可信的人工智能系统。</p>
+                                    </div>
+
+                                    <div class="narrative-block">
+                                        <h4>从个体到集体的认知突破</h4>
+                                        <p>真正的智慧不在于个体的完美无缺，而在于通过工具、协作和规范构建起的可靠认知体系。这正是多智能体系统设计的核心哲学 - 通过异质智能体的协同，弥补单一智能体的认知局限。</p>
+                                    </div>
+                                </div>
+
+                                <div class="significance-implications">
+                                    <div class="implication-card">
+                                        <h4>对AI系统设计的启示</h4>
+                                        <ul>
+                                            <li><strong>多样性优势</strong> - 不同架构的AI模型互补盲点</li>
+                                            <li><strong>冗余设计</strong> - 多重验证机制提高系统可靠性</li>
+                                            <li><strong>渐进学习</strong> - 从失败中迭代改进决策模型</li>
+                                            <li><strong>人机协作</strong> - 发挥人类直觉与AI精确计算的优势</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="implication-card">
+                                        <h4>多智能体协同的价值</h4>
+                                        <ul>
+                                            <li><strong>认知分工</strong> - 不同智能体专攻不同认知任务</li>
+                                            <li><strong>交叉验证</strong> - 多视角决策减少系统性偏误</li>
+                                            <li><strong>适应性</strong> - 动态调整团队组成应对不同挑战</li>
+                                            <li><strong>涌现智能</strong> - 群体智慧超越个体能力总和</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="agentpsy-lab">
+                            <div class="lab-introduction">
+                                <div class="lab-hero">
+                                    <div class="lab-logo">
+                                        <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                                            <circle cx="40" cy="40" r="35" stroke="#2563eb" stroke-width="2"/>
+                                            <circle cx="40" cy="40" r="25" fill="#2563eb" opacity="0.2"/>
+                                            <circle cx="40" cy="40" r="15" fill="#2563eb" opacity="0.4"/>
+                                            <circle cx="40" cy="40" r="8" fill="#2563eb"/>
+                                            <!-- Neural network connections -->
+                                            <line x1="40" y1="40" x2="20" y2="20" stroke="#2563eb" stroke-width="1"/>
+                                            <line x1="40" y1="40" x2="60" y2="20" stroke="#2563eb" stroke-width="1"/>
+                                            <line x1="40" y1="40" x2="20" y2="60" stroke="#2563eb" stroke-width="1"/>
+                                            <line x1="40" y1="40" x2="60" y2="60" stroke="#2563eb" stroke-width="1"/>
+                                            <circle cx="20" cy="20" r="3" fill="#10b981"/>
+                                            <circle cx="60" cy="20" r="3" fill="#10b981"/>
+                                            <circle cx="20" cy="60" r="3" fill="#10b981"/>
+                                            <circle cx="60" cy="60" r="3" fill="#10b981"/>
+                                        </svg>
+                                    </div>
+                                    <div class="lab-info">
+                                        <h2><a href="https://agentpsy.com" target="_blank" style="color: #2563eb; text-decoration: none;">AgentPsy.com AI人格实验室</a></h2>
+                                        <p class="lab-mission">探索AI稳定性与集体智慧的前沿阵地</p>
+                                    </div>
+                                </div>
+
+                                <div class="lab-focus-areas">
+                                    <h3>核心研究领域</h3>
+                                    <div class="focus-grid">
+                                        <div class="focus-item">
+                                            <div class="focus-icon">🧠</div>
+                                            <h4>AI人格测评</h4>
+                                            <p>专业AI人格认知评估与加固技术开发</p>
+                                        </div>
+                                        <div class="focus-item">
+                                            <div class="focus-icon">🤝</div>
+                                            <h4>异质协同设计</h4>
+                                            <p>不同特性AI智能体的协作机制优化</p>
+                                        </div>
+                                        <div class="focus-item">
+                                            <div class="focus-icon">🛡️</div>
+                                            <h4>系统稳定性</h4>
+                                            <p>构建可靠稳定的AI群体智能系统</p>
+                                        </div>
+                                        <div class="focus-item">
+                                            <div class="focus-icon">📊</div>
+                                            <h4>认知增强</h4>
+                                            <p>提升AI系统的认知能力和决策质量</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="lab-vision">
+                                    <h3>实验室愿景与使命</h3>
+                                    <div class="vision-content">
+                                        <div class="vision-statement">
+                                            <h4>构建可信的AI认知体系</h4>
+                                            <p>AgentPsy.com致力于通过科学的方法论和前沿的技术手段，解决AI系统在复杂环境中的认知可靠性问题。我们相信，未来的AI系统不是单一的超智能实体，而是由多个专门化、异质化的智能体组成的协作网络。</p>
+                                        </div>
+
+                                        <div class="vision-pillars">
+                                            <div class="pillar-item">
+                                                <h5>🔬 科学研究</h5>
+                                                <p>基于认知科学和AI理论的交叉研究</p>
+                                            </div>
+                                            <div class="pillar-item">
+                                                <h5>🛠️ 技术创新</h5>
+                                                <p>开发新一代AI认知增强技术</p>
+                                            </div>
+                                            <div class="pillar-item">
+                                                <h5>🌍 实际应用</h5>
+                                                <p>将理论成果转化为实用的解决方案</p>
+                                            </div>
+                                            <div class="pillar-item">
+                                                <h5>📚 知识传播</h5>
+                                                <p>推动AI认知科学的普及和教育</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="lab-call-to-action">
+                                    <div class="cta-content">
+                                        <h3>加入AI认知革命</h3>
+                                        <p>无论您是研究者、开发者，还是对AI认知科学感兴趣的学习者，AgentPsy.com都为您提供探索AI认知奥秘的平台。</p>
+                                        <div class="cta-actions">
+                                            <a href="https://agentpsy.com" target="_blank" class="btn btn-primary">
+                                                访问实验室网站
+                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                                    <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </a>
+                                            <button class="btn btn-outline" onclick="NavigationManager.navigateTo('scenarios')">
+                                                体验认知训练
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="multi-agent-systems">
+                            <h3>多智能体可信认知系统的未来</h3>
+                            <div class="future-vision">
+                                <div class="vision-timeline">
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker current">当前</div>
+                                        <div class="timeline-content">
+                                            <h4>单一AI模型时代</h4>
+                                            <p>依赖单一大型语言模型处理各种任务</p>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker developing">发展中</div>
+                                        <div class="timeline-content">
+                                            <h4>多模型协作</h4>
+                                            <p>不同专长的AI模型开始协作解决问题</p>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker future">未来</div>
+                                        <div class="timeline-content">
+                                            <h4>完全异质智能体生态</h4>
+                                            <p>由专门化AI人格组成的自适应协作网络</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="system-benefits">
+                                    <h4>多智能体系统的核心优势</h4>
+                                    <div class="benefits-grid">
+                                        <div class="benefit-card">
+                                            <h5>🎯 专业化分工</h5>
+                                            <p>每个智能体专注于特定领域，提高专业能力</p>
+                                        </div>
+                                        <div class="benefit-card">
+                                            <h5>🔄 动态适应</h5>
+                                            <p>根据任务需求动态组建最优智能体团队</p>
+                                        </div>
+                                        <div class="benefit-card">
+                                            <h5>🛡️ 容错能力</h5>
+                                            <p>单一智能体失效不影响整体系统运行</p>
+                                        </div>
+                                        <div class="benefit-card">
+                                            <h5>📈 持续学习</h5>
+                                            <p>智能体间相互学习，促进群体智能进化</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="conclusion">
+                            <div class="conclusion-content">
+                                <h3>认知进化的新篇章</h3>
+                                <p>从"失败的逻辑"到"可信的AI认知系统"，我们正在见证一场认知革命。这场革命不仅改变了我们对人类思维的理解，更重新定义了人工智能的发展方向。</p>
+
+                                <div class="key-insights">
+                                    <div class="insight-item">
+                                        <h4>🧠 认知谦逊</h4>
+                                        <p>承认局限是智慧的开始，无论是人类还是AI</p>
+                                    </div>
+                                    <div class="insight-item">
+                                        <h4>🤝 协作价值</h4>
+                                        <p>集体智慧永远超越个体能力的总和</p>
+                                    </div>
+                                    <div class="insight-item">
+                                        <h4>🔄 持续进化</h4>
+                                        <p>从失败中学习是认知系统的永恒主题</p>
+                                    </div>
+                                </div>
+
+                                <div class="final-message">
+                                    <p><strong>Dynamic Worlds</strong>与<strong>AgentPsy.com</strong>携手，为您提供一个探索认知奥秘、体验思维局限、展望AI未来的独特平台。在这里，每一次"失败"都是认知升级的机会，每一个"盲点"都是智慧增长的起点。</p>
+                                </div>
+
+                                <div class="action-buttons">
+                                    <button class="btn btn-primary" onclick="NavigationManager.navigateTo('scenarios')">
+                                        开始认知探索
+                                    </button>
+                                    <a href="https://agentpsy.com" target="_blank" class="btn btn-outline">
+                                        探索AI人格实验室
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                            <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book Page -->
+            <div id="book-page" class="page">
+                <div class="page-container">
+                    <section class="page-header">
+                        <h1 class="page-title">《失败的逻辑》</h1>
+                        <p class="page-subtitle">探索系统思维与人类认知局限</p>
+                    </section>
+
+                    <div class="book-content">
+                        <section class="book-intro">
+                            <div class="book-hero">
+                                <div class="book-cover">
+                                    <div class="book-cover-placeholder">
+                                        <svg width="120" height="160" viewBox="0 0 120 160" fill="none">
+                                            <rect x="4" y="4" width="112" height="152" rx="8" stroke="#2563eb" stroke-width="2"/>
+                                            <path d="M60 40 L60 60 M50 50 L70 50" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+                                            <circle cx="60" cy="80" r="8" stroke="#2563eb" stroke-width="2"/>
+                                            <path d="M45 100 Q60 90 75 100 Q60 110 45 100" stroke="#2563eb" stroke-width="2" fill="none"/>
+                                            <path d="M40 120 L80 120" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+                                            <path d="M45 130 L75 130" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+                                            <path d="M50 140 L70 140" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="book-info">
+                                    <h2 class="book-title">失败的逻辑</h2>
+                                    <p class="book-subtitle">系统思维、人类认知局限性与互动游戏设计</p>
+                                    <div class="book-meta">
+                                        <span class="book-author">基于 Dietrich Dörner 理论</span>
+                                        <span class="book-category">认知科学 · 系统思维</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="book-concepts">
+                            <h3>核心概念</h3>
+                            <div class="concepts-grid">
+                                <div class="concept-card">
+                                    <h4>失败的逻辑定义</h4>
+                                    <p>人类在面对复杂系统时，由于认知局限性和思维偏差而导致的系统性决策错误模式。</p>
+                                </div>
+                                <div class="concept-card">
+                                    <h4>系统思维框架</h4>
+                                    <p>基于非线性反馈、延迟效应、涌现行为和信息不完整性的复杂系统认知框架。</p>
+                                </div>
+                                <div class="concept-card">
+                                    <h4>认知偏差</h4>
+                                    <p>确认偏误、线性思维、短期导向等180+种影响决策的认知偏差。</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="cognitive-biases">
+                            <h3>主要认知偏差类型</h3>
+                            <div class="biases-grid">
+                                <div class="bias-category">
+                                    <h4>信息过载问题</h4>
+                                    <ul>
+                                        <li>确认偏误：倾向于寻找支持自己观点的信息</li>
+                                        <li>注意力偏差：只关注显著信息而忽略重要细节</li>
+                                        <li>可得性启发式：基于容易想起的信息做判断</li>
+                                    </ul>
+                                </div>
+                                <div class="bias-category">
+                                    <h4>意义构建问题</h4>
+                                    <ul>
+                                        <li>叙事谬误：为随机事件编造因果关系故事</li>
+                                        <li>归因错误：高估个人因素，低估情境因素</li>
+                                        <li>代表性启发式：基于刻板印象而非概率判断</li>
+                                    </ul>
+                                </div>
+                                <div class="bias-category">
+                                    <h4>快速决策问题</h4>
+                                    <ul>
+                                        <li>损失厌恶：对损失的敏感度高于收益</li>
+                                        <li>现状偏见：偏好维持现状</li>
+                                        <li>锚定效应：过度依赖初始信息</li>
+                                    </ul>
+                                </div>
+                                <div class="bias-category">
+                                    <h4>思维模式局限</h4>
+                                    <ul>
+                                        <li>线性思维：无法理解非线性关系</li>
+                                        <li>局部优化：追求局部最优而损害整体</li>
+                                        <li>短期导向：忽视长期后果</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="game-design">
+                            <h3>游戏设计原则</h3>
+                            <div class="design-principles">
+                                <div class="principle-group">
+                                    <h4>情景设计</h4>
+                                    <ul>
+                                        <li>真实复杂性：模拟现实世界的复杂系统</li>
+                                        <li>多重目标：设置相互冲突的目标要求</li>
+                                        <li>信息不对称：提供不完整和模糊的信息</li>
+                                        <li>时间压力：引入决策时间限制</li>
+                                    </ul>
+                                </div>
+                                <div class="principle-group">
+                                    <h4>反馈机制</h4>
+                                    <ul>
+                                        <li>延迟反馈：行动和结果之间的时间延迟</li>
+                                        <li>非线性反馈：小行动可能产生大后果</li>
+                                        <li>意外后果：行动产生意想不到的副作用</li>
+                                        <li>系统震荡：过度修正导致系统不稳定</li>
+                                    </ul>
+                                </div>
+                                <div class="principle-group">
+                                    <h4>失败体验设计</h4>
+                                    <ul>
+                                        <li>安全失败环境：在模拟中体验失败后果</li>
+                                        <li>即时复盘：提供决策分析和反馈</li>
+                                        <li>模式识别：帮助玩家识别自己的思维模式</li>
+                                        <li>学习迁移：将学到的原则应用到现实情境</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="educational-value">
+                            <h3>教育价值与应用</h3>
+                            <div class="value-grid">
+                                <div class="value-card">
+                                    <h4>系统思维培养</h4>
+                                    <ul>
+                                        <li>模式识别：识别系统中的模式和关系</li>
+                                        <li>杠杆点识别：找到系统中有效的干预点</li>
+                                        <li>边界判断：理解系统边界和影响范围</li>
+                                        <li>时间维度：考虑短期和长期影响</li>
+                                    </ul>
+                                </div>
+                                <div class="value-card">
+                                    <h4>决策能力提升</h4>
+                                    <ul>
+                                        <li>假设检验：检验自己的假设和信念</li>
+                                        <li>多视角思考：从不同角度看待问题</li>
+                                        <li>风险评估：更好地评估风险和不确定性</li>
+                                        <li>适应性学习：从失败中学习和调整</li>
+                                    </ul>
+                                </div>
+                                <div class="value-card">
+                                    <h4>现实世界应用</h4>
+                                    <ul>
+                                        <li>组织管理：改善组织决策流程</li>
+                                        <li>政策制定：设计更稳健的政策</li>
+                                        <li>个人发展：提升个人决策质量</li>
+                                        <li>危机应对：更好地应对复杂危机</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="conclusion">
+                            <div class="conclusion-content">
+                                <h3>核心理念</h3>
+                                <p>"失败的逻辑"揭示了人类思维在面对复杂性时的系统性缺陷。通过精心设计的互动游戏，我们可以在安全环境中体验这些失败，从而培养系统思维能力、改善决策质量，并最终在现实世界中做出更好的选择。</p>
+                                <div class="action-buttons">
+                                    <button class="btn btn-primary" onclick="NavigationManager.navigateTo('scenarios')">
+                                        开始体验
+                                    </button>
+                                    <button class="btn btn-outline" onclick="NavigationManager.navigateTo('home')">
+                                        返回首页
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Game Modal -->
+        <div id="game-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">认知训练</h2>
+                    <button class="modal-close" id="close-modal">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body" id="game-container">
+                    <!-- Game content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Invitation Modal -->
+    <div id="invitation-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">邀请好友</h2>
+                <button class="modal-close" id="close-invitation-modal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="invitation-content">
+                    <div class="invitation-info">
+                        <h3>分享认知之旅</h3>
+                        <p>邀请您的朋友一起探索认知陷阱，共同提升决策能力！</p>
+                    </div>
+
+                    <div class="invitation-rewards">
+                        <div class="reward-item">
+                            <div class="reward-icon">🎁</div>
+                            <div class="reward-details">
+                                <h4>邀请奖励</h4>
+                                <p>每成功邀请一位好友，双方各获得50积分</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="invitation-methods">
+                        <h4>分享方式</h4>
+                        <div class="share-buttons">
+                            <button class="share-btn" id="share-wechat" data-platform="wechat">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M8.691 2.188C3.891 2.188 0 5.593 0 10.391c0 4.412 3.631 8.021 8.063 8.021.421 0 .462-.021.531-.063.07-.056.141-.122.289-.242.427-.36.736-.744 1.384-1.646 2.23-.425.334-.637.663-.637.663l-.001-.001C14.286 13.822 12.506 10.891 10.5 8.775c-1.986-2.09-3.736-3.975-3.736-3.975-.026-.056-.041-.113-.041-.113.007-.041.007-.086.007-.125.014-.039.007-.081.014-.125.021-.044.007-.084.014-.126.021-.083.014-.16.028-.239.042-.317.063-.078.015-.154.03-.231.045-.154.028-.317.056-.49.087-.172.031-.344.062-.516.093-.172.031-.334.059-.496.087-.157.027-.31.051-.463.075-.152.023-.305.045-.457.067-.149.021-.295.04-.442.059-.145.019-.287.036-.429.053-.142.016-.283.031-.424.047-.134.014-.267.028-.401.042-.132.014-.263.026-.394.038-.127.01-.254.02-.381.029-.125.009-.249.018-.374.027-.122.008-.244.016-.366.023-.12.007-.239.013-.359.019-.117.006-.233.012-.349.017-.114.005-.227.01-.341.014-.111.004-.221.008-.332.011-.108.003-.215.006-.322.009-.105.002-.209.004-.313.006-.103.001-.203.003-.305.004-.1 0-.198.001-.296.003-.098 0-.195-.001-.291-.001-.097 0-.194-.001-.291-.001-.096 0-.191-.001-.286-.001-.095 0-.189-.001-.282-.001-.094 0-.187-.001-.28-.001-.093 0-.186-.001-.279-.001-.092 0-.182-.001-.273-.001-.091 0-.18-.001-.271-.001-.09 0-.179-.001-.269-.001-.089 0-.177-.001-.267-.001-.088 0-.175-.001-.265-.001-.087 0-.173-.001-.263-.001-.086 0-.171-.001-.261-.001-.085 0-.17-.001-.259-.001-.084 0-.168-.001-.257-.001-.083 0-.166-.001-.255-.001-.082 0-.165-.001-.253-.001-.081 0-.162-.001-.251-.001-.08 0-.161-.001-.249-.001-.079 0-.158-.001-.247-.001-.078 0-.156-.001-.245-.001-.077 0-.154-.001-.243-.001-.076 0-.153-.001-.241-.001-.075 0-.151-.001-.239-.001-.074 0-.149-.001-.237-.001-.073 0-.147-.001-.235-.001-.072 0-.145-.001-.233-.001-.071 0-.141-.001-.231-.001-.07 0-.14-.001-.229-.001-.069 0-.138-.001-.227-.001-.068 0-.136-.001-.225-.001-.067 0-.134-.001-.223-.001-.066 0-.132-.001-.221-.001-.065 0-.13-.001-.219-.001-.064 0-.128-.001-.217-.001-.063 0-.126-.001-.215-.001-.062 0-.124-.001-.213-.001-.061 0-.122-.001-.211-.001-.06 0-.121-.001-.209-.001-.059 0-.118-.001-.207-.001-.058 0-.117-.001-.205-.001-.057 0-.116-.001-.203-.001-.056 0-.115-.001-.201-.001-.055 0-.114-.001-.199-.001-.054 0-.113-.001-.197-.001-.053 0-.112-.001-.197-.001-.052 0-.111-.001-.195-.001-.051 0-.11-.001-.193-.001-.05 0-.109-.001-.191-.001-.05 0-.108-.001-.189-.001-.049 0-.107-.001-.187-.001-.048 0-.106-.001-.185-.001-.047 0-.105-.001-.183-.001-.046 0-.104-.001-.181-.001-.045 0-.103-.001-.179-.001-.044 0-.102-.001-.177-.001-.043 0-.101-.001-.175-.001-.042 0-.1-.001-.173-.001-.041 0-.099-.001-.171-.001-.04 0-.098-.001-.169-.001-.039 0-.097-.001-.167-.001-.038 0-.096-.001-.165-.001-.037 0-.095-.001-.163-.001-.036 0-.094-.001-.161-.001-.035 0-.093-.001-.159-.001-.034 0-.092-.001-.157-.001-.033 0-.089-.001-.155-.001-.032 0-.088-.001-.153-.001-.031 0-.087-.001-.151-.001-.03 0-.086-.001-.149-.001-.029 0-.085-.001-.147-.001-.028 0-.084-.001-.145-.001-.027 0-.083-.001-.143-.001-.026 0-.082-.001-.141-.001-.025 0-.081-.001-.139-.001-.024 0-.08-.001-.137-.001-.023 0-.079-.001-.135-.001-.022 0-.078-.001-.133-.001-.021 0-.077-.001-.131-.001-.02 0-.076-.001-.129-.001-.019 0-.075-.001-.127-.001-.018 0-.074-.001-.125-.001-.017 0-.073-.001-.123-.001-.016 0-.072-.001-.121-.001-.015 0-.071-.001-.119-.001-.014 0-.07-.001-.117-.001-.013 0-.069-.001-.115-.001-.012 0-.068-.001-.113-.001-.011 0-.067-.001-.111-.001-.01 0-.066-.001-.109-.001-.009 0-.065-.001-.107-.001-.008 0-.064-.001-.105-.001-.007 0-.063-.001-.103-.001-.006 0-.062-.001-.101-.001-.005 0-.061-.001-.099-.001-.004 0-.06-.001-.097-.001-.003 0-.059-.001-.095-.001-.002 0-.058-.001-.093-.001-.001 0-.057-.001-.091-.001-.001 0-.056-.001-.089-.001v0z"/>
+                                </svg>
+                                <span>微信</span>
+                            </button>
+                            <button class="share-btn" id="share-link" data-platform="link">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M3.9 12c0 1.71 1.39 3.1 3.1 3.1h4.07L7.07 18.07c1.51 1.51 3.71 1.51 5.22 0l3.98-3.98L16.3 16.3c1.71 0 3.1-1.39 3.1-3.1 0-1.42-.97-2.62-2.28-2.91l.02-.03c.28-.29.65-.49 1.03-.62-.38-.13-.75-.33-1.03-.62l.02-.03c.29-.28.49-.65.62-1.03.13-.38.33-.75.62-1.03.62-.38.13-.75.33-1.03.62z"/>
+                                </svg>
+                                <span>复制链接</span>
+                            </button>
+                            <button class="share-btn" id="share-qr" data-platform="qr">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M3 11h8V3H3v8zm2-2v6h4V5H5zm6-2v14h8V3h-8v6zm2 2v10h4V7h-4z"/>
+                                </svg>
+                                <span>二维码</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" id="cancel-invitation">取消</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Share Success Modal -->
+        <div id="share-success-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">分享成功</h2>
+                    <button class="modal-close" id="close-share-success">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="success-content">
+                        <div class="success-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                                <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2.15 5.65l-2.35 2.35-1.65-1.65c-.2-.2-.51-.2-.71 0l-1.64 1.65c-.21.2-.21.54-.2-.71l2.35-2.35c.2-.21.51-.2.71 0l1.65-1.65c.2-.21.51-.2.71 0zm.71 4.29l-1.65 1.65c-.2.2-.51-.2-.71 0l-1.64-1.65c-.21-.2-.54-.2-.71 0l1.65-1.65c.2-.21.51-.2.71 0z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <h3>分享成功！</h3>
+                        <p>您的邀请已成功分享，期待您的朋友加入认知之旅。</p>
+                        <div class="invitation-stats">
+                            <div class="stat">
+                                <span class="stat-label">已邀请</span>
+                                <span class="stat-value" id="invited-count">0</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">成功加入</span>
+                                <span class="stat-value" id="joined-count">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="share-more">继续分享</button>
+                </div>
+            </div>
+        </div>
+
+    <!-- JavaScript -->
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
