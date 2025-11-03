@@ -8,10 +8,10 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'api-server'))
 
 # 导入FastAPI应用
-from start import app
+from start import app as fastapi_app
 
 # Vercel需要一个名为app的可调用对象
-app = app
+app = fastapi_app
 
 if __name__ == "__main__":
     import uvicorn
