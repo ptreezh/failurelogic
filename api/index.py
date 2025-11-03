@@ -11,7 +11,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'api-server'))
 from start import app
 
 # Vercel需要一个名为app的可调用对象
-application = app
+app = app
 
 if __name__ == "__main__":
     import uvicorn
