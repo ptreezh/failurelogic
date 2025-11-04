@@ -16,12 +16,13 @@ const APP_CONFIG = {
 
     // GitHub Pages环境 - 只使用已验证工作的API地址
     const apiSources = [
-      'https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev',  // GitHub Codespaces 8000 (已验证工作)
+      'https://psychic-meme-rvq4v7pqwx3xxrr-8000.app.github.dev',  // Primary: New working Codespaces (已验证工作)
+      'https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev',  // Backup: Old Codespaces
       'https://failurelogic-api.vercel.app',      // Vercel部署 (备用)
       'https://failurelogic.vercel.app'          // 备用Vercel
     ];
 
-    // 返回GitHub Codespaces 8000端口作为首选 (已验证正常工作)
+    // 返回新工作的Codespaces作为首选 (已验证正常工作)
     return apiSources[0];
   })(),
 
