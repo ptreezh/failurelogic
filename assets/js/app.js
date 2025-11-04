@@ -465,36 +465,17 @@ const NavigationManager = {
   /**
    * Load scenarios page
    */
-  async loadScenariosPage() {
+  loadScenariosPage() {
     const scenariosGrid = document.getElementById('scenarios-grid');
     if (!scenariosGrid) {
       console.error('Scenarios grid not found');
       return;
     }
 
-    // Show loading state
-    scenariosGrid.innerHTML = '<div class="loading">加载场景中...</div>';
-
-    try {
-      console.log('Fetching scenarios from API...');
-      const scenarios = await ApiService.scenarios.getAll();
-      console.log('API response:', scenarios);
-
-      if (scenarios && Array.isArray(scenarios) && scenarios.length > 0) {
-        this.renderScenarios(scenarios, scenariosGrid);
-      } else {
-        console.log('No scenarios from API, using mock data');
-        // Fallback to mock data
-        const mockScenarios = this.getMockScenarios();
-        this.renderScenarios(mockScenarios, scenariosGrid);
-      }
-    } catch (error) {
-      console.error('Failed to load scenarios from API:', error);
-      // Fallback to mock data
-      console.log('Using mock data due to API error');
-      const mockScenarios = this.getMockScenarios();
-      this.renderScenarios(mockScenarios, scenariosGrid);
-    }
+    // 直接使用静态场景数据，无需API调用
+    console.log('Loading scenarios from static data...');
+    const mockScenarios = this.getMockScenarios();
+    this.renderScenarios(mockScenarios, scenariosGrid);
   },
 
   /**
@@ -658,6 +639,38 @@ const NavigationManager = {
         difficulty: 'beginner',
         estimatedDuration: 15,
         targetBiases: ['linear_thinking'],
+        content: {
+          introduction: '您刚刚接手了一家位于市中心的咖啡店。作为新经理，您面临各种决策，从员工管理到库存控制，再到市场营销。让我们看看线性思维如何影响您的决策。',
+          rounds: [
+            {
+              id: 1,
+              title: '员工招聘决策',
+              description: '咖啡店生意繁忙，您需要招聘更多员工。目前有2名咖啡师，每天服务100名顾客。您计划将生意扩大到每天200名顾客。',
+              question: '您应该招聘多少名新咖啡师？',
+              options: [
+                { text: '招聘2名新咖啡师（1:1比例）', value: 'linear', impact: { service_quality: 80, cost: 60, employee_satisfaction: 70 } },
+                { text: '招聘3名新咖啡师（考虑培训和轮班）', value: 'system', impact: { service_quality: 90, cost: 75, employee_satisfaction: 85 } },
+                { text: '招聘1名新咖啡师（最大化效率）', value: 'optimistic', impact: { service_quality: 60, cost: 40, employee_satisfaction: 50 } }
+              ],
+              correctAnswer: 'system',
+              explanation: '线性思维会认为2倍顾客需要2倍员工。但系统思维考虑到培训时间、轮班安排、高峰期需求等因素。'
+            },
+            {
+              id: 2,
+              title: '库存管理挑战',
+              description: '您的咖啡豆供应商提供了优惠：批量购买100公斤可享受30%折扣。目前您每周使用10公斤。',
+              question: '您应该如何采购咖啡豆？',
+              options: [
+                { text: '立即购买100公斤（享受折扣）', value: 'linear', impact: { cost_savings: 90, storage_cost: 40, freshness: 50 } },
+                { text: '购买20公斤（2周用量）', value: 'balanced', impact: { cost_savings: 70, storage_cost: 70, freshness: 80 } },
+                { text: '维持现有采购量', value: 'conservative', impact: { cost_savings: 50, storage_cost: 80, freshness: 90 } }
+              ],
+              correctAnswer: 'balanced',
+              explanation: '线性思维只看到折扣优势，但系统思维考虑存储成本、咖啡豆新鲜度、资金占用等因素。'
+            }
+          ],
+          conclusion: '通过这个咖啡店管理场景，您可以看到线性思维往往忽略系统的复杂性。优秀的决策需要考虑多个相互关联的因素。'
+        }
       },
       {
         id: 'relationship-time-delay',
@@ -667,6 +680,38 @@ const NavigationManager = {
         difficulty: 'intermediate',
         estimatedDuration: 20,
         targetBiases: ['time_delay_bias'],
+        content: {
+          introduction: '恋爱关系中的决策往往需要很长时间才能看到结果。这种时间延迟会影响我们的判断力和决策质量。让我们通过一个虚拟关系来体验这种现象。',
+          rounds: [
+            {
+              id: 1,
+              title: '沟通方式的改变',
+              description: '您和伴侣最近经常因为小事争吵。您认为改变沟通方式可能改善关系，但效果需要时间才能显现。',
+              question: '当您的沟通改变短期内没有明显效果时，您会怎么做？',
+              options: [
+                { text: '立即放弃，认为改变无效', value: 'immediate', impact: { relationship_quality: 40, personal_growth: 30, communication_skill: 20 } },
+                { text: '坚持改变至少3个月', value: 'patient', impact: { relationship_quality: 80, personal_growth: 85, communication_skill: 90 } },
+                { text: '尝试另一种沟通方式', value: 'adaptive', impact: { relationship_quality: 65, personal_growth: 70, communication_skill: 75 } }
+              ],
+              correctAnswer: 'patient',
+              explanation: '时间延迟偏差让我们期望立即看到结果。但关系改善需要时间，耐心和坚持是关键。'
+            },
+            {
+              id: 2,
+              title: '信任重建过程',
+              description: '您的伴侣曾经撒过一个善意的谎言。您决定努力重建信任，但信任的恢复是一个缓慢的过程。',
+              question: '在信任重建过程中，什么最重要？',
+              options: [
+                { text: '要求对方立即证明改变', value: 'urgent', impact: { trust_level: 30, relationship_stress: 90, emotional_wellbeing: 40 } },
+                { text: '给予时间和空间，观察持续的行为改变', value: 'patient', impact: { trust_level: 85, relationship_stress: 40, emotional_wellbeing: 80 } },
+                { text: '频繁提及过去以提醒对方', value: 'reminder', impact: { trust_level: 50, relationship_stress: 70, emotional_wellbeing: 50 } }
+              ],
+              correctAnswer: 'patient',
+              explanation: '信任重建具有显著的时间延迟。持续的行为改变比言语承诺更有意义。'
+            }
+          ],
+          conclusion: '恋爱关系中的时间延迟教会我们耐心和坚持的价值。真正的改变需要时间，理解和接受这一点是成熟关系的标志。'
+        }
       },
       {
         id: 'investment-confirmation',
@@ -676,7 +721,39 @@ const NavigationManager = {
         difficulty: 'advanced',
         estimatedDuration: 25,
         targetBiases: ['confirmation_bias'],
-      },
+        content: {
+          introduction: '确认偏误是我们倾向于寻找和解释支持我们既有信念的信息，而忽略相反的证据。在投资决策中，这种偏见可能导致重大损失。',
+          rounds: [
+            {
+              id: 1,
+              title: '股票研究偏见',
+              description: '您研究了某家科技公司并认为它有很大潜力。现在您需要做最终投资决策。',
+              question: '在投资前，您应该如何收集信息？',
+              options: [
+                { text: '主要寻找支持该股票的正面分析', value: 'confirming', impact: { investment_return: 30, risk_level: 80, learning_value: 20 } },
+                { text: '主动寻找反对该股票的负面信息', value: 'challenging', impact: { investment_return: 75, risk_level: 40, learning_value: 90 } },
+                { text: '只查看该公司官方发布的信息', value: 'limited', impact: { investment_return: 50, risk_level: 60, learning_value: 40 } }
+              ],
+              correctAnswer: 'challenging',
+              explanation: '确认偏误让我们偏好支持性信息。主动寻找反对意见能提供更平衡的视角。'
+            },
+            {
+              id: 2,
+              title: '投资组合调整',
+              description: '您的投资组合中某只股票下跌了20%。您需要决定是继续持有还是卖出。',
+              question: '面对亏损，您应该如何反应？',
+              options: [
+                { text: '立即卖出避免进一步损失', value: 'panic', impact: { portfolio_value: 60, emotional_state: 40, decision_quality: 30 } },
+                { text: '寻找信息证明自己最初的决策是正确的', value: 'confirming', impact: { portfolio_value: 45, emotional_state: 60, decision_quality: 40 } },
+                { text: '客观重新评估该公司基本面和未来前景', value: 'rational', impact: { portfolio_value: 80, emotional_state: 75, decision_quality: 90 } }
+              ],
+              correctAnswer: 'rational',
+              explanation: '确认偏误在亏损时特别危险，因为它让我们寻找证据支持原有决策而非客观评估。'
+            }
+          ],
+          conclusion: '投资中的确认偏误可能导致重大财务损失。学会挑战自己的假设，主动寻找不同观点，是成为理性投资者的关键。'
+        }
+      }
     ];
   },
 
@@ -1431,53 +1508,24 @@ const GameManager = {
   /**
    * Start scenario
    */
-  async startScenario(scenarioId) {
+  startScenario(scenarioId) {
     try {
       console.log('Starting scenario:', scenarioId);
       ToastManager.showInfo('正在启动游戏...');
 
-      // Show loading
-      AppState.isLoading = true;
+      // 直接使用静态数据创建游戏会话
+      AppState.gameSession = {
+        gameId: 'static-' + Date.now(),
+        scenarioId: scenarioId
+      };
 
-      let sessionData = null;
-      let apiSuccess = false;
+      // 从静态数据加载游戏内容
+      this.loadStaticGameContent(scenarioId);
 
-      try {
-        // Create game session using correct API endpoint
-        sessionData = await ApiService.scenarios.createGameSession(scenarioId);
-        console.log('Game session created:', sessionData);
-
-        if (!sessionData.success) {
-          throw new Error(sessionData.message || '创建游戏会话失败');
-        }
-
-        AppState.gameSession = {
-          gameId: sessionData.game_id,
-          scenarioId: scenarioId
-        };
-        apiSuccess = true;
-
-      } catch (apiError) {
-        console.warn('API call failed, using fallback mode:', apiError);
-        // Fallback: create mock session data
-        AppState.gameSession = {
-          gameId: 'mock-' + Date.now(),
-          scenarioId: scenarioId
-        };
-        ToastManager.showWarning('离线模式：游戏功能受限');
-      }
-
-      // Load game content (always try to load)
-      await this.loadGameContent(scenarioId);
-
-      // Show game modal (always show, even if API failed)
+      // 显示游戏界面
       this.showGameModal();
 
-      if (apiSuccess) {
-        ToastManager.showSuccess('游戏启动成功！');
-      } else {
-        ToastManager.showInfo('游戏启动（离线模式）');
-      }
+      ToastManager.showSuccess('游戏启动成功！');
 
     } catch (error) {
       console.error('Failed to start scenario:', error);
@@ -1501,7 +1549,28 @@ const GameManager = {
   },
 
   /**
-   * Load game content
+   * Load static game content (no API calls)
+   */
+  loadStaticGameContent(scenarioId) {
+    const gameContainer = document.getElementById('game-container');
+    if (!gameContainer) return;
+
+    // 从静态数据获取场景内容
+    const scenarios = PageManager.getMockScenarios();
+    const scenario = scenarios.find(s => s.id === scenarioId);
+
+    if (scenario && scenario.content) {
+      gameContainer.innerHTML = this.renderStaticGameContent(scenario);
+      // 初始化游戏状态
+      this.initializeStaticGame(scenario);
+    } else {
+      console.error('Scenario not found:', scenarioId);
+      gameContainer.innerHTML = '<div class="error">场景内容未找到</div>';
+    }
+  },
+
+  /**
+   * Load game content (legacy)
    */
   async loadGameContent(scenarioId) {
     const gameContainer = document.getElementById('game-container');
@@ -1613,7 +1682,261 @@ const GameManager = {
   },
 
   /**
-   * Render game content
+   * Render static game content
+   */
+  renderStaticGameContent(scenario) {
+    const content = scenario.content;
+    if (!content) return '<div class="error">场景内容未找到</div>';
+
+    return `
+      <div class="game-header">
+        <h2>${scenario.name}</h2>
+        <p>第 <span id="current-round">1</span> / ${content.rounds.length} 回合</p>
+      </div>
+      <div class="game-content">
+        <div class="scenario-intro">
+          <h3>场景介绍</h3>
+          <p>${content.introduction}</p>
+        </div>
+        <div id="round-container" class="round-container">
+          <!-- 当前回合内容将在这里渲染 -->
+        </div>
+        <div id="round-feedback" class="round-feedback" style="display: none;">
+          <!-- 回合反馈将在这里显示 -->
+        </div>
+        <div id="scenario-conclusion" class="scenario-conclusion" style="display: none;">
+          <h3>场景总结</h3>
+          <p>${content.conclusion}</p>
+        </div>
+      </div>
+      <div class="game-actions">
+        <button id="submit-decision" class="btn btn-primary" onclick="GameManager.submitDecision()">
+          提交决策
+        </button>
+        <button id="next-round" class="btn btn-outline" onclick="GameManager.nextRound()" style="display: none;">
+          下一回合
+        </button>
+        <button class="btn btn-outline" onclick="GameManager.hideGameModal()">
+          退出游戏
+        </button>
+      </div>
+    `;
+  },
+
+  /**
+   * Initialize static game
+   */
+  initializeStaticGame(scenario) {
+    // 初始化游戏状态
+    AppState.currentGame = {
+      scenario: scenario,
+      currentRound: 0,
+      decisions: [],
+      scores: {}
+    };
+
+    // 显示第一个回合
+    this.showRound(0);
+  },
+
+  /**
+   * Show current round
+   */
+  showRound(roundIndex) {
+    const game = AppState.currentGame;
+    const round = game.scenario.content.rounds[roundIndex];
+
+    const roundContainer = document.getElementById('round-container');
+    const feedbackContainer = document.getElementById('round-feedback');
+    const conclusionContainer = document.getElementById('scenario-conclusion');
+    const submitBtn = document.getElementById('submit-decision');
+    const nextBtn = document.getElementById('next-round');
+    const currentRoundSpan = document.getElementById('current-round');
+
+    if (!round) return;
+
+    // 隐藏反馈和结论
+    feedbackContainer.style.display = 'none';
+    conclusionContainer.style.display = 'none';
+
+    // 更新回合数
+    currentRoundSpan.textContent = roundIndex + 1;
+
+    // 渲染回合内容
+    roundContainer.innerHTML = `
+      <div class="round-content">
+        <h3>回合 ${roundIndex + 1}: ${round.title}</h3>
+        <div class="round-description">
+          <p>${round.description}</p>
+        </div>
+        <div class="round-question">
+          <h4>${round.question}</h4>
+          <div class="options">
+            ${round.options.map((option, index) => `
+              <div class="option">
+                <label>
+                  <input type="radio" name="decision" value="${option.value}" data-index="${index}">
+                  <span class="option-text">${option.text}</span>
+                </label>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+
+    // 显示/隐藏按钮
+    submitBtn.style.display = 'inline-block';
+    nextBtn.style.display = 'none';
+  },
+
+  /**
+   * Submit decision
+   */
+  submitDecision() {
+    const selectedOption = document.querySelector('input[name="decision"]:checked');
+    if (!selectedOption) {
+      ToastManager.showWarning('请选择一个选项');
+      return;
+    }
+
+    const game = AppState.currentGame;
+    const round = game.scenario.content.rounds[game.currentRound];
+    const optionIndex = parseInt(selectedOption.dataset.index);
+    const selectedOptionData = round.options[optionIndex];
+
+    // 保存决策
+    game.decisions.push({
+      round: game.currentRound + 1,
+      decision: selectedOptionData.value,
+      impact: selectedOptionData.impact
+    });
+
+    // 显示反馈
+    this.showFeedback(round, selectedOptionData);
+  },
+
+  /**
+   * Show feedback
+   */
+  showFeedback(round, selectedOption) {
+    const feedbackContainer = document.getElementById('round-feedback');
+    const submitBtn = document.getElementById('submit-decision');
+    const nextBtn = document.getElementById('next-round');
+
+    feedbackContainer.innerHTML = `
+      <div class="feedback-content">
+        <h4>决策反馈</h4>
+        <p><strong>您的选择：</strong>${selectedOption.text}</p>
+        <p><strong>分析：</strong>${round.explanation}</p>
+        <div class="impact-summary">
+          <h5>影响评估：</h5>
+          <ul>
+            ${Object.entries(selectedOption.impact).map(([key, value]) => `
+              <li>${this.translateImpactKey(key)}: ${value}/100</li>
+            `).join('')}
+          </ul>
+        </div>
+      </div>
+    `;
+
+    feedbackContainer.style.display = 'block';
+    submitBtn.style.display = 'none';
+
+    const game = AppState.currentGame;
+    if (game.currentRound < game.scenario.content.rounds.length - 1) {
+      nextBtn.style.display = 'inline-block';
+    } else {
+      // 显示结论
+      this.showConclusion();
+    }
+  },
+
+  /**
+   * Show conclusion
+   */
+  showConclusion() {
+    const conclusionContainer = document.getElementById('scenario-conclusion');
+    const nextBtn = document.getElementById('next-round');
+
+    conclusionContainer.style.display = 'block';
+    nextBtn.style.display = 'none';
+
+    // 计算总分
+    this.calculateFinalScore();
+  },
+
+  /**
+   * Next round
+   */
+  nextRound() {
+    const game = AppState.currentGame;
+    game.currentRound++;
+    this.showRound(game.currentRound);
+  },
+
+  /**
+   * Calculate final score
+   */
+  calculateFinalScore() {
+    const game = AppState.currentGame;
+    const conclusionContainer = document.getElementById('scenario-conclusion');
+
+    let totalScore = 0;
+    let roundScores = [];
+
+    game.decisions.forEach((decision, index) => {
+      const round = game.scenario.content.rounds[index];
+      const isCorrect = decision.decision === round.correctAnswer;
+      const score = isCorrect ? 100 : 50;
+
+      totalScore += score;
+      roundScores.push(score);
+    });
+
+    const averageScore = Math.round(totalScore / roundScores.length);
+
+    // 添加得分显示
+    const scoreDisplay = document.createElement('div');
+    scoreDisplay.className = 'final-score';
+    scoreDisplay.innerHTML = `
+      <h4>最终得分：${averageScore}/100</h4>
+      <p>回合得分：${roundScores.map((score, i) => `第${i+1}回合: ${score}`).join(', ')}</p>
+    `;
+
+    conclusionContainer.appendChild(scoreDisplay);
+    ToastManager.showSuccess(`游戏完成！最终得分：${averageScore}/100`);
+  },
+
+  /**
+   * Translate impact keys
+   */
+  translateImpactKey(key) {
+    const translations = {
+      service_quality: '服务质量',
+      cost: '成本控制',
+      employee_satisfaction: '员工满意度',
+      cost_savings: '成本节约',
+      storage_cost: '存储成本',
+      freshness: '新鲜度',
+      relationship_quality: '关系质量',
+      personal_growth: '个人成长',
+      communication_skill: '沟通技巧',
+      trust_level: '信任水平',
+      relationship_stress: '关系压力',
+      emotional_wellbeing: '情绪健康',
+      investment_return: '投资回报',
+      risk_level: '风险水平',
+      learning_value: '学习价值',
+      portfolio_value: '投资组合价值',
+      emotional_state: '情绪状态',
+      decision_quality: '决策质量'
+    };
+    return translations[key] || key;
+  },
+
+  /**
+   * Render game content (legacy)
    */
   renderGameContent(scenario) {
     return `
