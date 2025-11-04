@@ -43,17 +43,19 @@ class APIConfigManager {
   getAPISources() {
     const hostname = window.location.hostname;
 
-    // Development environment
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      return ['http://localhost:8000'];
-    }
+    // Always try localhost first (for local development)
+    // This will be skipped quickly if not available
+    const sources = ['http://localhost:8000'];
 
-    // Production environment - prioritize tested working sources
-    return [
+    // Production environment - remote API sources
+    const remoteSources = [
       'https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev', // Primary (verified working)
       'https://failurelogic-api.vercel.app', // Backup 1
       'https://failurelogic.vercel.app'       // Backup 2
     ];
+
+    // Add remote sources after localhost
+    return sources.concat(remoteSources);
   }
 
   getBaseUrl() {
