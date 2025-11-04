@@ -1556,7 +1556,7 @@ const GameManager = {
     if (!gameContainer) return;
 
     // 从静态数据获取场景内容
-    const scenarios = PageManager.getMockScenarios();
+    const scenarios = this.getMockScenarios();
     const scenario = scenarios.find(s => s.id === scenarioId);
 
     if (scenario && scenario.content) {
