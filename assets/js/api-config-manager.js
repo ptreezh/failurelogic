@@ -50,9 +50,10 @@ class APIConfigManager {
 
     // Production environment - remote API sources only
     return [
-      'https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev', // Primary GitHub Codespaces
-      'https://failurelogic-api.vercel.app', // Backup 1: Vercel API
-      'https://failurelogic.vercel.app'       // Backup 2: Vercel main
+      'https://psychic-meme-rvq4v7pqwx3xxrr-8000.app.github.dev', // Primary: New working Codespaces
+      'https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev', // Backup: Old Codespaces
+      'https://failurelogic-api.vercel.app', // Backup 2: Vercel API
+      'https://failurelogic.vercel.app'       // Backup 3: Vercel main
     ];
   }
 
