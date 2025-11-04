@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Dynamic Worlds - 认知陷阱教育平台，帮助您理解和克服思维局限">
+    <meta name="description" content="Failure Logic 认知陷阱教育互动游戏，帮助您理解和克服思维局限">
     <meta name="keywords" content="认知陷阱,失败逻辑,系统思维,决策训练">
     <meta name="author" content="Dynamic Worlds Team">
 
-    <title>Dynamic Worlds - 认知陷阱教育平台</title>
+    <title>Failure Logic 认知陷阱教育互动游戏</title>
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
@@ -24,7 +24,12 @@
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="stylesheet" href="assets/css/game-styles.css">
 
+    <!-- Preconnect to API for performance -->
+    <link rel="preconnect" href="https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev">
+    <link rel="preconnect" href="https://failurelogic-api.vercel.app">
+
     <!-- Preload Critical Resources -->
+    <link rel="preload" href="assets/js/api-config-manager.js" as="script">
     <link rel="preload" href="assets/js/app.js" as="script">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style">
 </head>
@@ -55,7 +60,7 @@
                         <circle cx="16" cy="16" r="14" stroke="#2563eb" stroke-width="2"/>
                         <path d="M10 16 L14 20 L22 12" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <span class="brand-text">Dynamic Worlds</span>
+                    <span class="brand-text">Failure Logic</span>
                 </div>
 
                 <div class="nav-menu">
@@ -137,7 +142,7 @@
                     <section class="hero-section">
                         <div class="hero-content">
                             <h1 class="hero-title">
-                                探索认知的
+                                Failure Logic - 探索认知的
                                 <span class="highlight">盲点</span>
                             </h1>
                             <p class="hero-description">
@@ -989,6 +994,7 @@
         </div>
 
     <!-- JavaScript -->
+    <script src="assets/js/api-config-manager.js"></script>
     <script src="assets/js/app.js"></script>
 </body>
 </html>

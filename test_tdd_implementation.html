@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TDD Implementation Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .test-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+        .test-result {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .pass { background: rgba(76, 175, 80, 0.3); border: 1px solid #4CAF50; }
+        .fail { background: rgba(244, 67, 54, 0.3); border: 1px solid #f44336; }
+        .pending { background: rgba(255, 193, 7, 0.3); border: 1px solid #FFC107; }
+        .metrics { font-family: 'Courier New', monospace; font-size: 14px; }
+        .iframe-container {
+            width: 100%;
+            height: 600px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .test-button {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        .test-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 TDD Implementation Verification</h1>
+        <p>Testing the optimized API configuration and performance improvements</p>
+
+        <button class="test-button" onclick="runAllTests()">Run All Tests</button>
+        <button class="test-button" onclick="openAppTest()">Open App Test</button>
+
+        <div id="test-results"></div>
+
+        <h2>Live App Preview</h2>
+        <div class="iframe-container">
+            <iframe src="index.html" id="app-frame"></iframe>
+        </div>
+    </div>
+
+    <script>
+        let testResults = [];
+        let appFrame = document.getElementById('app-frame');
+        let resultsContainer = document.getElementById('test-results');
+
+        async function runAllTests() {
+            console.log('🚀 Starting TDD Implementation Tests...');
+            testResults = [];
+            resultsContainer.innerHTML = '<div class="test-result pending">Running tests...</div>';
+
+            try {
+                // Test 1: API Configuration Manager
+                await testAPIConfigManager();
+
+                // Test 2: Application Loading Performance
+                await testAppPerformance();
+
+                // Test 3: API Connectivity
+                await testAPIConnectivity();
+
+                // Test 4: Scenario Loading
+                await testScenarioLoading();
+
+                // Test 5: Error Handling
+                await testErrorHandling();
+
+                // Test 6: Performance Monitoring
+                await testPerformanceMonitoring();
+
+            } catch (error) {
+                addTestResult('Test Suite Error', false, error.message);
+            }
+
+            displayResults();
+        }
+
+        async function testAPIConfigManager() {
+            try {
+                const frameWindow = appFrame.contentWindow;
+
+                // Wait for frame to load
+                await waitForFrameLoad();
+
+                // Check if APIConfigManager is available
+                const hasAPIConfig = frameWindow.APIConfigManager !== undefined;
+                addTestResult('APIConfigManager Available', hasAPIConfig);
+
+                if (hasAPIConfig) {
+                    // Test API source selection
+                    const apiConfig = new frameWindow.APIConfigManager();
+                    const baseUrl = apiConfig.getBaseUrl();
+                    const hasValidUrl = baseUrl && (baseUrl.includes('localhost') || baseUrl.includes('github.dev') || baseUrl.includes('vercel.app'));
+                    addTestResult('API Source Selection', hasValidUrl);
+
+                    // Test performance metrics
+                    const metrics = apiConfig.getMetrics();
+                    const hasMetrics = metrics && typeof metrics.totalRequests !== 'undefined';
+                    addTestResult('API Performance Metrics', hasMetrics);
+                }
+
+            } catch (error) {
+                addTestResult('API Configuration Manager', false, error.message);
+            }
+        }
+
+        async function testAppPerformance() {
+            try {
+                const frameWindow = appFrame.contentWindow;
+                await waitForFrameLoad();
+
+                // Get performance metrics
+                const performanceData = frameWindow.performance ? frameWindow.performance.timing : null;
+
+                if (performanceData) {
+                    const loadTime = performanceData.loadEventEnd - performanceData.navigationStart;
+                    const domTime = performanceData.domContentLoadedEventEnd - performanceData.navigationStart;
+
+                    addTestResult('Page Load Time < 5s', loadTime < 5000, `${loadTime}ms`);
+                    addTestResult('DOM Content Load < 3s', domTime < 3000, `${domTime}ms`);
+                } else {
+                    addTestResult('Performance API Available', false);
+                }
+
+            } catch (error) {
+                addTestResult('App Performance Test', false, error.message);
+            }
+        }
+
+        async function testAPIConnectivity() {
+            try {
+                const frameWindow = appFrame.contentWindow;
+                await waitForFrameLoad();
+
+                // Check if ApiService is available
+                const hasApiService = frameWindow.ApiService !== undefined;
+                addTestResult('ApiService Available', hasApiService);
+
+                if (hasApiService) {
+                    // Test scenarios API call
+                    const scenarios = await frameWindow.ApiService.scenarios.getAll();
+                    const hasScenarios = scenarios && scenarios.scenarios && scenarios.scenarios.length > 0;
+                    addTestResult('Scenarios API Call', hasScenarios);
+
+                    if (hasScenarios) {
+                        const scenarioCount = scenarios.scenarios.length;
+                        addTestResult('3 Scenarios Available', scenarioCount === 3, `Found ${scenarioCount}`);
+                    }
+
+                    // Test API metrics
+                    const metrics = frameWindow.ApiService.getMetrics();
+                    const hasValidMetrics = metrics && typeof metrics.averageResponseTime !== 'undefined';
+                    addTestResult('API Response Tracking', hasValidMetrics);
+                }
+
+            } catch (error) {
+                addTestResult('API Connectivity Test', false, error.message);
+            }
+        }
+
+        async function testScenarioLoading() {
+            try {
+                const frameWindow = appFrame.contentWindow;
+                await waitForFrameLoad();
+
+                // Navigate to scenarios page
+                const scenariosButton = frameWindow.document.querySelector('[data-page="scenarios"]');
+                if (scenariosButton) {
+                    scenariosButton.click();
+
+                    // Wait for scenarios to load
+                    await sleep(2000);
+
+                    const frameDocument = frameWindow.document;
+                    const scenarioCards = frameDocument.querySelectorAll('.scenario-card');
+                    const hasScenarioCards = scenarioCards.length > 0;
+                    addTestResult('Scenario Cards Loaded', hasScenarioCards, `Found ${scenarioCards.length} cards`);
+
+                    if (hasScenarioCards) {
+                        // Check for expected scenario content
+                        const hasCoffeeShop = Array.from(scenarioCards).some(card =>
+                            card.textContent.includes('咖啡店') || card.textContent.includes('coffee')
+                        );
+                        addTestResult('Coffee Shop Scenario Present', hasCoffeeShop);
+                    }
+                } else {
+                    addTestResult('Scenarios Navigation', false, 'Scenarios button not found');
+                }
+
+            } catch (error) {
+                addTestResult('Scenario Loading Test', false, error.message);
+            }
+        }
+
+        async function testErrorHandling() {
+            try {
+                const frameWindow = appFrame.contentWindow;
+                await waitForFrameLoad();
+
+                // Test error handling capabilities
+                const hasErrorHandling = frameWindow.ToastManager !== undefined;
+                addTestResult('Error Handling System', hasErrorHandling);
+
+                // Test mock data fallback
+                const hasMockData = frameWindow.MockData !== undefined;
+                addTestResult('Mock Data Fallback', hasMockData);
+
+            } catch (error) {
+                addTestResult('Error Handling Test', false, error.message);
+            }
+        }
+
+        async function testPerformanceMonitoring() {
+            try {
+                const frameWindow = appFrame.contentWindow;
+                await waitForFrameLoad();
+
+                // Check performance monitoring
+                const hasPerformanceMonitor = frameWindow.PerformanceMonitor !== undefined;
+                addTestResult('Performance Monitor Available', hasPerformanceMonitor);
+
+                // Check app state tracking
+                const hasAppState = frameWindow.AppState !== undefined;
+                addTestResult('App State Tracking', hasAppState);
+
+                if (hasAppState) {
+                    const hasMetrics = frameWindow.AppState.performanceMetrics !== undefined;
+                    addTestResult('Performance Metrics State', hasMetrics);
+                }
+
+            } catch (error) {
+                addTestResult('Performance Monitoring Test', false, error.message);
+            }
+        }
+
+        function waitForFrameLoad() {
+            return new Promise((resolve) => {
+                if (appFrame.contentWindow.document.readyState === 'complete') {
+                    resolve();
+                } else {
+                    appFrame.onload = resolve;
+                }
+            });
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function addTestResult(testName, passed, details = '') {
+            testResults.push({
+                name: testName,
+                passed: passed,
+                details: details
+            });
+        }
+
+        function displayResults() {
+            const passed = testResults.filter(r => r.passed).length;
+            const total = testResults.length;
+            const successRate = ((passed / total) * 100).toFixed(1);
+
+            let html = `<h2>📊 Test Results (${passed}/${total} - ${successRate}%)</h2>`;
+
+            testResults.forEach(result => {
+                const className = result.passed ? 'pass' : 'fail';
+                const icon = result.passed ? '✅' : '❌';
+                html += `<div class="test-result ${className}">
+                    ${icon} ${result.name}
+                    ${result.details ? `<span style="opacity: 0.8">- ${result.details}</span>` : ''}
+                </div>`;
+            });
+
+            // Add detailed metrics section
+            if (testResults.some(r => r.passed && r.name.includes('Performance'))) {
+                html += `
+                    <div class="test-container metrics">
+                        <h3>📈 Performance Summary</h3>
+                        <div id="performance-details"></div>
+                    </div>
+                `;
+            }
+
+            resultsContainer.innerHTML = html;
+        }
+
+        function openAppTest() {
+            // Open app in new window for manual testing
+            window.open('index.html', '_blank');
+        }
+
+        // Auto-run tests when page loads
+        window.addEventListener('load', () => {
+            setTimeout(runAllTests, 3000); // Wait for iframe to load
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "name": "failure-logic-tests",
+  "version": "1.0.0",
+  "description": "E2E tests for Cognitive Trap Platform using Playwright",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report",
+    "test:install": "playwright install",
+    "test:api": "playwright test api-integration.spec.js",
+    "test:scenarios": "playwright test scenarios-interaction.spec.js",
+    "test:load": "playwright test app-load.spec.js",
+    "test:all": "playwright test --reporter=html,JSON",
+    "test:ci": "playwright test --reporter=github,JSON"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
