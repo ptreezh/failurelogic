@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>认知陷阱平台 - 交互功能检查</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .result {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            padding: 12px 24px;
+            margin: 10px 5px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            border-left: 4px solid #007bff;
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>认知陷阱平台 - 交互功能检查</h1>
+        <p>此页面用于检查认知陷阱平台的前端交互功能是否正常工作</p>
+        
+        <div id="objectCheckResults">
+            <h2>1. 关键对象检查</h2>
+            <div id="objects"></div>
+        </div>
+        
+        <div id="apiCheckResults" class="section">
+            <h2>2. API连接检查</h2>
+            <button onclick="testAPIConnectivity()">测试API连通性</button>
+            <div id="apiResults"></div>
+        </div>
+        
+        <div id="functionCheckResults" class="section">
+            <h2>3. 功能可用性检查</h2>
+            <button onclick="testNavigationFunction()">测试导航功能</button>
+            <button onclick="testDifficultyFunction()">测试难度选择功能</button>
+            <button onclick="testGameFunction()">测试游戏功能</button>
+            <div id="functionResults"></div>
+        </div>
+        
+        <div id="completeTest" class="section">
+            <h2>4. 完整交互测试</h2>
+            <button onclick="runCompleteTest()">运行完整交互测试</button>
+            <div id="completeResults"></div>
+        </div>
+    </div>
+
+    <!-- 加载应用的JavaScript文件 -->
+    <script src="./assets/js/api-config-manager.js"></script>
+    <script>
+        console.log('API Config Manager loaded');
+    </script>
+    <script src="./assets/js/app.js"></script>
+    <script>
+        // 检查关键对象是否存在
+        function checkObjects() {
+            const objectsDiv = document.getElementById('objects');
+            
+            const objectsToCheck = [
+                {name: 'NavigationManager', obj: typeof window.NavigationManager !== 'undefined'},
+                {name: 'GameManager', obj: typeof window.GameManager !== 'undefined'},
+                {name: 'ApiService', obj: typeof window.ApiService !== 'undefined'},
+                {name: 'AppState', obj: typeof window.AppState !== 'undefined'},
+                {name: 'ToastManager', obj: typeof window.ToastManager !== 'undefined'},
+                {name: 'APP_CONFIG', obj: typeof window.APP_CONFIG !== 'undefined'}
+            ];
+            
+            objectsToCheck.forEach(item => {
+                const div = document.createElement('div');
+                div.className = item.obj ? 'result success' : 'result error';
+                div.textContent = `${item.name}: ${item.obj ? '可用' : '不可用'}`;
+                objectsDiv.appendChild(div);
+            });
+        }
+        
+        // 测试API连通性
+        async function testAPIConnectivity() {
+            const apiResults = document.getElementById('apiResults');
+            apiResults.innerHTML = '<div class="result info">正在测试API连通性...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:8003/scenarios/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.scenarios && Array.isArray(data.scenarios)) {
+                        apiResults.innerHTML = `<div class="result success">✅ API连通性正常 - 收到 ${data.scenarios.length} 个场景</div>`;
+                    } else {
+                        apiResults.innerHTML = '<div class="result error">❌ API响应格式不正确</div>';
+                    }
+                } else {
+                    apiResults.innerHTML = `<div class="result error">❌ API连接失败 - 状态码: ${response.status}</div>`;
+                }
+            } catch (error) {
+                apiResults.innerHTML = `<div class="result error">❌ API连接错误: ${error.message}</div>`;
+            }
+        }
+        
+        // 测试导航功能
+        function testNavigationFunction() {
+            const functionResults = document.getElementById('functionResults');
+            
+            if (typeof window.NavigationManager === 'undefined') {
+                functionResults.innerHTML += '<div class="result error">❌ NavigationManager 未定义</div>';
+                return;
+            }
+            
+            let testsPassed = 0;
+            let totalTests = 0;
+            
+            // 检查必要的方法
+            const navMethods = [
+                'renderPage', 'navigateTo', 'getPageTemplate', 'bindPageEvents', 'loadScenariosPage'
+            ];
+            
+            navMethods.forEach(method => {
+                totalTests++;
+                if (typeof window.NavigationManager[method] === 'function') {
+                    testsPassed++;
+                    functionResults.innerHTML += `<div class="result success">✅ NavigationManager.${method} 可用</div>`;
+                } else {
+                    functionResults.innerHTML += `<div class="result error">❌ NavigationManager.${method} 不可用</div>`;
+                }
+            });
+            
+            functionResults.innerHTML += `<div class="result ${testsPassed === totalTests ? 'success' : 'error'}">
+        导航功能测试: ${testsPassed}/${totalTests} 项通过</div>`;
+        }
+        
+        // 测试难度选择功能
+        function testDifficultyFunction() {
+            const functionResults = document.getElementById('functionResults');
+            
+            // 检查全局函数
+            if (typeof updateDifficultyDisplay === 'function') {
+                functionResults.innerHTML += '<div class="result success">✅ updateDifficultyDisplay 函数可用</div>';
+            } else {
+                functionResults.innerHTML += '<div class="result error">❌ updateDifficultyDisplay 函数不可用</div>';
+            }
+            
+            // 检查AppState中的难度相关设置
+            if (window.AppState && window.AppState.userPreferences) {
+                functionResults.innerHTML += '<div class="result success">✅ AppState.userPreferences 存在</div>';
+                
+                if ('difficulty' in window.AppState.userPreferences) {
+                    functionResults.innerHTML += '<div class="result success">✅ AppState.userPreferences.difficulty 存在</div>';
+                } else {
+                    functionResults.innerHTML += '<div class="result warning">⚠️ AppState.userPreferences.difficulty 不存在</div>';
+                }
+            } else {
+                functionResults.innerHTML += '<div class="result error">❌ AppState 或 AppState.userPreferences 不存在</div>';
+            }
+        }
+        
+        // 测试游戏功能
+        function testGameFunction() {
+            const functionResults = document.getElementById('functionResults');
+            
+            if (typeof window.GameManager === 'undefined') {
+                functionResults.innerHTML += '<div class="result error">❌ GameManager 未定义</div>';
+                return;
+            }
+            
+            let testsPassed = 0;
+            let totalTests = 0;
+            
+            // 检查必要的游戏方法
+            const gameMethods = [
+                'startScenario', 'executeGameTurn', 'updateGameState', 'showGameModal', 
+                'hideGameModal', 'submitStaticDecision', 'initializeStaticGame'
+            ];
+            
+            gameMethods.forEach(method => {
+                totalTests++;
+                if (typeof window.GameManager[method] === 'function') {
+                    testsPassed++;
+                    functionResults.innerHTML += `<div class="result success">✅ GameManager.${method} 可用</div>`;
+                } else {
+                    functionResults.innerHTML += `<div class="result error">❌ GameManager.${method} 不可用</div>`;
+                }
+            });
+            
+            functionResults.innerHTML += `<div class="result ${testsPassed === totalTests ? 'success' : 'error'}">
+        游戏功能测试: ${testsPassed}/${totalTests} 项通过</div>`;
+        }
+        
+        // 运行完整测试
+        async function runCompleteTest() {
+            const completeResults = document.getElementById('completeResults');
+            completeResults.innerHTML = '<div class="result info">正在运行完整交互测试...</div>';
+            
+            // 检查对象
+            let allChecks = true;
+            const requiredObjects = ['NavigationManager', 'GameManager', 'ApiService', 'AppState'];
+            for (const objName of requiredObjects) {
+                if (typeof window[objName] === 'undefined') {
+                    completeResults.innerHTML += `<div class="result error">❌ ${objName} 未定义</div>`;
+                    allChecks = false;
+                } else {
+                    completeResults.innerHTML += `<div class="result success">✅ ${objName} 已定义</div>`;
+                }
+            }
+            
+            // 测试API
+            try {
+                const response = await fetch('http://localhost:8003/scenarios/');
+                if (response.ok) {
+                    completeResults.innerHTML += '<div class="result success">✅ API连接测试通过</div>';
+                } else {
+                    completeResults.innerHTML += '<div class="result error">❌ API连接测试失败</div>';
+                    allChecks = false;
+                }
+            } catch (e) {
+                completeResults.innerHTML += `<div class="result error">❌ API连接错误: ${e.message}</div>`;
+                allChecks = false;
+            }
+            
+            // 检查关键方法
+            if (window.GameManager && typeof window.GameManager.startScenario !== 'function') {
+                completeResults.innerHTML += '<div class="result error">❌ GameManager.startScenario 不可用</div>';
+                allChecks = false;
+            } else if (window.GameManager) {
+                completeResults.innerHTML += '<div class="result success">✅ GameManager.startScenario 可用</div>';
+            }
+            
+            if (window.NavigationManager && typeof window.NavigationManager.navigateTo !== 'function') {
+                completeResults.innerHTML += '<div class="result error">❌ NavigationManager.navigateTo 不可用</div>';
+                allChecks = false;
+            } else if (window.NavigationManager) {
+                completeResults.innerHTML += '<div class="result success">✅ NavigationManager.navigateTo 可用</div>';
+            }
+            
+            if (allChecks) {
+                completeResults.innerHTML += '<div class="result success">🎉 所有交互功能测试通过！平台可以正常交互。</div>';
+            } else {
+                completeResults.innerHTML += '<div class="result error">❌ 部分交互功能测试未通过，需要修复。</div>';
+            }
+        }
+        
+        // 页面加载后检查对象
+        window.onload = function() {
+            checkObjects();
+        };
+    </script>
+</body>
+</html>

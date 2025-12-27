@@ -34,7 +34,9 @@
       "Bash(netstat:*)",
       "mcp__Playwright__browser_snapshot",
       "Bash(gh run list:*)",
-      "Bash(gh run view:*)"
+      "Bash(gh run view:*)",
+      "Bash(gh:*)",
+      "mcp__Playwright__browser_close"
     ],
     "deny": [],
     "ask": []

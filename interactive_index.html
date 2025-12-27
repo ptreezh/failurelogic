@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Failure Logic 认知陷阱教育互动游戏，探索《失败的逻辑》揭示的人类思维局限">
+    <meta name="keywords" content="认知陷阱,失败的逻辑,系统思维,决策训练,认知偏差">
+    <meta name="author" content="Dynamic Worlds Team">
+
+    <title>Failure Logic 认知陷阱教育互动游戏</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#2563eb">
+
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/game-styles.css">
+    
+    <style>
+        /* 主页特定样式 */
+        .hero-section {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 60px 0;
+            border-radius: 12px;
+            margin-bottom: 40px;
+        }
+        
+        .hero-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            gap: 40px;
+        }
+        
+        .hero-text {
+            flex: 1;
+            max-width: 600px;
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .highlight {
+            color: #f59e0b;
+            position: relative;
+        }
+        
+        .hero-description {
+            font-size: 1.25rem;
+            color: #4b5563;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .hero-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-large {
+            padding: 16px 32px;
+            font-size: 1.125rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .hero-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .cognitive-bubbles {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+        
+        .bubble {
+            position: absolute;
+            padding: 15px;
+            border-radius: 50px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px solid #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: 500;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .bubble-1 { top: 20%; left: 10%; width: 120px; }
+        .bubble-2 { top: 60%; right: 15%; width: 100px; }
+        .bubble-3 { bottom: 30%; left: 20%; width: 130px; }
+        .bubble-4 { top: 30%; right: 25%; width: 110px; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .book-introduction {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            color: #1e40af;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .introduction-text {
+            max-width: 800px;
+            margin: 0 auto 40px auto;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            text-align: center;
+        }
+        
+        .key-insights {
+            margin: 40px 0;
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .insight-card {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .insight-card h4 {
+            color: #1e40af;
+            margin-bottom: 15px;
+            font-size: 1.25rem;
+        }
+        
+        .surprising-findings {
+            margin-top: 40px;
+        }
+        
+        .findings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .finding-item {
+            background: #fef3c7;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .finding-item h4 {
+            color: #92400e;
+            margin-bottom: 15px;
+            font-size: 1.25rem;
+        }
+        
+        .features-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            margin-top: 10px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 10px;
+            background: #f9fafb;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            margin: 0 auto 20px;
+        }
+        
+        .feature-title {
+            font-size: 1.25rem;
+            color: #1e40af;
+            margin-bottom: 15px;
+        }
+        
+        .feature-description {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+        
+        .call-to-action {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-radius: 12px;
+        }
+        
+        .call-to-action h3 {
+            font-size: 1.75rem;
+            color: #1e40af;
+            margin-bottom: 15px;
+        }
+        
+        .call-to-action p {
+            font-size: 1.1rem;
+            color: #4b5563;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                    <circle cx="24" cy="24" r="20" stroke="#2563eb" stroke-width="2"/>
+                    <path d="M16 24 L22 30 L32 18" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <p class="loading-text">正在加载认知世界...</p>
+            <div class="loading-progress">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" class="app-container">
+        <!-- Navigation Header -->
+        <header class="app-header">
+            <nav class="nav-container">
+                <div class="nav-brand">
+                    <svg class="brand-icon" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <circle cx="16" cy="16" r="14" stroke="#2563eb" stroke-width="2"/>
+                        <path d="M10 16 L14 20 L22 12" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="brand-text">Failure Logic</span>
+                </div>
+
+                <div class="nav-menu">
+                    <button class="nav-item active" data-page="home">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                        </svg>
+                        <span>首页</span>
+                    </button>
+
+                    <button class="nav-item" data-page="scenarios">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
+                        </svg>
+                        <span>场景</span>
+                    </button>
+
+                    <button class="nav-item" data-page="about">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zm-1 7a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>了解更多</span>
+                    </button>
+
+                    <button class="nav-item" data-page="book">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.823a7.96 7.96 0 00-4.5-1.423c-.775.38-1.588.896-1.96 1.69-.6.753-1.336 1.791-1.69 2.915-.46 1.13.595 2.502 1.96 3.894a7.96 7.96 0 004.5 1.423c.775-.38 1.588-.896 1.96-1.69.6-.753 1.336-1.791 1.69-2.915.46-1.13.595-2.502 1.96-3.894.775-.38 1.588-.896 1.96-1.69.6-.753 1.336-1.791 1.69-2.915.46-1.13.595-2.502 1.96-3.894z"/>
+                            <path d="M12.5 12c0 .414-.336.75-.75.75s-.75-.336-.75-.75.336-.75.75-.75.336.75.75.75.336.75.75-.336.75-.75.75z"/>
+                        </svg>
+                        <span>失败的逻辑</span>
+                    </button>
+
+                    <button class="nav-item" data-page="profile">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>我的</span>
+                    </button>
+                </div>
+
+                <div class="nav-actions">
+                    <button class="sync-button" id="sync-button" title="同步数据">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 01-1 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="app-main">
+            <!-- Home Page -->
+            <div id="home-page" class="page active">
+                <div class="page-container">
+                    <!-- Hero Section - 不泄露测试答案，只介绍概念 -->
+                    <section class="hero-section">
+                        <div class="hero-content">
+                            <div class="hero-text">
+                                <h1 class="hero-title">
+                                    Failure Logic - 探索认知的
+                                    <span class="highlight">盲点</span>
+                                </h1>
+                                <p class="hero-description">
+                                    通过互动式决策游戏，体验<a href="#" onclick="NavigationManager.navigateTo('book')">《失败的逻辑》</a>揭示的人类思维局限，
+                                    在安全的环境中学习和成长。了解线性思维、指数增长误区、复利效应认知等思维陷阱。
+                                </p>
+                                <div class="hero-actions">
+                                    <button class="btn btn-primary btn-large" id="start-journey">
+                                        开始认知之旅
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                    <button class="btn btn-outline btn-large" id="learn-more-home">
+                                        了解更多
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="hero-visual">
+                                <div class="cognitive-bubbles">
+                                    <div class="bubble bubble-1">线性思维</div>
+                                    <div class="bubble bubble-2">时间延迟</div>
+                                    <div class="bubble bubble-3">错误归因</div>
+                                    <div class="bubble bubble-4">确认偏误</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 书籍介绍和核心发现 -->
+                    <section class="book-introduction">
+                        <h2 class="section-title">《失败的逻辑》核心概念</h2>
+                        <p class="introduction-text">
+                            本书由认知心理学家迪特里希·德勒纳所著，通过计算机模拟和心理学实验，揭示了人类在面对复杂系统时的决策失败模式。
+                            在安全的虚拟环境中，您可以体验到相同类型的认知偏差和思维陷阱。
+                        </p>
+                        
+                        <div class="key-insights">
+                            <h3>令人震惊的认知发现</h3>
+                            <div class="insights-grid">
+                                <div class="insight-card">
+                                    <h4>线性思维陷阱</h4>
+                                    <p>我们倾向于认为原因和结果之间存在直接、成比例的关系，但在复杂系统中这种思维方式常常导致错误决策。</p>
+                                </div>
+                                <div class="insight-card">
+                                    <h4>指数增长误解</h4>
+                                    <p>2^200（约1.6×10^60）比全宇宙的原子总数还多，但我们的直觉却严重低估了这样的数字。</p>
+                                </div>
+                                <div class="insight-card">
+                                    <h4>复利效应忽视</h4>
+                                    <p>人们习惯线性思维来预测复利结果，但复利在长期会产生惊人的雪球效应。</p>
+                                </div>
+                                <div class="insight-card">
+                                    <h4>时间延迟认知</h4>
+                                    <p>我们常常期望立即看到行动的结果，而在复杂系统中结果往往需要时间才能显现。</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="surprising-findings">
+                            <h3>令人吃惊的思维缺陷实例</h3>
+                            <div class="findings-grid">
+                                <div class="finding-item">
+                                    <h4>2^200的实际规模</h4>
+                                    <p>2的200次方是一个天文数字，约为1.6×10^60，远超宇宙中的原子总数（约10^80）。在测试中，您会发现自己对这个数字的估算远不及真实数值。</p>
+                                </div>
+                                <div class="finding-item">
+                                    <h4>兔子繁殖指数增长</h4>
+                                    <p>从2只兔子开始，每年翻5倍繁殖，仅需约11年就能超过100亿只！这展示了指数增长速度是如何超越我们线性思维的直觉。</p>
+                                </div>
+                                <div class="finding-item">
+                                    <h4>10万投资30年复利</h4>
+                                    <p>10万元本金，8%年复利，30年后变成约100万元，而线性思维只估算为34万元（10万+10万×8%×30）。复利效应远超直觉预期。</p>
+                                </div>
+                                <div class="finding-item">
+                                    <h4>挑战者号决策陷阱</h4>
+                                    <p>面对低温环境下O型环可能失效的警告，管理层表现出确认偏误，倾向于寻找支持按计划发射的信息，忽视工程师的风险警告。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Features/Interactive Scenarios -->
+                    <section class="features-section">
+                        <div class="section-header">
+                            <h2 class="section-title">认知陷阱体验场景</h2>
+                            <p class="section-subtitle">在安全虚拟环境中探索和学习人类思维局限</p>
+                        </div>
+                        <div class="features-grid">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                        <circle cx="24" cy="24" r="20" stroke="#2563eb" stroke-width="2"/>
+                                        <path d="M12 24h24M24 12v24" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+                                        <circle cx="24" cy="24" r="4" fill="#2563eb"/>
+                                    </svg>
+                                </div>
+                                <h3 class="feature-title">指数增长误区测试</h3>
+                                <p class="feature-description">
+                                    通过2^200等天文数字的挑战，体验线性思维在面对指数增长时的局限性。
+                                </p>
+                            </div>
+
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                        <rect x="4" y="4" width="40" height="40" rx="4" stroke="#2563eb" stroke-width="2"/>
+                                        <path d="M12 24 L18 30 L30 18 L36 24" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                <h3 class="feature-title">复利思维陷阱</h3>
+                                <p class="feature-description">
+                                    通过银行利息计算场景，比较复利与线性增长的巨大差异。
+                                </p>
+                            </div>
+
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                        <path d="M4 24 L4 8 L44 8 L44 24" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M4 32 L44 32" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+                                        <circle cx="12" cy="16" r="2" fill="#2563eb"/>
+                                        <circle cx="24" cy="16" r="2" fill="#2563eb"/>
+                                        <circle cx="36" cy="16" r="2" fill="#2563eb"/>
+                                        <circle cx="16" cy="32" r="2" fill="#2563eb"/>
+                                        <circle cx="24" cy="32" r="2" fill="#2563eb"/>
+                                        <circle cx="32" cy="32" r="2" fill="#2563eb"/>
+                                    </svg>
+                                </div>
+                                <h3 class="feature-title">历史决策重现</h3>
+                                <p class="feature-description">
+                                    重现挑战者号等经典决策失败案例，体验系统性认知偏差。
+                                </p>
+                            </div>
+
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                        <circle cx="24" cy="24" r="20" stroke="#2563eb" stroke-width="2"/>
+                                        <path d="M16 24 L20 28 L28 20" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M24 16 L28 20 L20 28" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                <h3 class="feature-title">推理游戏</h3>
+                                <p class="feature-description">
+                                    通过互动推理游戏，暴露和学习各种思维局限。
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Call to Action -->
+                    <div class="call-to-action">
+                        <h3>准备好挑战您的思维极限了吗？</h3>
+                        <p>在虚拟环境中安全地体验思维陷阱，发现您未知的认知盲点</p>
+                        <button class="btn btn-primary" onclick="NavigationManager.navigateTo('scenarios')">
+                            开始认知陷阱探索
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 01-1.414 0l-7-7a1 1 0 010-1.414l7-7a1 1 0 011.414 1.414L1.414 8l6.283 6.293a1 1 0 010 1.414z" clip-rule="evenodd" transform="rotate(180 8 8)"/>
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 01-1.414 0l-7-7a1 1 0 010-1.414l7-7a1 1 0 011.414 1.414L1.414 8l6.283 6.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scenarios Page -->
+            <div id="scenarios-page" class="page">
+                <div class="page-container">
+                    <section class="page-header">
+                        <h1 class="page-title">认知场景</h1>
+                        <p class="page-subtitle">选择一个场景开始您的思维挑战</p>
+                    </section>
+
+                    <div class="scenarios-grid" id="scenarios-grid">
+                        <!-- Scenarios will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Page -->
+            <div id="about-page" class="page">
+                <div class="page-container">
+                    <section class="page-header">
+                        <h1 class="page-title">了解更多</h1>
+                        <p class="page-subtitle">探索AI认知局限与多智能体可信系统</p>
+                    </section>
+                    <div class="about-content">
+                        <!-- About content will be loaded -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book Page -->
+            <div id="book-page" class="page">
+                <div class="page-container">
+                    <section class="page-header">
+                        <h1 class="page-title">《失败的逻辑》</h1>
+                        <p class="page-subtitle">系统思维与人类认知局限</p>
+                    </section>
+                    <div class="book-content">
+                        <!-- Book content will be loaded -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profile-page" class="page">
+                <div class="page-container">
+                    <section class="page-header">
+                        <h1 class="page-title">我的</h1>
+                        <p class="page-subtitle">个人进度与成就</p>
+                    </section>
+                    <div class="profile-content">
+                        <!-- Profile content will be loaded -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Toast Notification Container -->
+        <div id="toast-container" class="toast-container"></div>
+
+        <!-- Invitation Modal -->
+        <div id="invitation-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">邀请好友</h2>
+                    <button class="modal-close" id="close-invitation-modal">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="invitation-content">
+                        <div class="invitation-info">
+                            <h3>分享认知之旅</h3>
+                            <p>邀请您的朋友一起探索认知陷阱，共同提升决策能力！</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" id="cancel-invitation">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="assets/js/navigation-manager.js"></script>
+    <script src="assets/js/api-config-manager.js"></script>
+    <script src="assets/js/cognitive-trap-interactions.js"></script>
+    <script>
+        // 页面功能函数
+        document.addEventListener('DOMContentLoaded', function() {
+            // 显示页面内容并隐藏加载屏幕
+            document.getElementById('loading-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+            }, 500);
+
+            // 设置按钮点击事件
+            document.getElementById('start-journey')?.addEventListener('click', () => {
+                NavigationManager.navigateTo('scenarios');
+            });
+            
+            document.getElementById('learn-more-home')?.addEventListener('click', () => {
+                NavigationManager.navigateTo('about');
+            });
+
+            // 初始化认知陷阱交互功能
+            if (typeof CognitiveTrapInteractions !== 'undefined') {
+                CognitiveTrapInteractions.initialize();
+            }
+        });
+    </script>
+</body>
+</html>
