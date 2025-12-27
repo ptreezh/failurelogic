@@ -7,9 +7,17 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Application Loading', () => {
   test.beforeEach(async ({ page }) => {
-    // Clear any existing storage
+    // Clear cookies and storage before any page scripts run.
     await page.context().clearCookies();
-    await page.evaluate(() => localStorage.clear());
+
+    await page.addInitScript(() => {
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+      } catch {
+        // Some browsers / contexts may deny storage access before navigation.
+      }
+    });
   });
 
   test('should load the main page successfully', async ({ page }) => {

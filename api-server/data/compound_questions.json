@@ -1,0 +1,57 @@
+{
+  "compound_questions": [
+    {
+      "testId": "comp-001",
+      "questionType": "compound",
+      "topic": "compound-interest",
+      "questionText": "如果你投资10万元，年复利8%，30年后大约会变成多少？",
+      "options": [
+        "34万元（线性估算）",
+        "100万元", 
+        "317万元",
+        "500万元"
+      ],
+      "correctAnswer": 2,
+      "explanation": "复利计算：100,000 × (1.08)^30 = 1,006,266元。这展示了复利的惊人力量，远超线性增长估算。",
+      "difficulty": "medium",
+      "relatedConcepts": ["复利效应", "线性思维误区", "长期投资"]
+    },
+    {
+      "testId": "comp-002",
+      "questionType": "compound",
+      "topic": "compound-interest", 
+      "questionText": "如果你每月存款1000元，年化收益率8%，20年后你会拥有多少钱？",
+      "options": [
+        "24万元（不考虑利息）",
+        "40万元",
+        "58万元",
+        "60万元"
+      ],
+      "correctAnswer": 2,
+      "explanation": "考虑复利效应，20年后的本息总额约为58.9万元，这远高于仅考虑本金的24万元，体现了定投复利的力量。",
+      "difficulty": "medium",
+      "relatedConcepts": ["复利效应", "定投策略", "时间价值"]
+    },
+    {
+      "testId": "comp-003",
+      "questionType": "compound",
+      "topic": "compound-interest",
+      "questionText": "如果你有房贷100万元，年利率5%，按揭30年，总支付利息约多少？",
+      "options": [
+        "50万元（简单估算）",
+        "75万元",
+        "100万元",
+        "120万元"
+      ],
+      "correctAnswer": 3,
+      "explanation": "由于复利效应，30年房贷的总利息支出远高于简单估算的50万元，实际约为100万元左右，体现了复利在负债方面的负面效应。",
+      "difficulty": "medium",
+      "relatedConcepts": ["复利效应", "负债成本", "贷款计算"]
+    }
+  ],
+  "metadata": {
+    "total_questions": 3,
+    "last_updated": "2025-11-09",
+    "version": "1.0.0"
+  }
+}

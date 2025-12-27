@@ -192,7 +192,7 @@ test.describe('API Integration', () => {
       });
     });
 
-    await page.click('[data-page="scenarios']');
+    await page.click('[data-page="scenarios"]');
 
     // Should handle error gracefully
     await expect(page.locator('#scenarios-page')).toBeVisible();

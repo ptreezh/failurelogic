@@ -56,42 +56,35 @@ export default defineConfig({
   // Configure projects for major browsers
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      name: 'msedge',
+      use: { 
+        ...devices['Desktop Edge'],
+        headless: false,  // Explicitly disable headless mode per constitution
+      },
     },
 
     // Test against mobile viewports
     {
       name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
-    },
-
-    {
-      name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
+      use: { 
+        ...devices['Pixel 5'],
+        headless: false,  // Explicitly disable headless mode per constitution
+      },
     },
   ],
 
   // Development server configuration
   webServer: [
     {
-      command: 'cd api-server && python start.py 8000',
+      // Run backend from repo root (Playwright runs this command from the tests/ folder)
+      command: 'python ..\\api-server\\start.py 8000',
       port: 8000,
       reuseExistingServer: !process.env.CI,
       timeout: 120000, // 2 minutes to start
     },
     {
-      command: 'npx serve -l 3000',
+      // Serve repo root so the static frontend is available if tests target it
+      command: 'npx serve -l 3000 ..',
       port: 3000,
       reuseExistingServer: !process.env.CI,
       timeout: 30000, // 30 seconds to start

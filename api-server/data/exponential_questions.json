@@ -1,0 +1,60 @@
+{
+  "exponential_questions": [
+    {
+      "testId": "exp-001",
+      "questionType": "exponential",
+      "topic": "exponential-growth",
+      "questionText": "2^200粒米需要多大仓库？",
+      "options": [
+        "1万个足球场",
+        "100万个足球场", 
+        "1亿个足球场",
+        "以上都不对，不需要这么大",
+        "以上都不对，这些都不够"
+      ],
+      "correctAnswer": 4,
+      "explanation": "2^200粒米的数量是1.6×10^60，远超宇宙中的原子总数，因此即使是1亿个足球场也不够存储。",
+      "difficulty": "hard",
+      "relatedConcepts": ["指数增长误区", "线性思维偏差", "数量级估算"]
+    },
+    {
+      "testId": "exp-002",
+      "questionType": "exponential", 
+      "topic": "exponential-growth",
+      "questionText": "如果从现在开始，2只兔子每年翻5倍繁殖，大约需要多少年达到100亿只？",
+      "options": [
+        "100年", 
+        "50年",
+        "30年",
+        "20年", 
+        "10年"
+      ],
+      "correctAnswer": 4,
+      "explanation": "根据计算，从2只兔子开始，每年翻5倍，大约在第11年会超过80亿只（准确值约在11年），远比我们的直觉要快。",
+      "difficulty": "medium",
+      "relatedConcepts": ["指数增长误区", "时间延迟认知", "复利思维"]
+    },
+    {
+      "testId": "exp-003", 
+      "questionType": "exponential",
+      "topic": "exponential-growth",
+      "questionText": "如果将一张纸对折200次，厚度会达到多少？（假设纸张厚度为0.1毫米）",
+      "options": [
+        "大约1米高",
+        "到达月球的距离",
+        "超过太阳系的直径", 
+        "超过银河系的直径",
+        "以上都不对，无法达到那么厚"
+      ],
+      "correctAnswer": 3,
+      "explanation": "每次对折厚度翻倍，对折200次后的厚度为0.1毫米 × 2^200，这是一个天文数字，远超银河系的直径。",
+      "difficulty": "hard", 
+      "relatedConcepts": ["指数增长误区", "几何级数", "数量级估算"]
+    }
+  ],
+  "metadata": {
+    "total_questions": 3,
+    "last_updated": "2025-11-09",
+    "version": "1.0.0"
+  }
+}

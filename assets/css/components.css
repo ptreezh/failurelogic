@@ -561,3 +561,37 @@
     font-size: 0.875rem;
   }
 }
+
+/* 难度选择器样式 */
+.difficulty-control-panel {
+    display: flex !important;
+    align-items: center;
+    gap: 1rem;
+    margin: 20px 0 !important;
+    padding: 15px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 8px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.difficulty-control-panel label {
+    font-weight: bold;
+    color: white;
+    margin: 0;
+}
+
+.difficulty-control-panel select {
+    padding: 8px 12px;
+    margin: 0;
+    border-radius: 4px;
+    border: 1px solid #3b82f6;
+    background: white;
+    color: #333;
+}
+
+.difficulty-control-panel .current-difficulty {
+    color: #3498db;
+    font-weight: bold;
+    margin: 0;
+}

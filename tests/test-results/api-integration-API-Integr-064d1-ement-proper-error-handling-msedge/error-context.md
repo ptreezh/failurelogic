@@ -1,0 +1,86 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e5]:
+        - img [ref=e6]
+        - generic [ref=e9]: Failure Logic
+      - generic [ref=e10]:
+        - button "首页" [ref=e11] [cursor=pointer]:
+          - img [ref=e12]
+          - generic [ref=e14]: 首页
+        - button "场景" [active] [ref=e15] [cursor=pointer]:
+          - img [ref=e16]
+          - generic [ref=e18]: 场景
+        - button "指数测试" [ref=e19] [cursor=pointer]:
+          - img [ref=e20]
+          - generic [ref=e24]: 指数测试
+        - button "了解更多" [ref=e25] [cursor=pointer]:
+          - img [ref=e26]
+          - generic [ref=e28]: 了解更多
+        - button "失败的逻辑" [ref=e29] [cursor=pointer]:
+          - img [ref=e30]
+          - generic [ref=e33]: 失败的逻辑
+        - button "我的" [ref=e34] [cursor=pointer]:
+          - img [ref=e35]
+          - generic [ref=e37]: 我的
+      - button "同步数据" [ref=e39] [cursor=pointer]:
+        - img [ref=e40]
+  - main [ref=e42]:
+    - generic [ref=e44]:
+      - generic [ref=e45]:
+        - generic [ref=e46]:
+          - heading "Failure Logic - 探索认知的 盲点" [level=1] [ref=e47]
+          - paragraph [ref=e48]:
+            - text: 通过互动式决策游戏，体验
+            - link "《失败的逻辑》" [ref=e49] [cursor=pointer]:
+              - /url: "#book"
+            - text: 揭示的人类思维局限， 在安全的环境中学习和成长。
+          - generic [ref=e50]:
+            - button "开始认知之旅" [ref=e51] [cursor=pointer]:
+              - text: 开始认知之旅
+              - img [ref=e52]
+            - button "了解更多" [ref=e54] [cursor=pointer]
+        - generic [ref=e56]:
+          - generic [ref=e57]: 线性思维
+          - generic [ref=e58]: 时间延迟
+          - generic [ref=e59]: 错误归因
+          - generic [ref=e60]: 确认偏误
+      - generic [ref=e61]:
+        - generic [ref=e62]:
+          - heading "为什么选择 Dynamic Worlds？" [level=2] [ref=e63]
+          - paragraph [ref=e64]: 基于认知科学的创新学习方法
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - img [ref=e68]
+            - heading "体验式学习" [level=3] [ref=e71]
+            - paragraph [ref=e72]: 通过实践而非理论来理解认知偏差，在模拟环境中体验决策的复杂性。
+          - generic [ref=e73]:
+            - img [ref=e75]
+            - heading "安全失败" [level=3] [ref=e78]
+            - paragraph [ref=e79]: 在虚拟环境中体验失败的后果，无需承担真实世界的风险和代价。
+          - generic [ref=e80]:
+            - img [ref=e82]
+            - heading "认知觉醒" [level=3] [ref=e85]
+            - paragraph [ref=e86]: 创造"恍然大悟"的时刻，揭示您思维中的盲点和局限性。
+          - generic [ref=e87]:
+            - img [ref=e89]
+            - heading "系统思维" [level=3] [ref=e96]
+            - paragraph [ref=e97]: 培养整体性和长期性的思考方式，理解复杂系统中各要素的相互关系。
+      - generic [ref=e99]:
+        - generic [ref=e100]:
+          - generic [ref=e101]: "0"
+          - generic [ref=e102]: 活跃用户
+        - generic [ref=e103]:
+          - generic [ref=e104]: "0"
+          - generic [ref=e105]: 认知场景
+        - generic [ref=e106]:
+          - generic [ref=e107]: "0"
+          - generic [ref=e108]: 学习效果%
+        - generic [ref=e109]:
+          - generic [ref=e110]: "0"
+          - generic [ref=e111]: 推荐率%
+    - text: • • • • • • • • • • • • • • • • • • • • ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ → → → → → → → → → → → →
+```
