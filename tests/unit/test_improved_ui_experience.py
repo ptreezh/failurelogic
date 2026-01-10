@@ -17,7 +17,7 @@ class TestImprovedUIExperience(unittest.TestCase):
     def test_improved_feedback_generation(self):
         """测试改进的反馈生成机制"""
         # Given
-        from api_server.logic.cognitive_bias_analysis import generate_improved_feedback
+        from logic.cognitive_bias_analysis import generate_improved_feedback
         
         user_response = {
             'userChoice': 2,
@@ -39,7 +39,7 @@ class TestImprovedUIExperience(unittest.TestCase):
     def test_button_response_mechanism(self):
         """测试按钮响应机制"""
         # Given
-        from api_server.logic.interaction_response import handle_button_click
+        from logic.interaction_response import handle_button_click
         
         # When
         response = handle_button_click('exponential', 'submit_answer')
@@ -53,7 +53,7 @@ class TestImprovedUIExperience(unittest.TestCase):
     def test_homepage_content_structure(self):
         """测试主页内容结构，确保不泄露测试答案"""
         # Given
-        from api_server.logic.homepage_content import get_homepage_content
+        from logic.homepage_content import get_homepage_content
         
         # When
         content = get_homepage_content()
@@ -68,7 +68,7 @@ class TestImprovedUIExperience(unittest.TestCase):
     def test_pyramid_explanation_generation(self):
         """测试金字塔原理解释生成"""
         # Given
-        from api_server.logic.cognitive_bias_analysis import create_pyramid_explanation
+        from logic.cognitive_bias_analysis import create_pyramid_explanation
         
         # When
         explanation = create_pyramid_explanation(
@@ -89,7 +89,7 @@ class TestImprovedUIExperience(unittest.TestCase):
     def test_instant_feedback_mechanism(self):
         """测试即时反馈机制"""
         # Given
-        from api_server.logic.feedback_system import process_answer_with_instant_feedback
+        from logic.feedback_system import process_answer_with_instant_feedback
         
         answer_data = {
             'userId': 'test-user',
@@ -111,7 +111,7 @@ class TestImprovedUIExperience(unittest.TestCase):
     def test_cognitive_science_knowledge_content(self):
         """测试认知科学知识内容"""
         # Given
-        from api_server.logic.educational_content import get_cognitive_science_knowledge
+        from logic.educational_content import get_cognitive_science_knowledge
         
         # When
         knowledge = get_cognitive_science_knowledge()
@@ -130,7 +130,7 @@ class TestImprovedUserJourney(unittest.TestCase):
     def test_complete_user_flow(self):
         """测试完整用户旅程"""
         # Given
-        from api_server.logic.journey_manager import manage_user_journey
+        from logic.journey_manager import manage_user_journey
         
         journey_data = {
             'stage': 'homepage',
@@ -155,7 +155,7 @@ class TestImprovedUserJourney(unittest.TestCase):
     def test_button_click_visual_feedback(self):
         """测试按钮点击视觉反馈"""
         # Given
-        from api_server.logic.ui_interaction import process_button_click_with_feedback
+        from logic.ui_interaction import process_button_click_with_feedback
         
         # When
         response = process_button_click_with_feedback({

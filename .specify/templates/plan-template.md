@@ -31,14 +31,7 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-Constitution compliance requires:
-- Naming consistency: File name, variable name, class name, folder name, package name - all naming must follow unified conventions
-- TDD-Driven Implementation: All task implementation must be based on TDD (Test-Driven Development) approach
-- SOLID-Based Task Decomposition: All task decomposition must follow SOLID principles for maintainability
-- Contextual Preparation: All task execution must comprehensively prepare context and verify context clarity without ambiguity
-- Failure Logic Decision Testing: Framework based on 'The Logic of Failure' concept, designed to expose user thinking defects as target
-- GitHub Deployment Architecture: Frontend on GitHub Pages, Backend on GitHub Codespaces with seamless API integration
-- MCP Playwright Testing Protocol: Use MCP Playwright with Edge browser for all UI testing (no headless browsers)
+[Gates determined based on constitution file]
 
 ## Project Structure
 

@@ -1,0 +1,30 @@
+{
+  "theme": "dark",
+  "stream": true,
+  "primaryProvider": "openai",
+  "modelProfiles": [
+    {
+      "name": "Nemotron Nano 30B",
+      "modelName": "nvidia/nemotron-3-nano-30b-a3b",
+      "provider": "openai",
+      "apiKey": "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",
+      "baseUrl": "https://integrate.api.nvidia.com/v1",
+      "temperature": 1,
+      "topP": 1,
+      "maxTokens": 16384,
+      "isActive": true,
+      "extraBody": {
+        "reasoning_budget": 16384,
+        "chat_template_kwargs": {
+          "enable_thinking": true
+        }
+      }
+    }
+  ],
+  "modelPointers": {
+    "main": "nvidia/nemotron-3-nano-30b-a3b",
+    "task": "nvidia/nemotron-3-nano-30b-a3b",
+    "reasoning": "nvidia/nemotron-3-nano-30b-a3b",
+    "quick": "nvidia/nemotron-3-nano-30b-a3b"
+  }
+}
