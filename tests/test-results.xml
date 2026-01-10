@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="74" failures="62" skipped="0" errors="0" time="321.670147">
-<testsuite name="api-integration.spec.js" timestamp="2025-12-13T11:43:48.247Z" hostname="msedge" tests="11" failures="11" skipped="0" time="300.78" errors="0">
-<testcase name="API Integration › should successfully connect to API endpoints" classname="api-integration.spec.js" time="29.924">
+<testsuites id="" name="" tests="74" failures="62" skipped="0" errors="0" time="258.144994">
+<testsuite name="api-integration.spec.js" timestamp="2026-01-10T04:47:35.568Z" hostname="msedge" tests="11" failures="11" skipped="0" time="346.112" errors="0">
+<testcase name="API Integration › should successfully connect to API endpoints" classname="api-integration.spec.js" time="30.553">
 <failure message="api-integration.spec.js:14:7 should successfully connect to API endpoints" type="FAILURE">
 <![CDATA[  [msedge] › api-integration.spec.js:14:7 › API Integration › should successfully connect to API endpoints 
 
@@ -39,7 +39,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should handle API response caching" classname="api-integration.spec.js" time="29.055">
+<testcase name="API Integration › should handle API response caching" classname="api-integration.spec.js" time="29.142">
 <failure message="api-integration.spec.js:39:7 should handle API response caching" type="FAILURE">
 <![CDATA[  [msedge] › api-integration.spec.js:39:7 › API Integration › should handle API response caching ───
 
@@ -78,7 +78,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should implement API failover correctly" classname="api-integration.spec.js" time="28.484">
+<testcase name="API Integration › should implement API failover correctly" classname="api-integration.spec.js" time="31.064">
 <failure message="api-integration.spec.js:64:7 should implement API failover correctly" type="FAILURE">
 <![CDATA[  [msedge] › api-integration.spec.js:64:7 › API Integration › should implement API failover correctly 
 
@@ -117,7 +117,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should track API performance metrics" classname="api-integration.spec.js" time="30.784">
+<testcase name="API Integration › should track API performance metrics" classname="api-integration.spec.js" time="35.515">
 <failure message="api-integration.spec.js:90:7 should track API performance metrics" type="FAILURE">
 <![CDATA[  [msedge] › api-integration.spec.js:90:7 › API Integration › should track API performance metrics ─
 
@@ -156,7 +156,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should handle game session API calls" classname="api-integration.spec.js" time="34.95">
+<testcase name="API Integration › should handle game session API calls" classname="api-integration.spec.js" time="35.524">
 <failure message="api-integration.spec.js:108:7 should handle game session API calls" type="FAILURE">
 <![CDATA[  [msedge] › api-integration.spec.js:108:7 › API Integration › should handle game session API calls 
 
@@ -195,7 +195,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should handle game decision API calls" classname="api-integration.spec.js" time="24.727">
+<testcase name="API Integration › should handle game decision API calls" classname="api-integration.spec.js" time="30.285">
 <failure message="api-integration.spec.js:134:7 should handle game decision API calls" type="FAILURE">
 <![CDATA[  [msedge] › api-integration.spec.js:134:7 › API Integration › should handle game decision API calls 
 
@@ -234,7 +234,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should handle API timeouts gracefully" classname="api-integration.spec.js" time="28.408">
+<testcase name="API Integration › should handle API timeouts gracefully" classname="api-integration.spec.js" time="27.522">
 <failure message="api-integration.spec.js:164:7 should handle API timeouts gracefully" type="FAILURE">
 <![CDATA[  [msedge] › api-integration.spec.js:164:7 › API Integration › should handle API timeouts gracefully 
 
@@ -272,7 +272,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should implement proper error handling" classname="api-integration.spec.js" time="17.546">
+<testcase name="API Integration › should implement proper error handling" classname="api-integration.spec.js" time="29.231">
 <failure message="api-integration.spec.js:185:7 should implement proper error handling" type="FAILURE">
 <![CDATA[  [msedge] › api-integration.spec.js:185:7 › API Integration › should implement proper error handling 
 
@@ -286,7 +286,7 @@
     Call log:
       - Expect "toBeVisible" with timeout 5000ms
       - waiting for locator('#scenarios-page')
-        9 × locator resolved to <div class="page" id="scenarios-page">…</div>
+        8 × locator resolved to <div class="page" id="scenarios-page">…</div>
           - unexpected value "hidden"
 
 
@@ -320,7 +320,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should validate API response data structure" classname="api-integration.spec.js" time="31.777">
+<testcase name="API Integration › should validate API response data structure" classname="api-integration.spec.js" time="29.919">
 <failure message="api-integration.spec.js:206:7 should validate API response data structure" type="FAILURE">
 <![CDATA[  [msedge] › api-integration.spec.js:206:7 › API Integration › should validate API response data structure 
 
@@ -359,7 +359,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should handle concurrent API requests" classname="api-integration.spec.js" time="21.965">
+<testcase name="API Integration › should handle concurrent API requests" classname="api-integration.spec.js" time="36.53">
 <failure message="api-integration.spec.js:237:7 should handle concurrent API requests" type="FAILURE">
 <![CDATA[  [msedge] › api-integration.spec.js:237:7 › API Integration › should handle concurrent API requests 
 
@@ -398,7 +398,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should implement proper request retries" classname="api-integration.spec.js" time="23.16">
+<testcase name="API Integration › should implement proper request retries" classname="api-integration.spec.js" time="30.827">
 <failure message="api-integration.spec.js:250:7 should implement proper request retries" type="FAILURE">
 <![CDATA[  [msedge] › api-integration.spec.js:250:7 › API Integration › should implement proper request retries 
 
@@ -438,10 +438,10 @@
 </system-out>
 </testcase>
 </testsuite>
-<testsuite name="app-load.spec.js" timestamp="2025-12-13T11:43:48.247Z" hostname="msedge" tests="10" failures="7" skipped="0" time="276.548" errors="0">
-<testcase name="Application Loading › should load the main page successfully" classname="app-load.spec.js" time="30.013">
+<testsuite name="app-load.spec.js" timestamp="2026-01-10T04:47:35.568Z" hostname="msedge" tests="10" failures="7" skipped="0" time="238.24" errors="0">
+<testcase name="Application Loading › should load the main page successfully" classname="app-load.spec.js" time="31.179">
 </testcase>
-<testcase name="Application Loading › should hide loading screen after app loads" classname="app-load.spec.js" time="16.825">
+<testcase name="Application Loading › should hide loading screen after app loads" classname="app-load.spec.js" time="35.197">
 <failure message="app-load.spec.js:46:7 should hide loading screen after app loads" type="FAILURE">
 <![CDATA[  [msedge] › app-load.spec.js:46:7 › Application Loading › should hide loading screen after app loads 
 
@@ -489,7 +489,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Application Loading › should load navigation items correctly" classname="app-load.spec.js" time="17.967">
+<testcase name="Application Loading › should load navigation items correctly" classname="app-load.spec.js" time="27.02">
 <failure message="app-load.spec.js:57:7 should load navigation items correctly" type="FAILURE">
 <![CDATA[  [msedge] › app-load.spec.js:57:7 › Application Loading › should load navigation items correctly ──
 
@@ -537,9 +537,9 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Application Loading › should handle responsive design correctly" classname="app-load.spec.js" time="30.733">
+<testcase name="Application Loading › should handle responsive design correctly" classname="app-load.spec.js" time="33.635">
 </testcase>
-<testcase name="Application Loading › should initialize service worker correctly" classname="app-load.spec.js" time="60.903">
+<testcase name="Application Loading › should initialize service worker correctly" classname="app-load.spec.js" time="62.762">
 <failure message="app-load.spec.js:89:7 should initialize service worker correctly" type="FAILURE">
 <![CDATA[  [msedge] › app-load.spec.js:89:7 › Application Loading › should initialize service worker correctly 
 
@@ -577,7 +577,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Application Loading › should handle API connectivity gracefully" classname="app-load.spec.js" time="27.868">
+<testcase name="Application Loading › should handle API connectivity gracefully" classname="app-load.spec.js" time="16.788">
 <failure message="app-load.spec.js:107:7 should handle API connectivity gracefully" type="FAILURE">
 <![CDATA[  [msedge] › app-load.spec.js:107:7 › Application Loading › should handle API connectivity gracefully 
 
@@ -625,7 +625,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Application Loading › should load PWA manifest correctly" classname="app-load.spec.js" time="21.166">
+<testcase name="Application Loading › should load PWA manifest correctly" classname="app-load.spec.js" time="6.32">
 <failure message="app-load.spec.js:126:7 should load PWA manifest correctly" type="FAILURE">
 <![CDATA[  [msedge] › app-load.spec.js:126:7 › Application Loading › should load PWA manifest correctly ─────
 
@@ -661,7 +661,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Application Loading › should handle offline mode correctly" classname="app-load.spec.js" time="26.015">
+<testcase name="Application Loading › should handle offline mode correctly" classname="app-load.spec.js" time="13.171">
 <failure message="app-load.spec.js:139:7 should handle offline mode correctly" type="FAILURE">
 <![CDATA[  [msedge] › app-load.spec.js:139:7 › Application Loading › should handle offline mode correctly ───
 
@@ -675,7 +675,7 @@
     Call log:
       - Expect "toBeVisible" with timeout 5000ms
       - waiting for locator('#scenarios-page')
-        9 × locator resolved to <div class="page" id="scenarios-page">…</div>
+        8 × locator resolved to <div class="page" id="scenarios-page">…</div>
           - unexpected value "hidden"
 
 
@@ -709,9 +709,9 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Application Loading › should track performance metrics" classname="app-load.spec.js" time="19.733">
+<testcase name="Application Loading › should track performance metrics" classname="app-load.spec.js" time="7.944">
 </testcase>
-<testcase name="Application Loading › should handle accessibility requirements" classname="app-load.spec.js" time="25.325">
+<testcase name="Application Loading › should handle accessibility requirements" classname="app-load.spec.js" time="4.224">
 <failure message="app-load.spec.js:176:7 should handle accessibility requirements" type="FAILURE">
 <![CDATA[  [msedge] › app-load.spec.js:176:7 › Application Loading › should handle accessibility requirements 
 
@@ -766,16 +766,16 @@
 </system-out>
 </testcase>
 </testsuite>
-<testsuite name="bias-diagnosis.spec.js" timestamp="2025-12-13T11:43:48.247Z" hostname="msedge" tests="3" failures="0" skipped="0" time="0.171" errors="0">
-<testcase name="Cognitive trap diagnosis (API) › flags exponential misconception" classname="bias-diagnosis.spec.js" time="0.057">
+<testsuite name="bias-diagnosis.spec.js" timestamp="2026-01-10T04:47:35.568Z" hostname="msedge" tests="3" failures="0" skipped="0" time="0.74" errors="0">
+<testcase name="Cognitive trap diagnosis (API) › flags exponential misconception" classname="bias-diagnosis.spec.js" time="0.153">
 </testcase>
-<testcase name="Cognitive trap diagnosis (API) › flags compound interest misunderstanding (linear intuition)" classname="bias-diagnosis.spec.js" time="0.06">
+<testcase name="Cognitive trap diagnosis (API) › flags compound interest misunderstanding (linear intuition)" classname="bias-diagnosis.spec.js" time="0.389">
 </testcase>
-<testcase name="Cognitive trap diagnosis (API) › flags complex system underestimation as complex_system_misunderstanding" classname="bias-diagnosis.spec.js" time="0.054">
+<testcase name="Cognitive trap diagnosis (API) › flags complex system underestimation as complex_system_misunderstanding" classname="bias-diagnosis.spec.js" time="0.198">
 </testcase>
 </testsuite>
-<testsuite name="scenarios-interaction.spec.js" timestamp="2025-12-13T11:43:48.247Z" hostname="msedge" tests="13" failures="13" skipped="0" time="532.314" errors="0">
-<testcase name="Scenarios Interaction › should navigate to scenarios page" classname="scenarios-interaction.spec.js" time="33.469">
+<testsuite name="scenarios-interaction.spec.js" timestamp="2026-01-10T04:47:35.568Z" hostname="msedge" tests="13" failures="13" skipped="0" time="317.453" errors="0">
+<testcase name="Scenarios Interaction › should navigate to scenarios page" classname="scenarios-interaction.spec.js" time="20.398">
 <failure message="scenarios-interaction.spec.js:13:7 should navigate to scenarios page" type="FAILURE">
 <![CDATA[  [msedge] › scenarios-interaction.spec.js:13:7 › Scenarios Interaction › should navigate to scenarios page 
 
@@ -823,7 +823,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should load scenarios from API" classname="scenarios-interaction.spec.js" time="36.39">
+<testcase name="Scenarios Interaction › should load scenarios from API" classname="scenarios-interaction.spec.js" time="24.289">
 <failure message="scenarios-interaction.spec.js:22:7 should load scenarios from API" type="FAILURE">
 <![CDATA[  [msedge] › scenarios-interaction.spec.js:22:7 › Scenarios Interaction › should load scenarios from API 
 
@@ -862,7 +862,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should display scenario details correctly" classname="scenarios-interaction.spec.js" time="35.425">
+<testcase name="Scenarios Interaction › should display scenario details correctly" classname="scenarios-interaction.spec.js" time="31.452">
 <failure message="scenarios-interaction.spec.js:38:7 should display scenario details correctly" type="FAILURE">
 <![CDATA[  [msedge] › scenarios-interaction.spec.js:38:7 › Scenarios Interaction › should display scenario details correctly 
 
@@ -901,7 +901,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should handle scenario selection" classname="scenarios-interaction.spec.js" time="42.653">
+<testcase name="Scenarios Interaction › should handle scenario selection" classname="scenarios-interaction.spec.js" time="32.56">
 <failure message="scenarios-interaction.spec.js:52:7 should handle scenario selection" type="FAILURE">
 <![CDATA[  [msedge] › scenarios-interaction.spec.js:52:7 › Scenarios Interaction › should handle scenario selection 
 
@@ -940,7 +940,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should start game session correctly" classname="scenarios-interaction.spec.js" time="33.601">
+<testcase name="Scenarios Interaction › should start game session correctly" classname="scenarios-interaction.spec.js" time="31.53">
 <failure message="scenarios-interaction.spec.js:67:7 should start game session correctly" type="FAILURE">
 <![CDATA[  [msedge] › scenarios-interaction.spec.js:67:7 › Scenarios Interaction › should start game session correctly 
 
@@ -979,7 +979,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should display game controls for each scenario" classname="scenarios-interaction.spec.js" time="36.061">
+<testcase name="Scenarios Interaction › should display game controls for each scenario" classname="scenarios-interaction.spec.js" time="20.072">
 <failure message="scenarios-interaction.spec.js:85:7 should display game controls for each scenario" type="FAILURE">
 <![CDATA[  [msedge] › scenarios-interaction.spec.js:85:7 › Scenarios Interaction › should display game controls for each scenario 
 
@@ -1018,7 +1018,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should handle game decision submission" classname="scenarios-interaction.spec.js" time="49.725">
+<testcase name="Scenarios Interaction › should handle game decision submission" classname="scenarios-interaction.spec.js" time="30.251">
 <failure message="scenarios-interaction.spec.js:110:7 should handle game decision submission" type="FAILURE">
 <![CDATA[  [msedge] › scenarios-interaction.spec.js:110:7 › Scenarios Interaction › should handle game decision submission 
 
@@ -1057,7 +1057,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should handle game modal interactions" classname="scenarios-interaction.spec.js" time="43.387">
+<testcase name="Scenarios Interaction › should handle game modal interactions" classname="scenarios-interaction.spec.js" time="24.95">
 <failure message="scenarios-interaction.spec.js:139:7 should handle game modal interactions" type="FAILURE">
 <![CDATA[  [msedge] › scenarios-interaction.spec.js:139:7 › Scenarios Interaction › should handle game modal interactions 
 
@@ -1096,7 +1096,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should display appropriate loading states" classname="scenarios-interaction.spec.js" time="43.074">
+<testcase name="Scenarios Interaction › should display appropriate loading states" classname="scenarios-interaction.spec.js" time="25.217">
 <failure message="scenarios-interaction.spec.js:162:7 should display appropriate loading states" type="FAILURE">
 <![CDATA[  [msedge] › scenarios-interaction.spec.js:162:7 › Scenarios Interaction › should display appropriate loading states 
 
@@ -1142,7 +1142,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should handle API errors gracefully" classname="scenarios-interaction.spec.js" time="46.778">
+<testcase name="Scenarios Interaction › should handle API errors gracefully" classname="scenarios-interaction.spec.js" time="17.671">
 <failure message="scenarios-interaction.spec.js:173:7 should handle API errors gracefully" type="FAILURE">
 <![CDATA[  [msedge] › scenarios-interaction.spec.js:173:7 › Scenarios Interaction › should handle API errors gracefully 
 
@@ -1190,7 +1190,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should track game session state" classname="scenarios-interaction.spec.js" time="43.139">
+<testcase name="Scenarios Interaction › should track game session state" classname="scenarios-interaction.spec.js" time="20.287">
 <failure message="scenarios-interaction.spec.js:189:7 should track game session state" type="FAILURE">
 <![CDATA[  [msedge] › scenarios-interaction.spec.js:189:7 › Scenarios Interaction › should track game session state 
 
@@ -1229,7 +1229,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should provide game feedback and analysis" classname="scenarios-interaction.spec.js" time="44.148">
+<testcase name="Scenarios Interaction › should provide game feedback and analysis" classname="scenarios-interaction.spec.js" time="20.936">
 <failure message="scenarios-interaction.spec.js:209:7 should provide game feedback and analysis" type="FAILURE">
 <![CDATA[  [msedge] › scenarios-interaction.spec.js:209:7 › Scenarios Interaction › should provide game feedback and analysis 
 
@@ -1268,7 +1268,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should maintain responsive design during game" classname="scenarios-interaction.spec.js" time="44.464">
+<testcase name="Scenarios Interaction › should maintain responsive design during game" classname="scenarios-interaction.spec.js" time="17.84">
 <failure message="scenarios-interaction.spec.js:235:7 should maintain responsive design during game" type="FAILURE">
 <![CDATA[  [msedge] › scenarios-interaction.spec.js:235:7 › Scenarios Interaction › should maintain responsive design during game 
 
@@ -1308,8 +1308,8 @@
 </system-out>
 </testcase>
 </testsuite>
-<testsuite name="api-integration.spec.js" timestamp="2025-12-13T11:43:48.247Z" hostname="Mobile Chrome" tests="11" failures="11" skipped="0" time="420.743" errors="0">
-<testcase name="API Integration › should successfully connect to API endpoints" classname="api-integration.spec.js" time="47.681">
+<testsuite name="api-integration.spec.js" timestamp="2026-01-10T04:47:35.568Z" hostname="Mobile Chrome" tests="11" failures="11" skipped="0" time="320.41" errors="0">
+<testcase name="API Integration › should successfully connect to API endpoints" classname="api-integration.spec.js" time="22.59">
 <failure message="api-integration.spec.js:14:7 should successfully connect to API endpoints" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › api-integration.spec.js:14:7 › API Integration › should successfully connect to API endpoints 
 
@@ -1348,7 +1348,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should handle API response caching" classname="api-integration.spec.js" time="45.115">
+<testcase name="API Integration › should handle API response caching" classname="api-integration.spec.js" time="31.542">
 <failure message="api-integration.spec.js:39:7 should handle API response caching" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › api-integration.spec.js:39:7 › API Integration › should handle API response caching 
 
@@ -1387,7 +1387,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should implement API failover correctly" classname="api-integration.spec.js" time="46.32">
+<testcase name="API Integration › should implement API failover correctly" classname="api-integration.spec.js" time="23.878">
 <failure message="api-integration.spec.js:64:7 should implement API failover correctly" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › api-integration.spec.js:64:7 › API Integration › should implement API failover correctly 
 
@@ -1465,7 +1465,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should handle game session API calls" classname="api-integration.spec.js" time="33.697">
+<testcase name="API Integration › should handle game session API calls" classname="api-integration.spec.js" time="35.197">
 <failure message="api-integration.spec.js:108:7 should handle game session API calls" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › api-integration.spec.js:108:7 › API Integration › should handle game session API calls 
 
@@ -1504,7 +1504,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should handle game decision API calls" classname="api-integration.spec.js" time="33.75">
+<testcase name="API Integration › should handle game decision API calls" classname="api-integration.spec.js" time="37.259">
 <failure message="api-integration.spec.js:134:7 should handle game decision API calls" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › api-integration.spec.js:134:7 › API Integration › should handle game decision API calls 
 
@@ -1543,7 +1543,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should handle API timeouts gracefully" classname="api-integration.spec.js" time="32.841">
+<testcase name="API Integration › should handle API timeouts gracefully" classname="api-integration.spec.js" time="35.239">
 <failure message="api-integration.spec.js:164:7 should handle API timeouts gracefully" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › api-integration.spec.js:164:7 › API Integration › should handle API timeouts gracefully 
 
@@ -1581,7 +1581,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should implement proper error handling" classname="api-integration.spec.js" time="30.787">
+<testcase name="API Integration › should implement proper error handling" classname="api-integration.spec.js" time="32.343">
 <failure message="api-integration.spec.js:185:7 should implement proper error handling" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › api-integration.spec.js:185:7 › API Integration › should implement proper error handling 
 
@@ -1629,7 +1629,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should validate API response data structure" classname="api-integration.spec.js" time="37.835">
+<testcase name="API Integration › should validate API response data structure" classname="api-integration.spec.js" time="15.605">
 <failure message="api-integration.spec.js:206:7 should validate API response data structure" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › api-integration.spec.js:206:7 › API Integration › should validate API response data structure 
 
@@ -1668,7 +1668,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should handle concurrent API requests" classname="api-integration.spec.js" time="39.112">
+<testcase name="API Integration › should handle concurrent API requests" classname="api-integration.spec.js" time="25.107">
 <failure message="api-integration.spec.js:237:7 should handle concurrent API requests" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › api-integration.spec.js:237:7 › API Integration › should handle concurrent API requests 
 
@@ -1707,7 +1707,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="API Integration › should implement proper request retries" classname="api-integration.spec.js" time="39.224">
+<testcase name="API Integration › should implement proper request retries" classname="api-integration.spec.js" time="27.269">
 <failure message="api-integration.spec.js:250:7 should implement proper request retries" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › api-integration.spec.js:250:7 › API Integration › should implement proper request retries 
 
@@ -1747,10 +1747,10 @@
 </system-out>
 </testcase>
 </testsuite>
-<testsuite name="app-load.spec.js" timestamp="2025-12-13T11:43:48.247Z" hostname="Mobile Chrome" tests="10" failures="7" skipped="0" time="288.782" errors="0">
-<testcase name="Application Loading › should load the main page successfully" classname="app-load.spec.js" time="27.762">
+<testsuite name="app-load.spec.js" timestamp="2026-01-10T04:47:35.568Z" hostname="Mobile Chrome" tests="10" failures="7" skipped="0" time="263.12" errors="0">
+<testcase name="Application Loading › should load the main page successfully" classname="app-load.spec.js" time="24.131">
 </testcase>
-<testcase name="Application Loading › should hide loading screen after app loads" classname="app-load.spec.js" time="32.379">
+<testcase name="Application Loading › should hide loading screen after app loads" classname="app-load.spec.js" time="26.201">
 <failure message="app-load.spec.js:46:7 should hide loading screen after app loads" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › app-load.spec.js:46:7 › Application Loading › should hide loading screen after app loads 
 
@@ -1798,7 +1798,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Application Loading › should load navigation items correctly" classname="app-load.spec.js" time="35.573">
+<testcase name="Application Loading › should load navigation items correctly" classname="app-load.spec.js" time="23.67">
 <failure message="app-load.spec.js:57:7 should load navigation items correctly" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › app-load.spec.js:57:7 › Application Loading › should load navigation items correctly 
 
@@ -1846,9 +1846,9 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Application Loading › should handle responsive design correctly" classname="app-load.spec.js" time="23.06">
+<testcase name="Application Loading › should handle responsive design correctly" classname="app-load.spec.js" time="16.595">
 </testcase>
-<testcase name="Application Loading › should initialize service worker correctly" classname="app-load.spec.js" time="62.509">
+<testcase name="Application Loading › should initialize service worker correctly" classname="app-load.spec.js" time="61.106">
 <failure message="app-load.spec.js:89:7 should initialize service worker correctly" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › app-load.spec.js:89:7 › Application Loading › should initialize service worker correctly 
 
@@ -1886,7 +1886,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Application Loading › should handle API connectivity gracefully" classname="app-load.spec.js" time="26.87">
+<testcase name="Application Loading › should handle API connectivity gracefully" classname="app-load.spec.js" time="8.242">
 <failure message="app-load.spec.js:107:7 should handle API connectivity gracefully" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › app-load.spec.js:107:7 › Application Loading › should handle API connectivity gracefully 
 
@@ -1934,7 +1934,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Application Loading › should load PWA manifest correctly" classname="app-load.spec.js" time="22.964">
+<testcase name="Application Loading › should load PWA manifest correctly" classname="app-load.spec.js" time="15.31">
 <failure message="app-load.spec.js:126:7 should load PWA manifest correctly" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › app-load.spec.js:126:7 › Application Loading › should load PWA manifest correctly 
 
@@ -1970,7 +1970,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Application Loading › should handle offline mode correctly" classname="app-load.spec.js" time="19.293">
+<testcase name="Application Loading › should handle offline mode correctly" classname="app-load.spec.js" time="33.64">
 <failure message="app-load.spec.js:139:7 should handle offline mode correctly" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › app-load.spec.js:139:7 › Application Loading › should handle offline mode correctly 
 
@@ -2018,9 +2018,9 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Application Loading › should track performance metrics" classname="app-load.spec.js" time="14.902">
+<testcase name="Application Loading › should track performance metrics" classname="app-load.spec.js" time="21.759">
 </testcase>
-<testcase name="Application Loading › should handle accessibility requirements" classname="app-load.spec.js" time="23.47">
+<testcase name="Application Loading › should handle accessibility requirements" classname="app-load.spec.js" time="32.466">
 <failure message="app-load.spec.js:176:7 should handle accessibility requirements" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › app-load.spec.js:176:7 › Application Loading › should handle accessibility requirements 
 
@@ -2075,16 +2075,16 @@
 </system-out>
 </testcase>
 </testsuite>
-<testsuite name="bias-diagnosis.spec.js" timestamp="2025-12-13T11:43:48.247Z" hostname="Mobile Chrome" tests="3" failures="0" skipped="0" time="0.887" errors="0">
-<testcase name="Cognitive trap diagnosis (API) › flags exponential misconception" classname="bias-diagnosis.spec.js" time="0.333">
+<testsuite name="bias-diagnosis.spec.js" timestamp="2026-01-10T04:47:35.568Z" hostname="Mobile Chrome" tests="3" failures="0" skipped="0" time="0.624" errors="0">
+<testcase name="Cognitive trap diagnosis (API) › flags exponential misconception" classname="bias-diagnosis.spec.js" time="0.192">
 </testcase>
-<testcase name="Cognitive trap diagnosis (API) › flags compound interest misunderstanding (linear intuition)" classname="bias-diagnosis.spec.js" time="0.33">
+<testcase name="Cognitive trap diagnosis (API) › flags compound interest misunderstanding (linear intuition)" classname="bias-diagnosis.spec.js" time="0.177">
 </testcase>
-<testcase name="Cognitive trap diagnosis (API) › flags complex system underestimation as complex_system_misunderstanding" classname="bias-diagnosis.spec.js" time="0.224">
+<testcase name="Cognitive trap diagnosis (API) › flags complex system underestimation as complex_system_misunderstanding" classname="bias-diagnosis.spec.js" time="0.255">
 </testcase>
 </testsuite>
-<testsuite name="scenarios-interaction.spec.js" timestamp="2025-12-13T11:43:48.247Z" hostname="Mobile Chrome" tests="13" failures="13" skipped="0" time="399.425" errors="0">
-<testcase name="Scenarios Interaction › should navigate to scenarios page" classname="scenarios-interaction.spec.js" time="28.918">
+<testsuite name="scenarios-interaction.spec.js" timestamp="2026-01-10T04:47:35.568Z" hostname="Mobile Chrome" tests="13" failures="13" skipped="0" time="396.797" errors="0">
+<testcase name="Scenarios Interaction › should navigate to scenarios page" classname="scenarios-interaction.spec.js" time="33.688">
 <failure message="scenarios-interaction.spec.js:13:7 should navigate to scenarios page" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › scenarios-interaction.spec.js:13:7 › Scenarios Interaction › should navigate to scenarios page 
 
@@ -2098,7 +2098,7 @@
     Call log:
       - Expect "toHaveClass" with timeout 5000ms
       - waiting for locator('#scenarios-page')
-        9 × locator resolved to <div class="page" id="scenarios-page">…</div>
+        8 × locator resolved to <div class="page" id="scenarios-page">…</div>
           - unexpected value "page"
 
 
@@ -2132,7 +2132,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should load scenarios from API" classname="scenarios-interaction.spec.js" time="18.78">
+<testcase name="Scenarios Interaction › should load scenarios from API" classname="scenarios-interaction.spec.js" time="36.128">
 <failure message="scenarios-interaction.spec.js:22:7 should load scenarios from API" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › scenarios-interaction.spec.js:22:7 › Scenarios Interaction › should load scenarios from API 
 
@@ -2171,7 +2171,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should display scenario details correctly" classname="scenarios-interaction.spec.js" time="34.265">
+<testcase name="Scenarios Interaction › should display scenario details correctly" classname="scenarios-interaction.spec.js" time="33.325">
 <failure message="scenarios-interaction.spec.js:38:7 should display scenario details correctly" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › scenarios-interaction.spec.js:38:7 › Scenarios Interaction › should display scenario details correctly 
 
@@ -2210,7 +2210,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should handle scenario selection" classname="scenarios-interaction.spec.js" time="18.611">
+<testcase name="Scenarios Interaction › should handle scenario selection" classname="scenarios-interaction.spec.js" time="33.51">
 <failure message="scenarios-interaction.spec.js:52:7 should handle scenario selection" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › scenarios-interaction.spec.js:52:7 › Scenarios Interaction › should handle scenario selection 
 
@@ -2249,7 +2249,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should start game session correctly" classname="scenarios-interaction.spec.js" time="34.531">
+<testcase name="Scenarios Interaction › should start game session correctly" classname="scenarios-interaction.spec.js" time="33.305">
 <failure message="scenarios-interaction.spec.js:67:7 should start game session correctly" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › scenarios-interaction.spec.js:67:7 › Scenarios Interaction › should start game session correctly 
 
@@ -2288,7 +2288,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should display game controls for each scenario" classname="scenarios-interaction.spec.js" time="33.096">
+<testcase name="Scenarios Interaction › should display game controls for each scenario" classname="scenarios-interaction.spec.js" time="33.338">
 <failure message="scenarios-interaction.spec.js:85:7 should display game controls for each scenario" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › scenarios-interaction.spec.js:85:7 › Scenarios Interaction › should display game controls for each scenario 
 
@@ -2327,7 +2327,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should handle game decision submission" classname="scenarios-interaction.spec.js" time="33.575">
+<testcase name="Scenarios Interaction › should handle game decision submission" classname="scenarios-interaction.spec.js" time="33.469">
 <failure message="scenarios-interaction.spec.js:110:7 should handle game decision submission" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › scenarios-interaction.spec.js:110:7 › Scenarios Interaction › should handle game decision submission 
 
@@ -2366,7 +2366,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should handle game modal interactions" classname="scenarios-interaction.spec.js" time="33.667">
+<testcase name="Scenarios Interaction › should handle game modal interactions" classname="scenarios-interaction.spec.js" time="34.025">
 <failure message="scenarios-interaction.spec.js:139:7 should handle game modal interactions" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › scenarios-interaction.spec.js:139:7 › Scenarios Interaction › should handle game modal interactions 
 
@@ -2405,7 +2405,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should display appropriate loading states" classname="scenarios-interaction.spec.js" time="30.136">
+<testcase name="Scenarios Interaction › should display appropriate loading states" classname="scenarios-interaction.spec.js" time="30.904">
 <failure message="scenarios-interaction.spec.js:162:7 should display appropriate loading states" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › scenarios-interaction.spec.js:162:7 › Scenarios Interaction › should display appropriate loading states 
 
@@ -2451,7 +2451,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should handle API errors gracefully" classname="scenarios-interaction.spec.js" time="33.401">
+<testcase name="Scenarios Interaction › should handle API errors gracefully" classname="scenarios-interaction.spec.js" time="35.768">
 <failure message="scenarios-interaction.spec.js:173:7 should handle API errors gracefully" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › scenarios-interaction.spec.js:173:7 › Scenarios Interaction › should handle API errors gracefully 
 
@@ -2465,7 +2465,7 @@
     Call log:
       - Expect "toBeVisible" with timeout 5000ms
       - waiting for locator('#scenarios-page')
-        9 × locator resolved to <div class="page" id="scenarios-page">…</div>
+        8 × locator resolved to <div class="page" id="scenarios-page">…</div>
           - unexpected value "hidden"
 
 
@@ -2499,7 +2499,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should track game session state" classname="scenarios-interaction.spec.js" time="32.988">
+<testcase name="Scenarios Interaction › should track game session state" classname="scenarios-interaction.spec.js" time="15.326">
 <failure message="scenarios-interaction.spec.js:189:7 should track game session state" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › scenarios-interaction.spec.js:189:7 › Scenarios Interaction › should track game session state 
 
@@ -2538,7 +2538,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should provide game feedback and analysis" classname="scenarios-interaction.spec.js" time="33.77">
+<testcase name="Scenarios Interaction › should provide game feedback and analysis" classname="scenarios-interaction.spec.js" time="29.434">
 <failure message="scenarios-interaction.spec.js:209:7 should provide game feedback and analysis" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › scenarios-interaction.spec.js:209:7 › Scenarios Interaction › should provide game feedback and analysis 
 
@@ -2577,7 +2577,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Scenarios Interaction › should maintain responsive design during game" classname="scenarios-interaction.spec.js" time="33.687">
+<testcase name="Scenarios Interaction › should maintain responsive design during game" classname="scenarios-interaction.spec.js" time="14.577">
 <failure message="scenarios-interaction.spec.js:235:7 should maintain responsive design during game" type="FAILURE">
 <![CDATA[  [Mobile Chrome] › scenarios-interaction.spec.js:235:7 › Scenarios Interaction › should maintain responsive design during game 
 
