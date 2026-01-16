@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>恋爱关系时间延迟 - 集成测试</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/game-styles.css">
+    <link rel="stylesheet" href="assets/css/turn-based-game.css">
+    <link rel="stylesheet" href="assets/css/scenarios/relationship-time-delay.css">
+
+    <style>
+        body {
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            color: #e91e63;
+            margin-bottom: 15px;
+        }
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        #game-container {
+            min-height: 400px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 恋爱关系时间延迟 - 集成测试</h1>
+
+    <div class="test-section">
+        <h2>测试场景功能</h2>
+        <div class="test-buttons">
+            <button class="btn btn-primary" onclick="testScenarioLoad()">
+                1. 测试场景加载
+            </button>
+            <button class="btn btn-secondary" onclick="testRouterInit()">
+                2. 测试Router初始化
+            </button>
+            <button class="btn btn-secondary" onclick="testGameFlow()">
+                3. 测试游戏流程
+            </button>
+            <button class="btn btn-tertiary" onclick="clearGame()">
+                清除游戏
+            </button>
+        </div>
+    </div>
+
+    <div id="game-container"></div>
+
+    <div class="test-section">
+        <h2>测试结果</h2>
+        <div id="test-results"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/api-config-manager.js"></script>
+    <script src="assets/js/app.js"></script>
+
+    <script>
+        // Test results container
+        const resultsDiv = document.getElementById('test-results');
+
+        function logResult(message, success = true) {
+            const color = success ? '#4caf50' : '#f44336';
+            const icon = success ? '✓' : '✗';
+            resultsDiv.innerHTML += `<p style="color: ${color};">${icon} ${message}</p>`;
+        }
+
+        function testScenarioLoad() {
+            try {
+                logResult('开始测试场景加载...', true);
+
+                // Test 1: Check if class is defined
+                if (typeof RelationshipTimeDelayPageRouter === 'undefined') {
+                    logResult('❌ RelationshipTimeDelayPageRouter class not found', false);
+                    return;
+                }
+                logResult('✓ RelationshipTimeDelayPageRouter class is defined', true);
+
+                // Test 2: Check if start method exists
+                const router = new RelationshipTimeDelayPageRouter();
+                logResult('✓ Router instance created successfully', true);
+
+                // Test 3: Check initial state
+                if (router.currentPage !== 'START') {
+                    logResult(`❌ Initial page is ${router.currentPage}, expected START`, false);
+                    return;
+                }
+                logResult('✓ Router starts at START page', true);
+
+                // Test 4: Check game state
+                if (router.gameState.affection !== 50) {
+                    logResult(`❌ Initial affection is ${router.gameState.affection}, expected 50`, false);
+                    return;
+                }
+                logResult('✓ Initial game state is correct', true);
+
+                logResult('✅ 场景加载测试通过！', true);
+
+            } catch (error) {
+                logResult(`❌ 场景加载测试失败: ${error.message}`, false);
+                console.error(error);
+            }
+        }
+
+        function testRouterInit() {
+            try {
+                logResult('开始测试Router初始化...', true);
+
+                const router = new RelationshipTimeDelayPageRouter();
+
+                // Test page flow
+                router.startGame();
+                if (router.currentPage !== 'TURN_1_DECISION_1') {
+                    logResult(`❌ After startGame, page is ${router.currentPage}, expected TURN_1_DECISION_1`, false);
+                    return;
+                }
+                logResult('✓ startGame() transitions correctly', true);
+
+                // Test decision making
+                router.makeDecision('communication_style', 'medium');
+                if (router.currentPage !== 'TURN_1_DECISION_1_FEEDBACK') {
+                    logResult(`❌ After makeDecision, page is ${router.currentPage}, expected FEEDBACK`, false);
+                    return;
+                }
+                logResult('✓ makeDecision() works correctly', true);
+
+                // Test pending effect system
+                const initialPending = router.gameState.pending_effects.length;
+                router.queueDecisionEffect('dating_frequency', 'twice_weekly', 1);
+                if (router.gameState.pending_effects.length !== initialPending + 1) {
+                    logResult(`❌ queueDecisionEffect failed to add effect`, false);
+                    return;
+                }
+                logResult('✓ PendingEffect system works', true);
+
+                logResult('✅ Router初始化测试通过！', true);
+
+            } catch (error) {
+                logResult(`❌ Router初始化测试失败: ${error.message}`, false);
+                console.error(error);
+            }
+        }
+
+        function testGameFlow() {
+            try {
+                logResult('开始测试完整游戏流程...', true);
+
+                // Start the game
+                GameManager.startRelationshipTimeDelayGame();
+
+                setTimeout(() => {
+                    // Check if game modal is shown
+                    const modal = document.getElementById('game-modal');
+                    if (!modal) {
+                        logResult('❌ Game modal not found', false);
+                        return;
+                    }
+
+                    if (modal.style.display === 'none' || modal.style.display === '') {
+                        logResult('❌ Game modal is not visible', false);
+                        return;
+                    }
+                    logResult('✓ Game modal is displayed', true);
+
+                    // Check if content is rendered
+                    const container = document.getElementById('game-container');
+                    if (!container) {
+                        logResult('❌ Game container not found', false);
+                        return;
+                    }
+
+                    const hasContent = container.innerHTML.length > 100;
+                    if (!hasContent) {
+                        logResult('❌ Game container is empty', false);
+                        return;
+                    }
+                    logResult('✓ Game content is rendered', true);
+
+                    logResult('✅ 游戏流程测试通过！', true);
+
+                }, 500);
+
+            } catch (error) {
+                logResult(`❌ 游戏流程测试失败: ${error.message}`, false);
+                console.error(error);
+            }
+        }
+
+        function clearGame() {
+            try {
+                // Close modal if open
+                const modal = document.getElementById('game-modal');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+
+                // Clear router
+                if (window.relationshipTimeDelayRouter) {
+                    window.relationshipTimeDelayRouter = null;
+                }
+
+                // Clear container
+                const container = document.getElementById('game-container');
+                if (container) {
+                    container.innerHTML = '<p>游戏已清除。点击上方按钮重新开始测试。</p>';
+                }
+
+                resultsDiv.innerHTML = '<p>测试结果已清除。</p>';
+
+            } catch (error) {
+                logResult(`❌ 清除游戏失败: ${error.message}`, false);
+            }
+        }
+
+        // Auto-run test on page load
+        window.addEventListener('load', () => {
+            logResult('页面加载完成，准备测试', true);
+            logResult('点击上方按钮开始测试', true);
+        });
+    </script>
+</body>
+</html>

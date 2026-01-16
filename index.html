@@ -23,6 +23,8 @@
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="stylesheet" href="assets/css/game-styles.css">
+    <link rel="stylesheet" href="assets/css/turn-based-game.css">
+    <link rel="stylesheet" href="assets/css/scenarios/relationship-time-delay.css">
 
     <!-- Preconnect to API for performance -->
     <link rel="preconnect" href="http://localhost:8000">
@@ -31,7 +33,7 @@
 
     <!-- Preload Critical Resources -->
     <link rel="preload" href="assets/js/api-config-manager.js?v=20251104-2" as="script">
-    <link rel="preload" href="assets/js/app.js?v=20251104-2230" as="script">
+    <link rel="preload" href="assets/js/app.js?v=20260116-0150" as="script">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style">
 </head>
 <body>
@@ -266,6 +268,9 @@
                     </div>
 
                     <div class="scenarios-grid" id="scenarios-grid">
+                        <div class="loading" id="scenarios-loading" style="text-align: center; padding: 40px;">
+                            <p>加载场景中</p>
+                        </div>
                         <!-- Scenarios will be loaded dynamically -->
                     </div>
                 </div>
@@ -953,9 +958,9 @@
 
         <!-- Game Modal -->
         <div id="game-modal" class="modal">
-            <div class="modal-content">
+            <div class="modal-content game-modal-content">
                 <div class="modal-header">
-                    <h2 class="modal-title">认知训练</h2>
+                    <h2 class="modal-title game-modal-title">认知训练</h2>
                     <button class="modal-close" id="close-modal">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -976,7 +981,7 @@
     <div id="invitation-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">邀请好友</h2>
+                <h2 class="modal-title invitation-modal-title">邀请好友</h2>
                 <button class="modal-close" id="close-invitation-modal">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -1034,7 +1039,7 @@
         <div id="share-success-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2 class="modal-title">分享成功</h2>
+                    <h2 class="modal-title share-modal-title">分享成功</h2>
                     <button class="modal-close" id="close-share-success">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -1070,7 +1075,7 @@
 
     <!-- JavaScript -->
     <script src="assets/js/api-config-manager.js?v=20251104-2"></script>
-    <script src="assets/js/app.js?v=20251104-2230"></script>
+    <script src="assets/js/app.js?v=20260116-0150"></script>
 
     <script>
     // 难度选择功能
@@ -1081,7 +1086,9 @@
             "intermediate": "中级",
             "advanced": "高级"
         };
-        displayElement.textContent = `当前: ${difficultyNames[difficulty]}`;
+        if (displayElement) {
+            displayElement.textContent = `当前: ${difficultyNames[difficulty]}`;
+        }
 
         // 在游戏中使用选择的难度
         if (window.GameManager && typeof window.GameManager.setDifficulty === "function") {
@@ -1094,51 +1101,6 @@
         // 更新场景卡片 - 重新加载当前场景列表以显示对应难度的挑战
         if (typeof NavigationManager !== 'undefined' && typeof NavigationManager.loadScenariosPage === 'function') {
             NavigationManager.loadScenariosPage();
-        }
-    }
-
-    // 页面加载完成后初始化难度和隐藏加载屏幕
-    document.addEventListener("DOMContentLoaded", function() {
-        // 隐藏加载屏幕
-        const loadingScreen = document.getElementById("loading-screen");
-        if (loadingScreen) {
-            loadingScreen.style.display = "none";
-        }
-
-        // 延迟一点执行以便确保所有组件都已加载
-        setTimeout(function() {
-            // 初始化导航系统，确保显示场景页面（包含难度选择器）
-            if (typeof NavigationManager !== 'undefined') {
-                // 尝试导航到场景页面以确保难度选择器可见
-                try {
-                    NavigationManager.navigateTo('scenarios');
-                } catch (error) {
-                    console.warn('NavigationManager.navigateTo failed:', error);
-                    // 如果导航失败，手动初始化难度选择器
-                    initializeDifficultySelector();
-                }
-            } else {
-                // 如果导航管理器未定义，手动初始化难度选择器
-                initializeDifficultySelector();
-            }
-        }, 1000); // 延迟1秒以确保所有脚本都已加载
-    });
-
-    // 辅助函数：初始化难度选择器
-    function initializeDifficultySelector() {
-        const savedDifficulty = localStorage.getItem("selectedDifficulty");
-        const selector = document.getElementById("difficulty-level");
-
-        if (selector) {
-            if (savedDifficulty) {
-                selector.value = savedDifficulty;
-                updateDifficultyDisplay(savedDifficulty);
-            } else {
-                // 如果没有保存的难度，使用默认值并更新显示
-                updateDifficultyDisplay("beginner");
-            }
-        } else {
-            console.warn('难度选择器未找到');
         }
     }
     </script>
