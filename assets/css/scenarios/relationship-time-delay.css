@@ -1,0 +1,806 @@
+/**
+ * 恋爱关系时间延迟场景 - 聊天界面样式
+ * Relationship Time Delay Scenario - Chat Interface Styles
+ *
+ * 模仿微信/WhatsApp风格的聊天界面
+ */
+
+/* ============================================================================
+   聊天界面基础样式
+   ============================================================================ */
+
+.relationship-game-container {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 600px;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+}
+
+.game-page {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+/* ============================================================================
+   START页面样式
+   ============================================================================ */
+
+.start-page {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.start-page h1 {
+  color: #e91e63;
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.start-page .intro {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.start-page .intro p {
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.start-page .warning {
+  background: #fff3e0;
+  border-left: 4px solid #ff9800;
+  padding: 15px;
+  border-radius: 4px;
+  color: #e65100;
+}
+
+/* ============================================================================
+   决策页面样式
+   ============================================================================ */
+
+.decision-page {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.decision-page h2 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.decision-page .week-info {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 20px;
+}
+
+.decision-section {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.decision-section h3 {
+  color: #e91e63;
+  margin-bottom: 10px;
+}
+
+.decision-section .decision-desc {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* 选项卡片 */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.option-card {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  background: #f8f8f8;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.option-card:hover {
+  border-color: #e91e63;
+  background: #fff0f5;
+  transform: translateX(5px);
+}
+
+.option-card input[type="radio"] {
+  margin-right: 15px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.option-card span {
+  flex: 1;
+  font-size: 1em;
+  color: #333;
+}
+
+/* 期望显示 */
+.expectation-display {
+  margin-top: 20px;
+  padding: 15px;
+  background: #e3f2fd;
+  border-radius: 8px;
+  border-left: 4px solid #2196f3;
+}
+
+.expectation-display h4 {
+  margin: 0 0 10px 0;
+  color: #1976d2;
+  font-size: 1em;
+}
+
+.expectation-display p {
+  margin: 5px 0;
+  color: #424242;
+}
+
+/* ============================================================================
+   反馈页面样式
+   ============================================================================ */
+
+.feedback-page {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.feedback-content {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.your-expectation {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #e8f5e9;
+  border-radius: 8px;
+}
+
+.your-expectation h3 {
+  margin: 0 0 10px 0;
+  color: #2e7d32;
+}
+
+.delay-warning {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #fff3e0;
+  border-radius: 8px;
+}
+
+.delay-warning h3 {
+  margin: 0 0 10px 0;
+  color: #e65100;
+}
+
+.delay-warning .note {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.risk-warning {
+  padding: 15px;
+  background: #ffebee;
+  border-radius: 8px;
+  border-left: 4px solid #f44336;
+}
+
+.risk-warning h3 {
+  margin: 0 0 10px 0;
+  color: #c62828;
+}
+
+.risk-warning p {
+  margin: 0;
+  color: #d32f2f;
+}
+
+/* ============================================================================
+   聊天界面样式 (WeChat/WhatsApp风格)
+   ============================================================================ */
+
+.chat-interface {
+  background: #ededed;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  min-height: 200px;
+}
+
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  max-width: 80%;
+  animation: messageSlideIn 0.3s ease;
+}
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-sent {
+  align-self: flex-end;
+}
+
+.message-received {
+  align-self: flex-start;
+}
+
+.message-content {
+  padding: 12px 16px;
+  border-radius: 12px;
+  position: relative;
+  word-wrap: break-word;
+}
+
+.message-sent .message-content {
+  background: #95ec69; /* WeChat green */
+  color: white;
+  border-bottom-right-radius: 2px;
+}
+
+.message-received .message-content {
+  background: white;
+  color: #333;
+  border-bottom-left-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.message-emoji {
+  font-size: 1.2em;
+  margin-left: 5px;
+}
+
+.message-time {
+  font-size: 0.75em;
+  color: #999;
+  margin-top: 5px;
+  align-self: flex-end;
+}
+
+.message-sent .message-time {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* 正在输入指示器 */
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 16px;
+  background: white;
+  border-radius: 12px;
+  border-bottom-left-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  max-width: 100px;
+}
+
+.typing-indicator span {
+  width: 8px;
+  height: 8px;
+  background: #999;
+  border-radius: 50%;
+  animation: typingBounce 1.4s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typingBounce {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.typing-indicator p {
+  margin: 5px 0 0 0;
+  font-size: 0.75em;
+  color: #666;
+  white-space: nowrap;
+}
+
+/* ============================================================================
+   时间线可视化样式
+   ============================================================================ */
+
+.timeline-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.timeline-section h3 {
+  margin: 0 0 15px 0;
+  color: #e91e63;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 30px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #e0e0e0;
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -24px;
+  top: 5px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #2196f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #2196f3;
+}
+
+.timeline-item.active .timeline-marker {
+  background: #4caf50;
+  border-color: #4caf50;
+  color: white;
+}
+
+.timeline-item.pending .timeline-marker {
+  background: #fff;
+  border-color: #ff9800;
+  color: #ff9800;
+}
+
+.timeline-content {
+  background: #f5f5f5;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 0.9em;
+}
+
+.timeline-content p {
+  margin: 5px 0;
+  color: #333;
+}
+
+.timeline-content .delay {
+  color: #666;
+  font-style: italic;
+}
+
+/* ============================================================================
+   月总结页面样式
+   ============================================================================ */
+
+.summary-page {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.summary-page h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.summary-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.expectation-section,
+.reaction-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.expectation-section h3,
+.reaction-section h3 {
+  margin: 0 0 15px 0;
+  color: #333;
+}
+
+/* ============================================================================
+   觉醒页面样式
+   ============================================================================ */
+
+.awakening-page {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.awakening-page h2 {
+  text-align: center;
+  color: #ff9800;
+  margin-bottom: 30px;
+}
+
+.awakening-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.pattern-reveal {
+  margin: 20px 0;
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.pattern-reveal h3 {
+  margin: 0 0 15px 0;
+  color: #333;
+}
+
+.theory-lesson {
+  margin: 20px 0;
+  padding: 20px;
+  background: #e3f2fd;
+  border-radius: 8px;
+  border-left: 4px solid #2196f3;
+}
+
+.theory-lesson h3 {
+  margin: 0 0 15px 0;
+  color: #1976d2;
+}
+
+.theory-lesson ul {
+  margin: 10px 0 0 20px;
+}
+
+.theory-lesson li {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.strategy-choice {
+  margin: 30px 0;
+}
+
+.strategy-choice h3 {
+  margin-bottom: 20px;
+}
+
+.strategy-options {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.strategy-options button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.strategy-options button.btn-secondary {
+  background: #2196f3;
+  color: white;
+}
+
+.strategy-options button.btn-secondary:hover {
+  background: #1976d2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* ============================================================================
+   结局页面样式
+   ============================================================================ */
+
+.ending-page {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.ending-page h2 {
+  color: #e91e63;
+  margin-bottom: 30px;
+}
+
+.final-results {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom:20px;
+}
+
+.rating {
+  margin-bottom: 30px;
+}
+
+.rating h3 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.rating.level {
+  font-size: 2em;
+  color: #e91e63;
+  margin-bottom: 15px;
+}
+
+.rating.message {
+  color: #666;
+  font-style: italic;
+}
+
+.final-stats {
+  text-align: left;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.final-stats h3 {
+  margin: 0 0 15px 0;
+  color: #333;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+}
+
+.stat-row span:first-child {
+  font-weight: 500;
+  color: #666;
+}
+
+.stat-row .value {
+  font-weight: bold;
+  color: #333;
+}
+
+.stat-row .value.positive {
+  color: #4caf50;
+}
+
+.stat-row .value.negative {
+  color: #f44336;
+}
+
+.lessons-learned {
+  text-align: left;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #e8f5e9;
+  border-radius: 8px;
+  border-left: 4px solid #4caf50;
+}
+
+.lessons-learned h3 {
+  margin: 0 0 15px 0;
+  color: #2e7d32;
+}
+
+.lessons-learned ul {
+  margin: 10px 0 0 20px;
+}
+
+.lessons-learned li {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+/* ============================================================================
+   通用按钮样式
+   ============================================================================ */
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.btn {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: #e91e63;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #d81b60;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(233, 30, 99, 0.3);
+}
+
+.btn-secondary {
+  background: #2196f3;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #1976d2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+}
+
+.btn-tertiary {
+  background: #757575;
+  color: white;
+}
+
+.btn-tertiary:hover {
+  background: #616161;
+}
+
+.btn-large {
+  padding: 15px 40px;
+  font-size: 1.1em;
+}
+
+/* ============================================================================
+   决策历史样式
+   ============================================================================ */
+
+.turn-record {
+  background: #f5f5f5;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border-left: 4px solid #2196f3;
+}
+
+.turn-record h4 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.turn-record p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.turn-record .gap {
+  color: #ff9800;
+  font-weight: 500;
+}
+
+/* ============================================================================
+   响应式设计
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .game-page {
+    padding: 15px;
+  }
+
+  .start-page,
+  .decision-page,
+  .feedback-page,
+  .summary-page,
+  .awakening-page,
+  .ending-page {
+    max-width: 100%;
+  }
+
+  .message {
+    max-width: 90%;
+  }
+
+  .strategy-options {
+    flex-direction: column;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    margin: 5px 0;
+  }
+}
+
+/* ============================================================================
+   动画效果
+   ============================================================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.game-page > * {
+  animation: fadeIn 0.3s ease;
+}
