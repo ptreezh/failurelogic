@@ -1,0 +1,62 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ "main", "003-enhance-challenge-complexity" ]  # Support both main and current branch
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Prepare GitHub Pages Deployment
+        run: |
+          # Remove backend files that shouldn't be deployed to GitHub Pages
+          rm -rf api-server/ backend/ tests/ __pycache__/ 
+          rm -rf scenario_framework/ hooks/ docs/ components/
+          rm -rf .claude/ .github/ .gitignore
+          
+          # Remove Python files that aren't needed for frontend
+          find . -name "*.py" -delete
+          find . -name "requirements.txt" -delete
+          find . -name "*.pyc" -delete
+          find . -name "__pycache__" -type d -exec rm -rf {} +
+          
+          # Remove any markdown files except README
+          find . -name "*.md" ! -name "README.md" -delete
+          
+          # Ensure essential directories exist
+          mkdir -p assets/js assets/css assets/images assets/icons
+          
+          # List what we're deploying
+          echo "Deploying files:"
+          find . -type f -not -path "./.git/*" | head -30
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
