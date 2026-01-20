@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, 003-enhance-challenge-complexity ]
   workflow_dispatch:
 
 permissions:
@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -24,13 +24,23 @@ jobs:
     - name: Setup Pages
       uses: actions/configure-pages@v4
 
-    - name: Build assets
+    - name: Prepare for GitHub Pages
       run: |
-        echo "No build process needed - static HTML site"
-        echo "Optimizing assets for deployment..."
-        # Ensure API config manager is properly placed
-        mkdir -p assets/js
-        echo "✅ Assets ready for deployment"
+        # Remove backend files that shouldn't be deployed to GitHub Pages
+        rm -rf api-server/ backend/ tests/ __pycache__/
+        rm -rf scenario_framework/ hooks/ docs/ components/
+        
+        # Remove Python files
+        find . -name "*.py" -delete
+        find . -name "requirements.txt" -delete
+        find . -name "*.pyc" -delete
+        find . -name "__pycache__" -type d -exec rm -rf {} +
+        
+        # Ensure essential directories exist
+        mkdir -p assets/js assets/css assets/images assets/icons
+        
+        # Optimize for static hosting
+        echo "✅ Prepared assets for GitHub Pages deployment"
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
