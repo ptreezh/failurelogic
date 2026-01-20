@@ -8,6 +8,9 @@ from playwright.async_api import async_playwright
 import pytest
 import json
 import time
+import os
+
+BASE_URL = os.getenv('BASE_URL', 'http://localhost:8080')
 
 
 async def test_home_page_navigation():
@@ -19,7 +22,7 @@ async def test_home_page_navigation():
         
         try:
             # 访问主页
-            await page.goto("http://localhost:8000")
+            await page.goto(BASE_URL)
             await page.wait_for_timeout(2000)  # 等待页面加载
             
             # 检查页面标题
