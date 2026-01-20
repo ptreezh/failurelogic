@@ -1,278 +1,146 @@
 # AGENTS.md
 
-This guide provides coding standards and development guidelines for the Cognitive Trap Platform (认知陷阱平台).
+This file provides guidance to Qoder (qoder.com) when working with code in this repository.
 
-## Project Overview
+Cognitive Trap Platform: Hybrid Python FastAPI backend + vanilla JavaScript frontend. TDD-driven with E2E (Playwright), integration, and unit (pytest) tests.
 
-Hybrid architecture with Python FastAPI backend and vanilla JavaScript frontend. Follows TDD (Test-Driven Development) principles with comprehensive E2E, integration, and unit testing.
+## Architecture Overview
 
-## Build, Test, and Development Commands
+The Cognitive Trap Platform is an educational platform designed to teach users about cognitive biases through interactive scenarios and games. The architecture consists of:
 
-### Backend (Python)
+- **Backend**: Python FastAPI server with multiple scenario types and dynamic difficulty levels
+- **Frontend**: Vanilla JavaScript application with turn-based scenario implementations
+- **Data**: JSON-based scenarios with supporting data files
+
+## Key Components
+
+### Backend (api-server/)
+- **Endpoints** (`endpoints/`): FastAPI route handlers for scenarios, cognitive tests, and results
+- **Logic** (`logic/`): Core business logic including LLM integration in `llm/` subfolder
+- **Models** (`models/`): Pydantic models for data validation
+- **Loaders** (`loaders/`): Scenario data loading mechanisms
+- **Data** (`data/`): JSON data files for scenarios, historical cases, and game configurations
+
+### Frontend (assets/)
+- **JavaScript** (`js/`): Main application logic in `app.js`, including scenario routers and decision engines
+- **CSS** (`css/`): Styling for various scenarios and components
+- **Data** (`data/`): Frontend JSON data files
+
+### Scenarios & Games
+The platform implements multiple cognitive bias learning scenarios:
+- **Coffee Shop Linear Thinking**: Teaches about linear thinking traps in complex systems
+- **Relationship Time Delay**: Demonstrates time delay effects in relationship investments
+- **Investment Confirmation Bias**: Illustrates confirmation bias in investment decisions
+- **Advanced Game Scenarios**: More complex strategic decision-making games
+
+## Technology Stack
+
+- **Backend**: Python 3.12+, FastAPI, Pydantic, uvicorn
+- **Frontend**: Vanilla JavaScript (UMD/CommonJS modules), HTML/CSS
+- **Testing**: Playwright (E2E), pytest (unit), multiple integration test types
+- **Package Management**: npm for frontend dependencies
+
+## Key Patterns & Features
+
+### Dynamic Difficulty System
+- Multiple difficulty levels (beginner, intermediate, advanced)
+- Adaptive challenge scaling based on user preferences
+- Advanced challenges with increased complexity
+
+### Decision Engine Framework
+- Real-time calculation of decision consequences
+- Linear expectation vs. actual complex system results
+- Delayed effect simulation and tracking
+- Cognitive bias detection and feedback
+
+### Scenario Router Architecture
+- Turn-based scenario progression
+- State management for complex decision trees
+- Feedback systems with awakening moments
+- Pattern recognition for cognitive biases
+
+## Development Commands
+
+### Backend
 ```bash
-# Start API server
-python api-server/start.py [port]  # Default: 8000
-
-# Run Python unit tests
-python -m pytest tests/unit/
-python -m pytest api-server/logic/test_exponential_calculations.py
-
-# Run specific test file
-python tests/unit/test_cognitive_bias_analysis.py
+python api-server/start.py [port]          # Start API server (default 8000)
+python -m pytest tests/unit/               # Run Python unit tests
+python -m pytest -k "test_name"            # Run specific test
 ```
 
-### Frontend (JavaScript)
+### Frontend
 ```bash
-# Run all E2E tests
-cd tests && npm test
-
-# Run specific test suites
-npm run test:api              # API integration tests
-npm run test:scenarios        # Scenario interaction tests
-npm run test:load             # App load tests
-
-# Run in headed mode
-npm run test:headed
-
-# Debug mode
-npm run test:debug
-
-# View test reports
-npm run test:report
-
-# Install Playwright browsers
-npm run test:install
+cd tests                                    # All tests run from tests/
+npm test                                    # Run all E2E tests
+npm run test:api                            # API integration tests
+npm run test:scenarios                      # Scenario interaction tests
+npm test -- api-integration.spec.js         # Run specific test
+npm run test:report                         # View test reports
 ```
 
-## Code Style Guidelines
-
-### JavaScript/TypeScript
-
-#### Naming Conventions
-- **Constants**: `UPPER_SNAKE_CASE` (e.g., `APP_CONFIG`, `CACHE_NAME`)
-- **Classes**: `PascalCase` (e.g., `APIConfigManager`, `GameManager`)
-- **Methods/Functions**: `camelCase` (e.g., `initialize()`, `loadScenarios()`)
-- **Variables**: `camelCase` (e.g., `gameSession`, `currentGameIndex`)
-- **Test descriptions**: `should do something` (lowercase with spaces)
-
-#### Import/Export Patterns
-```javascript
-// Application files (UMD/CommonJS for compatibility)
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = APIConfigManager;
-} else if (typeof window !== 'undefined') {
-  window.APIConfigManager = APIConfigManager;
-}
-
-// Test files only (ES6 modules)
-import { test, expect } from '@playwright/test';
-```
-
-#### Class Patterns
-```javascript
-// Static classes for managers (NavigationManager, GameManager, ToastManager)
-class NavigationManager {
-  static routes = { ... };
-  static async navigateTo(page) { ... }
-}
-
-// Instance classes for components
-class APIConfigManager {
-  constructor(options = {}) {
-    this.options = { ... };
-  }
-  async request(endpoint) { ... }
-}
-```
-
-#### Error Handling
-```javascript
-try {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const data = await response.json();
-  return data;
-} catch (error) {
-  console.error('Operation failed:', error);
-  // Fallback to mock data or show error message
-}
-```
-
-#### Async/Await
-Always use `async/await` instead of promise chains:
-```javascript
-async initialize() {
-  try {
-    const response = await fetch(`${this.apiUrl}/api/scenarios`);
-    const data = await response.json();
-    this.games = data.scenarios;
-  } catch (error) {
-    console.error('Failed to load:', error);
-  }
-}
-```
-
-#### API Configuration
-```javascript
-// Use IIFE for environment-based URL selection
-const APP_CONFIG = {
-  apiBaseUrl: (() => {
-    const hostname = window.location.hostname;
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      return 'http://localhost:8000';
-    }
-    return 'https://production-api-url';
-  })()
-};
-```
-
-### Python (FastAPI)
-
-#### Naming Conventions
-- **Functions/Variables**: `snake_case` (e.g., `create_game_session`, `get_scenarios`)
-- **Classes**: `PascalCase` (e.g., `GameSession`, `Scenario`)
-- **Constants**: `UPPER_SNAKE_CASE` (e.g., `SCENARIOS`)
-- **Private methods**: `_leading_underscore` (e.g., `_internal_helper`)
-
-#### Type Hints
-Always use type hints for function signatures:
-```python
-from typing import Dict, Any, List, Optional
-
-async def create_game_session(
-    scenario_id: str = Query(..., alias="scenario_id"),
-    difficulty: str = Query("auto")
-) -> Dict[str, Any]:
-    """Create game session with specified difficulty."""
-    ...
-```
-
-#### Error Handling
-```python
-from fastapi import HTTPException
-
-scenario = next((s for s in SCENARIOS if s["id"] == scenario_id), None)
-if not scenario:
-    raise HTTPException(status_code=404, detail="场景未找到")
-```
-
-#### Pydantic Models
-Use Pydantic for data validation:
-```python
-from pydantic import BaseModel
-
-class GameState(BaseModel):
-    resources: int
-    satisfaction: int
-    turn_number: int
-```
-
-## Testing Guidelines
-
-### Test Structure (Given-When-Then)
-```javascript
-test('should calculate exponential growth correctly', () => {
-  // Given
-  const base = 2;
-  const exponent = 10;
-
-  // When
-  const result = calculateExponential(base, exponent);
-
-  // Then
-  expect(result).toBe(1024);
-});
-```
-
-### Playwright E2E Tests
-```javascript
-test.describe('Feature Name', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-  });
-
-  test('should do something', async ({ page }) => {
-    await page.click('[data-page="scenarios"]');
-    await expect(page.locator('.scenario-card')).toBeVisible();
-  });
-});
-```
-
-### Python pytest Tests
-```python
-def test_calculate_exponential_basic():
-    """Test basic exponential calculation"""
-    # Given
-    base = 2
-    exponent = 10
-
-    # When
-    result = calculate_exponential(base, exponent)
-
-    # Then
-    assert result == 1024
-```
-
-## File Organization
-
-```
-tests/
-├── e2e/              # Playwright E2E tests (*.spec.js)
-├── frontend/          # Jest unit tests (*.test.js)
-├── unit/              # Python pytest tests (*.py)
-└── playwright.config.js
-
-api-server/
-├── endpoints/         # API route handlers
-├── logic/            # Business logic
-├── models/           # Pydantic models
-└── start.py          # Application entry point
-```
-
-## API Integration
-
-### Frontend API Calls
-```javascript
-const response = await fetch(`${this.apiUrl}/api/scenarios/`, {
-  method: 'GET',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(data)
-});
-```
-
-### Backend Endpoints
-```python
-from fastapi import APIRouter
-
-router = APIRouter(prefix="/scenarios", tags=["scenarios"])
-
-@router.get("/")
-async def get_scenarios():
-    """获取所有认知陷阱场景"""
-    return {"scenarios": SCENARIOS}
-```
-
-## Key Principles
-
-1. **TDD First**: Write tests before implementing features
-2. **Failover**: Always provide fallback to mock data if API fails
-3. **Type Safety**: Use type hints in Python, consider TypeScript for new features
-4. **Error Boundaries**: Wrap all async operations in try-catch
-5. **Performance**: Use connection pooling, caching, and debounce where appropriate
-6. **Bilingual**: Comments can be in English or Chinese; prefer English for technical documentation
-7. **TDD Philosophy**: Evident in test file comments like "根据TDD原则，先编写测试然后实现功能"
-
-## Running a Single Test
-
-### Playwright Test
+### Testing Commands
 ```bash
-npm test -- api-integration.spec.js
-# Or with grep filter
-npm test -- --grep "should successfully connect to API"
+npx playwright test                        # Run Playwright E2E tests
+npx playwright test --ui                    # Run tests in UI mode
+npx playwright show-report                 # Show test report
+python -m pytest tests/unit/ -v            # Verbose unit tests
+npm run test:scenarios                     # Specific scenario tests
 ```
 
-### Python Test
-```bash
-python -m pytest tests/unit/test_exponential_logic.py::TestExponentialCalculations::test_calculate_exponential_basic
-python -m pytest -k "test_calculate_exponential_basic"
-```
+## Anti-Patterns (FORBIDDEN)
+1. `TODO`/`FIXME` comments in production code
+2. `XXX` placeholder patterns in naming
+3. `console.log`/`console.warn`/`console.error` in production
+4. `innerHTML` usage without sanitization (XSS risk)
+5. Generic `except Exception as e:` blocks
+6. Global window object pollution (`window.coffeeShopRouter`, etc.)
+7. Inline event handlers in HTML (`onclick="..."`)
+8. Debug mode flags in production builds
+9. Empty/mixed language test files
+
+## Deployment Notes
+- **CI**: Custom 7-stage Spec-Kit pipeline in `.github/workflows/`
+- **Pre-commit**: Black, isort, flake8, Prettier hooks configured
+- **Vercel**: Configured but has issues (points to non-existent `api/index.py`, uses Python 3.9 vs project's 3.12)
+- **GitHub Pages**: Used with Codespaces as primary hosting solution
+
+## Key Files and Directories
+- `api-server/start.py`: Main API server entry point with comprehensive decision tracking
+- `assets/js/app.js`: Frontend application with multiple scenario routers and decision engines
+- `assets/js/api-config-manager.js`: API configuration with intelligent failover
+- `tests/e2e/scenarios-interaction.spec.js`: End-to-end tests for scenario interactions
+- `api-server/data/`: Scenario data files in JSON format
+- `api-server/logic/llm/`: LLM integration for enhanced interactivity
+
+## Testing Structure
+- **E2E Tests** (`tests/e2e/`): Playwright tests for UI interactions
+- **Unit Tests** (`tests/unit/`): Pytest tests for backend logic
+- **Integration Tests** (`tests/integration/`): API and data integration tests
+- **Specialized Tests**: Scenario-specific and cognitive bias validation tests
+
+## Conventions
+### Python
+- Functions/variables: `snake_case`
+- Classes: `PascalCase`
+- Type hints: **Required** for all function signatures
+- Tests: Classes prefixed with `Test`, methods prefixed with `test_`
+- Comments: English or Chinese
+
+### JavaScript
+- Functions/variables: `camelCase`
+- Constants: `UPPER_SNAKE_CASE`, Classes: `PascalCase`
+- App files: UMD/CommonJS (for compatibility)
+- Test files: ES6 modules only
+- Test descriptions: lowercase with spaces
+
+### Testing
+- TDD First: Write tests before implementing features
+- Structure: Given-When-Then for all tests
+- Failover: Always provide fallback to mock data if API fails
+
+## Important Notes
+- `api-server/` is active; `api_server/` is legacy (ignore)
+- Root test sprawl: `test_*.py`, `validate*.py`, `verify*.py` at root should be in tests/
+- Playwright CI runs with `headless: false` (non-standard)
+- No build process: Vanilla JS with no bundler, direct script tags in HTML
+- The application supports multiple concurrent API endpoints with automatic failover

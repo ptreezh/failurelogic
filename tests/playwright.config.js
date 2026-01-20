@@ -51,6 +51,12 @@ export default defineConfig({
 
     // Ignore HTTPS errors for testing
     ignoreHTTPSErrors: true,
+
+    // Disable caching for tests to ensure fresh JavaScript loads
+    contextOptions: {
+      // Bypass browser cache
+      ignoreHTTPSErrors: true,
+    },
   },
 
   // Configure projects for major browsers

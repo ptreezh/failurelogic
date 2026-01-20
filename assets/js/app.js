@@ -2926,6 +2926,2982 @@ class DecisionEngine {
   }
 
   // ========== 5-Turn Coffee Shop Game Logic ==========
+  static calculateBusinessStrategyTurn(turn, decisions, gameState, decisionHistory, delayedEffects) {
+    const { satisfaction = 50, resources = 10000, reputation = 50, market_position = 30, product_quality = 50, competitive_pressure = 20 } = gameState;
+
+    // Initialize result
+    let result = {
+      newGameState: { ...gameState },
+      linearExpectation: {},
+      actualResult: {},
+      feedback: '',
+      newDelayedEffects: [],
+      gameOver: false,
+      gameOverReason: null
+    };
+
+    // Calculate linear expectation (what player expects)
+    result.linearExpectation = this.calculateBusinessStrategyLinearExpectation(turn, decisions, gameState);
+
+    // Calculate actual result (complex system reality)
+    const actual = this.calculateBusinessStrategyActualResult(turn, decisions, gameState, decisionHistory);
+
+    // Apply delayed effects from previous turns
+    const delayedEffectsResult = this.applyBusinessStrategyDelayedEffects(turn, delayedEffects, gameState);
+    result.newGameState = { ...delayedEffectsResult.state };
+
+    // Apply current turn effects
+    result.newGameState.resources += actual.effects.resources;
+    result.newGameState.reputation += actual.effects.reputation;
+    result.newGameState.market_position += actual.effects.market_position;
+    result.newGameState.product_quality += actual.effects.product_quality;
+    result.newGameState.competitive_pressure += actual.effects.competitive_pressure;
+
+    // Ensure values stay within bounds
+    result.newGameState.satisfaction = Math.max(0, Math.min(100, result.newGameState.satisfaction));
+    result.newGameState.resources = Math.max(0, result.newGameState.resources);
+    result.newGameState.reputation = Math.max(0, Math.min(100, result.newGameState.reputation));
+    result.newGameState.market_position = Math.max(0, Math.min(100, result.newGameState.market_position));
+    result.newGameState.product_quality = Math.max(0, Math.min(100, result.newGameState.product_quality));
+    result.newGameState.competitive_pressure = Math.max(0, Math.min(100, result.newGameState.competitive_pressure));
+
+    result.actualResult = {
+      satisfaction: result.newGameState.satisfaction,
+      resources: result.newGameState.resources,
+      reputation: result.newGameState.reputation,
+      market_position: result.newGameState.market_position,
+      product_quality: result.newGameState.product_quality,
+      competitive_pressure: result.newGameState.competitive_pressure,
+      changes: actual.effects
+    };
+
+    // Add new delayed effects
+    result.newDelayedEffects = actual.delayedEffects || [];
+
+    // Generate feedback
+    result.feedback = this.generateBusinessStrategyFeedback(turn, result.linearExpectation, result.actualResult, actual.narrative);
+
+    // Check game over conditions
+    if (result.newGameState.resources < 1000) {
+      result.gameOver = true;
+      result.gameOverReason = 'resources';
+    } else if (result.newGameState.reputation < 10) {
+      result.gameOver = true;
+      result.gameOverReason = 'reputation';
+    } else if (result.newGameState.market_position < 5) {
+      result.gameOver = true;
+      result.gameOverReason = 'market_position';
+    }
+
+    return result;
+  }
+
+  static calculateBusinessStrategyLinearExpectation(turn, decisions, gameState) {
+    const { resources = 10000, reputation = 50, market_position = 30 } = gameState;
+    let expected = {
+      resources,
+      reputation,
+      market_position,
+      thinking: ''
+    };
+
+    switch(turn) {
+      case 1:
+        // Turn 1: Initial strategy decision
+        const decisionId = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId) {
+          case 'rush_to_market':
+            expected.resources = resources + 1500; // Expected quick gains
+            expected.market_position = market_position + 20; // Expected market share gain
+            expected.reputation = reputation - 5; // Potential quality concerns
+            expected.thinking = `快速上市，预期获得¥1500收益和20%市场地位提升，但可能影响声誉`;
+            break;
+          case 'perfect_product':
+            expected.resources = resources + 800; // Moderate gain
+            expected.market_position = market_position + 10; // Moderate market share gain
+            expected.reputation = reputation + 15; // Quality boost
+            expected.thinking = `完美产品策略，预期获得¥800收益，声誉大幅提升`;
+            break;
+          case 'acquire_competitor':
+            expected.resources = resources + 1200; // Gain from acquisition
+            expected.market_position = market_position + 25; // Significant market share gain
+            expected.reputation = reputation + 5; // Acquisition may be viewed positively
+            expected.thinking = `收购策略，预期获得¥1200收益和25%市场地位提升`;
+            break;
+          case 'partnership':
+            expected.resources = resources + 1000; // Partnership benefits
+            expected.market_position = market_position + 15; // Moderate gain
+            expected.reputation = reputation + 10; // Collaboration viewed favorably
+            expected.thinking = `合作策略，预期获得¥1000收益和15%市场地位提升`;
+            break;
+          default:
+            expected.thinking = `选择了策略，预期获得相应收益`;
+        }
+        break;
+
+      case 2:
+        // Turn 2: Response to market developments
+        const decisionId2 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId2) {
+          case 'recall_all':
+            expected.resources = resources - 800; // Cost of recall
+            expected.reputation = reputation + 20; // Reputation recovery
+            expected.thinking = `召回策略，短期损失¥800但恢复声誉`;
+            break;
+          case 'handle_privately':
+            expected.resources = resources + 500; // No recall costs
+            expected.reputation = reputation - 10; // Potential reputation damage
+            expected.thinking = `私下处理，短期获益但有声誉风险`;
+            break;
+          case 'acknowledge_improve':
+            expected.resources = resources + 200; // Moderate impact
+            expected.reputation = reputation + 10; // Transparency helps
+            expected.thinking = `承认并改进，平衡短期损失与长期 reputation`;
+            break;
+          case 'ignore_issue':
+            expected.resources = resources + 700; // Short-term benefit
+            expected.reputation = reputation - 25; // Severe reputation damage
+            expected.thinking = `忽略问题，短期获益但声誉风险极高`;
+            break;
+        }
+        break;
+
+      default:
+        expected.thinking = `继续执行当前策略`;
+    }
+
+    return expected;
+  }
+
+  static calculateBusinessStrategyActualResult(turn, decisions, gameState, decisionHistory) {
+    const { resources = 10000, reputation = 50, market_position = 30, product_quality = 50, competitive_pressure = 20 } = gameState;
+
+    let effects = {
+      resources: 0,
+      reputation: 0,
+      market_position: 0,
+      product_quality: 0,
+      competitive_pressure: 0
+    };
+
+    let narrative = '';
+    let delayedEffects = [];
+
+    switch(turn) {
+      case 1:
+        // Turn 1: Initial strategy with complex market dynamics
+        const decisionId = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId) {
+          case 'rush_to_market':
+            // Reality: Market is saturated, quality issues arise, competitors react
+            effects.resources = 500; // Lower than expected gains
+            effects.market_position = 10; // Smaller gain due to competition
+            effects.reputation = -10; // Quality issues hurt reputation
+            effects.product_quality = -15; // Rushed product has quality issues
+            effects.competitive_pressure = 20; // Competitors intensify marketing
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                reputation: -5, 
+                market_position: -10,
+                description: '质量问题的后续影响在第2回合显现'
+              }
+            });
+
+            narrative = `快速上市策略带来了一些初期收益，但也暴露了质量问题。竞争对手迅速加大营销力度，市场饱和程度超预期。短期内获得¥500收益，市场地位仅增长10%，但声誉受损严重。`;
+            break;
+
+          case 'perfect_product':
+            // Reality: Some gains, but lose first-mover advantage
+            effects.resources = 600; // Lower than expected due to timing
+            effects.market_position = 5; // Smaller gain due to late entry
+            effects.reputation = 10; // Quality helps reputation
+            effects.product_quality = 15; // Product improves
+            effects.competitive_pressure = 15; // Competitors gain advantage
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                market_position: 5, 
+                reputation: 5,
+                description: '高质量产品的长期价值在第2回合开始显现'
+              }
+            });
+
+            narrative = `完美产品策略提高了产品质量和声誉，但错失了先发优势。竞争对手已抢占部分市场，短期内收益和市场地位增长有限，但为长期发展奠定基础。`;
+            break;
+
+          case 'acquire_competitor':
+            // Reality: High cost, integration issues, regulatory scrutiny
+            effects.resources = -500; // Unexpected costs and integration expenses
+            effects.market_position = 15; // Partial market gain
+            effects.reputation = -5; // Regulatory and ethical concerns
+            effects.product_quality = -5; // Integration disrupts operations
+            effects.competitive_pressure = 10; // Remaining competitors consolidate
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                resources: 800, 
+                market_position: 10,
+                description: '收购整合效益在第2回合开始显现'
+              }
+            });
+
+            narrative = `收购策略带来意外的整合成本和监管审查。虽然获得了一部分市场份额，但支出超出预期，运营受到干扰。长期来看，整合效益将在未来回合显现。`;
+            break;
+
+          case 'partnership':
+            // Reality: Moderate gains, shared risks and rewards
+            effects.resources = 700; // Shared gains
+            effects.market_position = 12; // Collaborative market gain
+            effects.reputation = 8; // Partnership viewed positively
+            effects.product_quality = 5; // Shared technology improves quality
+            effects.competitive_pressure = 5; // Partnership provides some protection
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                resources: 200, 
+                market_position: 5,
+                description: '合作伙伴关系的协同效应在第2回合显现'
+              }
+            });
+
+            narrative = `合作策略带来稳健的增长和正面声誉。通过资源共享，获得了稳定的收益和市场地位提升。合作关系提供了竞争优势，但也需要持续维护。`;
+            break;
+
+          default:
+            effects.resources = 100;
+            effects.market_position = 2;
+            narrative = `采取了某种策略，产生了中性影响。`;
+        }
+        break;
+
+      case 2:
+        // Turn 2: Response to market developments with complex consequences
+        const decisionId2 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId2) {
+          case 'recall_all':
+            // Reality: Costly but reputation-saving
+            effects.resources = -600; // Recall costs
+            effects.reputation = 25; // Strong reputation recovery
+            effects.market_position = -5; // Temporary loss of market share
+            effects.competitive_pressure = -10; // Competitors may pause
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                market_position: 15, 
+                resources: 400,
+                description: '声誉恢复带动市场地位和收益在第3回合回升'
+              }
+            });
+
+            narrative = `召回决策成本高昂，短期内损失¥600并失去部分市场份额，但成功恢复了声誉。消费者认可公司的负责任态度，为未来增长奠定基础。`;
+            break;
+
+          case 'handle_privately':
+            // Reality: Short-term gains, long-term risks
+            effects.resources = 400; // Reduced recall costs
+            effects.reputation = -15; // Discovery of hidden problems causes greater damage
+            effects.market_position = -10; // Customer loss due to discovered issues
+            effects.competitive_pressure = 20; // Competitors exploit the situation
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                resources: -800, 
+                reputation: -30,
+                description: '隐瞒问题的后果在第3回合全面显现'
+              }
+            });
+
+            narrative = `私下处理质量问题在短期内节省了成本，但问题被曝光后造成了更大的声誉损害。消费者感到被欺骗，市场份额下降，竞争对手趁机攻击。`;
+            break;
+
+          case 'acknowledge_improve':
+            // Reality: Balanced approach with mixed results
+            effects.resources = 100; // Moderate cost
+            effects.reputation = 15; // Transparency helps
+            effects.market_position = 0; // Neutral impact on market position
+            effects.product_quality = 10; // Improvements implemented
+            effects.competitive_pressure = -5; // Differentiation helps
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                market_position: 10, 
+                resources: 300,
+                description: 'Transparency and improvement efforts pay off in the long term'
+              }
+            });
+
+            narrative = `公开承认问题并承诺改进的做法获得了消费者的认可。虽然短期内收益有限，但为长期发展建立了信任基础，产品质量得到提升。`;
+            break;
+
+          case 'ignore_issue':
+            // Reality: Disastrous consequences
+            effects.resources = 200; // Short-term gain before problems surface
+            effects.reputation = -35; // Major reputation crisis
+            effects.market_position = -25; // Massive customer loss
+            effects.competitive_pressure = 30; // Competitors capitalize on weakness
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                resources: -1000, 
+                market_position: -40,
+                reputation: -40,
+                description: 'Ignoring the issue leads to company failure'
+              }
+            });
+
+            narrative = `忽视质量问题导致了严重的声誉危机。媒体广泛报道，消费者集体抵制，市场份额急剧下降。竞争对手全面进攻，公司陷入困境。`;
+            break;
+        }
+        break;
+    }
+
+    return { effects, narrative, delayedEffects };
+  }
+
+  static calculatePublicPolicyTurn(turn, decisions, gameState, decisionHistory, delayedEffects) {
+    const { resources = 10000, reputation = 50, public_support = 50, policy_effectiveness = 30, stakeholder_pressure = 20 } = gameState;
+
+    // Initialize result
+    let result = {
+      newGameState: { ...gameState },
+      linearExpectation: {},
+      actualResult: {},
+      feedback: '',
+      newDelayedEffects: [],
+      gameOver: false,
+      gameOverReason: null
+    };
+
+    // Calculate linear expectation (what player expects)
+    result.linearExpectation = this.calculatePublicPolicyLinearExpectation(turn, decisions, gameState);
+
+    // Calculate actual result (complex system reality)
+    const actual = this.calculatePublicPolicyActualResult(turn, decisions, gameState, decisionHistory);
+
+    // Apply delayed effects from previous turns
+    const delayedEffectsResult = this.applyPublicPolicyDelayedEffects(turn, delayedEffects, gameState);
+    result.newGameState = { ...delayedEffectsResult.state };
+
+    // Apply current turn effects
+    result.newGameState.resources += actual.effects.resources;
+    result.newGameState.reputation += actual.effects.reputation;
+    result.newGameState.public_support += actual.effects.public_support;
+    result.newGameState.policy_effectiveness += actual.effects.policy_effectiveness;
+    result.newGameState.stakeholder_pressure += actual.effects.stakeholder_pressure;
+
+    // Ensure values stay within bounds
+    result.newGameState.resources = Math.max(0, result.newGameState.resources);
+    result.newGameState.reputation = Math.max(0, Math.min(100, result.newGameState.reputation));
+    result.newGameState.public_support = Math.max(0, Math.min(100, result.newGameState.public_support));
+    result.newGameState.policy_effectiveness = Math.max(0, Math.min(100, result.newGameState.policy_effectiveness));
+    result.newGameState.stakeholder_pressure = Math.max(0, Math.min(100, result.newGameState.stakeholder_pressure));
+
+    result.actualResult = {
+      resources: result.newGameState.resources,
+      reputation: result.newGameState.reputation,
+      public_support: result.newGameState.public_support,
+      policy_effectiveness: result.newGameState.policy_effectiveness,
+      stakeholder_pressure: result.newGameState.stakeholder_pressure,
+      changes: actual.effects
+    };
+
+    // Add new delayed effects
+    result.newDelayedEffects = actual.delayedEffects || [];
+
+    // Generate feedback
+    result.feedback = this.generatePublicPolicyFeedback(turn, result.linearExpectation, result.actualResult, actual.narrative);
+
+    // Check game over conditions
+    if (result.newGameState.reputation < 15) {
+      result.gameOver = true;
+      result.gameOverReason = 'reputation';
+    } else if (result.newGameState.public_support < 10) {
+      result.gameOver = true;
+      result.gameOverReason = 'public_support';
+    } else if (result.newGameState.resources < 1000) {
+      result.gameOver = true;
+      result.gameOverReason = 'resources';
+    }
+
+    return result;
+  }
+
+  static calculatePublicPolicyLinearExpectation(turn, decisions, gameState) {
+    const { resources = 10000, reputation = 50, public_support = 50, policy_effectiveness = 30 } = gameState;
+    let expected = {
+      resources,
+      reputation,
+      public_support,
+      policy_effectiveness,
+      thinking: ''
+    };
+
+    switch(turn) {
+      case 1:
+        // Turn 1: Initial policy decision
+        const decisionId = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId) {
+          case 'new_subway':
+            expected.resources = resources - 6000; // High cost
+            expected.policy_effectiveness = policy_effectiveness + 25; // High expected effectiveness
+            expected.public_support = public_support + 10; // Expected positive reception
+            expected.reputation = reputation + 15; // Infrastructure investment viewed positively
+            expected.thinking = `地铁建设，预期花费¥6000，政策效果提升25，公众支持提升10`;
+            break;
+          case 'bus_expansion':
+            expected.resources = resources - 3000; // Medium cost
+            expected.policy_effectiveness = policy_effectiveness + 15; // Medium effectiveness
+            expected.public_support = public_support + 8; // Positive reception
+            expected.reputation = reputation + 10; // Good investment
+            expected.thinking = `公交扩展，预期花费¥3000，政策效果提升15，公众支持提升8`;
+            break;
+          case 'congestion_fee':
+            expected.resources = resources - 500; // Low cost
+            expected.policy_effectiveness = policy_effectiveness + 20; // High effectiveness
+            expected.public_support = public_support - 15; // Negative public reaction
+            expected.reputation = reputation - 10; // May harm reputation
+            expected.thinking = `拥堵费，预期花费¥500，政策效果提升20，但公众支持下降15`;
+            break;
+          case 'bike_lanes':
+            expected.resources = resources - 1500; // Low cost
+            expected.policy_effectiveness = policy_effectiveness + 10; // Low effectiveness
+            expected.public_support = public_support + 5; // Mixed reception
+            expected.reputation = reputation + 5; // Environmental initiative
+            expected.thinking = `自行车道，预期花费¥1500，政策效果提升10，公众支持提升5`;
+            break;
+          default:
+            expected.thinking = `选择了政策，预期获得相应效果`;
+        }
+        break;
+
+      case 2:
+        // Turn 2: Response to feedback
+        const decisionId2 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId2) {
+          case 'stick_to_plan':
+            expected.resources = resources; // No additional cost
+            expected.reputation = reputation + 5; // Consistency valued
+            expected.public_support = public_support - 5; // May disappoint some groups
+            expected.thinking = `坚持计划，保持政策一致性，但可能失去部分支持`;
+            break;
+          case 'collect_feedback':
+            expected.resources = resources - 800; // Cost of consultation
+            expected.reputation = reputation + 10; // Democratic approach
+            expected.public_support = public_support + 15; // Participation increases support
+            expected.thinking = `收集反馈，花费¥800，提升声誉和公众支持`;
+            break;
+          case 'restart_consultation':
+            expected.resources = resources - 2000; // High cost of restart
+            expected.reputation = reputation + 15; // Transparent approach
+            expected.public_support = public_support + 20; // Extensive participation
+            expected.thinking = `重新协商，花费¥2000，大幅提升声誉和公众支持`;
+            break;
+          case 'delegate_responsibility':
+            expected.resources = resources; // No direct cost
+            expected.reputation = reputation - 20; // Avoiding responsibility
+            expected.public_support = public_support - 10; // May seem evasive
+            expected.thinking = `转移责任，短期避免 blame，但损害声誉`;
+            break;
+        }
+        break;
+
+      default:
+        expected.thinking = `继续执行当前政策`;
+    }
+
+    return expected;
+  }
+
+  static calculatePublicPolicyActualResult(turn, decisions, gameState, decisionHistory) {
+    const { resources = 10000, reputation = 50, public_support = 50, policy_effectiveness = 30, stakeholder_pressure = 20 } = gameState;
+
+    let effects = {
+      resources: 0,
+      reputation: 0,
+      public_support: 0,
+      policy_effectiveness: 0,
+      stakeholder_pressure: 0
+    };
+
+    let narrative = '';
+    let delayedEffects = [];
+
+    switch(turn) {
+      case 1:
+        // Turn 1: Initial policy with complex political dynamics
+        const decisionId = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId) {
+          case 'new_subway':
+            // Reality: Cost overruns, construction disruption, environmental concerns
+            effects.resources = -7500; // Higher than expected costs
+            effects.policy_effectiveness = 15; // Lower than expected due to delays
+            effects.public_support = -5; // Construction disruption causes complaints
+            effects.reputation = 5; // Mixed reception
+            effects.stakeholder_pressure = 25; // Various interest groups emerge
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                public_support: 15, 
+                policy_effectiveness: 10,
+                description: '地铁建设的长期效益在第2回合开始显现'
+              }
+            });
+
+            narrative = `地铁建设项目面临预算超支和施工干扰等问题。虽然长期效益明显，但短期内造成交通混乱和噪音污染，引发部分市民不满。预期的¥6000成本实际增至¥7500，政策效果和公众支持均低于预期。`;
+            break;
+
+          case 'bus_expansion':
+            // Reality: Implementation challenges, limited reach
+            effects.resources = -3500; // Slightly higher cost
+            effects.policy_effectiveness = 12; // Moderate effectiveness
+            effects.public_support = 5; // Generally positive reception
+            effects.reputation = 8; // Solid infrastructure investment
+            effects.stakeholder_pressure = 15; // Bus companies and transit advocates
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                policy_effectiveness: 8, 
+                public_support: 5,
+                description: '公交服务改善效果在第2回合进一步显现'
+              }
+            });
+
+            narrative = `公交扩展项目按计划实施，成本略有超支。市民对公交服务改善表示满意，但覆盖面仍显不足。政策效果和公众支持略低于预期，但整体反响积极。`;
+            break;
+
+          case 'congestion_fee':
+            // Reality: Political backlash, evasion tactics, implementation costs
+            effects.resources = -1200; // Implementation costs plus administrative overhead
+            effects.policy_effectiveness = 12; // Some effectiveness despite resistance
+            effects.public_support = -25; // Strong negative reaction
+            effects.reputation = -15; // Politically unpopular
+            effects.stakeholder_pressure = 35; // Strong opposition from drivers and businesses
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                public_support: 10, 
+                policy_effectiveness: 8,
+                description: '拥堵费的交通改善效果在第2回合逐渐显现'
+              }
+            });
+
+            narrative = `拥堵费政策遭遇强烈政治反弹，企业和市民抗议不断。尽管在一定程度上缓解了交通拥堵，但社会成本巨大。公众支持率大幅下降，政治声誉受损严重。`;
+            break;
+
+          case 'bike_lanes':
+            // Reality: Limited impact, safety concerns, maintenance costs
+            effects.resources = -1800; // Higher maintenance costs
+            effects.policy_effectiveness = 6; // Lower than expected impact
+            effects.public_support = 8; // Positive among environmentalists
+            effects.reputation = 3; // Moderate reputation boost
+            effects.stakeholder_pressure = 10; // Cycling advocacy vs car owner groups
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                public_support: 12, 
+                policy_effectiveness: 4,
+                description: '环保效益和健康意识提升在第2回合显现'
+              }
+            });
+
+            narrative = `自行车道项目成本略高于预期，对整体交通改善影响有限。然而，环保人士和健康倡导者给予积极评价，为长期可持续发展奠定基础。`;
+            break;
+
+          default:
+            effects.resources = -500;
+            effects.policy_effectiveness = 5;
+            narrative = `采取了某种政策，产生了中性影响。`;
+        }
+        break;
+
+      case 2:
+        // Turn 2: Response to feedback with complex political consequences
+        const decisionId2 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId2) {
+          case 'stick_to_plan':
+            // Reality: Political costs of ignoring feedback
+            effects.resources = 0; // No additional cost
+            effects.reputation = -10; // Perceived as inflexible
+            effects.public_support = -15; // Ignoring public concerns
+            effects.stakeholder_pressure = 20; // Pressure from critics
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                policy_effectiveness: 20, 
+                public_support: 10,
+                description: 'Policy consistency pays off in long-term results'
+              }
+            });
+
+            narrative = `坚持原有计划的决策被视为缺乏灵活性，公众认为政府无视民意。尽管政策本身可能有效，但政治成本高昂，支持率进一步下降。`;
+            break;
+
+          case 'collect_feedback':
+            // Reality: Benefits of inclusive decision-making
+            effects.resources = -600; // Lower than expected consultation cost
+            effects.reputation = 15; // Valued democratic approach
+            effects.public_support = 20; // Increased participation builds support
+            effects.policy_effectiveness = 5; // Adjustments improve outcomes
+            effects.stakeholder_pressure = -5; // Better alignment reduces pressure
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                policy_effectiveness: 15, 
+                public_support: 10,
+                description: 'Stakeholder buy-in leads to better implementation'
+              }
+            });
+
+            narrative = `收集反馈的决策受到公众好评，被认为体现了民主参与精神。虽然增加了短期成本，但获得了更广泛的公众支持和更好的政策调整方向。`;
+            break;
+
+          case 'restart_consultation':
+            // Reality: High cost but builds consensus
+            effects.resources = -1800; // More efficient than expected
+            effects.reputation = 20; // Transparent governance
+            effects.public_support = 25; // Extensive participation
+            effects.policy_effectiveness = 8; // Better alignment with needs
+            effects.stakeholder_pressure = -10; // Consensus reduces conflict
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                policy_effectiveness: 25, 
+                reputation: 10,
+                description: 'Broad consensus leads to exceptional outcomes'
+              }
+            });
+
+            narrative = `重新协商的决策虽然成本较高，但建立了前所未有的共识。各利益相关方积极参与，为政策成功实施奠定了坚实基础。`;
+            break;
+
+          case 'delegate_responsibility':
+            // Reality: Short-term relief, long-term problems
+            effects.resources = 0; // No direct cost
+            effects.reputation = -25; // Seen as avoiding accountability
+            effects.public_support = -20; // Loses trust
+            effects.stakeholder_pressure = 15; // Others face the pressure
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                reputation: -30, 
+                policy_effectiveness: -15,
+                description: 'Lack of leadership leads to policy failure'
+              }
+            });
+
+            narrative = `转移责任的决策被公众视为逃避问责，严重损害了政治声誉。虽然短期内减轻了政治压力，但长期来看破坏了政府信誉和政策连贯性。`;
+            break;
+        }
+        break;
+    }
+
+    return { effects, narrative, delayedEffects };
+  }
+
+  static applyPublicPolicyDelayedEffects(currentTurn, delayedEffects, currentState) {
+    let state = { ...currentState };
+
+    if (!delayedEffects || delayedEffects.length === 0) {
+      return { state };
+    }
+
+    delayedEffects.forEach(effect => {
+      if (effect.turn === currentTurn) {
+        if (effect.effect) {
+          Object.keys(effect.effect).forEach(key => {
+            if (key !== 'description' && state.hasOwnProperty(key)) {
+              state[key] += effect.effect[key];
+            }
+          });
+        }
+      }
+    });
+
+    // Filter out applied effects
+    const remainingEffects = delayedEffects.filter(effect => effect.turn !== currentTurn);
+
+    return { state, remainingEffects };
+  }
+
+  static calculatePersonalFinanceTurn(turn, decisions, gameState, decisionHistory, delayedEffects) {
+    const { resources = 150000, income = 100000, debt = 0, financial_knowledge = 30, risk_tolerance = 50 } = gameState;
+
+    // Initialize result
+    let result = {
+      newGameState: { ...gameState },
+      linearExpectation: {},
+      actualResult: {},
+      feedback: '',
+      newDelayedEffects: [],
+      gameOver: false,
+      gameOverReason: null
+    };
+
+    // Calculate linear expectation (what player expects)
+    result.linearExpectation = this.calculatePersonalFinanceLinearExpectation(turn, decisions, gameState);
+
+    // Calculate actual result (complex system reality)
+    const actual = this.calculatePersonalFinanceActualResult(turn, decisions, gameState, decisionHistory);
+
+    // Apply delayed effects from previous turns
+    const delayedEffectsResult = this.applyPersonalFinanceDelayedEffects(turn, delayedEffects, gameState);
+    result.newGameState = { ...delayedEffectsResult.state };
+
+    // Apply current turn effects
+    result.newGameState.resources += actual.effects.resources;
+    result.newGameState.income += actual.effects.income;
+    result.newGameState.debt += actual.effects.debt;
+    result.newGameState.financial_knowledge += actual.effects.financial_knowledge;
+    result.newGameState.risk_tolerance += actual.effects.risk_tolerance;
+
+    // Ensure values stay within bounds
+    result.newGameState.resources = Math.max(0, result.newGameState.resources);
+    result.newGameState.income = Math.max(0, result.newGameState.income);
+    result.newGameState.debt = Math.max(0, result.newGameState.debt);
+    result.newGameState.financial_knowledge = Math.max(0, Math.min(100, result.newGameState.financial_knowledge));
+    result.newGameState.risk_tolerance = Math.max(0, Math.min(100, result.newGameState.risk_tolerance));
+
+    result.actualResult = {
+      resources: result.newGameState.resources,
+      income: result.newGameState.income,
+      debt: result.newGameState.debt,
+      financial_knowledge: result.newGameState.financial_knowledge,
+      risk_tolerance: result.newGameState.risk_tolerance,
+      changes: actual.effects
+    };
+
+    // Add new delayed effects
+    result.newDelayedEffects = actual.delayedEffects || [];
+
+    // Generate feedback
+    result.feedback = this.generatePersonalFinanceFeedback(turn, result.linearExpectation, result.actualResult, actual.narrative);
+
+    // Check game over conditions
+    if ((result.newGameState.debt / (result.newGameState.resources + 1)) > 0.8) { // Debt to asset ratio > 80%
+      result.gameOver = true;
+      result.gameOverReason = 'debt';
+    } else if (result.newGameState.resources < 1000) {
+      result.gameOver = true;
+      result.gameOverReason = 'resources';
+    }
+
+    return result;
+  }
+
+  static calculatePersonalFinanceLinearExpectation(turn, decisions, gameState) {
+    const { resources = 150000, income = 100000, financial_knowledge = 30 } = gameState;
+    let expected = {
+      resources,
+      income,
+      financial_knowledge,
+      thinking: ''
+    };
+
+    switch(turn) {
+      case 1:
+        // Turn 1: Initial financial decision
+        const decisionId = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId) {
+          case 'buy_car':
+            expected.resources = resources - 30000; // Car purchase cost
+            expected.income = income; // No change
+            expected.financial_knowledge = financial_knowledge + 2; // Minor learning
+            expected.thinking = `购车花费¥30000，短期提升生活质量，但减少投资本金`;
+            break;
+          case 'save_bank':
+            expected.resources = resources * 1.02; // 2% bank interest
+            expected.income = income;
+            expected.financial_knowledge = financial_knowledge + 1; // Basic learning
+            expected.thinking = `银行储蓄¥${resources.toFixed(0)}，年收益2%，安全保本`;
+            break;
+          case 'stock_market':
+            expected.resources = resources * 1.10; // 10% expected stock return
+            expected.income = income;
+            expected.financial_knowledge = financial_knowledge + 5; // Learning about markets
+            expected.thinking = `股票投资¥${resources.toFixed(0)}，预期年收益10%，高风险高回报`;
+            break;
+          case 'index_fund':
+            expected.resources = (resources - 5000) * 1.07 + 5000; // 7% index fund return + emergency fund
+            expected.income = income;
+            expected.financial_knowledge = financial_knowledge + 8; // Learning about diversified investing
+            expected.thinking = `指数基金投资¥${(resources-5000).toFixed(0)}，预期年收益7%，风险分散`;
+            break;
+          default:
+            expected.thinking = `选择了理财策略，预期获得相应收益`;
+        }
+        break;
+
+      case 2:
+        // Turn 2: Advanced financial decisions
+        const decisionId2 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId2) {
+          case 'increase_savings_rate':
+            expected.resources = resources * 1.07 + income * 0.20; // 7% return + 20% of income saved
+            expected.financial_knowledge = financial_knowledge + 10; // Learning about saving strategies
+            expected.thinking = `提高储蓄率至20%，投资获得7%收益，同时积累更多本金`;
+            break;
+          case 'risky_investment':
+            expected.resources = resources * 1.15; // 15% expected high-risk return
+            expected.financial_knowledge = financial_knowledge + 12; // Learning about high-risk investing
+            expected.thinking = `高风险投资，预期年收益15%，但波动性极大`;
+            break;
+          case 'get_loan_invest':
+            expected.resources = (resources + 50000) * 1.14 - 50000 * 1.05; // Leverage with loan at 5%
+            expected.debt = 50000 * 1.05; // Loan principal + interest
+            expected.thinking = `借贷¥50000投资，放大收益但承担利息成本`;
+            break;
+          case 'diversify_portfolio':
+            expected.resources = resources * 1.06; // 6% more conservative return
+            expected.financial_knowledge = financial_knowledge + 15; // Learning about diversification
+            expected.thinking = `分散投资降低风险，预期年收益6%，更加稳健`;
+            break;
+        }
+        break;
+
+      default:
+        expected.thinking = `继续执行当前财务策略`;
+    }
+
+    return expected;
+  }
+
+  static calculatePersonalFinanceActualResult(turn, decisions, gameState, decisionHistory) {
+    const { resources = 150000, income = 100000, debt = 0, financial_knowledge = 30, risk_tolerance = 50 } = gameState;
+
+    let effects = {
+      resources: 0,
+      income: 0,
+      debt: 0,
+      financial_knowledge: 0,
+      risk_tolerance: 0
+    };
+
+    let narrative = '';
+    let delayedEffects = [];
+
+    switch(turn) {
+      case 1:
+        // Turn 1: Initial financial decision with compound effects
+        const decisionId = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId) {
+          case 'buy_car':
+            // Reality: Car depreciation, insurance, maintenance costs
+            effects.resources = -35000; // Additional costs beyond purchase price
+            effects.income = 0; // No change
+            effects.financial_knowledge = -2; // Learning from mistake
+            effects.risk_tolerance = 5; // Confidence from consumption
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                resources: -2000, // Ongoing maintenance
+                financial_knowledge: 3,
+                description: '汽车相关费用在第2年继续产生'
+              }
+            });
+
+            narrative = `购车决策短期内满足了需求，但带来了意料之外的成本：车辆贬值、保险、维修等费用总计¥35000，远超预期。虽然获得了消费的满足感，但减少了可用于投资的资金，错失了复利增长的机会。`;
+            break;
+
+          case 'save_bank':
+            // Reality: Low returns, inflation risk
+            effects.resources = resources * 0.015 - resources; // Only 1.5% actual return after inflation
+            effects.income = 0; // No change
+            effects.financial_knowledge = 3; // Basic learning about banking
+            effects.risk_tolerance = -5; // Becomes more risk-averse
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                resources: resources * 0.015, // Another year of low returns
+                financial_knowledge: 2,
+                description: 'Low returns continue to compound'
+              }
+            });
+
+            narrative = `银行储蓄提供了本金安全保障，但实际收益率仅为1.5%（扣除通胀后），错失了更高的投资回报。资金的实际购买力增长缓慢，但获得了财务安全感。`;
+            break;
+
+          case 'stock_market':
+            // Reality: Volatility, behavioral biases, fees
+            const randomReturn = (Math.random() - 0.4) * 0.3 + 0.1; // -20% to +40% range with 10% average
+            effects.resources = resources * randomReturn;
+            effects.income = 0; // No change
+            effects.financial_knowledge = 8; // Significant learning from market experience
+            effects.risk_tolerance = randomReturn > 0 ? 10 : -10; // Affected by gains/losses
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                financial_knowledge: 10,
+                risk_tolerance: randomReturn > 0 ? 5 : -5,
+                description: 'Market experience shapes future risk tolerance'
+              }
+            });
+
+            narrative = `股票市场投资带来了高波动性体验。本年度收益为${(randomReturn * 100).toFixed(1)}%，可能是正也可能是负。虽然获得了丰富的市场经验，但也体验了市场的残酷波动。`;
+            break;
+
+          case 'index_fund':
+            // Reality: Moderate returns, low fees, diversification benefits
+            effects.resources = (resources - 5000) * 0.065; // 6.5% return after fees
+            effects.income = 0; // No change
+            effects.financial_knowledge = 12; // Learning about passive investing
+            effects.risk_tolerance = 3; // Comfortable with moderate risk
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                resources: (resources - 5000) * 0.065,
+                financial_knowledge: 8,
+                description: 'Index fund benefits compound over time'
+              }
+            });
+
+            narrative = `指数基金投资实现了6.5%的稳健回报，费用低廉，风险分散。虽然不如某些个股收益高，但提供了稳定的风险调整后回报。应急资金¥5000提供了财务安全感。`;
+            break;
+
+          default:
+            effects.resources = -1000;
+            effects.financial_knowledge = 2;
+            narrative = `采取了某种理财策略，产生了中性影响。`;
+        }
+        break;
+
+      case 2:
+        // Turn 2: Advanced financial decisions with complex consequences
+        const decisionId2 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId2) {
+          case 'increase_savings_rate':
+            // Reality: Compounding benefits, lifestyle adjustments
+            effects.resources = resources * 0.065 + income * 0.18; // 6.5% return + 18% of income saved
+            effects.income = 0; // No direct change
+            effects.financial_knowledge = 15; // Learning about savings strategies
+            effects.risk_tolerance = -2; // More conservative approach
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                resources: (resources + income * 0.18) * 0.065,
+                financial_knowledge: 10,
+                description: 'High savings rate accelerates wealth accumulation'
+              }
+            });
+
+            narrative = `提高储蓄率的决策加速了财富积累。虽然需要在生活方式上做出一些调整，但复利效应开始显现，为长期财务自由奠定了坚实基础。`;
+            break;
+
+          case 'risky_investment':
+            // Reality: High volatility, potential for significant losses
+            const riskyReturn = (Math.random() - 0.5) * 0.5 + 0.15; // -35% to +65% range with 15% average
+            effects.resources = resources * riskyReturn;
+            effects.income = 0; // No change
+            effects.financial_knowledge = riskyReturn > 0 ? 15 : 25; // Learning from gains or significant losses
+            effects.risk_tolerance = riskyReturn > 0 ? 20 : -30; // Significantly affected by outcome
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                risk_tolerance: riskyReturn > 0 ? 10 : -20,
+                financial_knowledge: 12,
+                description: 'Risky investment outcome affects future risk appetite'
+              }
+            });
+
+            narrative = `高风险投资带来了极端结果，收益为${(riskyReturn * 100).toFixed(1)}%。无论盈亏，都获得了宝贵的市场经验，但可能显著影响了未来的风险偏好。`;
+            break;
+
+          case 'get_loan_invest':
+            // Reality: Leverage risk, interest costs, potential amplification
+            const leverageReturn = (Math.random() - 0.3) * 0.25 + 0.14; // -15% to +43% range with 14% average
+            const loanInterest = 0.05; // 5% loan interest
+            const borrowedAmount = 50000;
+            
+            effects.resources = resources * leverageReturn - borrowedAmount * loanInterest;
+            effects.debt = borrowedAmount * (1 + loanInterest); // Add loan to debt
+            effects.financial_knowledge = 20; // Learning about leverage
+            effects.risk_tolerance = leverageReturn > 0.14 ? 15 : -25; // Affected by leverage outcome
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                debt: borrowedAmount * loanInterest * 0.8, // Ongoing interest
+                risk_tolerance: leverageReturn > 0.14 ? 8 : -15,
+                description: 'Leverage continues to affect financial position'
+              }
+            });
+
+            narrative = `借贷投资策略放大了收益和风险。本年度投资回报为${(leverageReturn * 100).toFixed(1)}%，但需支付¥${(borrowedAmount * loanInterest).toFixed(0)}的利息。财务杠杆既可能加速财富增长，也可能加剧损失。`;
+            break;
+
+          case 'diversify_portfolio':
+            // Reality: Lower volatility, modest returns, peace of mind
+            effects.resources = resources * 0.055; // Conservative 5.5% return
+            effects.income = 0; // No change
+            effects.financial_knowledge = 22; // Deep learning about diversification
+            effects.risk_tolerance = 8; // Better understanding of risk management
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                financial_knowledge: 15,
+                risk_tolerance: 5,
+                description: 'Diversification strategy provides stability over time'
+              }
+            });
+
+            narrative = `分散投资策略提供了稳定的5.5%回报，波动性较低。虽然收益率不如某些集中投资策略，但提供了心理上的安宁和风险控制。`;
+            break;
+        }
+        break;
+    }
+
+    return { effects, narrative, delayedEffects };
+  }
+
+  static applyPersonalFinanceDelayedEffects(currentTurn, delayedEffects, currentState) {
+    let state = { ...currentState };
+
+    if (!delayedEffects || delayedEffects.length === 0) {
+      return { state };
+    }
+
+    delayedEffects.forEach(effect => {
+      if (effect.turn === currentTurn) {
+        if (effect.effect) {
+          Object.keys(effect.effect).forEach(key => {
+            if (key !== 'description' && state.hasOwnProperty(key)) {
+              state[key] += effect.effect[key];
+            }
+          });
+        }
+      }
+    });
+
+    // Filter out applied effects
+    const remainingEffects = delayedEffects.filter(effect => effect.turn !== currentTurn);
+
+    return { state, remainingEffects };
+  }
+
+  static calculateClimateChangeTurn(turn, decisions, gameState, decisionHistory, delayedEffects) {
+    const { resources = 100000, reputation = 50, emission_reduction = 10, international_cooperation = 30, technological_advancement = 25, climate_risk = 70 } = gameState;
+
+    // Initialize result
+    let result = {
+      newGameState: { ...gameState },
+      linearExpectation: {},
+      actualResult: {},
+      feedback: '',
+      newDelayedEffects: [],
+      gameOver: false,
+      gameOverReason: null
+    };
+
+    // Calculate linear expectation (what player expects)
+    result.linearExpectation = this.calculateClimateChangeLinearExpectation(turn, decisions, gameState);
+
+    // Calculate actual result (complex system reality)
+    const actual = this.calculateClimateChangeActualResult(turn, decisions, gameState, decisionHistory);
+
+    // Apply delayed effects from previous turns
+    const delayedEffectsResult = this.applyClimateChangeDelayedEffects(turn, delayedEffects, gameState);
+    result.newGameState = { ...delayedEffectsResult.state };
+
+    // Apply current turn effects
+    result.newGameState.resources += actual.effects.resources;
+    result.newGameState.reputation += actual.effects.reputation;
+    result.newGameState.emission_reduction += actual.effects.emission_reduction;
+    result.newGameState.international_cooperation += actual.effects.international_cooperation;
+    result.newGameState.technological_advancement += actual.effects.technological_advancement;
+    result.newGameState.climate_risk += actual.effects.climate_risk;
+
+    // Ensure values stay within bounds
+    result.newGameState.resources = Math.max(0, result.newGameState.resources);
+    result.newGameState.reputation = Math.max(0, Math.min(100, result.newGameState.reputation));
+    result.newGameState.emission_reduction = Math.max(0, Math.min(100, result.newGameState.emission_reduction));
+    result.newGameState.international_cooperation = Math.max(0, Math.min(100, result.newGameState.international_cooperation));
+    result.newGameState.technological_advancement = Math.max(0, Math.min(100, result.newGameState.technological_advancement));
+    result.newGameState.climate_risk = Math.max(0, Math.min(100, result.newGameState.climate_risk));
+
+    result.actualResult = {
+      resources: result.newGameState.resources,
+      reputation: result.newGameState.reputation,
+      emission_reduction: result.newGameState.emission_reduction,
+      international_cooperation: result.newGameState.international_cooperation,
+      technological_advancement: result.newGameState.technological_advancement,
+      climate_risk: result.newGameState.climate_risk,
+      changes: actual.effects
+    };
+
+    // Add new delayed effects
+    result.newDelayedEffects = actual.delayedEffects || [];
+
+    // Generate feedback
+    result.feedback = this.generateClimateChangeFeedback(turn, result.linearExpectation, result.actualResult, actual.narrative);
+
+    // Check game over conditions
+    if (result.newGameState.climate_risk >= 90) {
+      result.gameOver = true;
+      result.gameOverReason = 'climate_risk';
+    } else if (result.newGameState.international_cooperation < 10) {
+      result.gameOver = true;
+      result.gameOverReason = 'cooperation';
+    } else if (result.newGameState.reputation < 10) {
+      result.gameOver = true;
+      result.gameOverReason = 'reputation';
+    }
+
+    return result;
+  }
+
+  static calculateClimateChangeLinearExpectation(turn, decisions, gameState) {
+    const { resources = 100000, reputation = 50, emission_reduction = 10, international_cooperation = 30 } = gameState;
+    let expected = {
+      resources,
+      reputation,
+      emission_reduction,
+      international_cooperation,
+      thinking: ''
+    };
+
+    switch(turn) {
+      case 1:
+        // Turn 1: Initial climate policy decision
+        const decisionId = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId) {
+          case 'unified_targets':
+            expected.emission_reduction = emission_reduction + 25; // High expected reduction
+            expected.international_cooperation = international_cooperation + 10; // Expected cooperation
+            expected.reputation = reputation + 15; // High reputation for leadership
+            expected.thinking = `统一减排目标，预期减排幅度提升25%，国际合作提升10%，声誉提升15`;
+            break;
+          case 'historical_emissions':
+            expected.emission_reduction = emission_reduction + 20; // High expected reduction
+            expected.international_cooperation = international_cooperation + 5; // Moderate cooperation
+            expected.reputation = reputation + 10; // Good reputation
+            expected.thinking = `基于历史排放责任，预期减排幅度提升20%，国际合作提升5%，声誉提升10`;
+            break;
+          case 'carbon_trading':
+            expected.emission_reduction = emission_reduction + 18; // Moderate reduction
+            expected.international_cooperation = international_cooperation + 20; // High cooperation
+            expected.resources = resources - 5000; // Trading system setup cost
+            expected.thinking = `碳交易市场，预期减排幅度提升18%，国际合作提升20%，需投入¥5000建设`;
+            break;
+          case 'tech_transfer':
+            expected.emission_reduction = emission_reduction + 15; // Moderate reduction
+            expected.international_cooperation = international_cooperation + 25; // High cooperation
+            expected.reputation = reputation + 20; // High reputation
+            expected.thinking = `技术转移机制，预期减排幅度提升15%，国际合作提升25%，声誉提升20`;
+            break;
+          default:
+            expected.thinking = `选择了气候政策，预期获得相应效果`;
+        }
+        break;
+
+      case 2:
+        // Turn 2: Response to implementation challenges
+        const decisionId2 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId2) {
+          case 'sanctions_noncompliance':
+            expected.emission_reduction = emission_reduction + 10; // Enforcement improves compliance
+            expected.international_cooperation = international_cooperation - 20; // Sanctions harm relationships
+            expected.reputation = reputation - 10; // Sanctions may seem harsh
+            expected.thinking = `制裁违约国，提升减排执行，但损害国际合作`;
+            break;
+          case 'adjust_targets':
+            expected.emission_reduction = emission_reduction + 15; // Adjusted targets remain achievable
+            expected.international_cooperation = international_cooperation + 15; // Flexibility helps
+            expected.reputation = reputation + 5; // Pragmatic approach
+            expected.thinking = `调整减排目标，保持减排动力，增强国际合作`;
+            break;
+          case 'strengthen_monitoring':
+            expected.emission_reduction = emission_reduction + 12; // Better monitoring improves compliance
+            expected.international_cooperation = international_cooperation + 10; // Transparency helps
+            expected.resources = resources - 8000; // Monitoring system costs
+            expected.thinking = `强化监督机制，提升减排效果，需投入¥8000`;
+            break;
+          case 'green_fund':
+            expected.emission_reduction = emission_reduction + 20; // Incentives drive action
+            expected.international_cooperation = international_cooperation + 30; // Incentives promote cooperation
+            expected.resources = resources - 15000; // Fund requires substantial investment
+            expected.thinking = `绿色基金激励，大幅提升减排和合作，需投入¥15000`;
+            break;
+        }
+        break;
+
+      case 3:
+        // Turn 3: Earth engineering decisions
+        const decisionId3 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId3) {
+          case 'ban_geoengineering':
+            expected.climate_risk = climate_risk - 5; // Prevents unknown risks
+            expected.technological_advancement = technological_advancement - 5; // Limits innovation
+            expected.international_cooperation = international_cooperation + 10; // Precaution promotes agreement
+            expected.thinking = `禁止地球工程，降低未知风险，但限制技术创新`;
+            break;
+          case 'limited_research':
+            expected.climate_risk = climate_risk - 10; // Controlled research may yield benefits
+            expected.technological_advancement = technological_advancement + 15; // Research drives innovation
+            expected.resources = resources - 10000; // Research costs
+            expected.thinking = `限制性研究，平衡风险与创新，需投入¥10000`;
+            break;
+          case 'pilot_programs':
+            expected.climate_risk = climate_risk - 20; // Potential rapid climate improvement
+            expected.technological_advancement = technological_advancement + 30; // Major innovation boost
+            expected.international_cooperation = international_cooperation - 15; // Controversial approach
+            expected.reputation = reputation - 5; // Risky reputation
+            expected.thinking = `试点项目，可能快速改善气候，大幅提升技术，但具争议性`;
+            break;
+          case 'governance_framework':
+            expected.climate_risk = climate_risk - 15; // Framework enables safe development
+            expected.technological_advancement = technological_advancement + 20; // Regulated innovation
+            expected.international_cooperation = international_cooperation + 20; // Governance promotes collaboration
+            expected.resources = resources - 12000; // Framework establishment costs
+            expected.thinking = `治理框架，安全推进创新，提升合作，需投入¥12000`;
+            break;
+        }
+        break;
+
+      default:
+        expected.thinking = `继续执行当前气候政策`;
+    }
+
+    return expected;
+  }
+
+  static calculateClimateChangeActualResult(turn, decisions, gameState, decisionHistory) {
+    const { resources = 100000, reputation = 50, emission_reduction = 10, international_cooperation = 30, technological_advancement = 25, climate_risk = 70 } = gameState;
+
+    let effects = {
+      resources: 0,
+      reputation: 0,
+      emission_reduction: 0,
+      international_cooperation: 0,
+      technological_advancement: 0,
+      climate_risk: 0
+    };
+
+    let narrative = '';
+    let delayedEffects = [];
+
+    switch(turn) {
+      case 1:
+        // Turn 1: Initial climate policy with complex international dynamics
+        const decisionId = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId) {
+          case 'unified_targets':
+            // Reality: Developing nations resist uniform targets due to economic concerns
+            effects.emission_reduction = 12; // Lower than expected due to resistance
+            effects.international_cooperation = -5; // Resistance creates tension
+            effects.reputation = 8; // Leadership recognition but also criticism
+            effects.resources = -2000; // Agreement negotiation costs
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                emission_reduction: 8, 
+                international_cooperation: 5,
+                description: 'Agreement implementation challenges emerge in round 2'
+              }
+            });
+
+            narrative = `统一减排目标遭遇发展中国家强烈抵制，它们担心这会阻碍经济发展。虽然在理论上体现了公平原则，但实际上导致了国际合作紧张。减排效果低于预期，仅为12%而非期望的25%。`;
+            break;
+
+          case 'historical_emissions':
+            // Reality: Developed nations resist accepting greater burden
+            effects.emission_reduction = 15; // Moderate achievement
+            effects.international_cooperation = 2; // Some cooperation despite tensions
+            effects.reputation = 12; // Recognition for addressing historical responsibility
+            effects.resources = -1000; // Negotiation costs
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                international_cooperation: 8, 
+                emission_reduction: 5,
+                description: 'Historical responsibility approach yields gradual benefits'
+              }
+            });
+
+            narrative = `基于历史排放责任的差异化目标在理论上公平，但发达国家担心承担过重负担。尽管如此，这种方法获得了中等程度的减排效果和逐步增强的国际合作。`;
+            break;
+
+          case 'carbon_trading':
+            // Reality: Complex implementation, potential for gaming
+            effects.emission_reduction = 10; // Lower than expected due to market complexities
+            effects.international_cooperation = 15; // Market mechanism encourages participation
+            effects.reputation = 5; // Mixed reception
+            effects.resources = -8000; // High implementation costs
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                emission_reduction: 12, 
+                resources: 5000,
+                description: 'Carbon market efficiency improves over time'
+              }
+            });
+
+            narrative = `碳交易市场机制促进了国际合作，但实施复杂，成本高昂。减排效果初期低于预期，但随着市场机制完善，预计将逐步改善。`;
+            break;
+
+          case 'tech_transfer':
+            // Reality: Technology sharing faces IP concerns, but builds goodwill
+            effects.emission_reduction = 18; // Effective approach
+            effects.international_cooperation = 20; // Significant cooperation boost
+            effects.reputation = 18; // Strong reputation enhancement
+            effects.resources = -12000; // Substantial investment in tech transfer
+            effects.technological_advancement = 10; // Technology sharing spurs innovation
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                emission_reduction: 15, 
+                technological_advancement: 12,
+                description: 'Technology transfer effects compound in round 2'
+              }
+            });
+
+            narrative = `技术转移机制取得了显著成效，大幅提升了国际合作和减排效果。虽然初期投入较大，但建立了良好的国际声誉，为后续合作奠定基础。`;
+            break;
+
+          default:
+            effects.emission_reduction = 5;
+            effects.international_cooperation = 2;
+            narrative = `采取了某种气候政策，产生了中性影响。`;
+        }
+        break;
+
+      case 2:
+        // Turn 2: Response to implementation with complex diplomatic consequences
+        const decisionId2 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId2) {
+          case 'sanctions_noncompliance':
+            // Reality: Sanctions may backfire, harming cooperation
+            effects.emission_reduction = 5; // Some enforcement effect
+            effects.international_cooperation = -25; // Significant cooperation damage
+            effects.reputation = -15; // Sanctions viewed negatively
+            effects.resources = -3000; // Sanction administration costs
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                international_cooperation: -30, 
+                emission_reduction: -5,
+                description: 'Sanction effects create long-term diplomatic damage'
+              }
+            });
+
+            narrative = `对违约国实施经济制裁短期内可能促使部分国家遵守，但严重损害了国际合作氛围。许多国家认为制裁过于严厉，开始质疑整个协议的有效性。`;
+            break;
+
+          case 'adjust_targets':
+            // Reality: Flexible approach maintains engagement
+            effects.emission_reduction = 12; // Pragmatic targets remain achievable
+            effects.international_cooperation = 18; // Flexibility enhances cooperation
+            effects.reputation = 8; // Pragmatism appreciated
+            effects.resources = -2000; // Adjustment process costs
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                emission_reduction: 15, 
+                international_cooperation: 10,
+                description: 'Flexible approach yields sustained benefits'
+              }
+            });
+
+            narrative = `调整减排目标的务实做法得到了广泛支持，各国更愿意承诺能够实现的目标。这种灵活性增强了协议的可持续性，为长期减排奠定了坚实基础。`;
+            break;
+
+          case 'strengthen_monitoring':
+            // Reality: Transparency builds trust but requires resources
+            effects.emission_reduction = 8; // Improved compliance through monitoring
+            effects.international_cooperation = 12; // Transparency builds trust
+            effects.reputation = 10; // Good governance recognized
+            effects.resources = -10000; // Significant monitoring system costs
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                emission_reduction: 10, 
+                international_cooperation: 8,
+                description: 'Monitoring system effectiveness grows over time'
+              }
+            });
+
+            narrative = `强化监督机制提高了透明度和信任度，减排执行情况有所改善。虽然建设和维护成本高昂，但为协议的长期有效性提供了保障。`;
+            break;
+
+          case 'green_fund':
+            // Reality: Incentives effective but expensive
+            effects.emission_reduction = 18; // Strong incentive effects
+            effects.international_cooperation = 25; // Significant cooperation boost
+            effects.reputation = 15; // Generosity recognized
+            effects.resources = -20000; // Substantial fund investment
+            effects.technological_advancement = 8; // Incentives drive innovation
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                emission_reduction: 20, 
+                technological_advancement: 12,
+                description: 'Green fund investments yield long-term benefits'
+              }
+            });
+
+            narrative = `绿色基金大幅提升了减排效果和国际合作水平。虽然投资巨大，但通过激励措施激发了各国的积极性，推动了技术创新。`;
+            break;
+        }
+        break;
+
+      case 3:
+        // Turn 3: Earth engineering decisions with complex scientific and political implications
+        const decisionId3 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId3) {
+          case 'ban_geoengineering':
+            // Reality: Prevents risks but limits potential solutions
+            effects.climate_risk = -2; // Slight improvement through other measures
+            effects.technological_advancement = -8; // Innovation limitations
+            effects.international_cooperation = 5; // Precaution creates some consensus
+            effects.reputation = 5; // Responsible approach
+            
+            delayedEffects.push({
+              turn: 4,
+              effect: { 
+                climate_risk: 3, 
+                technological_advancement: -5,
+                description: 'Banning geoengineering limits future options'
+              }
+            });
+
+            narrative = `全面禁止地球工程研究避免了潜在的未知风险，但也限制了解决气候问题的创新途径。虽然在短期内获得了一些国际支持，但可能错失了快速缓解气候变化的机会。`;
+            break;
+
+          case 'limited_research':
+            // Reality: Balances caution with innovation
+            effects.climate_risk = -8; // Controlled research shows promise
+            effects.technological_advancement = 12; // Focused innovation
+            effects.international_cooperation = 8; // Managed research cooperation
+            effects.resources = -12000; // Research investment
+            effects.reputation = 3; // Cautious but progressive approach
+            
+            delayedEffects.push({
+              turn: 4,
+              effect: { 
+                technological_advancement: 15, 
+                climate_risk: -10,
+                description: 'Controlled research yields breakthrough solutions'
+              }
+            });
+
+            narrative = `限制性研究在谨慎和创新之间找到了平衡。虽然投资较大，但取得了初步进展，为未来的气候解决方案奠定了基础。`;
+            break;
+
+          case 'pilot_programs':
+            // Reality: High potential but high risks
+            const success = Math.random() > 0.5; // 50% chance of success
+            effects.climate_risk = success ? -25 : 15; // Either dramatic improvement or worsening
+            effects.technological_advancement = success ? 25 : -10; // Success drives innovation or sets it back
+            effects.international_cooperation = success ? 15 : -30; // Success builds trust or destroys it
+            effects.reputation = success ? 20 : -25; // Success brings praise or severe criticism
+            effects.resources = -25000; // Large pilot program investment
+            
+            delayedEffects.push({
+              turn: 4,
+              effect: { 
+                climate_risk: success ? -15 : 20, 
+                international_cooperation: success ? 20 : -35,
+                description: 'Pilot program results have long-term implications'
+              }
+            });
+
+            narrative = `试点项目带来了巨大的不确定性。${success ? '项目取得了突破性成功，大幅降低了气候风险并推动了技术进步。' : '项目出现严重问题，加剧了气候风险并引发了国际争端。'}这种高风险高回报的策略结果两极分化。`;
+            break;
+
+          case 'governance_framework':
+            // Reality: Best of both worlds - managed innovation
+            effects.climate_risk = -18; // Well-managed approach shows results
+            effects.technological_advancement = 22; // Regulated innovation thrives
+            effects.international_cooperation = 25; // Framework enables broad participation
+            effects.resources = -15000; // Framework establishment costs
+            effects.reputation = 18; // Thoughtful approach recognized
+            
+            delayedEffects.push({
+              turn: 4,
+              effect: { 
+                climate_risk: -12, 
+                technological_advancement: 18,
+                description: 'Governance framework enables sustained progress'
+              }
+            });
+
+            narrative = `治理框架成功平衡了创新与风险管理。通过建立适当的规则和监督机制，各国能够在安全的环境下探索地球工程解决方案，取得了显著的气候改善效果。`;
+            break;
+        }
+        break;
+    }
+
+    return { effects, narrative, delayedEffects };
+  }
+
+  static applyClimateChangeDelayedEffects(currentTurn, delayedEffects, currentState) {
+    let state = { ...currentState };
+
+    if (!delayedEffects || delayedEffects.length === 0) {
+      return { state };
+    }
+
+    delayedEffects.forEach(effect => {
+      if (effect.turn === currentTurn) {
+        if (effect.effect) {
+          Object.keys(effect.effect).forEach(key => {
+            if (key !== 'description' && state.hasOwnProperty(key)) {
+              state[key] += effect.effect[key];
+            }
+          });
+        }
+      }
+    });
+
+    // Filter out applied effects
+    const remainingEffects = delayedEffects.filter(effect => effect.turn !== currentTurn);
+
+    return { state, remainingEffects };
+  }
+
+  static calculateAIGovernanceTurn(turn, decisions, gameState, decisionHistory, delayedEffects) {
+    const { resources = 50000, reputation = 50, ai_capability_assessment = 30, safety_compliance = 25, ethical_adherence = 40, innovation_balance = 35, stakeholder_pressure = 60 } = gameState;
+
+    // Initialize result
+    let result = {
+      newGameState: { ...gameState },
+      linearExpectation: {},
+      actualResult: {},
+      feedback: '',
+      newDelayedEffects: [],
+      gameOver: false,
+      gameOverReason: null
+    };
+
+    // Calculate linear expectation (what player expects)
+    result.linearExpectation = this.calculateAIGovernanceLinearExpectation(turn, decisions, gameState);
+
+    // Calculate actual result (complex system reality)
+    const actual = this.calculateAIGovernanceActualResult(turn, decisions, gameState, decisionHistory);
+
+    // Apply delayed effects from previous turns
+    const delayedEffectsResult = this.applyAIGovernanceDelayedEffects(turn, delayedEffects, gameState);
+    result.newGameState = { ...delayedEffectsResult.state };
+
+    // Apply current turn effects
+    result.newGameState.resources += actual.effects.resources;
+    result.newGameState.reputation += actual.effects.reputation;
+    result.newGameState.ai_capability_assessment += actual.effects.ai_capability_assessment;
+    result.newGameState.safety_compliance += actual.effects.safety_compliance;
+    result.newGameState.ethical_adherence += actual.effects.ethical_adherence;
+    result.newGameState.innovation_balance += actual.effects.innovation_balance;
+    result.newGameState.stakeholder_pressure += actual.effects.stakeholder_pressure;
+
+    // Ensure values stay within bounds
+    result.newGameState.resources = Math.max(0, result.newGameState.resources);
+    result.newGameState.reputation = Math.max(0, Math.min(100, result.newGameState.reputation));
+    result.newGameState.ai_capability_assessment = Math.max(0, Math.min(100, result.newGameState.ai_capability_assessment));
+    result.newGameState.safety_compliance = Math.max(0, Math.min(100, result.newGameState.safety_compliance));
+    result.newGameState.ethical_adherence = Math.max(0, Math.min(100, result.newGameState.ethical_adherence));
+    result.newGameState.innovation_balance = Math.max(0, Math.min(100, result.newGameState.innovation_balance));
+    result.newGameState.stakeholder_pressure = Math.max(0, Math.min(100, result.newGameState.stakeholder_pressure));
+
+    result.actualResult = {
+      resources: result.newGameState.resources,
+      reputation: result.newGameState.reputation,
+      ai_capability_assessment: result.newGameState.ai_capability_assessment,
+      safety_compliance: result.newGameState.safety_compliance,
+      ethical_adherence: result.newGameState.ethical_adherence,
+      innovation_balance: result.newGameState.innovation_balance,
+      stakeholder_pressure: result.newGameState.stakeholder_pressure,
+      changes: actual.effects
+    };
+
+    // Add new delayed effects
+    result.newDelayedEffects = actual.delayedEffects || [];
+
+    // Generate feedback
+    result.feedback = this.generateAIGovernanceFeedback(turn, result.linearExpectation, result.actualResult, actual.narrative);
+
+    // Check game over conditions
+    if (result.newGameState.reputation < 15) {
+      result.gameOver = true;
+      result.gameOverReason = 'reputation';
+    } else if (result.newGameState.stakeholder_pressure > 90) {
+      result.gameOver = true;
+      result.gameOverReason = 'stakeholder_pressure';
+    } else if (result.newGameState.resources < 5000) {
+      result.gameOver = true;
+      result.gameOverReason = 'resources';
+    }
+
+    return result;
+  }
+
+  static calculateAIGovernanceLinearExpectation(turn, decisions, gameState) {
+    const { resources = 50000, reputation = 50, ai_capability_assessment = 30, safety_compliance = 25 } = gameState;
+    let expected = {
+      resources,
+      reputation,
+      ai_capability_assessment,
+      safety_compliance,
+      thinking: ''
+    };
+
+    switch(turn) {
+      case 1:
+        // Turn 1: Initial AI governance decision
+        const decisionId = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId) {
+          case 'task_based_standards':
+            expected.ai_capability_assessment = ai_capability_assessment + 20; // High assessment improvement
+            expected.safety_compliance = safety_compliance + 10; // Moderate safety improvement
+            expected.reputation = reputation + 5; // Moderate reputation boost
+            expected.thinking = `基于任务的标准，预期AI能力评估提升20，安全合规提升10，声誉提升5`;
+            break;
+          case 'safety_constraints':
+            expected.ai_capability_assessment = ai_capability_assessment + 10; // Moderate assessment
+            expected.safety_compliance = safety_compliance + 25; // High safety improvement
+            expected.reputation = reputation + 8; // Good reputation for safety focus
+            expected.thinking = `安全约束标准，预期AI能力评估提升10，安全合规提升25，声誉提升8`;
+            break;
+          case 'ethical_framework':
+            expected.ai_capability_assessment = ai_capability_assessment + 15; // Moderate assessment
+            expected.safety_compliance = safety_compliance + 15; // Moderate safety improvement
+            expected.reputation = reputation + 12; // Strong reputation boost
+            expected.thinking = `伦理框架，预期AI能力评估提升15，安全合规提升15，声誉提升12`;
+            break;
+          case 'comprehensive_framework':
+            expected.ai_capability_assessment = ai_capability_assessment + 15; // Moderate assessment
+            expected.safety_compliance = safety_compliance + 20; // High safety improvement
+            expected.reputation = reputation + 10; // Good reputation
+            expected.resources = resources - 5000; // Framework development cost
+            expected.thinking = `综合评估框架，预期AI能力评估提升15，安全合规提升20，声誉提升10，需投入¥5000`;
+            break;
+          default:
+            expected.thinking = `选择了AI治理策略，预期获得相应效果`;
+        }
+        break;
+
+      case 2:
+        // Turn 2: Self-improvement decision
+        const decisionId2 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId2) {
+          case 'ban_self_improvement':
+            expected.safety_compliance = safety_compliance + 35; // High safety improvement
+            expected.ai_capability_assessment = ai_capability_assessment - 5; // Innovation constraint
+            expected.reputation = reputation + 15; // Safety focus appreciated
+            expected.thinking = `禁止自我改进，安全合规大幅提升35，但限制创新-5`;
+            break;
+          case 'limited_self_improvement':
+            expected.safety_compliance = safety_compliance + 20; // Moderate safety
+            expected.ai_capability_assessment = ai_capability_assessment + 5; // Limited innovation
+            expected.reputation = reputation + 8; // Balanced approach
+            expected.thinking = `限制性自我改进，安全合规提升20，能力评估提升5`;
+            break;
+          case 'supervised_improvement':
+            expected.safety_compliance = safety_compliance + 15; // Moderate safety
+            expected.ai_capability_assessment = ai_capability_assessment + 25; // High innovation
+            expected.reputation = reputation + 10; // Innovation balance
+            expected.thinking = `监督式改进，安全合规提升15，能力评估大幅提升25`;
+            break;
+          case 'approval_mechanism':
+            expected.safety_compliance = safety_compliance + 30; // High safety
+            expected.ai_capability_assessment = ai_capability_assessment + 10; // Controlled innovation
+            expected.reputation = reputation + 18; // Strong safety focus
+            expected.thinking = `审批机制，安全合规提升30，能力评估提升10，声誉大幅提升18`;
+            break;
+        }
+        break;
+
+      case 3:
+        // Turn 3: International coordination
+        const decisionId3 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId3) {
+          case 'international_union':
+            expected.safety_compliance = safety_compliance + 35; // High compliance through coordination
+            expected.reputation = reputation + 20; // International cooperation
+            expected.stakeholder_pressure = stakeholder_pressure - 10; // Shared burden
+            expected.thinking = `国际联盟，安全合规大幅提升35，声誉提升20，压力减轻10`;
+            break;
+          case 'minimum_standards':
+            expected.safety_compliance = safety_compliance + 25; // Moderate compliance
+            expected.reputation = reputation + 15; // Good cooperation
+            expected.stakeholder_pressure = stakeholder_pressure - 5; // Some burden sharing
+            expected.thinking = `最低标准，安全合规提升25，声誉提升15`;
+            break;
+          case 'unilateral_approach':
+            expected.safety_compliance = safety_compliance + 10; // Limited coordination benefits
+            expected.reputation = reputation - 10; // Criticism for isolation
+            expected.stakeholder_pressure = stakeholder_pressure + 15; // Increased domestic pressure
+            expected.thinking = `单边策略，安全合规仅提升10，声誉下降10，压力增加15`;
+            break;
+          case 'multilateral_coordination':
+            expected.safety_compliance = safety_compliance + 30; // Good coordination
+            expected.reputation = reputation + 25; // Strong cooperation
+            expected.stakeholder_pressure = stakeholder_pressure - 8; // Shared approach
+            expected.thinking = `多边协调，安全合规提升30，声誉大幅提升25，压力减轻8`;
+            break;
+        }
+        break;
+
+      case 4:
+        // Turn 4: Medical AI decision
+        const decisionId4 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId4) {
+          case 'explainability_requirement':
+            expected.safety_compliance = safety_compliance + 30; // High safety focus
+            expected.ai_capability_assessment = ai_capability_assessment - 10; // Innovation constraint
+            expected.reputation = reputation + 15; // Safety focus appreciated
+            expected.thinking = `可解释性要求，安全合规提升30，能力评估下降10，声誉提升15`;
+            break;
+          case 'conditional_use':
+            expected.safety_compliance = safety_compliance + 20; // Moderate safety
+            expected.ai_capability_assessment = ai_capability_assessment + 10; // Controlled innovation
+            expected.reputation = reputation + 12; // Balanced approach
+            expected.thinking = `条件使用，安全合规提升20，能力评估提升10，声誉提升12`;
+            break;
+          case 'patient_benefit_priority':
+            expected.ai_capability_assessment = ai_capability_assessment + 40; // High innovation benefit
+            expected.safety_compliance = safety_compliance - 5; // Safety concern
+            expected.reputation = reputation + 25; // Patient benefit focus
+            expected.thinking = `患者利益优先，能力评估大幅提升40，声誉大幅提升25，安全略降5`;
+            break;
+          case 'responsibility_mechanism':
+            expected.safety_compliance = safety_compliance + 25; // Clear accountability
+            expected.reputation = reputation + 20; // Responsibility clarity
+            expected.stakeholder_pressure = stakeholder_pressure - 15; // Clear expectations
+            expected.thinking = `责任机制，安全合规提升25，声誉提升20，压力减轻15`;
+            break;
+        }
+        break;
+
+      default:
+        expected.thinking = `继续执行当前AI治理策略`;
+    }
+
+    return expected;
+  }
+
+  static calculateAIGovernanceActualResult(turn, decisions, gameState, decisionHistory) {
+    const { resources = 50000, reputation = 50, ai_capability_assessment = 30, safety_compliance = 25, ethical_adherence = 40, innovation_balance = 35, stakeholder_pressure = 60 } = gameState;
+
+    let effects = {
+      resources: 0,
+      reputation: 0,
+      ai_capability_assessment: 0,
+      safety_compliance: 0,
+      ethical_adherence: 0,
+      innovation_balance: 0,
+      stakeholder_pressure: 0
+    };
+
+    let narrative = '';
+    let delayedEffects = [];
+
+    switch(turn) {
+      case 1:
+        // Turn 1: Initial AI governance with complex regulatory dynamics
+        const decisionId = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId) {
+          case 'task_based_standards':
+            // Reality: Standards difficult to implement due to rapid AI evolution
+            effects.ai_capability_assessment = 12; // Lower than expected due to complexity
+            effects.safety_compliance = 8; // Moderate improvement
+            effects.reputation = 3; // Some appreciation for detailed approach
+            effects.resources = -3000; // Standard development costs
+            effects.stakeholder_pressure = 10; // Industry pushback on complexity
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                ai_capability_assessment: 5, 
+                safety_compliance: 3,
+                stakeholder_pressure: 5,
+                description: 'Standard implementation challenges emerge in round 2'
+              }
+            });
+
+            narrative = `基于任务的评估标准在理论上很全面，但由于AI技术快速发展，实际实施起来非常复杂。行业对复杂标准提出质疑，导致实施进度慢于预期，AI能力评估提升仅为12而非预期的20。`;
+            break;
+
+          case 'safety_constraints':
+            // Reality: Safety focus may hamper innovation
+            effects.ai_capability_assessment = 8; // Lower due to innovation constraints
+            effects.safety_compliance = 20; // Strong safety improvement
+            effects.reputation = 10; // Public appreciates safety focus
+            effects.innovation_balance = -8; // Heavy constraint on innovation
+            effects.resources = -5000; // Safety system implementation costs
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                ai_capability_assessment: 3, 
+                innovation_balance: -5,
+                description: 'Safety constraints continue to limit innovation in round 2'
+              }
+            });
+
+            narrative = `安全约束标准显著提升了安全合规水平，但也限制了AI能力的发展。创新平衡得分下降，反映出过度安全导向对技术进步的负面影响。`;
+            break;
+
+          case 'ethical_framework':
+            // Reality: Ethics important but hard to measure
+            effects.ai_capability_assessment = 10; // Moderate assessment improvement
+            effects.safety_compliance = 12; // Ethics contribute to safety
+            effects.ethical_adherence = 20; // Significant ethics improvement
+            effects.reputation = 15; // Strong public support for ethics focus
+            effects.resources = -8000; // Ethics framework development costs
+            effects.stakeholder_pressure = -5; // Ethics resonate with public
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                ethical_adherence: 15, 
+                reputation: 8,
+                description: 'Ethics framework gains momentum in round 2'
+              }
+            });
+
+            narrative = `伦理框架取得了显著成效，大幅提升了伦理遵守度和公众声誉。虽然对AI能力评估的直接影响较小，但为长期可持续的AI发展奠定了基础。`;
+            break;
+
+          case 'comprehensive_framework':
+            // Reality: Comprehensive approach effective but resource-intensive
+            effects.ai_capability_assessment = 12; // Moderate improvement
+            effects.safety_compliance = 18; // Strong safety improvement
+            effects.reputation = 12; // Good approach recognition
+            effects.resources = -12000; // Substantial framework development costs
+            effects.ethical_adherence = 10; // Framework includes ethical components
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                safety_compliance: 15, 
+                ai_capability_assessment: 8,
+                description: 'Comprehensive framework effects compound in round 2'
+              }
+            });
+
+            narrative = `综合评估框架取得了平衡的效果，在安全和能力评估方面都有所提升。虽然初期投入较大，但为全面的AI治理提供了坚实基础。`;
+            break;
+
+          default:
+            effects.ai_capability_assessment = 5;
+            effects.safety_compliance = 3;
+            narrative = `采取了某种AI治理策略，产生了中性影响。`;
+        }
+        break;
+
+      case 2:
+        // Turn 2: Self-improvement decisions with complex technical and social implications
+        const decisionId2 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId2) {
+          case 'ban_self_improvement':
+            // Reality: Ban may drive underground development, innovation suffers
+            effects.safety_compliance = 25; // Significant safety improvement
+            effects.ai_capability_assessment = -10; // Severe innovation constraint
+            effects.reputation = 8; // Safety focus appreciated by some
+            effects.innovation_balance = -25; // Major innovation penalty
+            effects.stakeholder_pressure = 20; // Industry backlash
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                ai_capability_assessment: -15, 
+                innovation_balance: -20,
+                description: 'Ban effects severely limit development in round 3'
+              }
+            });
+
+            narrative = `全面禁止AI自我改进显著提升了安全合规，但也严重限制了AI能力发展和创新。业界对此政策表示强烈反对，认为这将使国家在AI竞赛中落后。`;
+            break;
+
+          case 'limited_self_improvement':
+            // Reality: Balanced approach works well
+            effects.safety_compliance = 18; // Good safety improvement
+            effects.ai_capability_assessment = 8; // Controlled innovation
+            effects.reputation = 12; // Balanced approach appreciated
+            effects.innovation_balance = 5; // Positive but controlled
+            effects.resources = -3000; // Monitoring system costs
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                ai_capability_assessment: 10, 
+                safety_compliance: 8,
+                description: 'Limited improvement approach shows sustainable benefits'
+              }
+            });
+
+            narrative = `限制性自我改进政策取得了良好的平衡效果，在保障安全的同时允许了适度的创新。公众和业界都对这种务实的方法表示认可。`;
+            break;
+
+          case 'supervised_improvement':
+            // Reality: Supervision effective but challenging to implement
+            effects.safety_compliance = 15; // Moderate safety improvement
+            effects.ai_capability_assessment = 20; // Good innovation
+            effects.reputation = 10; // Innovation focus appreciated
+            effects.resources = -10000; // Intensive supervision costs
+            effects.stakeholder_pressure = 15; // Oversight creates tensions
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                ai_capability_assessment: 15, 
+                safety_compliance: 5,
+                description: 'Supervision approach yields continued innovation'
+              }
+            });
+
+            narrative = `监督式改进政策促进了AI能力的显著提升，但监督机制的实施成本高昂，且在监管机构和研发机构之间产生了摩擦。`;
+            break;
+
+          case 'approval_mechanism':
+            // Reality: Structured approach effective
+            effects.safety_compliance = 25; // Strong safety improvement
+            effects.ai_capability_assessment = 12; // Controlled innovation
+            effects.reputation = 18; // Strong safety focus appreciated
+            effects.resources = -15000; // Approval system development costs
+            effects.innovation_balance = 2; // Minimal constraint
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                safety_compliance: 15, 
+                innovation_balance: 8,
+                description: 'Approval mechanism provides sustainable balance'
+              }
+            });
+
+            narrative = `审批机制在安全和创新之间取得了良好的平衡，建立了清晰的升级路径。虽然系统建设成本较高，但为AI能力的有序发展提供了保障。`;
+            break;
+        }
+        break;
+
+      case 3:
+        // Turn 3: International coordination with complex diplomatic implications
+        const decisionId3 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId3) {
+          case 'international_union':
+            // Reality: Coordination difficult but beneficial
+            effects.safety_compliance = 25; // Lower than expected due to coordination challenges
+            effects.reputation = 15; // International cooperation recognized
+            effects.stakeholder_pressure = -5; // Shared burden
+            effects.resources = -8000; // International coordination costs
+            effects.innovation_balance = 5; // Coordination facilitates innovation
+            
+            delayedEffects.push({
+              turn: 4,
+              effect: { 
+                safety_compliance: 10, 
+                reputation: 10,
+                description: 'International cooperation yields long-term benefits'
+              }
+            });
+
+            narrative = `国际AI监管联盟的建立遇到了协调挑战，效果低于预期，但为长期合作奠定了基础。各国在标准制定上存在一定分歧，但总体方向一致。`;
+            break;
+
+          case 'minimum_standards':
+            // Reality: Minimum standards achieve broad adoption
+            effects.safety_compliance = 22; // Good compliance through adoption
+            effects.reputation = 18; // Successful cooperation
+            effects.stakeholder_pressure = -8; // Reduced individual pressure
+            effects.resources = -5000; // Standard setting costs
+            effects.ai_capability_assessment = 5; // Standardization aids assessment
+            
+            delayedEffects.push({
+              turn: 4,
+              effect: { 
+                safety_compliance: 12, 
+                ai_capability_assessment: 8,
+                description: 'Minimum standards facilitate widespread adoption'
+              }
+            });
+
+            narrative = `最低安全标准协议取得了广泛的国际支持，因为门槛适中，各国易于接受。这为AI安全治理提供了基础框架。`;
+            break;
+
+          case 'unilateral_approach':
+            // Reality: Isolation leads to negative consequences
+            effects.safety_compliance = 8; // Limited by lack of coordination
+            effects.reputation = -15; // Criticized for isolationist approach
+            effects.stakeholder_pressure = 25; // Increased domestic pressure
+            effects.ai_capability_assessment = -5; // Falling behind internationally
+            effects.innovation_balance = -10; // Reduced competitive pressure
+            
+            delayedEffects.push({
+              turn: 4,
+              effect: { 
+                ai_capability_assessment: -10, 
+                reputation: -20,
+                description: 'Unilateral approach leads to international isolation'
+              }
+            });
+
+            narrative = `单边政策导致了国际孤立，其他国家在AI治理上取得合作进展时，我国却在国际舞台上被边缘化，声誉受损。`;
+            break;
+
+          case 'multilateral_coordination':
+            // Reality: Best of both worlds - coordination with autonomy
+            effects.safety_compliance = 28; // Effective coordination
+            effects.reputation = 22; // Strong cooperative stance
+            effects.stakeholder_pressure = -12; // Significant burden sharing
+            effects.resources = -7000; // Coordination costs
+            effects.innovation_balance = 8; // Facilitates international innovation
+            
+            delayedEffects.push({
+              turn: 4,
+              effect: { 
+                safety_compliance: 15, 
+                innovation_balance: 12,
+                description: 'Multilateral approach enables sustained benefits'
+              }
+            });
+
+            narrative = `多边协调机制在保持自主性的同时实现了有效的国际合作，取得了最佳的整体效果。`;
+            break;
+        }
+        break;
+
+      case 4:
+        // Turn 4: Medical AI decision with complex ethical implications
+        const decisionId4 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId4) {
+          case 'explainability_requirement':
+            // Reality: Explainability important but constrains cutting-edge AI
+            effects.safety_compliance = 25; // High safety through explainability
+            effects.ai_capability_assessment = -8; // Constraints cutting-edge applications
+            effects.reputation = 12; // Safety focus appreciated
+            effects.innovation_balance = -15; // Significant constraint on innovation
+            effects.resources = -5000; // Explainability system costs
+            
+            delayedEffects.push({
+              turn: 5,
+              effect: { 
+                ai_capability_assessment: -10, 
+                innovation_balance: -12,
+                description: 'Explainability constraints continue to limit advanced AI'
+              }
+            });
+
+            narrative = `可解释性要求显著提升了AI安全性，但也限制了尖端AI系统的应用，特别是在需要复杂决策的医疗领域。`;
+            break;
+
+          case 'conditional_use':
+            // Reality: Balanced approach works well
+            effects.safety_compliance = 18; // Good safety through conditions
+            effects.ai_capability_assessment = 12; // Controlled innovation
+            effects.reputation = 15; // Balanced approach appreciated
+            effects.innovation_balance = 8; // Positive balance
+            effects.resources = -3000; // Condition monitoring costs
+            
+            delayedEffects.push({
+              turn: 5,
+              effect: { 
+                safety_compliance: 10, 
+                ai_capability_assessment: 10,
+                description: 'Conditional approach enables sustainable medical AI'
+              }
+            });
+
+            narrative = `条件使用政策在医疗AI的安全性和有效性之间取得了良好平衡，允许了先进系统的应用，同时确保了必要的监督。`;
+            break;
+
+          case 'patient_benefit_priority':
+            // Reality: Patient benefits significant but risks remain
+            effects.ai_capability_assessment = 35; // High innovation benefit
+            effects.safety_compliance = -5; // Some safety concerns
+            effects.reputation = 20; // Strong patient advocacy support
+            effects.innovation_balance = 20; // High innovation score
+            effects.ethical_adherence = -10; // Ethical concerns about black-box decisions
+            
+            delayedEffects.push({
+              turn: 5,
+              effect: { 
+                ai_capability_assessment: 15, 
+                reputation: 10,
+                description: 'Patient benefit approach continues to deliver results'
+              }
+            });
+
+            narrative = `患者利益优先政策带来了显著的医疗AI进展和公众支持，但也引发了关于算法透明度和伦理的担忧。`;
+            break;
+
+          case 'responsibility_mechanism':
+            // Reality: Clear accountability provides stability
+            effects.safety_compliance = 22; // Clear accountability improves safety
+            effects.reputation = 18; // Responsibility clarity appreciated
+            effects.stakeholder_pressure = -15; // Clear expectations reduce pressure
+            effects.resources = -10000; // Responsibility system development costs
+            effects.ethical_adherence = 15; // Accountability improves ethics
+            
+            delayedEffects.push({
+              turn: 5,
+              effect: { 
+                safety_compliance: 12, 
+                ethical_adherence: 10,
+                description: 'Responsibility mechanism creates stable foundation'
+              }
+            });
+
+            narrative = `责任分配机制建立了清晰的问责制度，显著提升了安全合规和伦理遵守水平，为AI在敏感领域的应用提供了稳定基础。`;
+            break;
+        }
+        break;
+    }
+
+    return { effects, narrative, delayedEffects };
+  }
+
+  static applyAIGovernanceDelayedEffects(currentTurn, delayedEffects, currentState) {
+    let state = { ...currentState };
+
+    if (!delayedEffects || delayedEffects.length === 0) {
+      return { state };
+    }
+
+    delayedEffects.forEach(effect => {
+      if (effect.turn === currentTurn) {
+        if (effect.effect) {
+          Object.keys(effect.effect).forEach(key => {
+            if (key !== 'description' && state.hasOwnProperty(key)) {
+              state[key] += effect.effect[key];
+            }
+          });
+        }
+      }
+    });
+
+    // Filter out applied effects
+    const remainingEffects = delayedEffects.filter(effect => effect.turn !== currentTurn);
+
+    return { state, remainingEffects };
+  }
+
+  static calculateFinancialCrisisTurn(turn, decisions, gameState, decisionHistory, delayedEffects) {
+    const { resources = 100000, reputation = 50, systemic_risk_level = 60, market_stability = 40, liquidity_index = 45, regulatory_compliance = 55, international_coordination = 35 } = gameState;
+
+    // Initialize result
+    let result = {
+      newGameState: { ...gameState },
+      linearExpectation: {},
+      actualResult: {},
+      feedback: '',
+      newDelayedEffects: [],
+      gameOver: false,
+      gameOverReason: null
+    };
+
+    // Calculate linear expectation (what player expects)
+    result.linearExpectation = this.calculateFinancialCrisisLinearExpectation(turn, decisions, gameState);
+
+    // Calculate actual result (complex system reality)
+    const actual = this.calculateFinancialCrisisActualResult(turn, decisions, gameState, decisionHistory);
+
+    // Apply delayed effects from previous turns
+    const delayedEffectsResult = this.applyFinancialCrisisDelayedEffects(turn, delayedEffects, gameState);
+    result.newGameState = { ...delayedEffectsResult.state };
+
+    // Apply current turn effects
+    result.newGameState.resources += actual.effects.resources;
+    result.newGameState.reputation += actual.effects.reputation;
+    result.newGameState.systemic_risk_level += actual.effects.systemic_risk_level;
+    result.newGameState.market_stability += actual.effects.market_stability;
+    result.newGameState.liquidity_index += actual.effects.liquidity_index;
+    result.newGameState.regulatory_compliance += actual.effects.regulatory_compliance;
+    result.newGameState.international_coordination += actual.effects.international_coordination;
+
+    // Ensure values stay within bounds
+    result.newGameState.resources = Math.max(0, result.newGameState.resources);
+    result.newGameState.reputation = Math.max(0, Math.min(100, result.newGameState.reputation));
+    result.newGameState.systemic_risk_level = Math.max(0, Math.min(100, result.newGameState.systemic_risk_level));
+    result.newGameState.market_stability = Math.max(0, Math.min(100, result.newGameState.market_stability));
+    result.newGameState.liquidity_index = Math.max(0, Math.min(100, result.newGameState.liquidity_index));
+    result.newGameState.regulatory_compliance = Math.max(0, Math.min(100, result.newGameState.regulatory_compliance));
+    result.newGameState.international_coordination = Math.max(0, Math.min(100, result.newGameState.international_coordination));
+
+    result.actualResult = {
+      resources: result.newGameState.resources,
+      reputation: result.newGameState.reputation,
+      systemic_risk_level: result.newGameState.systemic_risk_level,
+      market_stability: result.newGameState.market_stability,
+      liquidity_index: result.newGameState.liquidity_index,
+      regulatory_compliance: result.newGameState.regulatory_compliance,
+      international_coordination: result.newGameState.international_coordination,
+      changes: actual.effects
+    };
+
+    // Add new delayed effects
+    result.newDelayedEffects = actual.delayedEffects || [];
+
+    // Generate feedback
+    result.feedback = this.generateFinancialCrisisFeedback(turn, result.linearExpectation, result.actualResult, actual.narrative);
+
+    // Check game over conditions
+    if (result.newGameState.systemic_risk_level > 90) {
+      result.gameOver = true;
+      result.gameOverReason = 'systemic_risk';
+    } else if (result.newGameState.market_stability < 10) {
+      result.gameOver = true;
+      result.gameOverReason = 'market_stability';
+    } else if (result.newGameState.reputation < 10) {
+      result.gameOver = true;
+      result.gameOverReason = 'reputation';
+    } else if (result.newGameState.liquidity_index < 15) {
+      result.gameOver = true;
+      result.gameOverReason = 'liquidity';
+    }
+
+    return result;
+  }
+
+  static calculateFinancialCrisisLinearExpectation(turn, decisions, gameState) {
+    const { resources = 100000, reputation = 50, systemic_risk_level = 60, market_stability = 40 } = gameState;
+    let expected = {
+      resources,
+      reputation,
+      systemic_risk_level,
+      market_stability,
+      thinking: ''
+    };
+
+    switch(turn) {
+      case 1:
+        // Turn 1: Initial crisis response decision
+        const decisionId = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId) {
+          case 'tighten_derivatives':
+            expected.systemic_risk_level = systemic_risk_level - 20; // Significant risk reduction
+            expected.market_stability = market_stability - 5; // Some market disruption
+            expected.reputation = reputation + 5; // Regulatory credibility
+            expected.thinking = `加强衍生品监管，预期系统风险降低20，市场稳定小幅下降5，声誉提升5`;
+            break;
+          case 'capital_requirements':
+            expected.systemic_risk_level = systemic_risk_level - 15; // Moderate risk reduction
+            expected.market_stability = market_stability + 5; // Long-term stability
+            expected.regulatory_compliance = regulatory_compliance + 15; // Compliance improvement
+            expected.thinking = `提高资本要求，预期系统风险降低15，市场稳定提升5，监管合规提升15`;
+            break;
+          case 'stress_testing':
+            expected.systemic_risk_level = systemic_risk_level - 10; // Risk awareness
+            expected.reputation = reputation + 10; // Proactive approach
+            expected.resources = resources - 5000; // Testing costs
+            expected.thinking = `压力测试，预期系统风险降低10，声誉提升10，需投入¥5000`;
+            break;
+          case 'monitor_only':
+            expected.systemic_risk_level = systemic_risk_level - 5; // Limited impact
+            expected.market_stability = market_stability + 3; // Minimal disruption
+            expected.resources = resources - 2000; // Monitoring costs
+            expected.thinking = `加强监控，预期系统风险降低5，市场稳定提升3，需投入¥2000`;
+            break;
+          default:
+            expected.thinking = `选择了危机应对策略，预期获得相应效果`;
+        }
+        break;
+
+      case 2:
+        // Turn 2: Liquidity response
+        const decisionId2 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId2) {
+          case 'massive_liquidity':
+            expected.market_stability = market_stability + 30; // Massive stability improvement
+            expected.systemic_risk_level = systemic_risk_level - 10; // Reduced stress
+            expected.reputation = reputation + 8; // Crisis response
+            expected.resources = resources - 50000; // Large liquidity injection
+            expected.thinking = `大规模流动性支持，市场稳定大幅提升30，需投入¥50000`;
+            break;
+          case 'targeted_support':
+            expected.market_stability = market_stability + 15; // Targeted stability
+            expected.systemic_risk_level = systemic_risk_level - 15; // Focused risk reduction
+            expected.reputation = reputation + 12; // Effective targeting
+            expected.resources = resources - 20000; // Targeted injection
+            expected.thinking = `定向支持，市场稳定提升15，系统风险降低15，需投入¥20000`;
+            break;
+          case 'market_driven':
+            expected.market_stability = market_stability - 10; // Market disruption
+            expected.systemic_risk_level = systemic_risk_level + 5; // Risk may increase
+            expected.reputation = reputation - 5; // Lack of support
+            expected.thinking = `市场驱动，市场稳定下降10，声誉下降5`;
+            break;
+          case 'coordinated_intervention':
+            expected.market_stability = market_stability + 25; // Coordinated stability
+            expected.systemic_risk_level = systemic_risk_level - 20; // International cooperation
+            expected.international_coordination = international_coordination + 20; // Coordination improvement
+            expected.resources = resources - 30000; // Coordinated efforts
+            expected.thinking = `协调干预，市场稳定提升25，系统风险降低20，国际合作提升20`;
+            break;
+        }
+        break;
+
+      case 3:
+        // Turn 3: Monetary policy response
+        const decisionId3 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId3) {
+          case 'aggressive_easing':
+            expected.market_stability = market_stability + 30; // Aggressive stability
+            expected.reputation = reputation + 15; // Strong action
+            expected.systemic_risk_level = systemic_risk_level - 8; // Reduced funding stress
+            expected.resources = resources - 10000; // Interest rate losses
+            expected.thinking = `激进降息，市场稳定大幅提升30，声誉提升15，需承担利率损失`;
+            break;
+          case 'maintain_rates':
+            expected.market_stability = market_stability - 5; // Short-term pain
+            expected.reputation = reputation + 10; // Disciplined approach
+            expected.systemic_risk_level = systemic_risk_level + 5; // Potential stress
+            expected.thinking = `维持利率，市场稳定下降5，声誉提升10，系统风险可能上升5`;
+            break;
+          case 'quantitative_easing':
+            expected.market_stability = market_stability + 35; // QE stability boost
+            expected.systemic_risk_level = systemic_risk_level - 12; // QE reduces stress
+            expected.liquidity_index = liquidity_index + 25; // Significant liquidity
+            expected.resources = resources - 40000; // Asset purchases
+            expected.thinking = `量化宽松，市场稳定提升35，流动性提升25，需投入¥40000`;
+            break;
+          case 'fiscal_coordination':
+            expected.market_stability = market_stability + 20; // Combined effect
+            expected.systemic_risk_level = systemic_risk_level - 15; // Dual approach
+            expected.reputation = reputation + 18; // Comprehensive response
+            expected.thinking = `财政协调，市场稳定提升20，系统风险降低15，声誉提升18`;
+            break;
+        }
+        break;
+
+      case 4:
+        // Turn 4: International coordination
+        const decisionId4 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId4) {
+          case 'lead_coordination':
+            expected.international_coordination = international_coordination + 30; // Leadership boost
+            expected.systemic_risk_level = systemic_risk_level - 25; // Global cooperation
+            expected.reputation = reputation + 20; // Leadership recognition
+            expected.resources = resources - 15000; // Leadership costs
+            expected.thinking = `主导协调，国际合作大幅提升30，系统风险降低25，声誉提升20`;
+            break;
+          case 'follow_main':
+            expected.international_coordination = international_coordination + 15; // Alignment
+            expected.market_stability = market_stability + 10; // Alignment stability
+            expected.reputation = reputation + 5; // Following credibility
+            expected.thinking = `跟随主要央行，国际合作提升15，市场稳定提升10，声誉提升5`;
+            break;
+          case 'independent_policy':
+            expected.systemic_risk_level = systemic_risk_level - 10; // Domestic focus
+            expected.reputation = reputation - 8; // International criticism
+            expected.international_coordination = international_coordination - 15; // Reduced cooperation
+            expected.thinking = `独立政策，系统风险降低10，声誉下降8，国际合作下降15`;
+            break;
+          case 'temporary_coordination':
+            expected.international_coordination = international_coordination + 20; // Temporary cooperation
+            expected.systemic_risk_level = systemic_risk_level - 18; // Crisis cooperation
+            expected.reputation = reputation + 12; // Balanced approach
+            expected.thinking = `临时协调，国际合作提升20，系统风险降低18，声誉提升12`;
+            break;
+        }
+        break;
+
+      default:
+        expected.thinking = `继续执行当前危机应对策略`;
+    }
+
+    return expected;
+  }
+
+  static calculateFinancialCrisisActualResult(turn, decisions, gameState, decisionHistory) {
+    const { resources = 100000, reputation = 50, systemic_risk_level = 60, market_stability = 40, liquidity_index = 45, regulatory_compliance = 55, international_coordination = 35 } = gameState;
+
+    let effects = {
+      resources: 0,
+      reputation: 0,
+      systemic_risk_level: 0,
+      market_stability: 0,
+      liquidity_index: 0,
+      regulatory_compliance: 0,
+      international_coordination: 0
+    };
+
+    let narrative = '';
+    let delayedEffects = [];
+
+    switch(turn) {
+      case 1:
+        // Turn 1: Initial crisis response with complex market dynamics
+        const decisionId = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId) {
+          case 'tighten_derivatives':
+            // Reality: Tightening may cause market disruption, but reduces risk
+            effects.systemic_risk_level = -12; // Risk reduction, but less than expected
+            effects.market_stability = -8; // Significant market disruption
+            effects.reputation = 3; // Some credibility gain
+            effects.regulatory_compliance = 15; // Significant compliance improvement
+            effects.resources = -3000; // Implementation costs
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                systemic_risk_level: -5, 
+                market_stability: 3,
+                regulatory_compliance: 8,
+                description: 'Derivatives tightening effects continue in round 2'
+              }
+            });
+
+            narrative = `加强衍生品监管在降低系统风险方面取得了一定成效，但引发了市场的显著动荡。监管合规度大幅提升，但短期内市场稳定性受到影响。系统风险仅降低了12点，不及预期的20点。`;
+            break;
+
+          case 'capital_requirements':
+            // Reality: Capital requirements take time to show full effect
+            effects.systemic_risk_level = -8; // Moderate risk reduction
+            effects.market_stability = 2; // Small positive effect
+            effects.regulatory_compliance = 20; // Strong compliance improvement
+            effects.resources = -1000; // Implementation costs
+            effects.liquidity_index = -5; // Capital requirements may reduce liquidity
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                systemic_risk_level: -7, 
+                market_stability: 5,
+                description: 'Capital requirement effects strengthen in round 2'
+              }
+            });
+
+            narrative = `提高资本充足率要求在提升监管合规方面效果显著，但对系统风险的降低作用较为温和。短期内对市场稳定有轻微正面影响，但可能对流动性造成一定压力。`;
+            break;
+
+          case 'stress_testing':
+            // Reality: Testing reveals additional risks
+            effects.systemic_risk_level = -5; // Risk awareness
+            effects.reputation = 8; // Proactive approach appreciated
+            effects.regulatory_compliance = 10; // Testing improves compliance
+            effects.resources = -8000; // Higher testing costs
+            effects.market_stability = -3; // Testing may cause some concern
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                systemic_risk_level: -8, 
+                regulatory_compliance: 12,
+                description: 'Stress testing reveals deeper issues in round 2'
+              }
+            });
+
+            narrative = `压力测试增强了对系统风险的认识，提升了监管合规水平，但测试过程中发现了更多潜在风险。虽然市场出现小幅波动，但整体展现了央行的前瞻性。`;
+            break;
+
+          case 'monitor_only':
+            // Reality: Monitoring alone has limited impact
+            effects.systemic_risk_level = -2; // Minimal risk reduction
+            effects.market_stability = 1; // Small positive effect
+            effects.resources = -1000; // Lower monitoring costs
+            effects.reputation = 2; // Maintaining vigilance
+            
+            delayedEffects.push({
+              turn: 2,
+              effect: { 
+                systemic_risk_level: 0, 
+                market_stability: -2,
+                description: 'Limited intervention leads to risk accumulation in round 2'
+              }
+            });
+
+            narrative = `仅加强监控的策略对系统风险的降低作用有限，虽然成本较低，但未能有效应对潜在风险。这种被动策略可能导致风险在后续阶段累积。`;
+            break;
+
+          default:
+            effects.systemic_risk_level = -3;
+            effects.market_stability = 0;
+            narrative = `采取了某种危机应对策略，产生了中性影响。`;
+        }
+        break;
+
+      case 2:
+        // Turn 2: Liquidity response with complex market reactions
+        const decisionId2 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId2) {
+          case 'massive_liquidity':
+            // Reality: Massive liquidity can cause moral hazard
+            effects.market_stability = 20; // Significant improvement, but less than expected
+            effects.systemic_risk_level = -5; // Risk reduced but moral hazard concerns
+            effects.reputation = 10; // Strong crisis response
+            effects.resources = -60000; // Higher than expected costs
+            effects.liquidity_index = 30; // Massive liquidity injection
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                systemic_risk_level: 8, 
+                market_stability: -5,
+                description: 'Moral hazard effects emerge in round 3'
+              }
+            });
+
+            narrative = `大规模流动性支持显著提升了市场稳定性，但产生了道德风险担忧。虽然短期内市场企稳，但可能鼓励过度冒险行为，为后续风险埋下隐患。`;
+            break;
+
+          case 'targeted_support':
+            // Reality: Targeted support most effective
+            effects.market_stability = 18; // Strong targeted improvement
+            effects.systemic_risk_level = -18; // Effective risk reduction
+            effects.reputation = 15; // Effective crisis management
+            effects.resources = -18000; // Efficient use of resources
+            effects.liquidity_index = 15; // Targeted liquidity
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                market_stability: 10, 
+                systemic_risk_level: -5,
+                description: 'Targeted support effects compound in round 3'
+              }
+            });
+
+            narrative = `定向支持策略取得了最佳效果，有效稳定了市场并降低了系统风险。资源配置效率高，市场信心得到恢复。`;
+            break;
+
+          case 'market_driven':
+            // Reality: Market-driven approach may lead to disorderly resolution
+            effects.market_stability = -15; // Significant market disruption
+            effects.systemic_risk_level = 10; // Risk increases as institutions fail
+            effects.reputation = -12; // Lack of support criticized
+            effects.liquidity_index = -10; // Liquidity crunch
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                systemic_risk_level: 15, 
+                market_stability: -20,
+                description: 'Market-driven resolution leads to systemic crisis in round 3'
+              }
+            });
+
+            narrative = `市场驱动的解决方案导致了显著的市场动荡，多家机构面临困境。缺乏央行支持导致流动性紧缩，系统性风险大幅上升。`;
+            break;
+
+          case 'coordinated_intervention':
+            // Reality: Coordination challenges but overall effective
+            effects.market_stability = 22; // Strong coordination effect
+            effects.systemic_risk_level = -22; // International cooperation reduces risk
+            effects.international_coordination = 25; // Successful coordination
+            effects.reputation = 18; // Leadership in crisis
+            effects.resources = -35000; // Coordination costs
+            
+            delayedEffects.push({
+              turn: 3,
+              effect: { 
+                market_stability: 12, 
+                systemic_risk_level: -8,
+                international_coordination: 10,
+                description: 'International cooperation yields sustained benefits'
+              }
+            });
+
+            narrative = `协调干预策略通过国际合作有效稳定了市场，显著降低了系统风险。虽然成本较高，但展现了国际协调的强大力量。`;
+            break;
+        }
+        break;
+
+      case 3:
+        // Turn 3: Monetary policy response with complex transmission mechanisms
+        const decisionId3 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId3) {
+          case 'aggressive_easing':
+            // Reality: Aggressive easing effective but inflationary risks
+            effects.market_stability = 25; // Strong stability effect
+            effects.reputation = 12; // Decisive action
+            effects.systemic_risk_level = -6; // Reduced funding stress
+            effects.resources = -15000; // Interest rate losses
+            effects.liquidity_index = 20; // Easy monetary conditions
+            
+            delayedEffects.push({
+              turn: 4,
+              effect: { 
+                systemic_risk_level: 5, 
+                market_stability: -3,
+                description: 'Aggressive easing creates inflation concerns in round 4'
+              }
+            });
+
+            narrative = `激进降息有效提升了市场稳定性，但引发了通胀担忧。虽然短期内提振了信心，但长期通胀风险可能成为新的系统性威胁。`;
+            break;
+
+          case 'maintain_rates':
+            // Reality: Maintaining rates may cause short-term pain but long-term gain
+            effects.market_stability = -8; // Short-term disruption
+            effects.reputation = 5; // Disciplined approach
+            effects.systemic_risk_level = 3; // Potential stress
+            effects.liquidity_index = -5; // Tight monetary conditions
+            
+            delayedEffects.push({
+              turn: 4,
+              effect: { 
+                market_stability: 15, 
+                systemic_risk_level: -10,
+                reputation: 8,
+                description: 'Disciplined approach pays off in round 4'
+              }
+            });
+
+            narrative = `维持利率不变的策略短期内导致市场动荡，但展现了政策纪律性。虽然当前市场承压，但为长期稳定奠定了基础。`;
+            break;
+
+          case 'quantitative_easing':
+            // Reality: QE very effective but resource-intensive
+            effects.market_stability = 30; // Strong QE effect
+            effects.systemic_risk_level = -10; // QE reduces stress
+            effects.liquidity_index = 35; // Massive liquidity
+            effects.resources = -50000; // Large asset purchases
+            effects.reputation = 20; // Comprehensive action
+            
+            delayedEffects.push({
+              turn: 4,
+              effect: { 
+                market_stability: 15, 
+                liquidity_index: 20,
+                description: 'QE effects continue to support markets in round 4'
+              }
+            });
+
+            narrative = `量化宽松政策显著提升了市场稳定性和流动性。虽然央行资产负债表大幅扩张，但有效缓解了金融压力。`;
+            break;
+
+          case 'fiscal_coordination':
+            // Reality: Fiscal-monetary coordination most effective
+            effects.market_stability = 25; // Combined effect
+            effects.systemic_risk_level = -18; // Dual approach
+            effects.reputation = 22; // Comprehensive response
+            effects.liquidity_index = 15; // Indirect liquidity support
+            effects.regulatory_compliance = 5; // Fiscal discipline
+            
+            delayedEffects.push({
+              turn: 4,
+              effect: { 
+                market_stability: 20, 
+                systemic_risk_level: -12,
+                reputation: 10,
+                description: 'Fiscal coordination provides sustained support'
+              }
+            });
+
+            narrative = `货币政策与财政政策的协调配合取得了最佳效果，双管齐下有效稳定了市场并降低了系统风险。`;
+            break;
+        }
+        break;
+
+      case 4:
+        // Turn 4: International coordination with complex geopolitical implications
+        const decisionId4 = Object.values(decisions)[0] || 'unknown';
+        switch(decisionId4) {
+          case 'lead_coordination':
+            // Reality: Leadership effective but costly
+            effects.international_coordination = 25; // Strong leadership effect
+            effects.systemic_risk_level = -20; // Effective global cooperation
+            effects.reputation = 18; // International leadership
+            effects.resources = -20000; // Leadership costs
+            
+            delayedEffects.push({
+              turn: 5,
+              effect: { 
+                systemic_risk_level: -8, 
+                international_coordination: 15,
+                description: 'Leadership effects continue to stabilize global markets'
+              }
+            });
+
+            narrative = `主导国际合作的策略在稳定全球市场方面发挥了重要作用，显著降低了系统性风险。虽然承担了较多成本，但确立了国际金融领导地位。`;
+            break;
+
+          case 'follow_main':
+            // Reality: Following has benefits but limits influence
+            effects.international_coordination = 18; // Good alignment
+            effects.market_stability = 12; // Alignment benefits
+            effects.reputation = 8; // Reliable partner
+            effects.resources = -5000; // Limited costs
+            
+            delayedEffects.push({
+              turn: 5,
+              effect: { 
+                systemic_risk_level: -5, 
+                market_stability: 8,
+                description: 'Alignment strategy provides stable benefits'
+              }
+            });
+
+            narrative = `跟随主要央行的策略实现了良好的国际协调，市场稳定性得到提升。虽然缺乏主动权，但风险较低，成本可控。`;
+            break;
+
+          case 'independent_policy':
+            // Reality: Independence has benefits but creates isolation
+            effects.systemic_risk_level = -5; // Domestic focus
+            effects.reputation = -10; // International criticism
+            effects.international_coordination = -20; // Reduced cooperation
+            effects.market_stability = -10; // Isolation effects
+            
+            delayedEffects.push({
+              turn: 5,
+              effect: { 
+                systemic_risk_level: 5, 
+                market_stability: -15,
+                description: 'Independent policy leads to market isolation'
+              }
+            });
+
+            narrative = `独立政策虽然关注国内需求，但导致了国际孤立，市场信心受到影响。缺乏国际合作可能放大了外部冲击的影响。`;
+            break;
+
+          case 'temporary_coordination':
+            // Reality: Temporary coordination provides balance
+            effects.international_coordination = 22; // Effective temporary cooperation
+            effects.systemic_risk_level = -15; // Crisis cooperation
+            effects.reputation = 15; // Balanced approach
+            effects.resources = -10000; // Coordination costs
+            
+            delayedEffects.push({
+              turn: 5,
+              effect: { 
+                systemic_risk_level: -8, 
+                international_coordination: 10,
+                description: 'Temporary coordination provides sustainable benefits'
+              }
+            });
+
+            narrative = `临时性协调机制在危机应对中取得了良好效果，平衡了国际合作与独立性。这种灵活安排既获得了合作益处又保持了政策自主性。`;
+            break;
+        }
+        break;
+    }
+
+    return { effects, narrative, delayedEffects };
+  }
+
+  static applyFinancialCrisisDelayedEffects(currentTurn, delayedEffects, currentState) {
+    let state = { ...currentState };
+
+    if (!delayedEffects || delayedEffects.length === 0) {
+      return { state };
+    }
+
+    delayedEffects.forEach(effect => {
+      if (effect.turn === currentTurn) {
+        if (effect.effect) {
+          Object.keys(effect.effect).forEach(key => {
+            if (key !== 'description' && state.hasOwnProperty(key)) {
+              state[key] += effect.effect[key];
+            }
+          });
+        }
+      }
+    });
+
+    // Filter out applied effects
+    const remainingEffects = delayedEffects.filter(effect => effect.turn !== currentTurn);
+
+    return { state, remainingEffects };
+  }
+
+  static generateFinancialCrisisFeedback(turn, linearExpectation, actualResult, narrative) {
+    let feedback = `📊 **第${turn}轮金融危机应对结果**\n\n`;
+
+    feedback += `📖 **情况描述**：\n${narrative}\n\n`;
+
+    feedback += `🧮 **你的线性预期**：\n${linearExpectation.thinking}\n`;
+    feedback += `- 期望系统风险：${Math.round(linearExpectation.systemic_risk_level)}\n`;
+    feedback += `- 期望市场稳定：${Math.round(linearExpectation.market_stability)}\n`;
+    feedback += `- 期望声誉：${Math.round(linearExpectation.reputation)}\n\n`;
+
+    feedback += `🎯 **实际结果**：\n`;
+    feedback += `- 实际系统风险：${Math.round(actualResult.systemic_risk_level)} (${actualResult.systemic_risk_level >= linearExpectation.systemic_risk_level ? '+' : ''}${Math.round(actualResult.systemic_risk_level - linearExpectation.systemic_risk_level)})\n`;
+    feedback += `- 实际市场稳定：${Math.round(actualResult.market_stability)} (${actualResult.market_stability >= linearExpectation.market_stability ? '+' : ''}${Math.round(actualResult.market_stability - linearExpectation.market_stability)})\n`;
+    feedback += `- 实际声誉：${Math.round(actualResult.reputation)} (${actualResult.reputation >= linearExpectation.reputation ? '+' : ''}${Math.round(actualResult.reputation - linearExpectation.reputation)})\n`;
+
+    const riskDiff = actualResult.systemic_risk_level - linearExpectation.systemic_risk_level;
+    const stabilityDiff = actualResult.market_stability - linearExpectation.market_stability;
+    const reputationDiff = actualResult.reputation - linearExpectation.reputation;
+
+    if (Math.abs(riskDiff) > 8 || Math.abs(stabilityDiff) > 10 || Math.abs(reputationDiff) > 7) {
+      feedback += `\n⚠️ **偏差分析**：实际结果与预期存在显著差异，说明金融系统中存在复杂的市场心理、政策传导机制和国际联动效应，简单的线性思维不足以应对。`;
+    }
+
+    return feedback;
+  }
+
+  static generateAIGovernanceFeedback(turn, linearExpectation, actualResult, narrative) {
+    let feedback = `📊 **第${turn}轮AI治理结果**\n\n`;
+
+    feedback += `📖 **情况描述**：\n${narrative}\n\n`;
+
+    feedback += `🧮 **你的线性预期**：\n${linearExpectation.thinking}\n`;
+    feedback += `- 期望AI能力评估：${Math.round(linearExpectation.ai_capability_assessment)}\n`;
+    feedback += `- 期望安全合规：${Math.round(linearExpectation.safety_compliance)}\n`;
+    feedback += `- 期望声誉：${Math.round(linearExpectation.reputation)}\n\n`;
+
+    feedback += `🎯 **实际结果**：\n`;
+    feedback += `- 实际AI能力评估：${Math.round(actualResult.ai_capability_assessment)} (${actualResult.ai_capability_assessment >= linearExpectation.ai_capability_assessment ? '+' : ''}${Math.round(actualResult.ai_capability_assessment - linearExpectation.ai_capability_assessment)})\n`;
+    feedback += `- 实际安全合规：${Math.round(actualResult.safety_compliance)} (${actualResult.safety_compliance >= linearExpectation.safety_compliance ? '+' : ''}${Math.round(actualResult.safety_compliance - linearExpectation.safety_compliance)})\n`;
+    feedback += `- 实际声誉：${Math.round(actualResult.reputation)} (${actualResult.reputation >= linearExpectation.reputation ? '+' : ''}${Math.round(actualResult.reputation - linearExpectation.reputation)})\n`;
+
+    const capabilityDiff = actualResult.ai_capability_assessment - linearExpectation.ai_capability_assessment;
+    const safetyDiff = actualResult.safety_compliance - linearExpectation.safety_compliance;
+    const reputationDiff = actualResult.reputation - linearExpectation.reputation;
+
+    if (Math.abs(capabilityDiff) > 5 || Math.abs(safetyDiff) > 8 || Math.abs(reputationDiff) > 7) {
+      feedback += `\n⚠️ **偏差分析**：实际结果与预期存在显著差异，说明AI治理环境中存在复杂的技术发展、社会接受度、国际合作等多重因素，简单的线性思维不足以应对。`;
+    }
+
+    return feedback;
+  }
+
+  static generateClimateChangeFeedback(turn, linearExpectation, actualResult, narrative) {
+    let feedback = `📊 **第${turn}轮气候政策结果**\n\n`;
+
+    feedback += `📖 **情况描述**：\n${narrative}\n\n`;
+
+    feedback += `🧮 **你的线性预期**：\n${linearExpectation.thinking}\n`;
+    feedback += `- 期望减排幅度：${Math.round(linearExpectation.emission_reduction)}%\n`;
+    feedback += `- 期望国际合作：${Math.round(linearExpectation.international_cooperation)}\n`;
+    feedback += `- 期望声誉：${Math.round(linearExpectation.reputation)}\n\n`;
+
+    feedback += `🎯 **实际结果**：\n`;
+    feedback += `- 实际减排幅度：${Math.round(actualResult.emission_reduction)}% (${actualResult.emission_reduction >= linearExpectation.emission_reduction ? '+' : ''}${Math.round(actualResult.emission_reduction - linearExpectation.emission_reduction)})\n`;
+    feedback += `- 实际国际合作：${Math.round(actualResult.international_cooperation)} (${actualResult.international_cooperation >= linearExpectation.international_cooperation ? '+' : ''}${Math.round(actualResult.international_cooperation - linearExpectation.international_cooperation)})\n`;
+    feedback += `- 实际声誉：${Math.round(actualResult.reputation)} (${actualResult.reputation >= linearExpectation.reputation ? '+' : ''}${Math.round(actualResult.reputation - linearExpectation.reputation)})\n`;
+
+    const emissionDiff = actualResult.emission_reduction - linearExpectation.emission_reduction;
+    const cooperationDiff = actualResult.international_cooperation - linearExpectation.international_cooperation;
+    const reputationDiff = actualResult.reputation - linearExpectation.reputation;
+
+    if (Math.abs(emissionDiff) > 8 || Math.abs(cooperationDiff) > 10 || Math.abs(reputationDiff) > 8) {
+      feedback += `\n⚠️ **偏差分析**：实际结果与预期存在显著差异，说明全球气候治理环境中存在复杂的国际博弈、政治动态和科学不确定性，简单的线性思维不足以应对。`;
+    }
+
+    return feedback;
+  }
+
+  static generatePersonalFinanceFeedback(turn, linearExpectation, actualResult, narrative) {
+    let feedback = `📊 **第${turn}年财务总结**\n\n`;
+
+    feedback += `📖 **情况描述**：\n${narrative}\n\n`;
+
+    feedback += `🧮 **你的线性预期**：\n${linearExpectation.thinking}\n`;
+    feedback += `- 期望总资产：¥${Math.round(linearExpectation.resources).toLocaleString()}\n`;
+    feedback += `- 期望理财知识：${Math.round(linearExpectation.financial_knowledge)}\n\n`;
+
+    feedback += `🎯 **实际结果**：\n`;
+    feedback += `- 实际总资产：¥${Math.round(actualResult.resources).toLocaleString()} (${actualResult.resources >= linearExpectation.resources ? '+' : ''}${Math.round(actualResult.resources - linearExpectation.resources).toLocaleString()})\n`;
+    feedback += `- 实际理财知识：${Math.round(actualResult.financial_knowledge)} (${actualResult.financial_knowledge >= linearExpectation.financial_knowledge ? '+' : ''}${Math.round(actualResult.financial_knowledge - linearExpectation.financial_knowledge)})\n`;
+
+    const resourceDiff = actualResult.resources - linearExpectation.resources;
+    const knowledgeDiff = actualResult.financial_knowledge - linearExpectation.financial_knowledge;
+
+    if (Math.abs(resourceDiff) > 10000 || Math.abs(knowledgeDiff) > 5) {
+      feedback += `\n⚠️ **偏差分析**：实际结果与预期存在显著差异，说明金融市场存在波动性、复利效应和时间价值等复杂因素，简单的线性思维不足以理解和预测长期财务结果。`;
+    }
+
+    return feedback;
+  }
+
+  static generatePublicPolicyFeedback(turn, linearExpectation, actualResult, narrative) {
+    let feedback = `📊 **第${turn}回合结果**\n\n`;
+
+    feedback += `📖 **情况描述**：\n${narrative}\n\n`;
+
+    feedback += `🧮 **你的线性预期**：\n${linearExpectation.thinking}\n`;
+    feedback += `- 期望预算：${Math.round(linearExpectation.resources)}元\n`;
+    feedback += `- 期望公众支持：${Math.round(linearExpectation.public_support)}\n`;
+    feedback += `- 期望政策效果：${Math.round(linearExpectation.policy_effectiveness)}\n\n`;
+
+    feedback += `🎯 **实际结果**：\n`;
+    feedback += `- 实际预算：${Math.round(actualResult.resources)}元 (${actualResult.resources >= linearExpectation.resources ? '+' : ''}${Math.round(actualResult.resources - linearExpectation.resources)})\n`;
+    feedback += `- 实际公众支持：${Math.round(actualResult.public_support)} (${actualResult.public_support >= linearExpectation.public_support ? '+' : ''}${Math.round(actualResult.public_support - linearExpectation.public_support)})\n`;
+    feedback += `- 实际政策效果：${Math.round(actualResult.policy_effectiveness)} (${actualResult.policy_effectiveness >= linearExpectation.policy_effectiveness ? '+' : ''}${Math.round(actualResult.policy_effectiveness - linearExpectation.policy_effectiveness)})\n`;
+
+    const resourceDiff = actualResult.resources - linearExpectation.resources;
+    const supportDiff = actualResult.public_support - linearExpectation.public_support;
+    const policyDiff = actualResult.policy_effectiveness - linearExpectation.policy_effectiveness;
+
+    if (Math.abs(resourceDiff) > 1000 || Math.abs(supportDiff) > 10 || Math.abs(policyDiff) > 8) {
+      feedback += `\n⚠️ **偏差分析**：实际结果与预期存在显著差异，说明公共政策环境中存在复杂的利益博弈、政治动态和时间延迟效应，简单的线性思维不足以应对。`;
+    }
+
+    return feedback;
+  }
+
+  static applyBusinessStrategyDelayedEffects(currentTurn, delayedEffects, currentState) {
+    let state = { ...currentState };
+
+    if (!delayedEffects || delayedEffects.length === 0) {
+      return { state };
+    }
+
+    delayedEffects.forEach(effect => {
+      if (effect.turn === currentTurn) {
+        if (effect.effect) {
+          Object.keys(effect.effect).forEach(key => {
+            if (key !== 'description' && state.hasOwnProperty(key)) {
+              state[key] += effect.effect[key];
+            }
+          });
+        }
+      }
+    });
+
+    // Filter out applied effects
+    const remainingEffects = delayedEffects.filter(effect => effect.turn !== currentTurn);
+
+    return { state, remainingEffects };
+  }
+
+  static generateBusinessStrategyFeedback(turn, linearExpectation, actualResult, narrative) {
+    let feedback = `📊 **第${turn}回合结果**\n\n`;
+
+    feedback += `📖 **情况描述**：\n${narrative}\n\n`;
+
+    feedback += `🧮 **你的线性预期**：\n${linearExpectation.thinking}\n`;
+    feedback += `- 期望资金：${Math.round(linearExpectation.resources)}元\n`;
+    feedback += `- 期望声誉：${Math.round(linearExpectation.reputation)}\n`;
+    feedback += `- 期望市场地位：${Math.round(linearExpectation.market_position)}\n\n`;
+
+    feedback += `🎯 **实际结果**：\n`;
+    feedback += `- 实际资金：${Math.round(actualResult.resources)}元 (${actualResult.resources >= linearExpectation.resources ? '+' : ''}${Math.round(actualResult.resources - linearExpectation.resources)})\n`;
+    feedback += `- 实际声誉：${Math.round(actualResult.reputation)} (${actualResult.reputation >= linearExpectation.reputation ? '+' : ''}${Math.round(actualResult.reputation - linearExpectation.reputation)})\n`;
+    feedback += `- 实际市场地位：${Math.round(actualResult.market_position)} (${actualResult.market_position >= linearExpectation.market_position ? '+' : ''}${Math.round(actualResult.market_position - linearExpectation.market_position)})\n`;
+
+    const resourceDiff = actualResult.resources - linearExpectation.resources;
+    const reputationDiff = actualResult.reputation - linearExpectation.reputation;
+    const marketDiff = actualResult.market_position - linearExpectation.market_position;
+
+    if (Math.abs(resourceDiff) > 300 || Math.abs(reputationDiff) > 15 || Math.abs(marketDiff) > 10) {
+      feedback += `\n⚠️ **偏差分析**：实际结果与预期存在显著差异，说明商业环境中存在复杂的相互依赖关系、延迟效应和竞争动态，简单的线性思维不足以应对。`;
+    }
+
+    return feedback;
+  }
+
   static calculateCoffeeShopTurn(turn, decisions, gameState, decisionHistory, delayedEffects) {
     const { satisfaction = 50, resources = 1000, reputation = 50 } = gameState;
 
@@ -3518,6 +6494,1109 @@ class DecisionEngine {
     }
     return `你的线性期望是：${linear.thinking}。但关系中存在时间延迟：今天的投入可能几周后才见效，且即时沟通不如持续稳定的陪伴重要。`;
   }
+
+  // ============================================================================
+  // Investment Scenario Instance Methods (TDD GREEN Phase)
+  // ============================================================================
+
+  constructor() {
+    // 决策规则配置
+    this.decisionRules = {
+      research_time: {
+        min: 0,
+        max: 100,
+        impact: 0.1, // 每单位研究时间对知识的影响
+        linearFactor: 10, // 线性期望系数
+        biasPenaltyFactor: 0.02 // 偏误惩罚系数
+      },
+      diversification: {
+        min: 0,
+        max: 100,
+        impact: 0.05, // 每单位分散度对风险的影响
+        linearFactor: 5,
+        biasPenaltyFactor: 0.01
+      },
+      trade_amount: {
+        min: 0,
+        max: 5000,
+        impact: 0.001, // 每单位交易金额对收益的影响
+        linearFactor: 0.01,
+        biasPenaltyFactor: 0.005
+      }
+    };
+  }
+
+  /**
+   * 计算决策的线性期望（用户直觉）
+   * @param {string} decisionType - 决策类型 (research_time, diversification, trade_amount)
+   * @param {number} value - 决策值
+   * @param {object} state - 当前状态
+   * @returns {object} 期望结果
+   */
+  calculateExpectation(decisionType, value, state) {
+    const rules = this.decisionRules[decisionType];
+    if (!rules) {
+      throw new Error(`Unknown decision type: ${decisionType}`);
+    }
+
+    const { portfolio = 10000, knowledge = 0 } = state || {};
+    let expected_portfolio, expected_profit, expected_knowledge, thinking;
+
+    switch (decisionType) {
+      case 'research_time':
+        // 线性思维：研究时间越长，收益越高（简单乘法）
+        expected_portfolio = portfolio + value * rules.linearFactor * 10;
+        expected_knowledge = Math.min(knowledge + value * rules.impact * 100, 100);
+        expected_profit = value * rules.linearFactor * 10;
+        thinking = `投入${value}小时研究，期望收益${Math.round(expected_profit)}元，期望知识+${Math.round(expected_knowledge - knowledge)}点`;
+        break;
+
+      case 'diversification':
+        // 线性思维：分散度越高，收益越稳定
+        expected_portfolio = portfolio + value * rules.linearFactor * 20;
+        expected_profit = value * rules.linearFactor * 20;
+        expected_knowledge = knowledge;
+        thinking = `分散投资${value}%，期望收益${Math.round(expected_profit)}元，风险降低`;
+        break;
+
+      case 'trade_amount':
+        // 线性思维：交易金额越大，收益越大
+        expected_portfolio = portfolio + value * rules.linearFactor * 2;
+        expected_profit = value * rules.linearFactor * 2;
+        expected_knowledge = knowledge;
+        thinking = `投入${value}元交易，期望收益${Math.round(expected_profit)}元`;
+        break;
+
+      default:
+        throw new Error(`Unknown decision type: ${decisionType}`);
+    }
+
+    return {
+      expected_portfolio: Math.round(expected_portfolio),
+      expected_profit: Math.round(expected_profit),
+      expected_knowledge: Math.round(expected_knowledge),
+      thinking: thinking
+    };
+  }
+
+  /**
+   * 计算实际结果（考虑偏误惩罚）
+   * @param {string} decisionType - 决策类型
+   * @param {number} value - 决策值
+   * @param {object} state - 当前状态
+   * @param {number} biasRisk - 偏误风险 (0-100)
+   * @returns {object} 实际结果
+   */
+  calculateActualResult(decisionType, value, state, biasRisk) {
+    const expectation = this.calculateExpectation(decisionType, value, state);
+    const rules = this.decisionRules[decisionType];
+
+    // 计算偏误惩罚：偏误风险越高，实际收益越低
+    const biasPenalty = Math.max(0, biasRisk - 50) * rules.biasPenaltyFactor * value;
+    const actual_portfolio = expectation.expected_portfolio - biasPenalty;
+    const actual_profit = expectation.expected_profit - biasPenalty;
+
+    // 延迟效应：研究时间不足时，效果在后续回合显现
+    let delayed_effects = [];
+    if (decisionType === 'research_time' && value < 30) {
+      delayed_effects.push({
+        type: 'research_bonus',
+        amount: value * 5,
+        description: '研究效果延迟显现',
+        turn_delay: 2
+      });
+    }
+
+    return {
+      expected_portfolio: expectation.expected_portfolio,
+      actual_portfolio: Math.round(actual_portfolio),
+      expected_profit: expectation.expected_profit,
+      actual_profit: Math.round(actual_profit),
+      bias_penalty: Math.round(biasPenalty),
+      delayed_effects: delayed_effects
+    };
+  }
+
+  /**
+   * 计算回合总结
+   * @param {object} state - 当前状态
+   * @param {array} history - 决策历史
+   * @returns {object} 回合总结
+   */
+  calculateTurnSummary(state, history) {
+    const lastDecision = history[history.length - 1];
+    const { portfolio, knowledge, turn_number } = state;
+
+    let narrative, performance, metrics;
+
+    if (lastDecision) {
+      // 根据偏误风险生成不同的叙述
+      const biasRisk = lastDecision.bias_risk || 0;
+
+      if (biasRisk > 70) {
+        narrative = '你的投资决策受到严重确认偏误影响。你过度依赖单一信息来源，忽视了重要的风险信号。';
+        performance = 'poor';
+      } else if (biasRisk > 40) {
+        narrative = '你的投资决策有一定偏误迹象。注意不要只寻找支持自己观点的信息。';
+        performance = 'average';
+      } else {
+        narrative = '你的投资决策相对理性，能够综合考虑多种信息来源。';
+        performance = 'good';
+      }
+    }
+
+    metrics = {
+      portfolio_change: portfolio - 10000,
+      knowledge_gained: knowledge,
+      turn: turn_number
+    };
+
+    return {
+      narrative,
+      performance,
+      metrics
+    };
+  }
+
+  /**
+   * 生成回合叙述文本
+   * @param {object} state - 当前状态
+   * @param {object} result - 计算结果
+   * @returns {string} 叙述文本
+   */
+  generateTurnNarrative(state, result) {
+    const { actual_portfolio, bias_penalty, delayed_effects } = result;
+    const { portfolio } = state;
+
+    let narrative = '';
+
+    if (bias_penalty > 0) {
+      narrative += `⚠️ 偏误惩罚：由于你的信息收集存在偏误，实际收益减少了${bias_penalty}元。\n\n`;
+    }
+
+    if (delayed_effects && delayed_effects.length > 0) {
+      narrative += `⏰ 延迟效果：${delayed_effects[0].description}，将在${delayed_effects[0].turn_delay}回合后显现。\n\n`;
+    }
+
+      narrative += `📊 本回合结束，资产净值：${Math.round(portfolio)}元`;
+
+    return narrative;
+  }
+
+  /**
+   * 计算投资回合总结（静态方法，兼容API调用）
+   * @param {object} decisions - 决策数据
+   * @param {object} gameState - 游戏状态
+   * @returns {object} 回合总结
+   */
+  static calculateInvestmentTurnSummary(decisions, gameState) {
+    const engine = new DecisionEngine();
+    const history = gameState.decision_history || [];
+
+    const turnSummary = engine.calculateTurnSummary(gameState, history);
+    const narrative = engine.generateTurnNarrative(gameState, {
+      actual_portfolio: gameState.portfolio,
+      bias_penalty: decisions.bias_penalty || 0,
+      delayed_effects: decisions.delayed_effects || []
+    });
+
+    return {
+      summary: turnSummary,
+      narrative: narrative,
+      actual_result: {
+        portfolio: gameState.portfolio,
+        knowledge: gameState.knowledge
+      }
+    };
+  }
+}
+
+// ============================================================================
+// INVESTMENT CONFIRMATION BIAS SCENARIO - NEW CLASSES (TDD GREEN Phase)
+// ============================================================================
+
+/**
+ * 投资确认偏误场景 - 页面路由器
+ * 基于CoffeeShopPageRouter和RelationshipTimeDelayPageRouter模式
+ */
+class InvestmentConfirmationBiasPageRouter {
+  constructor(gameState = null) {
+    // 初始化游戏状态
+    this.gameState = gameState || {
+      portfolio: 10000,
+      knowledge: 0,
+      turn_number: 1,
+      decision_history: [],
+      delayed_effects: [],
+      selected_sources: [],
+      source_quality: {},
+      bias_risk: 0,
+      achievements: []
+    };
+    
+    // 页面流转状态
+    this.currentPage = 'START';
+    this.currentTurn = 1;
+    this.currentDecisionIndex = 0;
+    this.tempDecisions = {};
+    this.tempSources = [];
+  }
+
+  // ========== Page State Management ==========
+  
+  getCurrentPage() {
+    return this.currentPage;
+  }
+  
+  getCurrentTurn() {
+    return this.currentTurn;
+  }
+
+  startGame() {
+    this.currentPage = 'TURN_1_DECISION_1';
+  }
+  
+  resetGame() {
+    this.currentPage = 'START';
+    this.currentTurn = 1;
+    this.tempDecisions = {};
+    this.tempSources = [];
+  }
+
+  // ========== 信息源选择 ==========
+  
+  selectSource(sourceId) {
+    const index = this.tempSources.indexOf(sourceId);
+    if (index === -1) {
+      this.tempSources.push(sourceId);
+    } else {
+      this.tempSources.splice(index, 1);
+    }
+  }
+
+  // ========== 决策流程 ==========
+  
+  makeDecision(key, value) {
+    this.tempDecisions[key] = value;
+    
+    // 页面流转逻辑
+    if (this.currentPage === 'TURN_1_DECISION_1') {
+      this.currentPage = 'TURN_1_DECISION_1_FEEDBACK';
+    } else if (this.currentPage === 'TURN_1_DECISION_2') {
+      this.currentPage = 'TURN_1_DECISION_2_FEEDBACK';
+    } else if (this.currentPage === 'TURN_2_DECISION_1') {
+      this.currentPage = 'TURN_2_DECISION_1_FEEDBACK';
+    } else if (this.currentPage === 'TURN_2_DECISION_2') {
+      this.currentPage = 'TURN_2_DECISION_2_FEEDBACK';
+    } else if (this.currentPage === 'TURN_3_DECISION_1') {
+      this.currentPage = 'TURN_3_DECISION_1_FEEDBACK';
+    } else if (this.currentPage === 'TURN_4_DECISION_1') {
+      this.currentPage = 'TURN_4_DECISION_1_FEEDBACK';
+    } else if (this.currentPage === 'TURN_5_DECISION_1') {
+      this.currentPage = 'TURN_5_DECISION_1_FEEDBACK';
+    }
+  }
+
+  confirmFeedback() {
+    const currentPage = this.currentPage;
+
+    if (currentPage === 'TURN_1_DECISION_1_FEEDBACK') {
+      this.currentPage = 'TURN_1_DECISION_2';
+      this.currentDecisionIndex = 1;
+    } else if (currentPage === 'TURN_1_DECISION_2_FEEDBACK') {
+      this.currentPage = 'TURN_1_SUMMARY';
+    } else if (currentPage === 'TURN_2_DECISION_1_FEEDBACK') {
+      this.currentPage = 'TURN_2_DECISION_2';
+      this.currentDecisionIndex = 1;
+    } else if (currentPage === 'TURN_2_DECISION_2_FEEDBACK') {
+      this.currentPage = 'TURN_2_SUMMARY';
+    } else if (currentPage === 'TURN_3_DECISION_1_FEEDBACK') {
+      this.currentPage = 'TURN_3_SUMMARY';
+    } else if (currentPage === 'TURN_4_DECISION_1_FEEDBACK') {
+      // 觉醒后进入第5回合
+      this.nextTurn();
+    } else if (currentPage === 'TURN_5_DECISION_1_FEEDBACK') {
+      this.currentPage = 'TURN_5_ENDING';
+    }
+  }
+
+  // ========== 回合管理 ==========
+  
+  nextTurn() {
+    // 提交当前回合的决策
+    this.submitTurn();
+    
+    // 进入下一回合
+    this.currentTurn++;
+    this.currentDecisionIndex = 0;
+    this.tempDecisions = {};
+    this.tempSources = [];
+    
+    // 设置下一回合的页面
+    if (this.currentTurn === 2) {
+      this.currentPage = 'TURN_2_DECISION_1';
+    } else if (this.currentTurn === 3) {
+      this.currentPage = 'TURN_3_DECISION_1';
+    } else if (this.currentTurn === 4) {
+      this.currentPage = 'TURN_4_DECISION_1';
+    } else if (this.currentTurn === 5) {
+      this.currentPage = 'TURN_5_DECISION_1';
+    } else if (this.currentTurn >= 6) {
+      this.currentPage = 'TURN_5_ENDING';
+    }
+  }
+  
+  submitTurn() {
+    // 计算回合总结
+    const summary = DecisionEngine.calculateInvestmentTurnSummary(
+      this.tempDecisions,
+      this.gameState
+    );
+    
+    // 更新游戏状态
+    this.gameState.portfolio = summary.actual_result.portfolio;
+    this.gameState.knowledge = summary.actual_result.knowledge;
+    this.gameState.turn_number++;
+    
+    // 更新信息源质量
+    this.updateSourceQuality(this.tempSources);
+    
+    // 计算偏误风险
+    const biasResult = BiasAnalyzer.analyzeConfirmationBias(
+      this.gameState.decision_history
+    );
+    this.gameState.bias_risk = biasResult.biasRisk;
+    
+    // 添加到决策历史
+    this.gameState.decision_history.push({
+      turn: this.currentTurn,
+      decisions: { ...this.tempDecisions },
+      sources: [...this.tempSources],
+      linear_expectation: summary.linear_expectation,
+      actual_result: summary.actual_result,
+      gap: summary.gap,
+      bias_metrics: biasResult
+    });
+    
+    // 应用延迟效果
+    this.applyDelayedEffects();
+    
+    // 清空临时决策
+    this.tempDecisions = {};
+    this.tempSources = [];
+  }
+
+  updateSourceQuality(sources) {
+    sources.forEach(sourceId => {
+      if (!this.gameState.source_quality[sourceId]) {
+        this.gameState.source_quality[sourceId] = {
+          used_count: 0,
+          bias_score: 0
+        };
+      }
+      this.gameState.source_quality[sourceId].used_count++;
+    });
+  }
+
+  applyDelayedEffects() {
+    const turn = this.currentTurn;
+    
+    (this.gameState.delayed_effects || []).forEach(effect => {
+      if (effect.turn_delay === turn) {
+        if (effect.knowledge) {
+          this.gameState.knowledge += effect.knowledge;
+        }
+      }
+    });
+    
+    // 移除已应用的效果
+    this.gameState.delayed_effects = this.gameState.delayed_effects.filter(
+      effect => effect.turn_delay > turn
+    );
+  }
+
+  // ========== 觉醒决策 ==========
+  
+  makeAwakeningDecision(strategy) {
+    this.tempDecisions = {
+      awakeningStrategy: strategy
+    };
+    
+    // 应用策略效果
+    if (strategy === 'diversify' || strategy === 'question') {
+      this.gameState.portfolio += 500;
+      this.gameState.knowledge += 20;
+    } else if (strategy === 'continue') {
+      this.gameState.portfolio += 100;
+    }
+  }
+
+  // ========== 辅助方法 ==========
+  
+  getTempDecisions() {
+    return this.tempDecisions;
+  }
+  
+  updateDecision(key, value) {
+    this.tempDecisions[key] = value;
+  }
+
+  // ========== 渲染方法 ==========
+  
+  renderPage() {
+    switch (this.currentPage) {
+      case 'START':
+        return this.renderStartPage();
+      case 'TURN_1_DECISION_1':
+      case 'TURN_2_DECISION_1':
+      case 'TURN_3_DECISION_1':
+      case 'TURN_5_DECISION_1':
+        return this.renderInformationSourcePage();
+      case 'TURN_1_DECISION_2':
+        return this.renderDecisionPage(1, 2, 'research_time', {
+          min: 0, max: 100, default: 20, unit: '小时'
+        });
+      case 'TURN_2_DECISION_2':
+        return this.renderDecisionPage(2, 2, 'diversification', {
+          min: 0, max: 100, default: 50, unit: '%'
+        });
+      case 'TURN_3_DECISION_2':
+        return this.renderDecisionPage(3, 2, 'trade_amount', {
+          min: 0, max: 5000, default: 2000, unit: '¥'
+        });
+      case 'TURN_4_DECISION_1':
+        return this.renderAwakeningPage();
+      case 'TURN_1_DECISION_1_FEEDBACK':
+      case 'TURN_1_DECISION_2_FEEDBACK':
+      case 'TURN_2_DECISION_1_FEEDBACK':
+      case 'TURN_2_DECISION_2_FEEDBACK':
+      case 'TURN_3_DECISION_1_FEEDBACK':
+      case 'TURN_4_DECISION_1_FEEDBACK':
+      case 'TURN_5_DECISION_1_FEEDBACK':
+        return this.renderFeedbackPage();
+      case 'TURN_1_SUMMARY':
+      case 'TURN_2_SUMMARY':
+      case 'TURN_3_SUMMARY':
+        return this.renderTurnSummaryPage();
+      case 'TURN_5_ENDING':
+        return this.renderEndingPage();
+      default:
+        return '<div>页面开发中...</div>';
+    }
+  }
+  
+  renderStartPage() {
+    return `
+      <div class="game-page start-page">
+        <h2>📈 投资决策挑战</h2>
+        <div class="scenario-intro">
+          <p>你刚获得一笔投资资金，准备进入股票市场。</p>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-label">💰 初始资金</span>
+              <span class="stat-value">¥${this.gameState.portfolio}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">📚 初始知识</span>
+              <span class="stat-value">0</span>
+            </div>
+          </div>
+          <div class="confirmation-bias-hint">
+            <p><strong>💭 你的直觉想法：</strong></p>
+            <ul>
+              <li>"看好科技股，就多找支持科技股的分析"</li>
+              <li>"坚持自己的判断，忽略不同观点"</li>
+            </ul>
+          </div>
+          <p class="game-goal"><strong>🎯 目标：</strong>投资5个季度，实现资金增值并学习多元化投资</p>
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="window.investmentRouter.startGame(); window.investmentRouter.render();">开始投资</button>
+        </div>
+      </div>
+    `;
+  }
+  
+  renderInformationSourcePage() {
+    const sources = [
+      { id: 'news', icon: '📰', name: '新闻资讯', bias: 0.7, reliability: 0.6 },
+      { id: 'research', icon: '📊', name: '研究报告', bias: 0.4, reliability: 0.8 },
+      { id: 'friend', icon: '👥', name: '朋友推荐', bias: 0.8, reliability: 0.5 },
+      { id: 'ai', icon: '🤖', name: 'AI分析', bias: 0.3, reliability: 0.9 }
+    ];
+    
+    return `
+      <div class="game-page information-source-page">
+        <h2>📋 第${this.currentTurn}季度 - 信息源选择</h2>
+        <div class="progress">季度 ${this.currentTurn}/5</div>
+        
+        <div class="state-display">
+          <h3>📊 当前状态</h3>
+          <div class="state-grid">
+            <div class="state-item">
+              <span class="state-label">💰 资金</span>
+              <span class="state-value">¥${Math.round(this.gameState.portfolio)}</span>
+            </div>
+            <div class="state-item">
+              <span class="state-label">📚 知识</span>
+              <span class="state-value">${Math.round(this.gameState.knowledge)}</span>
+            </div>
+            <div class="state-item">
+              <span class="state-label">⚠️ 偏误风险</span>
+              <span class="state-value ${this.gameState.bias_risk > 60 ? 'warning' : ''}">${this.gameState.bias_risk}%</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="information-sources">
+          <h3>📰 选择信息来源</h3>
+          <p class="hint">选择2-4个信息源以获得全面视角</p>
+          <div class="sources-grid">
+            ${sources.map(source => `
+              <div class="source-card ${this.tempSources.includes(source.id) ? 'selected' : ''}"
+                   onclick="window.investmentRouter.selectSource('${source.id}'); window.investmentRouter.render();">
+                <div class="source-icon">${source.icon}</div>
+                <div class="source-name">${source.name}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div class="actions">
+          <button class="btn btn-primary confirm-btn"
+                  ${this.tempSources.length === 0 ? 'disabled' : ''}
+                  onclick="window.investmentRouter.makeDecision('sources', window.investmentRouter.tempSources); window.investmentRouter.render();">
+            确认选择 (${this.tempSources.length}个信息源)
+          </button>
+        </div>
+      </div>
+    `;
+  }
+  
+  renderDecisionPage(turn, decisionNum, decisionId, config) {
+    const value = this.tempDecisions[decisionId] || config.default;
+    const expectation = DecisionEngine.calculateInvestmentExpectation(decisionId, value, this.gameState);
+    
+    return `
+      <div class="game-page decision-page turn-${turn}-decision-${decisionNum}">
+        <div class="page-header">
+          <h2>📈 第${turn}季度 - 决策${decisionNum}/2</h2>
+          <div class="progress">季度 ${this.currentTurn}/5</div>
+        </div>
+        
+        <div class="state-display">
+          <h3>📊 当前状态</h3>
+          <div class="state-grid">
+            <div class="state-item">
+              <span class="state-label">💰 资金</span>
+              <span class="state-value">¥${Math.round(this.gameState.portfolio)}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="decision-area">
+          <h3>📋 决策：${this.getDecisionLabel(decisionId)}</h3>
+          <p>当前：${this.getCurrentValueLabel(decisionId)}</p>
+          
+          <div class="slider-container">
+            <span class="min-value">${config.min}${config.unit}</span>
+            <input type="range"
+                   id="${decisionId}"
+                   class="game-slider"
+                   min="${config.min}"
+                   max="${config.max}"
+                   value="${value}"
+                   oninput="window.investmentRouter.updateDecision('${decisionId}', parseInt(this.value)); window.investmentRouter.render();">
+            <span class="max-value">${config.max}${config.unit}</span>
+          </div>
+          <p class="current-selection">当前选择：${value}${config.unit}</p>
+        </div>
+        
+        <div class="expectation-calculator">
+          <h3>💭 你的线性期望</h3>
+          <div class="calculation-breakdown">
+            ${expectation.thinking}
+          </div>
+          <div class="total-expectation">
+            <span>期望收益：</span>
+            <span class="value ${expectation.expected_profit >= 0 ? 'positive' : 'negative'}">
+              ${expectation.expected_profit >= 0 ? '+' : ''}¥${Math.round(expectation.expected_profit)}
+            </span>
+          </div>
+        </div>
+        
+        <div class="actions">
+          <button class="btn btn-primary confirm-btn"
+                  onclick="window.investmentRouter.makeDecision('${decisionId}', window.investmentRouter.tempDecisions['${decisionId}']); window.investmentRouter.render();">
+            确认选择
+          </button>
+        </div>
+      </div>
+    `;
+  }
+  
+  renderFeedbackPage() {
+    return `
+      <div class="game-page feedback-page">
+        <h2>✅ 决策已确认</h2>
+        
+        <div class="feedback-content">
+          <p><strong>你的选择：</strong> ${this.renderDecisionSummary()}</p>
+          
+          <div class="expectation-display">
+            <h3>📈 你的线性期望</h3>
+            <p>实际结果将在季度末揭晓...（受市场波动和偏误影响）</p>
+          </div>
+        </div>
+        
+        <div class="actions">
+          <button class="btn btn-primary" onclick="window.investmentRouter.confirmFeedback(); window.investmentRouter.render();">继续</button>
+        </div>
+      </div>
+    `;
+  }
+  
+  renderTurnSummaryPage() {
+    const summary = DecisionEngine.calculateInvestmentTurnSummary(
+      this.tempDecisions,
+      this.gameState
+    );
+    const biasResult = BiasAnalyzer.analyzeConfirmationBias(
+      this.gameState.decision_history
+    );
+    
+    return `
+      <div class="game-page turn-summary-page">
+        <h2>📊 第${this.currentTurn}季度总结</h2>
+        
+        <div class="comparison">
+          <h3>你的期望 vs 实际结果</h3>
+          <div class="comparison-row">
+            <span>期望资金：</span>
+            <span class="value">¥${Math.round(summary.linear_expectation.portfolio)}</span>
+          </div>
+          <div class="comparison-row">
+            <span>实际资金：</span>
+            <span class="value ${summary.gap >= 0 ? 'positive' : 'negative'}">
+              ¥${Math.round(summary.actual_result.portfolio)}
+              (${summary.gap >= 0 ? '+' : ''}¥${Math.round(summary.gap)})
+            </span>
+          </div>
+        </div>
+        
+        <div class="bias-metrics">
+          <h3>⚠️ 确认偏误分析</h3>
+          <div class="metrics-grid">
+            <div class="metric-item">
+              <span class="metric-label">信息多样性</span>
+              <span class="metric-value">${(biasResult.diversity * 100).toFixed(0)}%</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">一致性偏好</span>
+              <span class="metric-value">${(biasResult.consistency * 100).toFixed(0)}%</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">偏误风险</span>
+              <span class="metric-value ${biasResult.biasRisk > 60 ? 'warning' : ''}">${biasResult.biasRisk}%</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="narrative">
+          <h3>📖 发生了什么</h3>
+          <p>${summary.narrative}</p>
+        </div>
+        
+        <div class="actions">
+          <button class="btn btn-primary" onclick="window.investmentRouter.nextTurn(); window.investmentRouter.render();">
+            进入第${this.currentTurn + 1}季度 →
+          </button>
+        </div>
+      </div>
+    `;
+  }
+  
+  renderAwakeningPage() {
+    const biasResult = BiasAnalyzer.analyzeConfirmationBias(
+      this.gameState.decision_history
+    );
+    
+    return `
+      <div class="game-page awakening-page">
+        <h2>💡 觉醒时刻</h2>
+        
+        <div class="awakening-content">
+          <div class="pattern-reveal">
+            <h3>🧠 你发现了一个模式...</h3>
+            <p class="insight-text">
+              当你<strong>过于依赖单一信息源</strong>或<strong>选择性接收信息</strong>时，
+              你的投资决策容易出现偏差。
+            </p>
+          </div>
+          
+          <div class="theory-lesson">
+            <h3>📖 《失败的逻辑》教诲</h3>
+            <blockquote>
+              "确认偏误是指我们倾向于寻找、解释和记住那些证实我们已有信念或假设的信息，而忽视与之相矛盾的信息。"
+            </blockquote>
+          </div>
+          
+          <div class="choice">
+            <h3>🎯 最后一季度：你会如何决策？</h3>
+            <div class="awakening-options">
+              <button class="btn btn-option" onclick="window.investmentRouter.makeAwakeningDecision('continue'); window.investmentRouter.render();">
+                🔄 继续现状
+                <small>坚持当前策略</small>
+              </button>
+              <button class="btn btn-option" onclick="window.investmentRouter.makeAwakeningDecision('diversify'); window.investmentRouter.render();">
+                🎯 多元投资
+                <small>分散风险，多样化信息源</small>
+              </button>
+              <button class="btn btn-option" onclick="window.investmentRouter.makeAwakeningDecision('question'); window.investmentRouter.render();">
+                ❓ 重新思考
+                <small>质疑现有策略，寻求不同观点</small>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  
+  renderEndingPage() {
+    const finalPortfolio = Math.round(this.gameState.portfolio);
+    const finalKnowledge = Math.round(this.gameState.knowledge);
+    const biasRisk = this.gameState.bias_risk;
+    
+    let rating = '';
+    let message = '';
+    
+    if (finalPortfolio >= 15000 && biasRisk < 40) {
+      rating = '🏆 投资大师';
+      message = '你成功克服了确认偏误，实现了多元化投资！';
+    } else if (finalPortfolio >= 12000 || biasRisk < 50) {
+      rating = '⭐ 优秀投资者';
+      message = '你学会了警惕确认偏误，做出了更明智的决策。';
+    } else if (finalPortfolio >= 10000) {
+      rating = '👍 合格投资者';
+      message = '你经历了一些挫折，获得了宝贵的经验。';
+    } else {
+      rating = '📚 需要学习';
+      message = '确认偏误导致了投资损失，建议重新学习《失败的逻辑》。';
+    }
+    
+    return `
+      <div class="game-page ending-page">
+        <h2>🎉 投资结束</h2>
+        
+        <div class="final-results">
+          <div class="rating">
+            <h3>${rating}</h3>
+            <p class="message">${message}</p>
+          </div>
+          
+          <div class="final-stats">
+            <h3>📊 最终状态</h3>
+            <div class="stat-row">
+              <span>💰 资金：</span>
+              <span class="value ${finalPortfolio >= 10000 ? 'positive' : 'negative'}">¥${finalPortfolio}</span>
+            </div>
+            <div class="stat-row">
+              <span>📚 知识：</span>
+              <span class="value">${finalKnowledge}</span>
+            </div>
+            <div class="stat-row">
+              <span>⚠️ 偏误风险：</span>
+              <span class="value ${biasRisk < 50 ? 'positive' : 'negative'}">${biasRisk}%</span>
+            </div>
+          </div>
+          
+          <div class="lessons-learned">
+            <h3>🎓 你学到了什么</h3>
+            <ul>
+              <li>确认偏误如何影响投资决策</li>
+              <li>多元化信息源的重要性</li>
+              <li>选择性接收信息的危害</li>
+              <li>如何识别和克服确认偏误</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="actions">
+          <button class="btn btn-primary" onclick="window.investmentRouter.resetGame(); window.investmentRouter.render();">重新挑战</button>
+        </div>
+      </div>
+    `;
+  }
+  
+  // ========== 辅助渲染方法 ==========
+  
+  getDecisionLabel(decisionId) {
+    const labels = {
+      'research_time': '研究时间',
+      'diversification': '投资多样化',
+      'trade_amount': '交易金额',
+      'strategy': '投资策略'
+    };
+    return labels[decisionId] || decisionId;
+  }
+  
+  getCurrentValueLabel(decisionId) {
+    const labels = {
+      'research_time': '暂无研究',
+      'diversification': '未多样化',
+      'trade_amount': '暂无交易',
+      'strategy': '未选择'
+    };
+    return labels[decisionId] || '';
+  }
+  
+  renderDecisionSummary() {
+    const sources = this.tempSources.map(id => {
+      const map = {
+        'news': '新闻资讯',
+        'research': '研究报告',
+        'friend': '朋友推荐',
+        'ai': 'AI分析'
+      };
+      return map[id];
+    });
+    return `信息源：${sources.join(', ')}`;
+  }
+  
+  // ========== 状态持久化 ==========
+  
+  saveState() {
+    const state = {
+      tempDecisions: this.tempDecisions,
+      tempSources: this.tempSources,
+      currentTurn: this.currentTurn,
+      currentPage: this.currentPage,
+      gameState: this.gameState
+    };
+    sessionStorage.setItem('investmentGameState', JSON.stringify(state));
+  }
+  
+  loadState() {
+    const saved = sessionStorage.getItem('investmentGameState');
+    if (saved) {
+      const state = JSON.parse(saved);
+      this.tempDecisions = state.tempDecisions;
+      this.tempSources = state.tempSources;
+      this.currentTurn = state.currentTurn;
+      this.currentPage = state.currentPage;
+      this.gameState = state.gameState;
+    }
+  }
+  
+  render() {
+    const container = document.getElementById('game-container');
+    if (container) {
+      container.innerHTML = this.renderPage();
+    }
+  }
+}
+
+/**
+ * 确认偏误分析器 - 检测和分析确认偏误
+ */
+class BiasAnalyzer {
+  constructor() {
+    this.thresholds = {
+      low_risk: 40,
+      medium_risk: 60,
+      high_risk: 80
+    };
+  }
+  
+  /**
+   * 分析确认偏误
+   */
+  analyzeConfirmationBias(decisionHistory) {
+    if (!decisionHistory || decisionHistory.length === 0) {
+      return {
+        diversity: 0,
+        consistency: 0,
+        singleSourceRisk: 0,
+        biasRisk: 0,
+        recommendations: []
+      };
+    }
+    
+    // 计算信息多样性
+    const diversity = this.calculateSourceDiversity(decisionHistory);
+    
+    // 计算信息一致性
+    const consistency = this.calculateSourceConsistency(decisionHistory);
+    
+    // 计算单一信息源风险
+    const singleSourceRisk = this.calculateSingleSourceRisk(decisionHistory);
+    
+    // 计算偏误风险
+    const biasRisk = this.calculateBiasRisk(diversity, consistency, singleSourceRisk);
+    
+    // 生成建议
+    const recommendations = this.generateRecommendations(
+      diversity,
+      consistency,
+      singleSourceRisk
+    );
+    
+    return {
+      diversity,
+      consistency,
+      singleSourceRisk,
+      biasRisk,
+      recommendations
+    };
+  }
+  
+  /**
+   * 计算信息源多样性
+   */
+  calculateSourceDiversity(decisionHistory) {
+    const sourceTypes = new Set();
+    
+    decisionHistory.forEach(record => {
+      if (record.sources) {
+        record.sources.forEach(source => sourceTypes.add(source));
+      }
+    });
+    
+    return Math.min(sourceTypes.size / 4, 1);
+  }
+  
+  /**
+   * 计算信息源一致性
+   */
+  calculateSourceConsistency(decisionHistory) {
+    if (decisionHistory.length <= 1) return 0;
+    
+    let consistencyCount = 0;
+    
+    for (let i = 1; i < decisionHistory.length; i++) {
+      const current = decisionHistory[i].sources ? decisionHistory[i].sources.slice().sort().join(',') : '';
+      const previous = decisionHistory[i-1].sources ? decisionHistory[i-1].sources.slice().sort().join(',') : '';
+      
+      if (current === previous && current !== '') {
+        consistencyCount++;
+      }
+    }
+    
+    return consistencyCount / (decisionHistory.length - 1);
+  }
+  
+  /**
+   * 计算单一信息源风险
+   */
+  calculateSingleSourceRisk(decisionHistory) {
+    const singleSourceCount = decisionHistory.filter(
+      record => record.sources && record.sources.length === 1
+    ).length;
+    
+    return singleSourceCount / decisionHistory.length;
+  }
+  
+  /**
+   * 计算偏误风险
+   */
+  calculateBiasRisk(diversity, consistency, singleSourceRisk) {
+    // 权重：多样性40%，一致性30%，单源风险30%
+    const risk = (1 - diversity) * 40 + consistency * 30 + singleSourceRisk * 30;
+    return Math.round(Math.min(Math.max(risk, 0), 100));
+  }
+  
+  /**
+   * 生成建议
+   */
+  generateRecommendations(diversity, consistency, singleSourceRisk) {
+    const recommendations = [];
+
+    if (diversity < 0.5) {
+      recommendations.push('尝试使用更多不同类型的信息源');
+    }
+
+    if (consistency > 0.5) {
+      recommendations.push('你倾向于重复选择相似的信息，考虑尝试新的来源');
+    }
+
+    // Only warn about single source if diversity is low
+    if (singleSourceRisk > 0.5 && diversity < 0.5) {
+      recommendations.push('避免只依赖单一信息源');
+    }
+
+    return recommendations;
+  }
+  
+  /**
+   * 识别偏误模式
+   */
+  identifyBiasPatterns(decisions) {
+    const patterns = [];
+    
+    // 检查确认偏误
+    const sourceCounts = {};
+    decisions.forEach(d => {
+      if (d.source) {
+        sourceCounts[d.source] = (sourceCounts[d.source] || 0) + 1;
+      }
+    });
+    
+    const maxCount = Math.max(...Object.values(sourceCounts));
+    if (maxCount / decisions.length > 0.5) {
+      patterns.push('confirmation_bias');
+    }
+    
+    // 检查低多样性
+    const uniqueSources = Object.keys(sourceCounts).length;
+    if (uniqueSources / decisions.length < 0.5) {
+      patterns.push('low_diversity');
+    }
+    
+    return patterns;
+  }
+  
+  /**
+   * 获取偏误指标
+   */
+  getBiasMetrics(decisionHistory) {
+    const result = this.analyzeConfirmationBias(decisionHistory);
+
+    let level = 'low';
+    if (result.biasRisk > 60) level = 'high';
+    else if (result.biasRisk > 40) level = 'medium';
+
+    return {
+      ...result,
+      level,
+      recommendations: result.recommendations
+    };
+  }
+
+  // ============================================================================
+  // Static wrapper methods for backward compatibility
+  // ============================================================================
+
+  static analyzeConfirmationBias(decisionHistory) {
+    const analyzer = new BiasAnalyzer();
+    return analyzer.analyzeConfirmationBias(decisionHistory);
+  }
+
+  static calculateBiasRisk(diversity, consistency, singleSourceRisk) {
+    const analyzer = new BiasAnalyzer();
+    return analyzer.calculateBiasRisk(diversity, consistency, singleSourceRisk);
+  }
+}
+
+// Export for use
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { InvestmentConfirmationBiasPageRouter, BiasAnalyzer };
+}
+
+// Make available globally for browser
+if (typeof window !== 'undefined') {
+  window.InvestmentConfirmationBiasPageRouter = InvestmentConfirmationBiasPageRouter;
+  window.BiasAnalyzer = BiasAnalyzer;
 }
 
 // Game Manager with difficulty support
@@ -3661,17 +7740,34 @@ class GameManager {
     const gameContainer = document.getElementById('game-container');
     if (!gameContainer) return;
 
-    try {
-      // Special handling for turn-based scenarios with PageRouter
-      if (scenarioId === 'coffee-shop-linear-thinking') {
-        GameManager.startCoffeeShopGame();
-        return;
-      } else if (scenarioId === 'relationship-time-delay') {
-        GameManager.startRelationshipTimeDelayGame();
-        return;
-      }
+    // Special handling for turn-based scenarios with PageRouter
+    if (scenarioId === 'coffee-shop-linear-thinking') {
+      GameManager.startCoffeeShopGame();
+      return;
+    } else if (scenarioId === 'relationship-time-delay') {
+      GameManager.startRelationshipTimeDelayGame();
+      return;
+    } else if (scenarioId === 'investment-confirmation-bias') {
+      GameManager.startInvestmentConfirmationBiasGame();
+      return;
+    } else if (scenarioId === 'business-strategy-reasoning') {
+      GameManager.startBusinessStrategyGame();
+      return;
+    } else if (scenarioId === 'public-policy-making') {
+      GameManager.startPublicPolicyGame();
+      return;
+    } else if (scenarioId === 'personal-finance-decision') {
+      GameManager.startPersonalFinanceGame();
+      return;
+    } else if (scenarioId === 'climate-change-policy') {
+      GameManager.startClimateChangeGame();
+      return;
+    } else if (scenarioId === 'ai-governance-regulation') {
+      GameManager.startAIGovernanceGame();
+      return;
+    }
 
-      // Try to get scenario data from mock scenarios
+    // Try to get scenario data from mock scenarios
       const scenarios = NavigationManager.getMockScenarios();
       const scenario = scenarios.find(s => s.id === scenarioId);
 
@@ -5649,6 +9745,239 @@ class GameManager {
     }
   }
 
+  static startAIGovernanceGame() {
+    console.log('🤖 Starting AI Governance game...');
+
+    // Initialize game state for AI governance scenario
+    const initialState = {
+      satisfaction: 50,
+      resources: 50000,
+      reputation: 50,
+      ai_capability_assessment: 30,
+      safety_compliance: 25,
+      ethical_adherence: 40,
+      innovation_balance: 35,
+      stakeholder_pressure: 60,
+      week_number: 1,
+      turn_number: 1,
+      decision_history: [],
+      pending_effects: []
+    };
+
+    // Create page router
+    const router = new AIGovernancePageRouter(initialState);
+
+    // Store router in global scope for page interactions
+    window.aiGovernanceRouter = router;
+
+    // Store session
+    AppState.gameSession = {
+      gameId: 'ai-governance-' + Date.now(),
+      scenarioId: 'ai-governance-regulation',
+      difficulty: 'advanced',
+      status: 'active',
+      gameState: initialState,
+      currentTurn: 1,
+      decision_history: [],
+      patterns: []
+    };
+
+    this.showGameModal();
+
+    // Render the start page
+    const container = document.getElementById('game-container');
+    if (container) {
+      container.innerHTML = router.renderPage();
+    }
+
+    console.log('✅ AI Governance game initialized');
+  }
+
+  static startClimateChangeGame() {
+    console.log('🌍 Starting Climate Change game...');
+
+    // Initialize game state for climate change scenario
+    const initialState = {
+      satisfaction: 50,
+      resources: 100000,
+      reputation: 50,
+      emission_reduction: 10,
+      international_cooperation: 30,
+      technological_advancement: 25,
+      climate_risk: 70,
+      week_number: 1,
+      turn_number: 1,
+      decision_history: [],
+      pending_effects: []
+    };
+
+    // Create page router
+    const router = new ClimateChangePageRouter(initialState);
+
+    // Store router in global scope for page interactions
+    window.climateChangeRouter = router;
+
+    // Store session
+    AppState.gameSession = {
+      gameId: 'climate-change-' + Date.now(),
+      scenarioId: 'climate-change-policy',
+      difficulty: 'advanced',
+      status: 'active',
+      gameState: initialState,
+      currentTurn: 1,
+      decision_history: [],
+      patterns: []
+    };
+
+    this.showGameModal();
+
+    // Render the start page
+    const container = document.getElementById('game-container');
+    if (container) {
+      container.innerHTML = router.renderPage();
+    }
+
+    console.log('✅ Climate Change game initialized');
+  }
+
+  static startPersonalFinanceGame() {
+    console.log('💰 Starting Personal Finance game...');
+
+    // Initialize game state for personal finance scenario
+    const initialState = {
+      satisfaction: 50,
+      resources: 150000,
+      income: 100000,
+      debt: 0,
+      financial_knowledge: 30,
+      risk_tolerance: 50,
+      week_number: 1,
+      turn_number: 1,
+      decision_history: [],
+      pending_effects: []
+    };
+
+    // Create page router
+    const router = new PersonalFinancePageRouter(initialState);
+
+    // Store router in global scope for page interactions
+    window.personalFinanceRouter = router;
+
+    // Store session
+    AppState.gameSession = {
+      gameId: 'personal-finance-' + Date.now(),
+      scenarioId: 'personal-finance-decision',
+      difficulty: 'beginner',
+      status: 'active',
+      gameState: initialState,
+      currentTurn: 1,
+      decision_history: [],
+      patterns: []
+    };
+
+    this.showGameModal();
+
+    // Render the start page
+    const container = document.getElementById('game-container');
+    if (container) {
+      container.innerHTML = router.renderPage();
+    }
+
+    console.log('✅ Personal Finance game initialized');
+  }
+
+  static startPublicPolicyGame() {
+    console.log('🏛️ Starting Public Policy game...');
+
+    // Initialize game state for public policy scenario
+    const initialState = {
+      satisfaction: 50,
+      resources: 10000,
+      reputation: 50,
+      policy_effectiveness: 30,
+      public_support: 50,
+      stakeholder_pressure: 20,
+      week_number: 1,
+      turn_number: 1,
+      decision_history: [],
+      pending_effects: []
+    };
+
+    // Create page router
+    const router = new PublicPolicyPageRouter(initialState);
+
+    // Store router in global scope for page interactions
+    window.publicPolicyRouter = router;
+
+    // Store session
+    AppState.gameSession = {
+      gameId: 'public-policy-' + Date.now(),
+      scenarioId: 'public-policy-making',
+      difficulty: 'intermediate',
+      status: 'active',
+      gameState: initialState,
+      currentTurn: 1,
+      decision_history: [],
+      patterns: []
+    };
+
+    this.showGameModal();
+
+    // Render the start page
+    const container = document.getElementById('game-container');
+    if (container) {
+      container.innerHTML = router.renderPage();
+    }
+
+    console.log('✅ Public Policy game initialized');
+  }
+
+  static startBusinessStrategyGame() {
+    console.log('🚀 Starting Business Strategy game...');
+
+    // Initialize game state for business strategy scenario
+    const initialState = {
+      satisfaction: 50,
+      resources: 10000,
+      reputation: 50,
+      market_position: 30,
+      product_quality: 50,
+      competitive_pressure: 20,
+      week_number: 1,
+      turn_number: 1,
+      decision_history: [],
+      pending_effects: []
+    };
+
+    // Create page router
+    const router = new BusinessStrategyPageRouter(initialState);
+
+    // Store router in global scope for page interactions
+    window.businessStrategyRouter = router;
+
+    // Store session
+    AppState.gameSession = {
+      gameId: 'business-strategy-' + Date.now(),
+      scenarioId: 'business-strategy-reasoning',
+      difficulty: 'intermediate',
+      status: 'active',
+      gameState: initialState,
+      currentTurn: 1,
+      decision_history: [],
+      patterns: []
+    };
+
+    this.showGameModal();
+
+    // Render the start page
+    const container = document.getElementById('game-container');
+    if (container) {
+      container.innerHTML = router.renderPage();
+    }
+
+    console.log('✅ Business Strategy game initialized');
+  }
+
   static startRelationshipTimeDelayGame() {
     console.log('🚀 Starting Relationship Time Delay game...');
 
@@ -5692,6 +10021,52 @@ class GameManager {
     }
 
     console.log('✅ Relationship Time Delay game initialized');
+  }
+
+  static startInvestmentConfirmationBiasGame() {
+    console.log('🚀 Starting Investment Confirmation Bias game...');
+
+    // Initialize game state for investment confirmation bias scenario
+    const initialState = {
+      portfolio: 10000,
+      knowledge: 0,
+      turn_number: 1,
+      decision_history: [],
+      delayed_effects: [],
+      selected_sources: [],
+      source_quality: {},
+      bias_risk: 0,
+      achievements: []
+    };
+
+    // Create page router
+    const router = new InvestmentConfirmationBiasPageRouter(initialState);
+
+    // Store router in global scope for page interactions
+    window.investmentRouter = router;
+
+    // Store session
+    AppState.gameSession = {
+      gameId: 'investment-confirmation-bias-' + Date.now(),
+      scenarioId: 'investment-confirmation-bias',
+      difficulty: 'advanced',
+      status: 'active',
+      gameState: initialState,
+      currentTurn: 1,
+      decision_history: [],
+      delayed_effects: [],
+      patterns: []
+    };
+
+    this.showGameModal();
+
+    // Render the start page
+    const container = document.getElementById('game-container');
+    if (container) {
+      container.innerHTML = router.renderPage();
+    }
+
+    console.log('✅ Investment Confirmation Bias game initialized');
   }
 
   static getMockGameContent(scenarioId) {

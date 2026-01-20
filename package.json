@@ -1,1 +1,14 @@
-{}
+{
+  "name": "failure-logic-web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node static-server.js",
+    "test:e2e": "npx playwright test tests/e2e --reporter=list"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "express": "^4.22.1",
+    "playwright": "^1.40.0"
+  }
+}
