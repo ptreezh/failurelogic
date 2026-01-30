@@ -16,7 +16,7 @@
     <meta name="theme-color" content="#2563eb">
 
     <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="assets/icons/icon-144x144.svg">
 
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/normalize.css">
@@ -38,7 +38,7 @@
 </head>
 <body>
     <!-- Loading Screen -->
-    <div id="loading-screen" class="loading-screen">
+    <div id="loading-screen" class="loading-screen" style="display: none; visibility: hidden; pointer-events: none; z-index: -9999; opacity: 0;">
         <div class="loading-content">
             <div class="loading-logo">
                 <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
@@ -1075,7 +1075,7 @@
 
     <!-- JavaScript -->
     <script src="assets/js/api-config-manager.js?v=20251104-2"></script>
-    <script src="assets/js/app.js?v=20260116-0150"></script>
+    <script type="module" src="assets/js/app.js?v=20260116-0150"></script>
 
     <script>
     // 难度选择功能
@@ -1103,6 +1103,65 @@
             NavigationManager.loadScenariosPage();
         }
     }
+
+    // 立即移除加载屏幕以防止拦截指针事件
+    document.addEventListener('DOMContentLoaded', function() {
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+            // 立即从DOM中移除加载屏幕
+            loadingScreen.remove();
+
+            // 添加CSS覆盖确保加载屏幕永远不会显示
+            const cssOverride = document.createElement('style');
+            cssOverride.textContent = `
+                #loading-screen,
+                .loading-screen,
+                .loading-content,
+                .loading-overlay,
+                .loading {
+                    display: none !important;
+                    visibility: hidden !important;
+                    pointer-events: none !important;
+                    z-index: -9999 !important;
+                    opacity: 0 !important;
+                    position: absolute !important;
+                    top: -9999px !important;
+                    left: -9999px !important;
+                }
+
+                body {
+                    pointer-events: auto !important;
+                }
+            `;
+            document.head.appendChild(cssOverride);
+        }
+    });
+
+    // 确保在页面完全加载后也执行移除操作
+    window.addEventListener('load', function() {
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+            loadingScreen.remove();
+        }
+    });
+
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js')
+                .then(function(registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                })
+                .catch(function(error) {
+                    console.log('ServiceWorker registration failed: ', error);
+                });
+        });
+    }
+
+    // 加载交互修复脚本
+    const script = document.createElement('script');
+    script.src = 'complete-fix-interactions.js';
+    document.head.appendChild(script);
     </script>
 </body>
 </html>
