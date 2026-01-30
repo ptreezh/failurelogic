@@ -2674,3 +2674,722 @@ img {
     font-size: 1.5rem;
   }
 }
+
+/* 历史案例页面样式 */
+.historical-cases-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-md);
+}
+
+.historical-case-detail-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-md);
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: var(--space-3xl);
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+}
+
+.page-header p {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-xl);
+}
+
+.case-card {
+  padding: var(--space-xl);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-align: left;
+}
+
+.case-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--primary-300);
+}
+
+.case-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-md);
+}
+
+.case-header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  flex: 1;
+}
+
+.case-id {
+  background: var(--primary-100);
+  color: var(--primary-700);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-left: var(--space-sm);
+  flex-shrink: 0;
+}
+
+.case-description {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--space-lg);
+}
+
+.case-meta {
+  display: flex;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.decision-points, .lessons-count {
+  background: var(--gray-100);
+  color: var(--gray-700);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.case-content {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+}
+
+.decision-step {
+  margin-bottom: var(--space-2xl);
+}
+
+.decision-step h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary-600);
+  margin-bottom: var(--space-lg);
+}
+
+.situation-box {
+  background: var(--primary-50);
+  border: 1px solid var(--primary-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.situation-box h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary-700);
+  margin-bottom: var(--space-md);
+}
+
+.situation-box p {
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.options-container {
+  margin-bottom: var(--space-xl);
+}
+
+.options-container h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+}
+
+.option-btn {
+  display: block;
+  width: 100%;
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-lg);
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.option-btn:hover {
+  background: var(--primary-50);
+  border-color: var(--primary-300);
+  transform: translateX(4px);
+}
+
+.option-btn:last-child {
+  margin-bottom: 0;
+}
+
+.previous-decisions {
+  background: var(--gray-50);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.previous-decisions h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+}
+
+.previous-decisions ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.previous-decisions li {
+  padding: var(--space-xs) 0;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.previous-decisions li:last-child {
+  border-bottom: none;
+}
+
+.case-summary {
+  border-top: 2px solid var(--primary-200);
+  padding-top: var(--space-xl);
+}
+
+.case-summary h4 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-700);
+  margin-bottom: var(--space-xl);
+  text-align: center;
+}
+
+.actual-outcomes, .lessons-learned, .pyramid-analysis {
+  margin-bottom: var(--space-2xl);
+}
+
+.actual-outcomes h5, .lessons-learned h5, .pyramid-analysis h5 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.actual-outcomes ul, .lessons-learned ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.actual-outcomes li, .lessons-learned li {
+  padding: var(--space-sm) 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.actual-outcomes li:last-child, .lessons-learned li:last-child {
+  border-bottom: none;
+}
+
+.pyramid-analysis p {
+  margin-bottom: var(--space-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.pyramid-analysis ul {
+  list-style: none;
+  padding-left: var(--space-md);
+  margin: var(--space-sm) 0;
+}
+
+.pyramid-analysis li {
+  padding: var(--space-xs) 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.pyramid-analysis li:last-child {
+  border-bottom: none;
+}
+
+.btn-back {
+  margin-bottom: var(--space-xl);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: var(--space-3xl) 0;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--primary-100);
+  border-top: 4px solid var(--primary-600);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto var(--space-lg);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  text-align: center;
+  padding: var(--space-3xl) var(--space-md);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.error-message h3 {
+  color: var(--error);
+  margin-bottom: var(--space-md);
+}
+
+.error-message p {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xl);
+  line-height: 1.6;
+}
+
+/* 响应式设计 - 历史案例页面 */
+@media (max-width: 768px) {
+  .historical-cases-page,
+  .historical-case-detail-page {
+    padding: var(--space-lg) var(--space-sm);
+  }
+  
+  .page-header h1 {
+    font-size: 2rem;
+  }
+  
+  .cases-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+  
+  .case-card {
+    padding: var(--space-lg);
+  }
+  
+  .case-header {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  
+  .case-meta {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  
+  .case-content {
+    padding: var(--space-lg);
+  }
+  
+  .decision-step h3 {
+    font-size: 1.125rem;
+  }
+}
+
+/* 沉浸式体验界面样式 */
+.immersive-experience {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.immersive-experience.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.immersive-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, transparent 0%, rgba(0,0,0,0.8) 100%);
+  z-index: 1;
+}
+
+.immersive-container {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  max-height: 90vh;
+  width: 90%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-2xl);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.immersive-header {
+  padding: var(--space-xl);
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.immersive-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.immersive-subtitle {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: var(--space-sm);
+}
+
+.immersive-content {
+  padding: var(--space-xl);
+  height: 60vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.immersive-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.timeline-event-immersive {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  border-left: 4px solid var(--primary-400);
+  animation: fadeInUp 0.5s ease;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.timeline-event-immersive:hover {
+  transform: translateX(5px);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.event-date {
+  font-weight: 600;
+  color: var(--primary-200);
+  margin-bottom: var(--space-xs);
+  font-size: 0.875rem;
+}
+
+.event-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: var(--space-sm);
+}
+
+.event-description {
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+}
+
+.immersive-decision-point {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin: var(--space-lg) 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.decision-situation {
+  font-size: 1.125rem;
+  color: white;
+  margin-bottom: var(--space-lg);
+  line-height: 1.6;
+}
+
+.decision-options-immersive {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-md);
+}
+
+.option-card-immersive {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.option-card-immersive:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.3);
+}
+
+.option-card-immersive.selected {
+  background: rgba(59, 130, 246, 0.3);
+  border-color: var(--primary-300);
+  box-shadow: 0 0 0 2px var(--primary-400);
+}
+
+.immersive-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-md);
+  padding: var(--space-xl);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.immersive-btn {
+  padding: var(--space-md) var(--space-xl);
+  border: none;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.immersive-btn-primary {
+  background: var(--primary-500);
+  color: white;
+}
+
+.immersive-btn-primary:hover {
+  background: var(--primary-400);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.3);
+}
+
+.immersive-btn-secondary {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.immersive-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.immersive-close {
+  position: absolute;
+  top: var(--space-lg);
+  right: var(--space-lg);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  transition: all 0.3s ease;
+  z-index: 3;
+}
+
+.immersive-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.immersive-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.stat-card {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-300);
+  margin-bottom: var(--space-xs);
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+.pulse-animation {
+  animation: pulseGlow 2s infinite;
+}
+
+/* 沉浸式分支叙事样式 */
+.narrative-branch {
+  position: relative;
+  margin: var(--space-xl) 0;
+  padding: var(--space-lg);
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--space-lg);
+  border-left: 3px solid var(--success);
+}
+
+.branch-title {
+  font-weight: 600;
+  color: var(--success);
+  margin-bottom: var(--space-md);
+  font-size: 1.125rem;
+}
+
+.branch-content {
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+}
+
+.emotional-engagement-meter {
+  height: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  margin: var(--space-lg) 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.engagement-level {
+  height: 100%;
+  background: linear-gradient(90deg, var(--warning) 0%, var(--success) 100%);
+  width: 70%;
+  border-radius: 10px;
+  position: relative;
+}
+
+.engagement-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* 响应式设计 - 沉浸式体验 */
+@media (max-width: 768px) {
+  .immersive-container {
+    width: 95%;
+    height: 95vh;
+  }
+  
+  .immersive-title {
+    font-size: 2rem;
+  }
+  
+  .immersive-content {
+    padding: var(--space-lg);
+    height: 65vh;
+  }
+  
+  .decision-options-immersive {
+    grid-template-columns: 1fr;
+  }
+  
+  .immersive-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .immersive-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .immersive-stats {
+    grid-template-columns: 1fr;
+  }
+}

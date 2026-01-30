@@ -1,7 +1,7 @@
 # Cognitive Trap Platform - Failure Logic System
 
 ## Overview
-The Cognitive Trap Platform is an educational system designed to teach users about cognitive biases through interactive scenarios and games. Based on the principles of /Failure Logic/ by Dietrich Dörner, it demonstrates how humans make systematic errors when dealing with complex systems.
+The Cognitive Trap Platform is an educational system designed to teach users about cognitive biases through interactive scenarios and games. Based on the principles of "Failure Logic" by Dietrich Dörner, it demonstrates how humans make systematic errors when dealing with complex systems.
 
 ## Architecture
 - **Backend**: Python FastAPI server with cognitive bias detection algorithms
@@ -22,29 +22,24 @@ The Cognitive Trap Platform is an educational system designed to teach users abo
 - Node.js (for development tools)
 
 ### Backend Setup
-//✅ 加载了 3 个游戏场景
-✅ 加载了 3 个高级游戏场景
-✅ 加载了 21 个历史案例
-📊 总共加载了 27 个额外场景
-🎯 场景总数: 30
-测试结果端点不可用
-✗ LLM互动式端点不可用: No module named 'endpoints.interactive'
-🚀 启动认知陷阱平台API服务器 (端口: 8081)
-📊 API文档: http://localhost:8081/docs/
+```bash
+# Start the API server
+python api-server/start.py 8081
+```
 
 ### Frontend Access
-Open / in your browser, or serve it through a web server.
+Open `index.html` in your browser, or serve it through a web server.
 
 ## GitHub Pages Deployment
 
 The platform is configured for GitHub Pages deployment:
 
-1. The /, /, /, and assets are properly configured
-2. The / file is set up for custom domain: /
-3. A GitHub Actions workflow is configured in /
+1. The `index.html`, `manifest.json`, `sw.js`, and assets are properly configured
+2. The `CNAME` file is set up for custom domain: `failure-logic.agentfoundry.ai`
+3. A GitHub Actions workflow is configured in `.github/workflows/github-pages.yml`
 
 ### Deployment Steps
-1. Push your code to the / branch
+1. Push your code to the `main` branch
 2. GitHub Actions will automatically build and deploy to GitHub Pages
 3. Visit https://failure-logic.agentfoundry.ai to access the deployed platform
 
@@ -67,15 +62,15 @@ The platform is configured for GitHub Pages deployment:
 - ✅ Challenges linear thinking assumptions
 - ✅ Reveals cognitive biases in real-time
 - ✅ Demonstrates complex system behaviors
-- ✅ Provides learning from /failures/
+- ✅ Provides learning from "failures"
 - ✅ Offers personalized insights
 
 ## API Endpoints
 
-- / - Health check
-- / - List all scenarios
-- / - Create new game session
-- / - Execute game turn
+- `GET /health` - Health check
+- `GET /scenarios/` - List all scenarios
+- `POST /scenarios/create_game_session` - Create new game session
+- `POST /scenarios/{game_id}/turn` - Execute game turn
 
 ## Technical Notes
 

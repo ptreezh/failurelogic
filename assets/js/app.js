@@ -51,6 +51,8 @@ const AppState = {
   gameSession: null,
   gameModal: null,
   currentGame: null,
+  userId: 'user_' + Date.now(), // Generate a default user ID
+  userProfile: null,
   userPreferences: {
     difficulty: 'beginner',  // Default to beginner
     challengeType: 'base'    // Default to base challenges
@@ -101,6 +103,7 @@ class NavigationManager {
     '/': 'home',
     '/scenarios': 'scenarios',
     '/dashboard': 'dashboard',
+    '/learning-path': 'learning-path',
     '/profile': 'profile',
     '/settings': 'settings',
     '/about': 'about',
@@ -155,6 +158,8 @@ class NavigationManager {
         return this.getScenariosPage();
       case 'dashboard':
         return this.getDashboardPage();
+      case 'learning-path':
+        return this.getLearningPathPage();
       case 'profile':
         return this.getProfilePage();
       case 'settings':
@@ -738,6 +743,86 @@ class NavigationManager {
         </div>
       </section>
     `;
+  }
+
+  static getLearningPathPage() {
+    // Generate personalized learning path if learning engine is available
+    let learningPathContent = '<p>加载个性化学习路径中...</p>';
+    
+    if (window.PersonalizedLearningEngine && AppState.userId) {
+      const userId = AppState.userId;
+      const userPath = window.PersonalizedLearningEngine.generateLearningPath(userId);
+      
+      if (userPath && userPath.length > 0) {
+        learningPathContent = `
+          <div class="learning-path-intro">
+            <h2>为您定制的学习路径</h2>
+            <p>根据您的学习进度和认知特点，我们为您推荐以下学习路径：</p>
+          </div>
+          
+          <div class="learning-path-grid">
+            ${userPath.map((item, index) => `
+              <div class="learning-path-card">
+                <div class="path-priority priority-${item.priority}">
+                  ${item.priority.toUpperCase()}
+                </div>
+                <h3>${this.getScenarioNameById(item.scenarioId)}</h3>
+                <p class="path-focus">重点关注: ${item.focus}</p>
+                <p class="path-difficulty">难度: ${item.difficulty}</p>
+                <button class="btn btn-primary" onclick="GameManager.startScenario('${item.scenarioId}')">
+                  开始挑战
+                </button>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else {
+        learningPathContent = `
+          <div class="learning-path-intro">
+            <h2>个性化学习路径</h2>
+            <p>开始一些挑战来构建您的个性化学习路径！</p>
+            <p>系统将根据您的表现推荐最适合您的学习内容。</p>
+          </div>
+        `;
+      }
+    }
+    
+    return `
+      <section class="page-section learning-path-page">
+        <header class="page-header">
+          <h1>个性化学习路径</h1>
+          <p>基于您的表现和认知特点的个性化推荐</p>
+        </header>
+        
+        <div class="learning-path-content">
+          ${learningPathContent}
+        </div>
+        
+        <div class="learning-insights">
+          <h3>学习洞察</h3>
+          <div class="insights-grid">
+            <div class="insight-card">
+              <h4>🧠 认知偏向分析</h4>
+              <p>识别您最容易陷入的认知偏向，提供针对性训练</p>
+            </div>
+            <div class="insight-card">
+              <h4>📈 学习进度追踪</h4>
+              <p>实时追踪您的学习进度和改进趋势</p>
+            </div>
+            <div class="insight-card">
+              <h4>🎯 个性化反馈</h4>
+              <p>根据您的决策模式提供个性化建议</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  static getScenarioNameById(scenarioId) {
+    const scenarios = this.getMockScenarios();
+    const scenario = scenarios.find(s => s.id === scenarioId);
+    return scenario ? scenario.name : scenarioId;
   }
 
   static getProfilePage() {
@@ -6440,6 +6525,9 @@ class DecisionEngine {
       feedback += `\n⚠️ **偏差分析**：实际结果显著低于预期，说明系统中存在你未考虑到的因素（协调成本、边际效应递减、品质下降等）`;
     }
 
+    // Enhanced feedback for multi-phase scenarios
+    feedback += `\n🔍 **多阶段影响**：此决策可能对后续阶段产生连锁反应，特别是在第${turn + 1}-${turn + 3}回合之间。`;
+    
     return feedback;
   }
 
@@ -7818,17 +7906,29 @@ class GameManager {
         satisfaction: 50,
         resources: 1000,
         reputation: 50,
-        turn_number: 1
+        turn_number: 1,
+        max_turns: 5  // Extended from original
       },
       'investment-confirmation-bias': {
         portfolio: 10000,
         knowledge: 0,
-        turn_number: 1
+        turn_number: 1,
+        max_turns: 8  // Extended to support 8+ rounds
       },
       'relationship-time-delay': {
         satisfaction: 50,
         trust: 50,
-        turn_number: 1
+        turn_number: 1,
+        max_turns: 10  // Extended to support 10 rounds
+      },
+      'extended-multi-phase': {
+        satisfaction: 50,
+        resources: 10000,
+        reputation: 50,
+        turn_number: 1,
+        max_turns: 12,  // New extended scenario with 12 rounds
+        phase: 1,       // Track current phase
+        phase_progress: 0  // Track progress within phase
       }
     };
 
@@ -7836,7 +7936,8 @@ class GameManager {
       satisfaction: 50,
       resources: 1000,
       reputation: 50,
-      turn_number: 1
+      turn_number: 1,
+      max_turns: 5
     };
   }
 
@@ -7865,6 +7966,9 @@ class GameManager {
     } else if (scenarioId === 'financial-crisis-response') {
       this.startFinancialCrisisGame();
       return;
+    } else if (scenarioId === 'extended-multi-phase') {
+      this.startExtendedMultiPhaseGame();
+      return;
     }
 
     // Get the selected difficulty from user preferences
@@ -7886,7 +7990,11 @@ class GameManager {
         gameState: initialState,  // ✅ Add initial state
         decision_history: [],  // ✅ Track all decisions across turns
         delayed_effects: [],   // ✅ Track time-delayed consequences
-        patterns: []           // ✅ Identify decision patterns
+        patterns: [],          // ✅ Identify decision patterns
+        checkpoints: {},       // ✅ Add checkpoint system for extended scenarios
+        auto_save_enabled: true,  // ✅ Enable auto-save for extended scenarios
+        last_saved: Date.now(),   // ✅ Track last save time
+        scenario_progress: 0      // ✅ Track overall scenario progress
       };
 
       // Show game modal immediately to give feedback to user
@@ -7913,7 +8021,11 @@ class GameManager {
             gameState: sessionData.gameState || sessionData.game_state || AppState.gameSession.gameState,
             decision_history: AppState.gameSession.decision_history || [],  // ✅ Preserve history
             delayed_effects: AppState.gameSession.delayed_effects || [],    // ✅ Preserve delayed effects
-            patterns: AppState.gameSession.patterns || []                    // ✅ Preserve patterns
+            patterns: AppState.gameSession.patterns || [],                    // ✅ Preserve patterns
+            checkpoints: AppState.gameSession.checkpoints || {},              // ✅ Preserve checkpoints
+            auto_save_enabled: AppState.gameSession.auto_save_enabled,        // ✅ Preserve auto-save setting
+            last_saved: AppState.gameSession.last_saved,                      // ✅ Preserve last save time
+            scenario_progress: AppState.gameSession.scenario_progress || 0    // ✅ Preserve progress
           };
         }
 
@@ -7934,7 +8046,11 @@ class GameManager {
           gameState: initialState,
           decision_history: [],  // ✅ Track decisions even in static mode
           delayed_effects: [],   // ✅ Track delayed effects
-          patterns: []           // ✅ Track patterns
+          patterns: [],          // ✅ Track patterns
+          checkpoints: {},       // ✅ Add checkpoint system
+          auto_save_enabled: true,  // ✅ Enable auto-save
+          last_saved: Date.now(),   // ✅ Track last save time
+          scenario_progress: 0      // ✅ Track progress
         };
         this.loadStaticGameContent(scenarioId);
         return;
@@ -7942,6 +8058,11 @@ class GameManager {
 
       // Load dynamic game content
       await this.loadGameContent(scenarioId);
+      
+      // Start auto-save timer for extended scenarios
+      if (AppState.gameSession.gameState.max_turns > 5) {
+        this.startAutoSaveTimer();
+      }
     } catch (error) {
       console.error('Failed to start scenario:', error);
       ToastManager.show('启动挑战失败', 'error', '游戏错误');
@@ -8514,6 +8635,12 @@ class GameManager {
         AppState.gameSession.gameState = newGameState;
       }
 
+      // Update user profile with personalized learning engine
+      if (window.PersonalizedLearningEngine) {
+        const userId = AppState.userId || 'anonymous';
+        window.PersonalizedLearningEngine.updateUserProfile(userId, AppState.gameSession, AppState.gameSession.decision_history);
+      }
+
       // Build result object
       const result = {
         feedback: this.buildDecisionFeedback(decision, effects, currentState, newGameState),
@@ -8737,6 +8864,53 @@ class GameManager {
       `;
     }
 
+    // Add personalized feedback if learning engine is available
+    if (window.PersonalizedLearningEngine && AppState.userId) {
+      const personalizedFeedback = window.PersonalizedLearningEngine.generateAdaptiveFeedback(
+        AppState.userId,
+        gameState,
+        result.linear_expectation
+      );
+
+      if (personalizedFeedback && (personalizedFeedback.suggestions.length > 0 || personalizedFeedback.warnings.length > 0 || personalizedFeedback.insights.length > 0)) {
+        feedbackHTML += `
+          <div class="personalized-feedback">
+            <h5>🎯 个性化反馈</h5>
+            <div class="personalized-content">
+              ${personalizedFeedback.encouragement ? `<div class="encouragement"><strong>鼓励:</strong> ${personalizedFeedback.encouragement}</div>` : ''}
+              
+              ${personalizedFeedback.suggestions.length > 0 ? `
+                <div class="suggestions">
+                  <strong>建议:</strong>
+                  <ul>
+                    ${personalizedFeedback.suggestions.map(s => `<li>${s}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+              
+              ${personalizedFeedback.warnings.length > 0 ? `
+                <div class="warnings">
+                  <strong>提醒:</strong>
+                  <ul>
+                    ${personalizedFeedback.warnings.map(w => `<li>${w}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+              
+              ${personalizedFeedback.insights.length > 0 ? `
+                <div class="insights">
+                  <strong>洞察:</strong>
+                  <ul>
+                    ${personalizedFeedback.insights.map(i => `<li>${i}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }
+    }
+
     feedbackHTML += `</div>`;
     feedbackDisplay.innerHTML = feedbackHTML;
     feedbackDisplay.className = 'feedback-section feedback game-feedback'; // Add classes for tests
@@ -8745,7 +8919,7 @@ class GameManager {
     feedbackDisplay.style.display = 'block';
     feedbackDisplay.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-    console.log('Feedback displayed with cognitive analysis');
+    console.log('Feedback displayed with cognitive analysis and personalized feedback');
   }
 
   static displayError(message) {
@@ -8814,6 +8988,23 @@ class GameManager {
 
     if (AppState.gameSession) {
       AppState.gameSession.gameState = newState;
+      
+      // Update progress tracking
+      if (newState.turn_number && newState.max_turns) {
+        const progress = (newState.turn_number / newState.max_turns) * 100;
+        AppState.gameSession.scenario_progress = progress;
+        
+        // Update progress bar if exists
+        const progressBar = document.getElementById('scenario-progress-bar');
+        if (progressBar) {
+          progressBar.style.width = `${progress}%`;
+        }
+        
+        const progressText = document.getElementById('scenario-progress-text');
+        if (progressText) {
+          progressText.textContent = `${Math.round(progress)}%`;
+        }
+      }
     }
 
     // Update scenario-specific state displays
@@ -8860,6 +9051,7 @@ class GameManager {
         <p>知识: ${newState.knowledge || 'N/A'}</p>
         <p>资源: ${newState.resources || 'N/A'}</p>
         <p>回合: ${newState.turn || 'N/A'}</p>
+        <p>最大回合: ${newState.max_turns || 'N/A'}</p>
       `;
     }
   }
@@ -9035,16 +9227,25 @@ class GameManager {
     const turn = AppState.gameSession.currentTurn;
     const gameState = AppState.gameSession.gameState;
     const decisionHistory = AppState.gameSession.decision_history || [];
+    const maxTurns = gameState.max_turns || 5;
 
     // Get turn-specific config
-    const turnConfig = this.getCoffeeShopTurnConfig(turn);
+    const turnConfig = this.getExtendedTurnConfig(turn, maxTurns);
 
     return `
       <div class="turn-based-game">
         <!-- Turn Header -->
         <div class="turn-header">
           <h2>☕ ${turnConfig.title}</h2>
-          <div class="turn-number">第 ${turn}/5 回合</div>
+          <div class="turn-number">第 ${turn}/${maxTurns} 回合</div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+          <div class="progress-bar-container">
+            <div id="scenario-progress-bar" class="progress-bar" style="width: ${(turn/maxTurns)*100}%"></div>
+          </div>
+          <div id="scenario-progress-text" class="progress-text">${Math.round((turn/maxTurns)*100)}%</div>
         </div>
 
         <!-- Situation Description -->
@@ -9065,16 +9266,19 @@ class GameManager {
         }
 
         <!-- Linear Expectation Calculator -->
-        ${!turnConfig.isAwakeningMoment && turn !== 5 ?
+        ${!turnConfig.isAwakeningMoment && turn !== maxTurns ?
           this.renderLinearExpectationCalculator(turn) : ''
         }
 
         <!-- Delayed Effects Queue -->
         ${this.renderDelayedEffectsQueue(AppState.gameSession.delayed_effects || [])}
 
+        <!-- Checkpoint Controls for Extended Scenarios -->
+        ${maxTurns > 5 ? this.renderCheckpointControls() : ''}
+
         <!-- Action Buttons -->
         <div class="turn-actions">
-          ${turn !== 5 ?
+          ${turn !== maxTurns ?
             `<button class="btn btn-primary submit-decision-btn" onclick="GameManager.submitTurnDecision()">
               提交决策
             </button>` :
@@ -9280,6 +9484,141 @@ class GameManager {
     `;
   }
 
+  static renderCheckpointControls() {
+    return `
+      <div class="checkpoint-controls">
+        <h3>💾 检查点管理</h3>
+        <div class="checkpoint-buttons">
+          <button class="btn btn-secondary" onclick="GameManager.saveCheckpoint()">保存检查点</button>
+          <button class="btn btn-tertiary" onclick="GameManager.loadCheckpoint()">加载检查点</button>
+          <button class="btn btn-info" onclick="GameManager.listCheckpoints()">查看所有检查点</button>
+        </div>
+      </div>
+    `;
+  }
+
+  static saveCheckpoint(checkpointName = null) {
+    if (!AppState.gameSession) {
+      console.error('No active game session');
+      return;
+    }
+
+    const checkpointNameFinal = checkpointName || `checkpoint_${AppState.gameSession.currentTurn}`;
+    const checkpointData = {
+      gameState: { ...AppState.gameSession.gameState },
+      decisionHistory: [...AppState.gameSession.decision_history],
+      delayedEffects: [...AppState.gameSession.delayed_effects],
+      timestamp: Date.now(),
+      turn: AppState.gameSession.currentTurn
+    };
+
+    if (!AppState.gameSession.checkpoints) {
+      AppState.gameSession.checkpoints = {};
+    }
+
+    AppState.gameSession.checkpoints[checkpointNameFinal] = checkpointData;
+    localStorage.setItem(`checkpoint_${AppState.gameSession.gameId}_${checkpointNameFinal}`, JSON.stringify(checkpointData));
+
+    ToastManager.show(`检查点 "${checkpointNameFinal}" 已保存`, 'success', '保存成功');
+  }
+
+  static loadCheckpoint(checkpointName = null) {
+    if (!AppState.gameSession) {
+      console.error('No active game session');
+      return;
+    }
+
+    const checkpointNameFinal = checkpointName || `checkpoint_${AppState.gameSession.currentTurn}`;
+    let checkpointData = AppState.gameSession.checkpoints?.[checkpointNameFinal];
+
+    if (!checkpointData) {
+      // Try loading from localStorage
+      const stored = localStorage.getItem(`checkpoint_${AppState.gameSession.gameId}_${checkpointNameFinal}`);
+      if (stored) {
+        checkpointData = JSON.parse(stored);
+      }
+    }
+
+    if (!checkpointData) {
+      ToastManager.show(`检查点 "${checkpointNameFinal}" 不存在`, 'error', '加载失败');
+      return;
+    }
+
+    // Restore game state
+    AppState.gameSession.gameState = checkpointData.gameState;
+    AppState.gameSession.decision_history = checkpointData.decisionHistory;
+    AppState.gameSession.delayed_effects = checkpointData.delayedEffects;
+    AppState.gameSession.currentTurn = checkpointData.turn;
+
+    ToastManager.show(`检查点 "${checkpointNameFinal}" 已加载`, 'success', '加载成功');
+    
+    // Refresh UI
+    if (typeof window.coffeeShopRouter !== 'undefined') {
+      window.coffeeShopRouter.gameState = checkpointData.gameState;
+      window.coffeeShopRouter.render();
+    } else if (typeof window.investmentRouter !== 'undefined') {
+      window.investmentRouter.gameState = checkpointData.gameState;
+      window.investmentRouter.render();
+    } else if (typeof window.relationshipTimeDelayRouter !== 'undefined') {
+      window.relationshipTimeDelayRouter.gameState = checkpointData.gameState;
+      window.relationshipTimeDelayRouter.render();
+    } else {
+      this.updateGameStateUI(checkpointData.gameState);
+    }
+  }
+
+  static listCheckpoints() {
+    if (!AppState.gameSession || !AppState.gameSession.checkpoints) {
+      ToastManager.show('没有可用的检查点', 'info', '检查点列表');
+      return;
+    }
+
+    const checkpoints = Object.keys(AppState.gameSession.checkpoints);
+    if (checkpoints.length === 0) {
+      ToastManager.show('没有可用的检查点', 'info', '检查点列表');
+      return;
+    }
+
+    let message = '可用检查点：<br>';
+    checkpoints.forEach(name => {
+      const data = AppState.gameSession.checkpoints[name];
+      message += `- ${name}: 第${data.turn}回合 (保存于 ${new Date(data.timestamp).toLocaleTimeString()})<br>`;
+    });
+
+    ToastManager.show(message, 'info', '检查点列表');
+  }
+
+  static startAutoSaveTimer() {
+    if (!AppState.gameSession || !AppState.gameSession.auto_save_enabled) {
+      return;
+    }
+
+    // Clear any existing autosave timer
+    if (AppState.gameSession.autosaveInterval) {
+      clearInterval(AppState.gameSession.autosaveInterval);
+    }
+
+    // Set up auto-save every 2 minutes for extended scenarios
+    AppState.gameSession.autosaveInterval = setInterval(() => {
+      if (AppState.gameSession && AppState.gameSession.gameState) {
+        const turn = AppState.gameSession.gameState.turn_number || AppState.gameSession.currentTurn || 1;
+        this.saveCheckpoint(`autosave_t${turn}`);
+        AppState.gameSession.last_saved = Date.now();
+        console.log(`Auto-saved checkpoint at turn ${turn}`);
+      }
+    }, 120000); // Every 2 minutes
+
+    console.log('Auto-save timer started for extended scenario');
+  }
+
+  static stopAutoSaveTimer() {
+    if (AppState.gameSession && AppState.gameSession.autosaveInterval) {
+      clearInterval(AppState.gameSession.autosaveInterval);
+      AppState.gameSession.autosaveInterval = null;
+      console.log('Auto-save timer stopped');
+    }
+  }
+
   static getStateLabel(key) {
     const labels = {
       satisfaction: '😊 满意度',
@@ -9359,7 +9698,12 @@ class GameManager {
   // ========== Coffee Shop Turn Configuration ==========
 
   static getCoffeeShopTurnConfig(turn) {
-    const configs = {
+    return this.getExtendedTurnConfig(turn, 5); // Default to 5 turns
+  }
+
+  static getExtendedTurnConfig(turn, maxTurns = 5) {
+    // Base configuration for the first 5 turns
+    const baseConfigs = {
       1: {
         title: '开业第1月',
         description: '你的咖啡店刚刚开业，位置不错但竞争激烈。你有¥1,000启动资金。',
@@ -9466,7 +9810,176 @@ class GameManager {
       }
     };
 
-    return configs[turn] || configs[1];
+    // If we have more than 5 turns, extend the configuration
+    if (maxTurns > 5) {
+      // For extended scenarios, create additional turn configurations
+      const extendedConfigs = { ...baseConfigs };
+
+      // Add more turns if maxTurns > 5
+      for (let i = 6; i <= maxTurns; i++) {
+        extendedConfigs[i] = this.getExtendedTurn(i, maxTurns);
+      }
+
+      return extendedConfigs[turn] || extendedConfigs[1];
+    }
+
+    return baseConfigs[turn] || baseConfigs[1];
+  }
+
+  static getExtendedTurn(turn, maxTurns) {
+    // Define extended turn configurations for scenarios with more than 5 turns
+    const phase = Math.ceil((turn / maxTurns) * 4); // Divide into 4 phases
+    const progress = (turn / maxTurns) * 100;
+
+    // Phase-based configuration for extended scenarios
+    if (phase === 1) {
+      // Early phase (turns 6-8 typically)
+      return {
+        title: `第${turn}月 - 扩张阶段`,
+        description: `游戏进行到${Math.round(progress)}%，你现在需要考虑长期战略规划。`,
+        situation: '业务开始稳定，但新的挑战和 opportunities 出现。你需要平衡短期利润和长期发展。',
+        decisions: [
+          {
+            id: 'growthStrategy',
+            type: 'slider',
+            label: '📈 决策1: 增长策略强度',
+            min: 0,
+            max: 100,
+            default: 50,
+            unit: '%',
+            warning_threshold: 80,
+            warning_message: '⚠️ 过度扩张可能导致资源紧张',
+            thinking: `"策略强度越高，增长越快"`
+          },
+          {
+            id: 'qualityFocus',
+            type: 'slider',
+            label: '⚖️ 决策2: 质量关注度',
+            min: 0,
+            max: 100,
+            default: 60,
+            unit: '%',
+            warning_threshold: 90,
+            warning_message: '⚠️ 过度关注质量可能影响扩张速度',
+            thinking: `"质量关注度越高，客户满意度越高"`
+          }
+        ]
+      };
+    } else if (phase === 2) {
+      // Mid phase (turns 9-12 typically)
+      return {
+        title: `第${turn}月 - 稳定阶段`,
+        description: `游戏进行到${Math.round(progress)}%，市场环境发生变化，需要调整策略。`,
+        situation: '市场竞争加剧，客户期望提高。你需要在维持现有业务和开拓新市场之间找到平衡。',
+        decisions: [
+          {
+            id: 'marketFocus',
+            type: 'slider',
+            label: '🎯 决策1: 市场专注度',
+            min: 0,
+            max: 100,
+            default: 70,
+            unit: '%',
+            warning_threshold: 90,
+            warning_message: '⚠️ 过度专注可能错失其他机会',
+            thinking: `"专注特定市场可提高竞争力"`
+          },
+          {
+            id: 'innovationInvestment',
+            type: 'slider',
+            label: '💡 决策2: 创新投入',
+            min: 0,
+            max: 100,
+            default: 40,
+            unit: '%',
+            warning_threshold: 70,
+            warning_message: '⚠️ 过度创新可能导致成本过高',
+            thinking: `"创新投入带来长期竞争优势"`
+          }
+        ]
+      };
+    } else if (phase === 3) {
+      // Late mid phase (turns 13-16 typically)
+      return {
+        title: `第${turn}月 - 挑战阶段`,
+        description: `游戏进行到${Math.round(progress)}%，面临重大挑战和决策点。`,
+        situation: '外部环境变化剧烈，内部管理复杂度增加。需要做出关键决策来应对外部挑战。',
+        decisions: [
+          {
+            id: 'adaptationStrategy',
+            type: 'choice',
+            label: '🔄 适应策略',
+            options: [
+              {
+                id: 'pivot',
+                label: 'A. 转型策略',
+                description: '改变核心业务模式以适应新环境',
+                expected_profit: 200,
+                risk: 'medium',
+                thinking: '"市场变了，我们也必须改变"'
+              },
+              {
+                id: 'scale',
+                label: 'B. 扩大规模',
+                description: '通过扩大规模来维持竞争力',
+                expected_profit: 150,
+                risk: 'low',
+                thinking: '"规模经济是我们的优势"'
+              },
+              {
+                id: 'specialize',
+                label: 'C. 专业化',
+                description: '专注于核心优势领域',
+                expected_profit: 180,
+                risk: 'low',
+                thinking: '"专注才能做得更好"'
+              }
+            ]
+          }
+        ]
+      };
+    } else {
+      // Final phase (turns 17+ typically)
+      return {
+        title: `第${turn}月 - 终局阶段`,
+        description: `游戏接近尾声，最终结果取决于你之前的选择。`,
+        situation: '大局已定，但最后几步仍可能影响最终结果。',
+        decisions: [
+          {
+            id: 'legacyDecision',
+            type: 'choice',
+            label: '🏆 遗产决策',
+            options: [
+              {
+                id: 'profitMax',
+                label: 'A. 利润最大化',
+                description: '追求短期利润最大化',
+                expected_profit: 300,
+                risk: 'low',
+                thinking: '"利润最重要"'
+              },
+              {
+                id: 'sustainability',
+                label: 'B. 可持续发展',
+                description: '为长期可持续发展奠定基础',
+                expected_profit: 250,
+                risk: 'low',
+                thinking: '"长期价值更重要"'
+              },
+              {
+                id: 'socialImpact',
+                label: 'C. 社会影响力',
+                description: '注重社会和环境影响',
+                expected_profit: 200,
+                risk: 'low',
+                thinking: '"企业社会责任"'
+              }
+            ]
+          }
+        ],
+        isFinale: true
+      };
+    }
   }
 
   // ========== Interactive Functions ==========
@@ -9678,6 +10191,15 @@ class GameManager {
       actual_result: result.actualResult
     });
 
+    // Update user profile with personalized learning engine
+    if (window.PersonalizedLearningEngine) {
+      window.PersonalizedLearningEngine.updateUserProfile(
+        AppState.userId, 
+        AppState.gameSession, 
+        AppState.gameSession.decision_history
+      );
+    }
+
     // Show result feedback
     this.showTurnFeedback(turn, result);
 
@@ -9823,6 +10345,15 @@ class GameManager {
     const turn4Decision = decisionHistory.find(d => d.turn === 4);
     const awakened = turn4Decision && turn4Decision.decision.awakening === 'A';
 
+    // Update user profile with personalized learning engine
+    if (window.PersonalizedLearningEngine) {
+      window.PersonalizedLearningEngine.updateUserProfile(
+        AppState.userId, 
+        AppState.gameSession, 
+        AppState.gameSession.decision_history
+      );
+    }
+
     if (awakened) {
       // Victory ending
       container.innerHTML = `
@@ -9869,9 +10400,20 @@ class GameManager {
             </ul>
           </div>
 
+          <div class="personalized-recommendations">
+            <h4>🎯 个性化推荐</h4>
+            <div class="recommendations-content">
+              ${window.PersonalizedLearningEngine ? 
+                this.generatePersonalizedRecommendations() : 
+                '<p>开始更多挑战来获取个性化推荐！</p>'
+              }
+            </div>
+          </div>
+
           <div class="ending-actions">
             <button class="btn btn-primary" onclick="GameManager.closeGameModal()">完成</button>
             <button class="btn btn-secondary" onclick="GameManager.startCoffeeShopGame()">再次挑战</button>
+            <button class="btn btn-tertiary" onclick="NavigationManager.navigateTo('learning-path')">查看学习路径</button>
           </div>
         </div>
       `;
@@ -9924,9 +10466,20 @@ class GameManager {
             </ul>
           </div>
 
+          <div class="personalized-recommendations">
+            <h4>🎯 个性化改进建议</h4>
+            <div class="recommendations-content">
+              ${window.PersonalizedLearningEngine ? 
+                this.generatePersonalizedRecommendations(true) : 
+                '<p>开始更多挑战来获取个性化建议！</p>'
+              }
+            </div>
+          </div>
+
           <div class="ending-actions">
             <button class="btn btn-primary" onclick="GameManager.startCoffeeShopGame()">重新挑战</button>
-            <button class="btn btn-secondary" onclick="GameManager.closeGameModal()">关闭</button>
+            <button class="btn btn-secondary" onclick="NavigationManager.navigateTo('scenarios')">选择其他场景</button>
+            <button class="btn btn-tertiary" onclick="NavigationManager.navigateTo('learning-path')">查看学习路径</button>
           </div>
         </div>
       `;
@@ -10344,6 +10897,148 @@ class GameManager {
     console.log('✅ Investment Confirmation Bias game initialized');
   }
 
+  static generatePersonalizedRecommendations(isFailure = false) {
+    if (!window.PersonalizedLearningEngine) {
+      return '<p>个性化推荐引擎未加载</p>';
+    }
+
+    const userId = AppState.userId;
+    const profile = window.PersonalizedLearningEngine.userProfiles[userId];
+    
+    if (!profile) {
+      return '<p>开始挑战以建立您的个人档案</p>';
+    }
+
+    let recommendations = '';
+
+    // Add improvement areas if any
+    if (profile.improvementAreas.length > 0) {
+      recommendations += '<h5>需要改进的领域:</h5><ul>';
+      profile.improvementAreas.forEach(area => {
+        switch(area) {
+          case 'complex-system-thinking':
+            recommendations += '<li><strong>复杂系统思维</strong>: 尝试理解变量之间的非线性关系</li>';
+            break;
+          case 'long-term-consequence-planning':
+            recommendations += '<li><strong>长期后果规划</strong>: 考虑决策的延迟效应</li>';
+            break;
+          case 'considering-alternatives':
+            recommendations += '<li><strong>考虑替代方案</strong>: 主动寻找与您观点相反的信息</li>';
+            break;
+          case 'resource-allocation':
+            recommendations += '<li><strong>资源配置</strong>: 平衡短期和长期的资源分配</li>';
+            break;
+          case 'relationship-dynamics':
+            recommendations += '<li><strong>关系动态</strong>: 理解投资和回报之间的时间延迟</li>';
+            break;
+          default:
+            recommendations += `<li>${area}</li>`;
+        }
+      });
+      recommendations += '</ul>';
+    }
+
+    // Add strength areas if any
+    if (profile.strengths.length > 0) {
+      recommendations += '<h5>您的优势:</h5><ul>';
+      profile.strengths.forEach(strength => {
+        switch(strength) {
+          case 'complex-system-understanding':
+            recommendations += '<li><strong>复杂系统理解</strong>: 您很好地理解了系统中的相互依赖关系</li>';
+            break;
+          case 'long-term-thinking':
+            recommendations += '<li><strong>长期思维</strong>: 您善于考虑长期后果</li>';
+            break;
+          case 'open-mindedness':
+            recommendations += '<li><strong>开放心态</strong>: 您愿意考虑不同的观点</li>';
+            break;
+          case 'effective-decision-making':
+            recommendations += '<li><strong>有效决策</strong>: 您的决策通常产生良好的结果</li>';
+            break;
+          case 'learning-agility':
+            recommendations += '<li><strong>学习敏捷性</strong>: 您快速从经验中学习</li>';
+            break;
+          default:
+            recommendations += `<li>${strength}</li>`;
+        }
+      });
+      recommendations += '</ul>';
+    }
+
+    // Add specific scenario recommendations
+    const learningPath = window.PersonalizedLearningEngine.generateLearningPath(userId);
+    if (learningPath && learningPath.length > 0) {
+      recommendations += '<h5>为您推荐的下一个挑战:</h5><ul>';
+      learningPath.slice(0, 3).forEach(item => {
+        recommendations += `<li><strong>${NavigationManager.getScenarioNameById(item.scenarioId)}</strong> - ${item.focus} (难度: ${item.difficulty})</li>`;
+      });
+      recommendations += '</ul>';
+    }
+
+    if (isFailure) {
+      recommendations += '<p class="improvement-tip"><strong>💡 改进提示:</strong> 每次失败都是学习的机会。尝试从不同角度审视问题，并考虑复杂系统中的非线性关系。</p>';
+    } else {
+      recommendations += '<p class="success-tip"><strong>🎉 成功提示:</strong> 继续挑战更高级的场景，巩固您的系统思维能力。</p>';
+    }
+
+    return recommendations || '<p>继续挑战以获得更多个性化建议</p>';
+  }
+
+  static startExtendedMultiPhaseGame() {
+    console.log('🚀 Starting Extended Multi-Phase game...');
+
+    // Initialize game state for extended multi-phase scenario
+    const initialState = {
+      satisfaction: 50,
+      resources: 10000,
+      reputation: 50,
+      turn_number: 1,
+      max_turns: 12,  // Extended to 12 turns
+      phase: 1,       // Track current phase
+      phase_progress: 0,  // Track progress within phase
+      decision_history: [],
+      delayed_effects: [],
+      patterns: [],
+      achievements: []
+    };
+
+    // Create page router for extended scenario
+    const router = new ExtendedMultiPhasePageRouter(initialState);
+
+    // Store router in global scope for page interactions
+    window.extendedMultiPhaseRouter = router;
+
+    // Store session
+    AppState.gameSession = {
+      gameId: 'extended-multi-phase-' + Date.now(),
+      scenarioId: 'extended-multi-phase',
+      difficulty: 'advanced',
+      status: 'active',
+      gameState: initialState,
+      currentTurn: 1,
+      decision_history: [],
+      delayed_effects: [],
+      patterns: [],
+      checkpoints: {},
+      auto_save_enabled: true,
+      last_saved: Date.now(),
+      scenario_progress: 0
+    };
+
+    this.showGameModal();
+
+    // Render the start page
+    const container = document.getElementById('game-container');
+    if (container) {
+      container.innerHTML = router.renderPage();
+    }
+
+    // Start auto-save timer for extended scenario
+    this.startAutoSaveTimer();
+
+    console.log('✅ Extended Multi-Phase game initialized');
+  }
+
   static getMockGameContent(scenarioId) {
     const scenarioConfigs = {
       'coffee-shop-linear-thinking': {
@@ -10425,6 +11120,1359 @@ class GameManager {
   }
 }
 
+// Extended Multi-Phase Page Router for 8+ round scenarios
+class ExtendedMultiPhasePageRouter {
+  constructor(gameState = null) {
+    // Initialize game state
+    this.gameState = gameState || {
+      satisfaction: 50,
+      resources: 10000,
+      reputation: 50,
+      turn_number: 1,
+      max_turns: 12,
+      phase: 1,
+      phase_progress: 0,
+      decision_history: [],
+      delayed_effects: [],
+      achievements: []
+    };
+    
+    // Page flow state
+    this.currentPage = 'START';
+    this.currentTurn = this.gameState.turn_number;
+    this.currentDecisionIndex = 0;
+    this.tempDecisions = {};
+    this.tempInputs = {};
+    this.feedbackVisible = false;
+  }
+
+  // ========== State Management ==========
+  
+  getCurrentPage() {
+    return this.currentPage;
+  }
+  
+  getCurrentTurn() {
+    return this.currentTurn;
+  }
+  
+  getGameState() {
+    return this.gameState;
+  }
+
+  // ========== Navigation Methods ==========
+  
+  startGame() {
+    this.currentPage = 'TURN_1_INTRO';
+    this.updatePhase();
+  }
+
+  nextTurn() {
+    // Submit current turn's decisions
+    this.submitTurn();
+    
+    // Move to next turn
+    this.currentTurn++;
+    this.gameState.turn_number = this.currentTurn;
+    
+    // Update phase if needed
+    this.updatePhase();
+    
+    // Reset temporary decisions
+    this.tempDecisions = {};
+    this.tempInputs = {};
+    
+    // Set next page
+    if (this.currentTurn <= this.gameState.max_turns) {
+      this.currentPage = `TURN_${this.currentTurn}_DECISION`;
+    } else {
+      this.currentPage = 'GAME_END';
+    }
+    
+    this.feedbackVisible = false;
+  }
+
+  updatePhase() {
+    // Update phase based on turn progress
+    const phaseCount = 4; // 4 phases for extended scenarios
+    const phaseSize = Math.ceil(this.gameState.max_turns / phaseCount);
+    this.gameState.phase = Math.min(Math.floor((this.currentTurn - 1) / phaseSize) + 1, phaseCount);
+    this.gameState.phase_progress = ((this.currentTurn - 1) % phaseSize) / phaseSize;
+  }
+
+  // ========== Decision Handling ==========
+  
+  makeDecision(key, value) {
+    this.tempDecisions[key] = value;
+    
+    // Move to feedback page after decision
+    this.currentPage = `TURN_${this.currentTurn}_FEEDBACK`;
+    this.feedbackVisible = true;
+  }
+
+  updateDecision(key, value) {
+    this.tempDecisions[key] = value;
+  }
+
+  updateInput(key, value) {
+    this.tempInputs[key] = value;
+  }
+
+  // ========== Turn Processing ==========
+  
+  submitTurn() {
+    // Process the turn with decision engine
+    const decision = { ...this.tempDecisions, ...this.tempInputs };
+    
+    // Calculate turn result using decision engine
+    const result = this.calculateTurnResult(decision);
+    
+    // Update game state with results
+    this.gameState.satisfaction = result.newGameState.satisfaction;
+    this.gameState.resources = result.newGameState.resources;
+    this.gameState.reputation = result.newGameState.reputation;
+    
+    // Add to decision history
+    this.gameState.decision_history.push({
+      turn: this.currentTurn,
+      decision: { ...decision },
+      result: { ...result },
+      timestamp: Date.now()
+    });
+    
+    // Apply any delayed effects
+    this.applyDelayedEffects();
+    
+    // Check for achievements
+    this.checkAchievements();
+  }
+
+  calculateTurnResult(decision) {
+    // Default result
+    let result = {
+      newGameState: { ...this.gameState },
+      linearExpectation: {},
+      actualResult: {},
+      feedback: '',
+      newDelayedEffects: [],
+      gameOver: false,
+      gameOverReason: null
+    };
+    
+    // Apply decision effects based on decision type
+    if (decision.growthStrategy !== undefined) {
+      // Growth strategy decision
+      const growthEffect = decision.growthStrategy * 0.3;
+      result.newGameState.resources += growthEffect * 100;
+      result.newGameState.satisfaction += decision.qualityFocus * 0.2 - 5;
+      result.newGameState.reputation += decision.qualityFocus * 0.15;
+    } else if (decision.marketFocus !== undefined) {
+      // Market focus decision
+      const marketEffect = decision.marketFocus * 0.25;
+      result.newGameState.resources += marketEffect * 80;
+      result.newGameState.satisfaction += decision.innovationInvestment * 0.1 - 3;
+      result.newGameState.reputation += decision.marketFocus * 0.1;
+    }
+    
+    // Ensure values stay within bounds
+    result.newGameState.resources = Math.max(0, result.newGameState.resources);
+    result.newGameState.satisfaction = Math.max(0, Math.min(100, result.newGameState.satisfaction));
+    result.newGameState.reputation = Math.max(0, Math.min(100, result.newGameState.reputation));
+    
+    // Generate feedback
+    result.feedback = this.generateTurnFeedback(decision, result);
+    
+    return result;
+  }
+
+  generateTurnFeedback(decision, result) {
+    let feedback = `📊 **第${this.currentTurn}回合结果**\n\n`;
+    
+    feedback += `📖 **你的决策**：\n`;
+    Object.entries(decision).forEach(([key, value]) => {
+      feedback += `- ${this.getDecisionLabel(key)}: ${value}\n`;
+    });
+    
+    feedback += `\n🎯 **实际结果**：\n`;
+    feedback += `- 资源: ${Math.round(result.newGameState.resources)} (${this.formatChange(result.newGameState.resources - this.gameState.resources)})\n`;
+    feedback += `- 满意度: ${Math.round(result.newGameState.satisfaction)} (${this.formatChange(result.newGameState.satisfaction - this.gameState.satisfaction)})\n`;
+    feedback += `- 声誉: ${Math.round(result.newGameState.reputation)} (${this.formatChange(result.newGameState.reputation - this.gameState.reputation)})\n`;
+    
+    return feedback;
+  }
+
+  getDecisionLabel(key) {
+    const labels = {
+      'growthStrategy': '增长策略',
+      'qualityFocus': '质量关注',
+      'marketFocus': '市场专注',
+      'innovationInvestment': '创新投入',
+      'adaptationStrategy': '适应策略',
+      'legacyDecision': '遗产决策'
+    };
+    return labels[key] || key;
+  }
+
+  formatChange(change) {
+    return (change >= 0 ? '+' : '') + Math.round(change);
+  }
+
+  applyDelayedEffects() {
+    // Apply any delayed effects that are scheduled for this turn
+    if (!this.gameState.delayed_effects || this.gameState.delayed_effects.length === 0) {
+      return;
+    }
+
+    const effectsToApply = this.gameState.delayed_effects.filter(effect => effect.turn === this.currentTurn);
+    effectsToApply.forEach(effect => {
+      if (effect.changes) {
+        Object.entries(effect.changes).forEach(([key, value]) => {
+          if (this.gameState[key] !== undefined) {
+            this.gameState[key] += value;
+          }
+        });
+      }
+    });
+
+    // Remove applied effects
+    this.gameState.delayed_effects = this.gameState.delayed_effects.filter(effect => effect.turn !== this.currentTurn);
+  }
+
+  checkAchievements() {
+    // Check for various achievements based on game state
+    const achievements = [];
+    
+    // Check for resource milestones
+    if (this.gameState.resources > 50000 && !this.gameState.achievements.includes('wealthy')) {
+      achievements.push('wealthy');
+      this.gameState.achievements.push('wealthy');
+    }
+    
+    // Check for satisfaction milestones
+    if (this.gameState.satisfaction > 80 && !this.gameState.achievements.includes('satisfaction_master')) {
+      achievements.push('satisfaction_master');
+      this.gameState.achievements.push('satisfaction_master');
+    }
+    
+    // Check for reputation milestones
+    if (this.gameState.reputation > 85 && !this.gameState.achievements.includes('reputation_legend')) {
+      achievements.push('reputation_legend');
+      this.gameState.achievements.push('reputation_legend');
+    }
+    
+    // Check for balanced gameplay
+    if (this.gameState.satisfaction > 70 && this.gameState.reputation > 70 && this.gameState.resources > 25000 && 
+        !this.gameState.achievements.includes('balanced_approach')) {
+      achievements.push('balanced_approach');
+      this.gameState.achievements.push('balanced_approach');
+    }
+    
+    // Award achievements
+    if (achievements.length > 0) {
+      this.showAchievements(achievements);
+    }
+  }
+
+  showAchievements(achievements) {
+    const achievementNames = {
+      'wealthy': '财富积累者',
+      'satisfaction_master': '满意度大师',
+      'reputation_legend': '声誉传奇',
+      'balanced_approach': '均衡之道'
+    };
+    
+    const achievementText = achievements.map(a => achievementNames[a]).join(', ');
+    ToastManager.show(`成就解锁: ${achievementText}`, 'success', '新成就！');
+  }
+
+  // ========== Page Rendering ==========
+  
+  renderPage() {
+    switch (this.currentPage) {
+      case 'START':
+        return this.renderStartPage();
+      case 'TURN_1_INTRO':
+        return this.renderTurnIntroPage(1);
+      case 'TURN_2_INTRO':
+        return this.renderTurnIntroPage(2);
+      case 'TURN_3_INTRO':
+        return this.renderTurnIntroPage(3);
+      case 'TURN_4_INTRO':
+        return this.renderTurnIntroPage(4);
+      case 'TURN_5_INTRO':
+        return this.renderTurnIntroPage(5);
+      case 'TURN_6_INTRO':
+        return this.renderTurnIntroPage(6);
+      case 'TURN_7_INTRO':
+        return this.renderTurnIntroPage(7);
+      case 'TURN_8_INTRO':
+        return this.renderTurnIntroPage(8);
+      case 'TURN_9_INTRO':
+        return this.renderTurnIntroPage(9);
+      case 'TURN_10_INTRO':
+        return this.renderTurnIntroPage(10);
+      case 'TURN_11_INTRO':
+        return this.renderTurnIntroPage(11);
+      case 'TURN_12_INTRO':
+        return this.renderTurnIntroPage(12);
+      case 'TURN_1_DECISION':
+      case 'TURN_2_DECISION':
+      case 'TURN_3_DECISION':
+      case 'TURN_4_DECISION':
+      case 'TURN_5_DECISION':
+      case 'TURN_6_DECISION':
+      case 'TURN_7_DECISION':
+      case 'TURN_8_DECISION':
+      case 'TURN_9_DECISION':
+      case 'TURN_10_DECISION':
+      case 'TURN_11_DECISION':
+      case 'TURN_12_DECISION':
+        return this.renderDecisionPage(parseInt(this.currentPage.split('_')[1]));
+      case 'TURN_1_FEEDBACK':
+      case 'TURN_2_FEEDBACK':
+      case 'TURN_3_FEEDBACK':
+      case 'TURN_4_FEEDBACK':
+      case 'TURN_5_FEEDBACK':
+      case 'TURN_6_FEEDBACK':
+      case 'TURN_7_FEEDBACK':
+      case 'TURN_8_FEEDBACK':
+      case 'TURN_9_FEEDBACK':
+      case 'TURN_10_FEEDBACK':
+      case 'TURN_11_FEEDBACK':
+      case 'TURN_12_FEEDBACK':
+        return this.renderFeedbackPage(parseInt(this.currentPage.split('_')[1]));
+      case 'GAME_END':
+        return this.renderGameEndPage();
+      default:
+        return '<div class="game-page">页面开发中...</div>';
+    }
+  }
+
+  renderStartPage() {
+    return `
+      <div class="game-page start-page">
+        <h2>🚀 扩展多阶段决策挑战</h2>
+        <div class="scenario-intro">
+          <p>欢迎来到扩展版多阶段决策挑战！</p>
+          <p>在这个挑战中，您将经历长达${this.gameState.max_turns}回合的复杂决策过程，每个回合都考验着您的战略思维和长远规划能力。</p>
+          
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-label">📊 总回合数</span>
+              <span class="stat-value">${this.gameState.max_turns}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">🎯 总阶段数</span>
+              <span class="stat-value">4</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">💪 挑战难度</span>
+              <span class="stat-value advanced">高级</span>
+            </div>
+          </div>
+          
+          <div class="scenario-goals">
+            <h3>🎯 挑战目标</h3>
+            <ul>
+              <li>平衡资源、满意度和声誉三个关键指标</li>
+              <li>在长期内实现可持续增长</li>
+              <li>应对各阶段的不同挑战</li>
+              <li>解锁各种成就</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="actions">
+          <button class="btn btn-primary" onclick="window.extendedMultiPhaseRouter.startGame(); window.extendedMultiPhaseRouter.render();">
+            开始挑战
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  renderTurnIntroPage(turn) {
+    const phaseInfo = this.getPhaseInfo();
+    
+    return `
+      <div class="game-page turn-intro-page">
+        <h2>🔄 第${turn}回合 - ${phaseInfo.name}</h2>
+        
+        <div class="turn-progress">
+          <div class="progress-bar-container">
+            <div class="progress-bar" style="width: ${(turn / this.gameState.max_turns) * 100}%"></div>
+          </div>
+          <div class="progress-text">进度: ${Math.round((turn / this.gameState.max_turns) * 100)}%</div>
+        </div>
+        
+        <div class="phase-info">
+          <h3>📋 阶段信息</h3>
+          <div class="phase-details">
+            <div class="phase-name">第${this.gameState.phase}阶段: ${phaseInfo.name}</div>
+            <div class="phase-desc">${phaseInfo.description}</div>
+          </div>
+        </div>
+        
+        <div class="current-state">
+          <h3>📊 当前状态</h3>
+          <div class="state-grid">
+            <div class="state-item">
+              <span class="state-label">💰 资源</span>
+              <span class="state-value">${Math.round(this.gameState.resources)}</span>
+            </div>
+            <div class="state-item">
+              <span class="state-label">😊 满意度</span>
+              <span class="state-value">${Math.round(this.gameState.satisfaction)}</span>
+            </div>
+            <div class="state-item">
+              <span class="state-label">⭐ 声誉</span>
+              <span class="state-value">${Math.round(this.gameState.reputation)}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="turn-context">
+          <h3>📖 回合背景</h3>
+          <p>${this.getTurnContext(turn)}</p>
+        </div>
+        
+        <div class="actions">
+          <button class="btn btn-primary" onclick="window.extendedMultiPhaseRouter.currentPage='TURN_${turn}_DECISION'; window.extendedMultiPhaseRouter.render();">
+            开始决策
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  getPhaseInfo() {
+    const phase = this.gameState.phase;
+    const phaseInfo = {
+      1: {
+        name: "探索与建立",
+        description: "在初始阶段，重点是建立基础，探索市场机会，并为长期发展奠定根基。"
+      },
+      2: {
+        name: "增长与扩张",
+        description: "在第二阶段，需要加速增长，扩大市场份额，并优化运营效率。"
+      },
+      3: {
+        name: "挑战与适应",
+        description: "面临市场变化和竞争压力，需要灵活适应并调整策略。"
+      },
+      4: {
+        name: "巩固与传承",
+        description: "在最终阶段，巩固成果，确保可持续性，并为未来打下基础。"
+      }
+    };
+    
+    return phaseInfo[phase] || phaseInfo[1];
+  }
+
+  getTurnContext(turn) {
+    // Provide different context based on the turn number
+    const contexts = {
+      1: "游戏开始，您拥有基础资源。现在需要做出第一个关键决策，这将为整个游戏设定基调。",
+      2: "第一回合的结果已经显现，您需要根据当前状况调整策略，考虑下一步的方向。",
+      3: "业务开始发展，但同时也出现了新的挑战。您需要在增长和稳定之间找到平衡。",
+      4: "市场竞争加剧，您需要更加精细地管理资源和策略，以保持竞争优势。",
+      5: "中期评估时间，回顾前几个回合的决策效果，并为接下来的阶段制定计划。",
+      6: "游戏进入下半场，之前的决策开始产生长期影响。您需要更具前瞻性的思考。",
+      7: "关键转折点，您的决策将对后期游戏走向产生重大影响。",
+      8: "中期到后期过渡，需要在维持现有成果和寻求新突破之间做出选择。",
+      9: "后期阶段开始，长期战略变得至关重要，短期波动需要放在更大背景下考量。",
+      10: "游戏接近尾声，每一步决策都更加重要，需要为最终结果做准备。",
+      11: "倒数第二回合，所有之前的决策都将汇聚于此，影响最终结果。",
+      12: "最后一回合，您的最终决策将决定整个游戏的成败。"
+    };
+    
+    return contexts[turn] || contexts[1];
+  }
+
+  renderDecisionPage(turn) {
+    // Get decision configuration based on turn and phase
+    const decisionConfig = this.getDecisionConfig(turn);
+    
+    return `
+      <div class="game-page decision-page">
+        <h2>🤔 第${turn}回合 - 决策时间</h2>
+        
+        <div class="turn-progress">
+          <div class="progress-bar-container">
+            <div class="progress-bar" style="width: ${(turn / this.gameState.max_turns) * 100}%"></div>
+          </div>
+          <div class="progress-text">进度: ${Math.round((turn / this.gameState.max_turns) * 100)}%</div>
+        </div>
+        
+        <div class="current-state">
+          <h3>📊 当前状态</h3>
+          <div class="state-grid">
+            <div class="state-item">
+              <span class="state-label">💰 资源</span>
+              <span class="state-value">${Math.round(this.gameState.resources)}</span>
+            </div>
+            <div class="state-item">
+              <span class="state-label">😊 满意度</span>
+              <span class="state-value">${Math.round(this.gameState.satisfaction)}</span>
+            </div>
+            <div class="state-item">
+              <span class="state-label">⭐ 声誉</span>
+              <span class="state-value">${Math.round(this.gameState.reputation)}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="decision-context">
+          <h3>📖 决策背景</h3>
+          <p>${this.getTurnContext(turn)}</p>
+        </div>
+        
+        <div class="decision-area">
+          <h3>📋 决策选项</h3>
+          ${decisionConfig.map(config => this.renderDecisionControl(config)).join('')}
+        </div>
+        
+        <div class="actions">
+          <button class="btn btn-secondary" onclick="window.extendedMultiPhaseRouter.currentPage='TURN_${turn}_INTRO'; window.extendedMultiPhaseRouter.render();">
+            返回
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  getDecisionConfig(turn) {
+    // Return different decision configurations based on turn number and phase
+    if (turn <= 3) {
+      // Early game decisions
+      return [
+        {
+          id: 'growthStrategy',
+          type: 'slider',
+          label: '📈 增长策略',
+          min: 0,
+          max: 100,
+          default: 50,
+          unit: '%',
+          description: '决定投入多少资源用于增长'
+        },
+        {
+          id: 'qualityFocus',
+          type: 'slider',
+          label: '⚖️ 质量关注',
+          min: 0,
+          max: 100,
+          default: 60,
+          unit: '%',
+          description: '决定投入多少注意力维持质量'
+        }
+      ];
+    } else if (turn <= 6) {
+      // Mid game decisions
+      return [
+        {
+          id: 'marketFocus',
+          type: 'slider',
+          label: '🎯 市场专注',
+          min: 0,
+          max: 100,
+          default: 70,
+          unit: '%',
+          description: '决定专注特定市场的程度'
+        },
+        {
+          id: 'innovationInvestment',
+          type: 'slider',
+          label: '💡 创新投入',
+          min: 0,
+          max: 100,
+          default: 40,
+          unit: '%',
+          description: '决定投入多少资源进行创新'
+        }
+      ];
+    } else if (turn <= 9) {
+      // Late mid game decisions
+      return [
+        {
+          id: 'adaptationStrategy',
+          type: 'choice',
+          label: '🔄 适应策略',
+          options: [
+            { id: 'pivot', label: '转型策略', description: '改变核心策略以适应新环境' },
+            { id: 'scale', label: '扩大规模', description: '通过规模效应保持竞争力' },
+            { id: 'specialize', label: '专业深化', description: '专注于核心优势领域' }
+          ]
+        }
+      ];
+    } else {
+      // End game decisions
+      return [
+        {
+          id: 'legacyDecision',
+          type: 'choice',
+          label: '🏆 遗产决策',
+          options: [
+            { id: 'profitMax', label: '利润最大化', description: '追求短期利润最大化' },
+            { id: 'sustainability', label: '可持续发展', description: '为长期发展奠定基础' },
+            { id: 'socialImpact', label: '社会影响', description: '注重社会和环境责任' }
+          ]
+        }
+      ];
+    }
+  }
+
+  renderDecisionControl(config) {
+    if (config.type === 'slider') {
+      const currentValue = this.tempDecisions[config.id] !== undefined ? 
+        this.tempDecisions[config.id] : config.default;
+      
+      return `
+        <div class="decision-control slider-control">
+          <label for="${config.id}">
+            <strong>${config.label}</strong>
+            <span class="control-desc">${config.description}</span>
+          </label>
+          <div class="slider-container">
+            <span class="min-value">${config.min}${config.unit}</span>
+            <input 
+              type="range" 
+              id="${config.id}" 
+              class="game-slider" 
+              min="${config.min}" 
+              max="${config.max}" 
+              value="${currentValue}"
+              oninput="window.extendedMultiPhaseRouter.updateDecision('${config.id}', parseInt(this.value)); window.extendedMultiPhaseRouter.render();">
+            <span class="max-value">${config.max}${config.unit}</span>
+          </div>
+          <div class="current-selection">
+            当前选择: <span id="${config.id}-value">${currentValue}</span>${config.unit}
+          </div>
+        </div>
+      `;
+    } else if (config.type === 'choice') {
+      return `
+        <div class="decision-control choice-control">
+          <label>
+            <strong>${config.label}</strong>
+          </label>
+          <div class="choice-options">
+            ${config.options.map(option => `
+              <div class="choice-card" onclick="window.extendedMultiPhaseRouter.makeDecision('${config.id}', '${option.id}');">
+                <h4>${option.label}</h4>
+                <p>${option.description}</p>
+                <button class="btn btn-option">选择</button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+    
+    return `<div class="decision-control">未知控件类型</div>`;
+  }
+
+  renderFeedbackPage(turn) {
+    // Calculate results if not already done
+    if (Object.keys(this.tempDecisions).length > 0) {
+      const decision = { ...this.tempDecisions, ...this.tempInputs };
+      const result = this.calculateTurnResult(decision);
+      
+      return `
+        <div class="game-page feedback-page">
+          <h2>✅ 第${turn}回合 - 决策反馈</h2>
+          
+          <div class="turn-progress">
+            <div class="progress-bar-container">
+              <div class="progress-bar" style="width: ${(turn / this.gameState.max_turns) * 100}%"></div>
+            </div>
+            <div class="progress-text">进度: ${Math.round((turn / this.gameState.max_turns) * 100)}%</div>
+          </div>
+          
+          <div class="feedback-content">
+            <h3>📋 您的决策</h3>
+            <div class="decision-summary">
+              ${Object.entries(this.tempDecisions).map(([key, value]) => {
+                return `<div class="decision-item"><strong>${this.getDecisionLabel(key)}:</strong> ${value}</div>`;
+              }).join('')}
+            </div>
+            
+            <h3>📊 结果反馈</h3>
+            <div class="result-display">
+              <pre>${result.feedback}</pre>
+            </div>
+            
+            <h3>📈 影响预览</h3>
+            <div class="impact-preview">
+              <p>这些决策的影响将在接下来的回合中逐步显现，特别是延迟效应将在未来回合中发挥作用。</p>
+            </div>
+          </div>
+          
+          <div class="actions">
+            <button class="btn btn-primary" onclick="window.extendedMultiPhaseRouter.nextTurn();">
+              进入第${turn + 1}回合
+            </button>
+          </div>
+        </div>
+      `;
+    } else {
+      return `
+        <div class="game-page feedback-page">
+          <h2>⏳ 等待决策</h2>
+          <p>请先做出决策以查看反馈。</p>
+          <div class="actions">
+            <button class="btn btn-primary" onclick="window.extendedMultiPhaseRouter.currentPage='TURN_${turn}_DECISION'; window.extendedMultiPhaseRouter.render();">
+              返回决策页面
+            </button>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  renderGameEndPage() {
+    // Calculate final scores and achievements
+    const finalScore = Math.round(
+      (this.gameState.resources / 100) * 0.4 + 
+      this.gameState.satisfaction * 0.3 + 
+      this.gameState.reputation * 0.3
+    );
+    
+    // Determine rating
+    let rating = '';
+    let ratingDesc = '';
+    if (finalScore >= 80) {
+      rating = '🏆 卓越领导者';
+      ratingDesc = '您展现了卓越的战略思维和长期规划能力！';
+    } else if (finalScore >= 60) {
+      rating = '🎖️ 优秀管理者';
+      ratingDesc = '您的决策平衡了各方需求，取得了不错的成绩！';
+    } else if (finalScore >= 40) {
+      rating = '🏅 合格参与者';
+      ratingDesc = '您完成了挑战，虽然有起伏，但坚持到了最后！';
+    } else {
+      rating = '📚 学习者';
+      ratingDesc = '挑战虽然艰难，但您获得了宝贵的经验！';
+    }
+    
+    return `
+      <div class="game-page end-page">
+        <h2>🎉 挑战完成！</h2>
+        
+        <div class="final-rating">
+          <h3>${rating}</h3>
+          <p>${ratingDesc}</p>
+        </div>
+        
+        <div class="final-stats">
+          <h3>📊 最终状态</h3>
+          <div class="stat-grid">
+            <div class="stat-item large">
+              <span class="stat-label">💰 资源</span>
+              <span class="stat-value">${Math.round(this.gameState.resources)}</span>
+            </div>
+            <div class="stat-item large">
+              <span class="stat-label">😊 满意度</span>
+              <span class="stat-value">${Math.round(this.gameState.satisfaction)}</span>
+            </div>
+            <div class="stat-item large">
+              <span class="stat-label">⭐ 声誉</span>
+              <span class="stat-value">${Math.round(this.gameState.reputation)}</span>
+            </div>
+            <div class="stat-item large">
+              <span class="stat-label">💯 综合评分</span>
+              <span class="stat-value">${finalScore}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="achievements-section">
+          <h3>🏆 解锁成就</h3>
+          <div class="achievements-list">
+            ${this.gameState.achievements.length > 0 ? 
+              this.gameState.achievements.map(ach => this.getAchievementDisplay(ach)).join('') :
+              '<p>暂无成就，再试一次挑战更高分数吧！</p>'
+            }
+          </div>
+        </div>
+        
+        <div class="learning-outcomes">
+          <h3>🎓 学习收获</h3>
+          <ul>
+            <li>长周期决策的复杂性与挑战</li>
+            <li>资源、满意度和声誉之间的平衡艺术</li>
+            <li>延迟效应在战略决策中的重要性</li>
+            <li>不同阶段需要采用不同的策略重点</li>
+          </ul>
+        </div>
+        
+        <div class="actions">
+          <button class="btn btn-primary" onclick="window.extendedMultiPhaseRouter.resetGame(); window.extendedMultiPhaseRouter.render();">
+            再次挑战
+          </button>
+          <button class="btn btn-secondary" onclick="GameManager.hideGameModal(); NavigationManager.navigateTo('scenarios');">
+            选择其他场景
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  getAchievementDisplay(achievement) {
+    const achievementDetails = {
+      'wealthy': { name: '财富积累者', desc: '资源超过50,000' },
+      'satisfaction_master': { name: '满意度大师', desc: '满意度超过80' },
+      'reputation_legend': { name: '声誉传奇', desc: '声誉超过85' },
+      'balanced_approach': { name: '均衡之道', desc: '各项指标均达到优秀水平' }
+    };
+    
+    const details = achievementDetails[achievement] || { name: achievement, desc: '未知成就' };
+    
+    return `
+      <div class="achievement-item unlocked">
+        <span class="achievement-icon">🏆</span>
+        <div class="achievement-info">
+          <h4>${details.name}</h4>
+          <p>${details.desc}</p>
+        </div>
+      </div>
+    `;
+  }
+
+  resetGame() {
+    // Reset to initial state
+    this.gameState = {
+      satisfaction: 50,
+      resources: 10000,
+      reputation: 50,
+      turn_number: 1,
+      max_turns: 12,
+      phase: 1,
+      phase_progress: 0,
+      decision_history: [],
+      delayed_effects: [],
+      achievements: []
+    };
+    
+    this.currentPage = 'START';
+    this.currentTurn = 1;
+    this.tempDecisions = {};
+    this.tempInputs = {};
+    this.feedbackVisible = false;
+  }
+
+  // ========== Persistence ==========
+  
+  saveState() {
+    const state = {
+      gameState: this.gameState,
+      currentPage: this.currentPage,
+      currentTurn: this.currentTurn,
+      tempDecisions: this.tempDecisions,
+      tempInputs: this.tempInputs,
+      feedbackVisible: this.feedbackVisible
+    };
+    
+    sessionStorage.setItem('extendedMultiPhaseGameState', JSON.stringify(state));
+  }
+
+  loadState() {
+    const saved = sessionStorage.getItem('extendedMultiPhaseGameState');
+    if (saved) {
+      const state = JSON.parse(saved);
+      this.gameState = state.gameState;
+      this.currentPage = state.currentPage;
+      this.currentTurn = state.currentTurn;
+      this.tempDecisions = state.tempDecisions || {};
+      this.tempInputs = state.tempInputs || {};
+      this.feedbackVisible = state.feedbackVisible || false;
+    }
+  }
+
+  render() {
+    const container = document.getElementById('game-container');
+    if (container) {
+      container.innerHTML = this.renderPage();
+    }
+  }
+}
+
+// Personalized Learning Engine
+class PersonalizedLearningEngine {
+  constructor() {
+    this.userProfiles = {};
+    this.learningPaths = {};
+    this.adaptiveFeedback = {};
+    this.analytics = {};
+  }
+
+  /**
+   * Create or update user profile based on game interactions
+   * @param {string} userId - Unique identifier for the user
+   * @param {object} gameSession - Current game session data
+   * @param {object} decisionHistory - History of user decisions
+   */
+  updateUserProfile(userId, gameSession, decisionHistory) {
+    if (!this.userProfiles[userId]) {
+      this.userProfiles[userId] = {
+        id: userId,
+        createdAt: new Date(),
+        totalGamesPlayed: 0,
+        successRate: 0,
+        preferredScenarios: {},
+        cognitiveBiasTendencies: {},
+        learningSpeed: 'medium', // slow, medium, fast
+        difficultyPreference: 'intermediate', // beginner, intermediate, advanced
+        engagementLevel: 'moderate', // low, moderate, high
+        improvementAreas: [],
+        strengths: [],
+        lastActive: new Date(),
+        totalPlayTime: 0
+      };
+    }
+
+    const profile = this.userProfiles[userId];
+    
+    // Update basic stats
+    profile.totalGamesPlayed += 1;
+    profile.lastActive = new Date();
+
+    // Analyze decision patterns to detect cognitive bias tendencies
+    const biasAnalysis = this.analyzeCognitiveBiases(decisionHistory);
+    Object.assign(profile.cognitiveBiasTendencies, biasAnalysis);
+
+    // Analyze success patterns
+    const successRate = this.calculateSuccessRate(decisionHistory);
+    profile.successRate = (profile.successRate + successRate) / 2; // Moving average
+
+    // Update preferred scenarios
+    if (gameSession?.scenarioId) {
+      profile.preferredScenarios[gameSession.scenarioId] = 
+        (profile.preferredScenarios[gameSession.scenarioId] || 0) + 1;
+    }
+
+    // Determine learning speed based on how quickly they adapt
+    profile.learningSpeed = this.estimateLearningSpeed(decisionHistory);
+
+    // Identify improvement areas and strengths
+    profile.improvementAreas = this.identifyImprovementAreas(decisionHistory);
+    profile.strengths = this.identifyStrengths(decisionHistory);
+
+    return profile;
+  }
+
+  /**
+   * Analyze cognitive biases from decision history
+   * @param {Array} decisionHistory - Array of user decisions
+   * @return {Object} Bias analysis results
+   */
+  analyzeCognitiveBiases(decisionHistory) {
+    const biases = {
+      confirmationBias: 0,
+      linearThinking: 0,
+      timeDelayNeglect: 0,
+      overconfidence: 0,
+      anchoring: 0,
+      availabilityHeuristic: 0
+    };
+
+    if (!decisionHistory || decisionHistory.length === 0) {
+      return biases;
+    }
+
+    // Analyze confirmation bias: tendency to stick with similar decisions despite poor outcomes
+    let confirmationScore = 0;
+    for (let i = 1; i < decisionHistory.length; i++) {
+      const prev = decisionHistory[i - 1];
+      const curr = decisionHistory[i];
+      
+      // Check if user repeated similar decisions despite negative outcomes
+      if (this.similarDecisions(prev.decision, curr.decision)) {
+        if (curr.actual_result && this.isNegativeOutcome(curr.actual_result)) {
+          confirmationScore += 1;
+        }
+      }
+    }
+    biases.confirmationBias = Math.min(confirmationScore / decisionHistory.length, 1);
+
+    // Analyze linear thinking: expecting linear outcomes from complex systems
+    let linearThinkingScore = 0;
+    for (const decision of decisionHistory) {
+      if (decision.linear_expectation && decision.actual_result) {
+        const gap = this.calculateGap(decision.linear_expectation, decision.actual_result);
+        if (gap > 0.5) { // Large gap indicates linear thinking
+          linearThinkingScore += 1;
+        }
+      }
+    }
+    biases.linearThinking = Math.min(linearThinkingScore / decisionHistory.length, 1);
+
+    // Analyze time delay neglect: ignoring delayed effects
+    let timeDelayScore = 0;
+    for (const decision of decisionHistory) {
+      if (decision.delayed_effects_applied && Object.keys(decision.delayed_effects_applied).length > 0) {
+        // If user didn't account for delayed effects, increase score
+        timeDelayScore += 0.5; // Arbitrary value, adjust as needed
+      }
+    }
+    biases.timeDelayNeglect = Math.min(timeDelayScore / decisionHistory.length, 1);
+
+    return biases;
+  }
+
+  /**
+   * Calculate success rate from decision history
+   * @param {Array} decisionHistory - Array of user decisions
+   * @return {number} Success rate between 0 and 1
+   */
+  calculateSuccessRate(decisionHistory) {
+    if (!decisionHistory || decisionHistory.length === 0) {
+      return 0.5; // Neutral starting point
+    }
+
+    let successfulDecisions = 0;
+    for (const decision of decisionHistory) {
+      if (decision.actual_result) {
+        // Define success based on positive outcomes in various metrics
+        const isSuccessful = this.isPositiveOutcome(decision.actual_result);
+        if (isSuccessful) {
+          successfulDecisions++;
+        }
+      }
+    }
+
+    return successfulDecisions / decisionHistory.length;
+  }
+
+  /**
+   * Estimate learning speed based on improvement over time
+   * @param {Array} decisionHistory - Array of user decisions
+   * @return {string} Learning speed category
+   */
+  estimateLearningSpeed(decisionHistory) {
+    if (decisionHistory.length < 4) {
+      return 'medium'; // Not enough data
+    }
+
+    // Compare early decisions vs later decisions
+    const earlyDecisions = decisionHistory.slice(0, Math.floor(decisionHistory.length / 2));
+    const laterDecisions = decisionHistory.slice(Math.floor(decisionHistory.length / 2));
+
+    const earlySuccessRate = this.calculateSuccessRate(earlyDecisions);
+    const laterSuccessRate = this.calculateSuccessRate(laterDecisions);
+
+    if (laterSuccessRate > earlySuccessRate + 0.2) {
+      return 'fast';
+    } else if (laterSuccessRate > earlySuccessRate + 0.05) {
+      return 'medium';
+    } else {
+      return 'slow';
+    }
+  }
+
+  /**
+   * Identify areas where user needs improvement
+   * @param {Array} decisionHistory - Array of user decisions
+   * @return {Array} Improvement areas
+   */
+  identifyImprovementAreas(decisionHistory) {
+    const areas = [];
+    const biasAnalysis = this.analyzeCognitiveBiases(decisionHistory);
+
+    // Add areas based on bias tendencies
+    if (biasAnalysis.linearThinking > 0.6) {
+      areas.push('complex-system-thinking');
+    }
+    if (biasAnalysis.timeDelayNeglect > 0.6) {
+      areas.push('long-term-consequence-planning');
+    }
+    if (biasAnalysis.confirmationBias > 0.6) {
+      areas.push('considering-alternatives');
+    }
+    if (biasAnalysis.overconfidence > 0.6) {
+      areas.push('realistic-expectation-setting');
+    }
+
+    // Add areas based on performance gaps
+    const performanceAnalysis = this.analyzePerformanceGaps(decisionHistory);
+    if (performanceAnalysis.lowResourceManagement) {
+      areas.push('resource-allocation');
+    }
+    if (performanceAnalysis.lowRelationshipManagement) {
+      areas.push('relationship-dynamics');
+    }
+
+    return areas;
+  }
+
+  /**
+   * Identify user's strengths
+   * @param {Array} decisionHistory - Array of user decisions
+   * @return {Array} Strengths
+   */
+  identifyStrengths(decisionHistory) {
+    const strengths = [];
+    const biasAnalysis = this.analyzeCognitiveBiases(decisionHistory);
+    const successRate = this.calculateSuccessRate(decisionHistory);
+
+    // Add strengths based on low bias scores
+    if (biasAnalysis.linearThinking < 0.3) {
+      strengths.push('complex-system-understanding');
+    }
+    if (biasAnalysis.timeDelayNeglect < 0.3) {
+      strengths.push('long-term-thinking');
+    }
+    if (biasAnalysis.confirmationBias < 0.3) {
+      strengths.push('open-mindedness');
+    }
+
+    // Add strengths based on high success rates
+    if (successRate > 0.7) {
+      strengths.push('effective-decision-making');
+    }
+
+    // Add strengths based on consistent improvement
+    if (this.showsConsistentImprovement(decisionHistory)) {
+      strengths.push('learning-agility');
+    }
+
+    return strengths;
+  }
+
+  /**
+   * Generate personalized learning path for user
+   * @param {string} userId - User ID
+   * @return {Array} Recommended scenarios and activities
+   */
+  generateLearningPath(userId) {
+    const profile = this.userProfiles[userId];
+    if (!profile) {
+      return this.getDefaultLearningPath();
+    }
+
+    const path = [];
+
+    // Prioritize improvement areas
+    for (const area of profile.improvementAreas) {
+      switch (area) {
+        case 'complex-system-thinking':
+          path.push({
+            scenarioId: 'coffee-shop-linear-thinking',
+            difficulty: 'beginner',
+            focus: 'understanding-non-linear-relationships',
+            priority: 'high'
+          });
+          break;
+        case 'long-term-consequence-planning':
+          path.push({
+            scenarioId: 'relationship-time-delay',
+            difficulty: 'intermediate',
+            focus: 'time-delay-effects',
+            priority: 'high'
+          });
+          break;
+        case 'considering-alternatives':
+          path.push({
+            scenarioId: 'investment-confirmation-bias',
+            difficulty: 'advanced',
+            focus: 'avoiding-confirmation-bias',
+            priority: 'high'
+          });
+          break;
+        case 'resource-allocation':
+          path.push({
+            scenarioId: 'business-strategy-reasoning',
+            difficulty: profile.difficultyPreference,
+            focus: 'resource-management',
+            priority: 'medium'
+          });
+          break;
+        case 'relationship-dynamics':
+          path.push({
+            scenarioId: 'relationship-time-delay',
+            difficulty: profile.difficultyPreference,
+            focus: 'relationship-investment',
+            priority: 'medium'
+          });
+          break;
+      }
+    }
+
+    // Add reinforcement for strengths
+    for (const strength of profile.strengths) {
+      switch (strength) {
+        case 'complex-system-understanding':
+          path.push({
+            scenarioId: 'extended-multi-phase',
+            difficulty: 'advanced',
+            focus: 'complex-system-challenges',
+            priority: 'medium'
+          });
+          break;
+        case 'long-term-thinking':
+          path.push({
+            scenarioId: 'climate-change-policy',
+            difficulty: 'advanced',
+            focus: 'long-term-planning',
+            priority: 'medium'
+          });
+          break;
+      }
+    }
+
+    // Add general reinforcement
+    path.push({
+      scenarioId: 'personal-finance-decision',
+      difficulty: profile.difficultyPreference,
+      focus: 'practical-application',
+      priority: 'low'
+    });
+
+    return path;
+  }
+
+  /**
+   * Generate adaptive feedback based on user profile
+   * @param {string} userId - User ID
+   * @param {object} currentGameState - Current game state
+   * @param {object} currentDecision - Current decision being made
+   * @return {object} Personalized feedback
+   */
+  generateAdaptiveFeedback(userId, currentGameState, currentDecision) {
+    const profile = this.userProfiles[userId];
+    if (!profile) {
+      return this.getDefaultFeedback(currentGameState, currentDecision);
+    }
+
+    let feedback = {
+      encouragement: '',
+      suggestions: [],
+      warnings: [],
+      insights: []
+    };
+
+    // Provide encouragement based on learning speed
+    if (profile.learningSpeed === 'fast') {
+      feedback.encouragement = '您学得很快！继续保持这种积极的学习态度。';
+    } else if (profile.learningSpeed === 'slow') {
+      feedback.encouragement = '学习是一个渐进的过程，请保持耐心，您正在取得进步。';
+    } else {
+      feedback.encouragement = '您正以合适的速度学习，保持这种节奏。';
+    }
+
+    // Provide suggestions based on improvement areas
+    for (const area of profile.improvementAreas) {
+      switch (area) {
+        case 'complex-system-thinking':
+          feedback.suggestions.push('考虑决策的间接影响和系统性后果，而不仅仅是直接影响。');
+          break;
+        case 'long-term-consequence-planning':
+          feedback.suggestions.push('思考这个决策在未来几个回合可能产生的影响。');
+          break;
+        case 'considering-alternatives':
+          feedback.suggestions.push('在做决定之前，尝试从不同角度审视问题。');
+          break;
+      }
+    }
+
+    // Provide warnings based on cognitive biases
+    const biasAnalysis = profile.cognitiveBiasTendencies;
+    if (biasAnalysis.linearThinking > 0.7) {
+      feedback.warnings.push('注意：您可能倾向于线性思维，复杂系统往往有非线性结果。');
+    }
+    if (biasAnalysis.timeDelayNeglect > 0.7) {
+      feedback.warnings.push('提醒：您可能忽视了决策的时间延迟效应。');
+    }
+
+    // Provide insights based on strengths
+    for (const strength of profile.strengths) {
+      switch (strength) {
+        case 'complex-system-understanding':
+          feedback.insights.push('您对复杂系统有很好的理解，善于看到事物间的关联。');
+          break;
+        case 'long-term-thinking':
+          feedback.insights.push('您擅长考虑长期后果，这是一个重要的战略能力。');
+          break;
+      }
+    }
+
+    return feedback;
+  }
+
+  // Helper methods
+  similarDecisions(dec1, dec2) {
+    // Simple comparison - in practice this could be more sophisticated
+    return JSON.stringify(dec1) === JSON.stringify(dec2);
+  }
+
+  isNegativeOutcome(result) {
+    // Define negative outcome based on various metrics
+    if (result.resources && result.resources < 0) return true;
+    if (result.satisfaction && result.satisfaction < 30) return true;
+    if (result.reputation && result.reputation < 30) return true;
+    return false;
+  }
+
+  isPositiveOutcome(result) {
+    // Define positive outcome based on various metrics
+    if (result.resources && result.resources > 0) return true;
+    if (result.satisfaction && result.satisfaction > 60) return true;
+    if (result.reputation && result.reputation > 60) return true;
+    return false;
+  }
+
+  calculateGap(expectation, actual) {
+    // Calculate normalized gap between expectation and actual result
+    let totalGap = 0;
+    let count = 0;
+
+    for (const key of ['resources', 'satisfaction', 'reputation']) {
+      if (expectation[key] !== undefined && actual[key] !== undefined) {
+        const gap = Math.abs(expectation[key] - actual[key]) / Math.max(Math.abs(expectation[key]), 1);
+        totalGap += gap;
+        count++;
+      }
+    }
+
+    return count > 0 ? totalGap / count : 0;
+  }
+
+  analyzePerformanceGaps(decisionHistory) {
+    // Analyze where user performs poorly
+    return {
+      lowResourceManagement: false, // Placeholder logic
+      lowRelationshipManagement: false // Placeholder logic
+    };
+  }
+
+  showsConsistentImprovement(decisionHistory) {
+    // Check if user shows improvement over time
+    if (decisionHistory.length < 6) return false;
+
+    const earlyPerformance = this.calculateSuccessRate(decisionHistory.slice(0, 3));
+    const latePerformance = this.calculateSuccessRate(decisionHistory.slice(-3));
+
+    return latePerformance > earlyPerformance;
+  }
+
+  getDefaultLearningPath() {
+    return [
+      { scenarioId: 'coffee-shop-linear-thinking', difficulty: 'beginner', focus: 'basic-concepts', priority: 'high' },
+      { scenarioId: 'relationship-time-delay', difficulty: 'intermediate', focus: 'time-effects', priority: 'medium' },
+      { scenarioId: 'investment-confirmation-bias', difficulty: 'advanced', focus: 'bias-awareness', priority: 'low' }
+    ];
+  }
+
+  getDefaultFeedback(currentGameState, currentDecision) {
+    return {
+      encouragement: '欢迎来到认知陷阱平台！',
+      suggestions: ['仔细考虑您的决策可能带来的各种后果'],
+      warnings: [],
+      insights: ['每次决策都是学习的机会']
+    };
+  }
+}
+
 // UI Components
 class ToastManager {
   static show(message, type = 'info', title = null) {
@@ -10470,6 +12518,10 @@ class ToastManager {
 document.addEventListener('DOMContentLoaded', () => {
   console.log('App Initializing...');
 
+  // Initialize Personalized Learning Engine
+  window.PersonalizedLearningEngine = new PersonalizedLearningEngine();
+  console.log('Personalized Learning Engine initialized');
+
   // Expose debugging interfaces to window object
   window.AppState = AppState;
   window.GameManager = GameManager;
@@ -10477,11 +12529,47 @@ document.addEventListener('DOMContentLoaded', () => {
   window.ApiService = ApiService;
   console.log('Debug interfaces exposed to window');
 
-  // Hide loading screen
+    // Hide loading screen with enhanced method to prevent pointer event interception
   const loadingScreen = document.getElementById('loading-screen');
   if (loadingScreen) {
+    // Method 1: Immediate visual removal
     loadingScreen.style.display = 'none';
-    console.log('Loading screen hidden');
+    loadingScreen.style.visibility = 'hidden';
+    loadingScreen.style.opacity = '0';
+    loadingScreen.style.zIndex = '-9999';
+    
+    // Method 2: Remove from DOM completely
+    setTimeout(() => {
+      if (loadingScreen.parentNode) {
+        loadingScreen.parentNode.removeChild(loadingScreen);
+      }
+    }, 100);
+    
+    // Method 3: Add CSS override to prevent any interference
+    const cssOverride = document.createElement('style');
+    cssOverride.textContent = `
+      #loading-screen,
+      .loading-screen,
+      .loading-content,
+      .loading-overlay,
+      .loading {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        z-index: -9999 !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+      }
+      
+      body {
+        pointer-events: auto !important;
+      }
+    `;
+    document.head.appendChild(cssOverride);
+
+    console.log('Enhanced loading screen hidden with multiple methods');
   }
 
   // Bind navigation button click handlers
@@ -10527,6 +12615,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.ApiService = ApiService;
   window.APP_CONFIG = APP_CONFIG;
   window.AppState = AppState;
+  window.PersonalizedLearningEngine = PersonalizedLearningEngine;
   
   // Bind modal close buttons if present
   try {
@@ -10570,3 +12659,780 @@ window.addEventListener('load', () => {
     });
   }
 });
+            
+// === 全局加载屏幕移除函数 ===
+// 作为后备方案，确保加载屏幕被移除
+function removeLoadingScreen() {
+  const loadingScreen = document.getElementById('loading-screen');
+  if (loadingScreen) {
+    // 方法1: 立即视觉移除
+    loadingScreen.style.display = 'none';
+    loadingScreen.style.visibility = 'hidden';
+    loadingScreen.style.opacity = '0';
+    loadingScreen.style.zIndex = '-9999';
+    loadingScreen.style.pointerEvents = 'none';
+    
+    // 方法2: 短暂延时后从DOM中完全移除
+    setTimeout(() => {
+      try {
+        if (loadingScreen.parentNode) {
+          loadingScreen.parentNode.removeChild(loadingScreen);
+        }
+      } catch (e) {
+        console.warn('Could not remove loading screen from DOM:', e);
+      }
+    }, 50);
+    
+    // 方法3: 添加CSS覆盖确保永不干扰
+    const cssOverride = document.createElement('style');
+    cssOverride.textContent = `
+      #loading-screen,
+      .loading-screen,
+      .loading-content,
+      .loading-overlay,
+      .loading {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        z-index: -9999 !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+      }
+      
+      body {
+        pointer-events: auto !important;
+        overflow: auto !important;
+      }
+    `;
+    document.head.appendChild(cssOverride);
+
+    console.log('Global loading screen removal function applied');
+  }
+  
+  // 确保主应用容器可见且可交互
+  const appContainer = document.getElementById('app');
+  if (appContainer) {
+    appContainer.style.visibility = 'visible';
+    appContainer.style.opacity = '1';
+    appContainer.style.pointerEvents = 'auto';
+  }
+  
+  // 确保body元素可交互
+  document.body.style.pointerEvents = 'auto';
+  document.body.style.overflow = 'auto';
+}
+
+// 立即执行加载屏幕移除（作为后备）
+removeLoadingScreen();
+
+// 在页面完全加载后再次执行
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', removeLoadingScreen);
+} else {
+  // 如果页面已经加载完成，稍后执行
+  setTimeout(removeLoadingScreen, 100);
+}
+
+// 监听页面加载完成事件
+window.addEventListener('load', removeLoadingScreen);
+
+// 将必要的类和对象暴露到全局作用域，以便HTML中的内联JavaScript可以访问
+window.NavigationManager = NavigationManager;
+window.AppState = AppState;
+window.ApiService = ApiService;
+
+// ============================================================================
+// Historical Cases Page Class - Real-world failure cases extension
+// ============================================================================
+
+class HistoricalCasesPage {
+  constructor() {
+    this.cases = [];
+    this.currentCase = null;
+    this.currentStep = 0;
+    this.userDecisions = [];
+    this.isLoading = false;
+  }
+
+  async initialize() {
+    try {
+      this.isLoading = true;
+      await this.loadHistoricalCases();
+      this.render();
+    } catch (error) {
+      console.error('Error initializing historical cases:', error);
+      this.showError('加载历史案例时出错');
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  async loadHistoricalCases() {
+    try {
+      // Try to load from API with fallback to local data
+      const response = await Promise.race([
+        fetch(`${APP_CONFIG.apiBaseUrl}/historical/scenarios`),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('API timeout after 5 seconds')), 5000)
+        )
+      ]);
+
+      if (response.ok) {
+        const data = await response.json();
+        this.cases = data.scenarios || [];
+      } else {
+        // Fallback to local data or mock data
+        this.cases = this.getDefaultHistoricalCases();
+      }
+    } catch (error) {
+      console.warn('Failed to load historical cases from API:', error);
+      // Use default cases as fallback
+      this.cases = this.getDefaultHistoricalCases();
+    }
+  }
+
+  getDefaultHistoricalCases() {
+    // Return default historical cases as fallback
+    return [
+      {
+        scenarioId: "hist-001",
+        title: "挑战者号航天飞机灾难",
+        description: "1986年挑战者号航天飞机发射决策过程分析",
+        decisionPoints: [
+          {
+            step: 1,
+            situation: "气温预报显示发射日将异常寒冷（华氏31度，摄氏-0.5度）",
+            options: [
+              "推迟发射以评估低温风险", 
+              "按计划发射"
+            ]
+          },
+          {
+            step: 2,
+            situation: "工程师提出O型环在低温下可能失效的担忧",
+            options: [
+              "要求提供更多低温测试数据", 
+              "要求制造商出具书面保证",
+              "忽略担忧，按计划发射"
+            ]
+          }
+        ],
+        actualOutcomes: [
+          "管理层决定按计划发射", 
+          "发射过程中右固体火箭助推器的O型环失效", 
+          "导致燃料泄漏并引发爆炸", 
+          "七名宇航员全部遇难"
+        ],
+        alternativeOptions: [
+          "推迟发射以进行低温环境试验",
+          "更换更适合低温环境的O型环材料", 
+          "建立更严格的低温发射标准"
+        ],
+        lessons: [
+          "确认偏误让管理层忽视了工程警告",
+          "群体思维压制了反对声音",
+          "时间压力影响了风险评估",
+          "专家意见被非技术管理层否决"
+        ],
+        pyramidAnalysis: {
+          "coreConclusion": "系统性认知偏差导致了灾难性决策",
+          "supportingArguments": [
+            "确认偏误让管理层倾向于寻找支持按时发射的信息",
+            "群体思维压制了异议声音，形成虚假共识", 
+            "时间压力和预算限制影响了客观风险评估"
+          ],
+          "examples": [
+            "类似偏误在其他组织决策中反复出现，如哥伦比亚号航天飞机事故",
+            "项目延期压力常常导致风险被低估"
+          ],
+          "actionableAdvice": [
+            "建立多元化决策机制，鼓励质疑声音",
+            "设立独立的安全审查委员会",
+            "在决策中充分考虑技术专家意见"
+          ]
+        }
+      },
+      {
+        scenarioId: "hist-002",
+        title: "泰坦尼克号航线决策",
+        description: "1912年泰坦尼克号航行路线选择的过程分析",
+        decisionPoints: [
+          {
+            step: 1,
+            situation: "航线选择 - 为了展示速度优势选择更快的航线",
+            options: [
+              "选择传统安全航线，避开冰山区域",
+              "选择更快的航线，追求速度记录",
+              "等待冰情预报后再决策"
+            ]
+          },
+          {
+            step: 2,
+            situation: "收到多条冰山警告电报",
+            options: [
+              "降低航速并调整航线",
+              "加强瞭望，维持航速", 
+              "忽略警告，继续高速航行"
+            ]
+          }
+        ],
+        actualOutcomes: [
+          "决策者选择了更快的航线以追求速度记录",
+          "尽管收到冰山警告，仍然维持高速航行",
+          "撞上冰山导致船只沉没",
+          "超过1500人丧生"
+        ],
+        alternativeOptions: [
+          "选择更安全的传统航线",
+          "在冰山区域大幅减速",
+          "推迟航行直到天气好转"
+        ],
+        lessons: [
+          "过度自信导致对风险的低估",
+          "商业压力掩盖了安全考量", 
+          "对新技术的盲目信任（号称'永不沉没'）"
+        ],
+        pyramidAnalysis: {
+          "coreConclusion": "过度自信和商业考量导致了对风险的系统性低估",
+          "supportingArguments": [
+            "对新技术的过度信任（号称'永不沉没'）导致了轻率的决策",
+            "商业压力和追求速度记录的欲望影响了安全判断",
+            "对潜在风险的证据被有意无意地忽略了"
+          ],
+          "examples": [
+            "历史上多次出现因过度自信导致的重大事故",
+            "商业利益与安全考量的冲突常常导致错误的优先级"
+          ],
+          "actionableAdvice": [
+            "建立独立于商业考量的安全评估机制",
+            "在项目规划中充分考虑黑天鹅事件的可能性",
+            "培养对不确定性和风险的敬畏心，避免对技术的盲目信任"
+          ]
+        }
+      }
+    ];
+  }
+
+  render() {
+    const container = document.getElementById('historical-cases-container') || document.body;
+    container.innerHTML = this.getCasesPageHTML();
+    this.bindEvents();
+  }
+
+  getCasesPageHTML() {
+    if (this.isLoading) {
+      return `
+        <div class="historical-cases-page">
+          <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>加载历史案例中...</p>
+          </div>
+        </div>
+      `;
+    }
+
+    if (this.currentCase) {
+      return this.getCaseDetailPageHTML();
+    }
+
+    return `
+      <div class="historical-cases-page">
+        <div class="page-header">
+          <h1>🏛️ 历史失败案例研究</h1>
+          <p>通过真实世界的失败案例学习认知偏差和决策陷阱</p>
+        </div>
+
+        <div class="cases-grid">
+          ${this.cases.map((historicalCase, index) => this.renderCaseCard(historicalCase, index)).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  renderCaseCard(historicalCase, index) {
+    return `
+      <div class="case-card" onclick="window.historicalCasesPage.selectCase(${index})">
+        <div class="case-header">
+          <h3>${historicalCase.title}</h3>
+          <span class="case-id">${historicalCase.scenarioId}</span>
+        </div>
+        <p class="case-description">${historicalCase.description}</p>
+        <div class="case-meta">
+          <span class="decision-points">决策点: ${historicalCase.decisionPoints.length}</span>
+          <span class="lessons-count">教训: ${historicalCase.lessons.length}</span>
+        </div>
+        <button class="btn btn-outline">开始案例研究</button>
+      </div>
+    `;
+  }
+
+  getCaseDetailPageHTML() {
+    const decisionPoint = this.currentCase.decisionPoints[this.currentStep] || {};
+    const isLastStep = this.currentStep >= this.currentCase.decisionPoints.length - 1;
+
+    return `
+      <div class="historical-case-detail-page">
+        <div class="case-header">
+          <button class="btn btn-back" onclick="window.historicalCasesPage.goBackToCases()">← 返回案例列表</button>
+          <h1>${this.currentCase.title}</h1>
+          <p class="case-description">${this.currentCase.description}</p>
+        </div>
+
+        <div class="case-content">
+          <div class="decision-step">
+            <h3>决策步骤 ${this.currentStep + 1}/${this.currentCase.decisionPoints.length}</h3>
+            <div class="situation-box">
+              <h4>情境描述</h4>
+              <p>${decisionPoint.situation}</p>
+            </div>
+
+            <div class="options-container">
+              <h4>可选决策</h4>
+              ${decisionPoint.options?.map((option, idx) => `
+                <button class="option-btn" onclick="window.historicalCasesPage.makeDecision(${idx})">
+                  ${option}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+
+          ${this.userDecisions.length > 0 ? `
+            <div class="previous-decisions">
+              <h4>您的决策历程</h4>
+              <ul>
+                ${this.userDecisions.map((decision, idx) => `
+                  <li>步骤 ${idx + 1}: ${decision.optionText}</li>
+                `).join('')}
+              </ul>
+            </div>
+          ` : ''}
+
+          ${isLastStep ? `
+            <div class="case-summary">
+              <h4>案例总结</h4>
+              <div class="actual-outcomes">
+                <h5>实际结果</h5>
+                <ul>
+                  ${this.currentCase.actualOutcomes?.map(outcome => `<li>${outcome}</li>`).join('')}
+                </ul>
+              </div>
+              
+              <div class="lessons-learned">
+                <h5>关键教训</h5>
+                <ul>
+                  ${this.currentCase.lessons?.map(lesson => `<li>${lesson}</li>`).join('')}
+                </ul>
+              </div>
+              
+              <div class="pyramid-analysis">
+                <h5>金字塔分析</h5>
+                <p><strong>核心结论:</strong> ${this.currentCase.pyramidAnalysis?.coreConclusion}</p>
+                <p><strong>支撑论据:</strong></p>
+                <ul>
+                  ${this.currentCase.pyramidAnalysis?.supportingArguments?.map(arg => `<li>${arg}</li>`).join('')}
+                </ul>
+                <p><strong>实用建议:</strong></p>
+                <ul>
+                  ${this.currentCase.pyramidAnalysis?.actionableAdvice?.map(advice => `<li>${advice}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  selectCase(index) {
+    this.currentCase = this.cases[index];
+    this.currentStep = 0;
+    this.userDecisions = [];
+    this.render();
+  }
+
+  makeDecision(optionIndex) {
+    if (!this.currentCase || this.currentStep >= this.currentCase.decisionPoints.length) {
+      return;
+    }
+
+    const decisionPoint = this.currentCase.decisionPoints[this.currentStep];
+    const selectedOption = decisionPoint.options[optionIndex];
+
+    this.userDecisions.push({
+      step: this.currentStep,
+      optionIndex: optionIndex,
+      optionText: selectedOption,
+      timestamp: new Date().toISOString()
+    });
+
+    this.currentStep++;
+
+    // If this was the last decision, show the summary immediately
+    if (this.currentStep >= this.currentCase.decisionPoints.length) {
+      this.render();
+    } else {
+      // Move to next decision
+      this.render();
+    }
+  }
+
+  goBackToCases() {
+    this.currentCase = null;
+    this.currentStep = 0;
+    this.userDecisions = [];
+    this.render();
+  }
+
+  bindEvents() {
+    // Additional event binding if needed
+  }
+
+  showError(message) {
+    const container = document.getElementById('historical-cases-container') || document.body;
+    container.innerHTML = `
+      <div class="error-message">
+        <h3>❌ 错误</h3>
+        <p>${message}</p>
+        <button class="btn btn-primary" onclick="window.historicalCasesPage.initialize()">重新加载</button>
+      </div>
+    `;
+  }
+
+  // Decision Tree Visualization Methods
+  renderDecisionTree() {
+    if (!this.currentCase) return '';
+
+    const nodes = this.buildDecisionTreeNodes();
+    return `
+      <div class="decision-tree-container">
+        <h4>决策树可视化</h4>
+        <div class="decision-tree">
+          ${nodes.map(node => this.renderTreeNode(node)).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  buildDecisionTreeNodes() {
+    if (!this.currentCase || !this.currentCase.decisionPoints) return [];
+
+    const nodes = [];
+    for (let i = 0; i < this.currentCase.decisionPoints.length; i++) {
+      const decisionPoint = this.currentCase.decisionPoints[i];
+      const node = {
+        id: `step-${i}`,
+        step: i,
+        situation: decisionPoint.situation,
+        options: decisionPoint.options,
+        isCompleted: i < this.currentStep,
+        isSelected: i === this.currentStep - 1,
+        userChoice: this.userDecisions.find(d => d.step === i)?.optionIndex || null
+      };
+      nodes.push(node);
+    }
+
+    return nodes;
+  }
+
+  renderTreeNode(node) {
+    const statusClass = node.isCompleted ? 'completed' : (node.isSelected ? 'selected' : 'pending');
+    const icon = node.isCompleted ? '✅' : (node.isSelected ? '🔄' : '⏳');
+
+    return `
+      <div class="tree-node ${statusClass}" id="${node.id}">
+        <div class="node-header">
+          <span class="node-status">${icon}</span>
+          <span class="node-step">步骤 ${node.step + 1}</span>
+        </div>
+        <div class="node-content">
+          <div class="node-situation">${node.situation}</div>
+          <div class="node-options">
+            ${node.options.map((option, idx) => {
+              const isChosen = node.userChoice === idx;
+              const optionClass = isChosen ? 'chosen-option' : '';
+              return `<div class="option-item ${optionClass}">${option}${isChosen ? ' ← 您的选择' : ''}</div>`;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Timeline Visualization Methods
+  renderTimelineVisualization() {
+    if (!this.currentCase) return '';
+
+    const events = this.buildTimelineEvents();
+    return `
+      <div class="timeline-visualization-container">
+        <h4>历史事件时间线</h4>
+        <div class="timeline">
+          ${events.map(event => this.renderTimelineEvent(event)).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  buildTimelineEvents() {
+    if (!this.currentCase) return [];
+
+    const events = [];
+    
+    // Add decision events
+    this.currentCase.decisionPoints.forEach((point, index) => {
+      events.push({
+        type: 'decision',
+        title: `决策点 ${index + 1}`,
+        description: point.situation.substring(0, 100) + (point.situation.length > 100 ? '...' : ''),
+        date: `T+${index + 1}阶段`,
+        step: index,
+        completed: index < this.currentStep
+      });
+    });
+
+    // Add outcome events if available
+    if (this.currentCase.actualOutcomes) {
+      this.currentCase.actualOutcomes.forEach((outcome, index) => {
+        events.push({
+          type: 'outcome',
+          title: `实际结果 ${index + 1}`,
+          description: outcome,
+          date: `T+${this.currentCase.decisionPoints.length + index + 1}阶段`,
+          step: index,
+          completed: this.currentStep >= this.currentCase.decisionPoints.length
+        });
+      });
+    }
+
+    return events;
+  }
+
+  renderTimelineEvent(event) {
+    const statusClass = event.completed ? 'completed' : 'pending';
+    const icon = event.type === 'decision' ? '💭' : '📊';
+
+    return `
+      <div class="timeline-event ${statusClass}">
+        <div class="timeline-marker">${icon}</div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <span class="timeline-title">${event.title}</span>
+            <span class="timeline-date">${event.date}</span>
+          </div>
+          <div class="timeline-description">${event.description}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Interactive Elements for User Engagement
+  addInteractiveElements() {
+    // Add reflective questions after each decision
+    return `
+      <div class="interactive-elements">
+        <div class="reflection-questions">
+          <h4>反思问题</h4>
+          <div class="question-item">
+            <p>在类似情况下，您会如何避免同样的决策错误？</p>
+            <textarea class="reflection-textarea" placeholder="写下您的思考..."></textarea>
+          </div>
+          <div class="question-item">
+            <p>这个历史案例与您当前面临的决策有何相似之处？</p>
+            <textarea class="reflection-textarea" placeholder="写下您的思考..."></textarea>
+          </div>
+          <button class="btn btn-secondary" onclick="window.historicalCasesPage.saveReflection()">保存反思</button>
+        </div>
+        
+        <div class="comparison-section">
+          <h4>现代对比</h4>
+          <p>思考一下，如果同样的决策情景出现在今天，可能会有什么不同？</p>
+          <div class="modern-context-selector">
+            <select id="modern-context-select" onchange="window.historicalCasesPage.onModernContextChange(this.value)">
+              <option value="">选择现代情境...</option>
+              <option value="tech">科技行业</option>
+              <option value="finance">金融行业</option>
+              <option value="healthcare">医疗行业</option>
+              <option value="government">政府决策</option>
+              <option value="personal">个人决策</option>
+            </select>
+          </div>
+          <div id="modern-context-output" class="modern-context-output"></div>
+        </div>
+        
+        <div class="bias-identification">
+          <h4>认知偏差识别</h4>
+          <p>在这个案例中，您认为哪些认知偏差起了重要作用？</p>
+          <div class="bias-grid">
+            ${this.renderBiasSelection()}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderBiasSelection() {
+    const commonBiases = [
+      "确认偏误 (Confirmation Bias)",
+      "群体思维 (Groupthink)", 
+      "过度自信 (Overconfidence)",
+      "锚定效应 (Anchoring)",
+      "损失厌恶 (Loss Aversion)",
+      "时间偏好 (Temporal Discounting)",
+      "权威偏见 (Authority Bias)",
+      "可得性启发 (Availability Heuristic)"
+    ];
+
+    return commonBiases.map(bias => `
+      <label class="bias-checkbox">
+        <input type="checkbox" value="${bias}" onchange="window.historicalCasesPage.onBiasSelected(this, '${bias}')">
+        <span>${bias}</span>
+      </label>
+    `).join('');
+  }
+
+  onBiasSelected(element, biasName) {
+    if (!this.selectedBiases) this.selectedBiases = [];
+    
+    if (element.checked) {
+      if (!this.selectedBiases.includes(biasName)) {
+        this.selectedBiases.push(biasName);
+      }
+    } else {
+      this.selectedBiases = this.selectedBiases.filter(b => b !== biasName);
+    }
+    
+    console.log('Selected biases:', this.selectedBiases);
+  }
+
+  onModernContextChange(context) {
+    const outputDiv = document.getElementById('modern-context-output');
+    if (!outputDiv) return;
+
+    let comparisonText = '';
+    switch(context) {
+      case 'tech':
+        comparisonText = '在科技行业，快速迭代和A/B测试可能帮助识别类似风险，但技术乐观主义也可能加剧确认偏误。';
+        break;
+      case 'finance':
+        comparisonText = '金融行业有更严格的风控体系，但市场情绪和羊群效应可能导致类似的集体误判。';
+        break;
+      case 'healthcare':
+        comparisonText = '医疗决策通常有更严格的循证要求，但时间压力和责任分散仍可能导致类似错误。';
+        break;
+      case 'government':
+        comparisonText = '政府决策有更多制衡机制，但政治考量和公众压力可能引入新的偏见。';
+        break;
+      case 'personal':
+        comparisonText = '个人决策中，情感因素和短期思维可能比组织决策中的偏见更为突出。';
+        break;
+      default:
+        comparisonText = '';
+    }
+
+    outputDiv.innerHTML = comparisonText ? 
+      `<div class="modern-context-result"><p>${comparisonText}</p></div>` : '';
+  }
+
+  saveReflection() {
+    const textareas = document.querySelectorAll('.reflection-textarea');
+    const reflections = Array.from(textareas).map(ta => ta.value.trim()).filter(val => val);
+    
+    if (reflections.length > 0) {
+      alert('反思已保存！这些思考将帮助您更好地应用历史教训。');
+      
+      // In a real implementation, we would save to a backend or localStorage
+      console.log('Saved reflections:', reflections);
+    } else {
+      alert('请填写至少一个反思问题。');
+    }
+  }
+
+  // Enhanced detail page with interactive elements
+  getCaseDetailPageHTML() {
+    const decisionPoint = this.currentCase.decisionPoints[this.currentStep] || {};
+    const isLastStep = this.currentStep >= this.currentCase.decisionPoints.length - 1;
+
+    return `
+      <div class="historical-case-detail-page">
+        <div class="case-header">
+          <button class="btn btn-back" onclick="window.historicalCasesPage.goBackToCases()">← 返回案例列表</button>
+          <h1>${this.currentCase.title}</h1>
+          <p class="case-description">${this.currentCase.description}</p>
+        </div>
+
+        <div class="case-content">
+          <!-- Decision Tree Visualization -->
+          ${this.renderDecisionTree()}
+
+          <!-- Timeline Visualization -->
+          ${this.renderTimelineVisualization()}
+
+          <div class="decision-step">
+            <h3>决策步骤 ${this.currentStep + 1}/${this.currentCase.decisionPoints.length}</h3>
+            <div class="situation-box">
+              <h4>情境描述</h4>
+              <p>${decisionPoint.situation}</p>
+            </div>
+
+            <div class="options-container">
+              <h4>可选决策</h4>
+              ${decisionPoint.options?.map((option, idx) => `
+                <button class="option-btn" onclick="window.historicalCasesPage.makeDecision(${idx})">
+                  ${option}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+
+          ${this.userDecisions.length > 0 ? `
+            <div class="previous-decisions">
+              <h4>您的决策历程</h4>
+              <ul>
+                ${this.userDecisions.map((decision, idx) => `
+                  <li>步骤 ${idx + 1}: ${decision.optionText}</li>
+                `).join('')}
+              </ul>
+            </div>
+          ` : ''}
+
+          <!-- Interactive Elements -->
+          ${this.addInteractiveElements()}
+
+          ${isLastStep ? `
+            <div class="case-summary">
+              <h4>案例总结</h4>
+              <div class="actual-outcomes">
+                <h5>实际结果</h5>
+                <ul>
+                  ${this.currentCase.actualOutcomes?.map(outcome => `<li>${outcome}</li>`).join('')}
+                </ul>
+              </div>
+              
+              <div class="lessons-learned">
+                <h5>关键教训</h5>
+                <ul>
+                  ${this.currentCase.lessons?.map(lesson => `<li>${lesson}</li>`).join('')}
+                </ul>
+              </div>
+              
+              <div class="pyramid-analysis">
+                <h5>金字塔分析</h5>
+                <p><strong>核心结论:</strong> ${this.currentCase.pyramidAnalysis?.coreConclusion}</p>
+                <p><strong>支撑论据:</strong></p>
+                <ul>
+                  ${this.currentCase.pyramidAnalysis?.supportingArguments?.map(arg => `<li>${arg}</li>`).join('')}
+                </ul>
+                <p><strong>实用建议:</strong></p>
+                <ul>
+                  ${this.currentCase.pyramidAnalysis?.actionableAdvice?.map(advice => `<li>${advice}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }
+}

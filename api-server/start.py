@@ -17,6 +17,9 @@ from datetime import datetime
 from pydantic import BaseModel
 from collections import defaultdict
 
+# 导入错误处理模块
+from utils.error_handlers import global_exception_handler, CustomException
+
 # ===== 增强系统：决策模式追踪器 =====
 class DecisionPatternTracker:
     """追踪用户的决策模式，识别认知偏误倾向"""
@@ -155,6 +158,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 注册全局异常处理器
+app.add_exception_handler(Exception, global_exception_handler)
 
 # 场景数据 - 统一的场景结构，支持多难度级别
 import os
@@ -368,7 +374,7 @@ except ImportError:
 
 # 导入并注册互动式认知测试端点（新增 LLM 集成）
 try:
-    from api_server.endpoints.interactive import router as interactive_router
+    from endpoints.interactive import router as interactive_router
     app.include_router(interactive_router)
     print("✓ LLM互动式端点已注册")
 except ImportError as e:
@@ -1527,22 +1533,6 @@ from fastapi.responses import HTMLResponse
 import os
 
 
-# 提供主页(index.html)的路由
-@app.get("/")
-async def read_root():
-    """返回主页面"""
-    try:
-        import os
-        _current_dir = os.path.dirname(os.path.abspath(__file__))
-        _project_root = os.path.dirname(_current_dir)
-        index_path = os.path.join(_project_root, "index.html")
-        with open(index_path, "r", encoding="utf-8") as f:
-            content = f.read()
-        return HTMLResponse(content=content)
-    except FileNotFoundError:
-        return {"message": "认知陷阱平台主页 - API服务运行正常", "status": "healthy"}
-
-
 # 挂载静态资源目录 - 使用绝对路径
 import os
 _current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -1551,8 +1541,70 @@ app.mount("/assets", StaticFiles(directory=os.path.join(_project_root, "assets")
 if os.path.exists(os.path.join(_project_root, "web-app")):
     app.mount("/web-app", StaticFiles(directory=os.path.join(_project_root, "web-app")), name="web_app")
 
+# 为根路径提供主页（放在静态文件挂载之后，但路由会按定义顺序处理）
+@app.get("/")
+async def serve_home():
+    """专门处理根路径，提供主页"""
+    try:
+        import os
+        # 获取项目根目录 - 相对于start.py文件向上两级
+        _current_dir = os.path.dirname(os.path.abspath(__file__))
+        _project_root = os.path.dirname(_current_dir)
+        index_path = os.path.join(_project_root, "index.html")
+
+        print(f"DEBUG: 尝试从路径加载index.html: {index_path}")
+        print(f"DEBUG: 文件是否存在: {os.path.exists(index_path)}")
+
+        # 检查index.html是否存在
+        if os.path.exists(index_path):
+            with open(index_path, "r", encoding="utf-8") as f:
+                content = f.read()
+            print(f"DEBUG: 成功读取 {len(content)} 字符的文件")
+            return HTMLResponse(content=content)
+        else:
+            # 如果在上级目录找不到，尝试在当前目录查找
+            index_path = os.path.join(_current_dir, "index.html")
+            print(f"DEBUG: 尝试从当前目录加载index.html: {index_path}")
+            print(f"DEBUG: 文件是否存在: {os.path.exists(index_path)}")
+
+            if os.path.exists(index_path):
+                with open(index_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+                print(f"DEBUG: 成功读取 {len(content)} 字符的文件")
+                return HTMLResponse(content=content)
+            else:
+                # 如果都没找到，返回错误信息
+                print(f"DEBUG: 未找到index.html文件")
+                return HTMLResponse(content=f"<h1>错误：未找到index.html文件</h1><p>尝试路径：{index_path}</p>")
+    except Exception as e:
+        print(f"DEBUG: 加载主页时出错: {str(e)}")
+        return {"message": f"加载主页时出错: {str(e)}", "status": "error"}
+
+# 为其他路径提供静态文件服务
+@app.get("/{full_path:path}")
+async def serve_static(full_path: str):
+    """提供静态文件服务"""
+    # 对于其他路径，尝试从静态目录提供文件
+    raise HTTPException(status_code=404, detail="文件未找到")
+
+# 临时测试路由
+@app.get("/test-home")
+async def test_home():
+    """测试路由，用于验证代码是否被执行"""
+    import os
+    _current_dir = os.path.dirname(os.path.abspath(__file__))
+    _project_root = os.path.dirname(_current_dir)
+    index_path = os.path.join(_project_root, "index.html")
+
+    if os.path.exists(index_path):
+        with open(index_path, "r", encoding="utf-8") as f:
+            content = f.read(500)  # 读取前500个字符
+        return HTMLResponse(content=f"<h1>测试路由</h1><p>文件存在，前500个字符：</p><pre>{content}</pre>")
+    else:
+        return {"message": "index.html not found in project root", "path_checked": index_path}
+
 if __name__ == "__main__":
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
+    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8081
     print(f"🚀 启动认知陷阱平台API服务器 (端口: {port})")
     print(f"📊 API文档: http://localhost:{port}/docs")
     uvicorn.run(app, host="0.0.0.0", port=port)
