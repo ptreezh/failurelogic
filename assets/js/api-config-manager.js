@@ -48,12 +48,11 @@ class APIConfigManager {
       return ['http://localhost:8000'];
     }
 
-    // Production environment - remote API sources only
+    // Production environment - GitHub Pages only (no custom domains)
+    // Note: API endpoints are on Codespaces, which may need to be started manually
     return [
-      'https://psychic-meme-rvq4v7pqwx3xxrr-8000.app.github.dev', // Primary: New working Codespaces
-      'https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev', // Backup: Old Codespaces
-      'https://failurelogic-api.vercel.app', // Backup 2: Vercel API
-      'https://failurelogic.vercel.app'       // Backup 3: Vercel main
+      'https://psychic-meme-rvq4v7pqwx3xxrr-8000.app.github.dev', // Primary: Codespaces (port 8000)
+      'https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev',  // Backup: Old Codespaces
     ];
   }
 
