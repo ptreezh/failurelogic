@@ -9,14 +9,16 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from models.cognitive_tests import (
-    CognitiveTestQuestion, HistoricalScenario, GameScenario, 
+    CognitiveTestQuestion, HistoricalScenario, GameScenario,
     QuestionType, TopicType
 )
 from models.user_responses import UserResponseRecord
 from models.test_results import ChallengeResultSummary, ExplanationFramework
 from logic.exponential_calculations import (
     calculate_exponential, calculate_exponential_granary_problem,
-    calculate_rabbit_growth_simulation, compare_linear_vs_exponential
+    calculate_rabbit_growth_simulation, compare_linear_vs_exponential,
+    calculate_complex_system_failure, calculate_nano_replication,
+    calculate_social_network_growth
 )
 from logic.compound_interest import calculate_compound_interest
 from logic.cognitive_bias_analysis import (
@@ -25,7 +27,10 @@ from logic.cognitive_bias_analysis import (
     analyze_compound_interest_misunderstanding,
     create_pyramid_explanation,
     generate_bias_feedback,
+    generate_improved_feedback
 )
+from utils.response_format import APIResponse, CalculationResult, BiasAnalysisResult
+from utils.error_handlers import CustomException
 
 # 创建路由器
 router = APIRouter(prefix="/api", tags=["cognitive_tests"])
@@ -134,6 +139,31 @@ def load_historical_scenarios() -> List[Dict]:
         print(f"Warning: {file_path} is not valid JSON, using default data")
         return []
 
+
+def load_advanced_historical_scenarios() -> List[Dict]:
+    """从JSON文件加载高级历史场景数据"""
+    import os
+    file_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'advanced_historical_cases.json')
+    file_path = os.path.normpath(file_path)  # 规范化路径
+    
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            # 检查数据结构并提取正确的数组
+            if 'historical_cases' in data and isinstance(data['historical_cases'], list):
+                return data['historical_cases']
+            elif 'scenarios' in data and isinstance(data['scenarios'], list):
+                return data['scenarios']
+            else:
+                print(f"Warning: Unexpected data structure in {file_path}")
+                return []
+    except FileNotFoundError:
+        print(f"Warning: {file_path} not found, using advanced default data")
+        return []
+    except json.JSONDecodeError:
+        print(f"Warning: {file_path} is not valid JSON, using advanced default data")
+        return []
+
 def load_game_scenarios() -> List[Dict]:
     """从JSON文件加载游戏场景数据"""
     import os
@@ -217,15 +247,29 @@ async def calculate_exponential_endpoint(request: ExponentialRequest):
     """计算指数增长结果"""
     try:
         result = calculate_exponential(request.base, request.exponent)
-        return {
-            "base": request.base,
-            "exponent": request.exponent,
-            "result": result,
-            "scientific_notation": f"{result:.2e}" if result > 1e10 else str(result),
-            "comparison": "这是一个天文数字，远超日常生活中的数量级。"
-        }
+        response_data = CalculationResult(
+            result=result,
+            scientific_notation=f"{result:.2e}" if result > 1e10 else str(result),
+            comparison="这是一个天文数字，远超日常生活中的数量级。",
+            calculation_details={
+                "base": request.base,
+                "exponent": request.exponent
+            }
+        )
+        return APIResponse.success_response(
+            data=response_data.dict(),
+            message="指数计算成功"
+        )
+    except CustomException as e:
+        return APIResponse.error_response(
+            message=e.message,
+            error_code=e.error_code
+        )
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        return APIResponse.error_response(
+            message="计算过程中发生未知错误",
+            error_code="UNKNOWN_ERROR"
+        )
 
 @router.post("/exponential/calculate/granary")
 async def calculate_granary_problem(
@@ -240,9 +284,20 @@ async def calculate_granary_problem(
             units=2**200,  # 2的200次方
             rice_weight_per_grain_g=rice_weight_per_grain_g
         )
-        return result
+        return APIResponse.success_response(
+            data=result,
+            message="米粒问题计算成功"
+        )
+    except CustomException as e:
+        return APIResponse.error_response(
+            message=e.message,
+            error_code=e.error_code
+        )
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        return APIResponse.error_response(
+            message="计算过程中发生未知错误",
+            error_code="UNKNOWN_ERROR"
+        )
 
 @router.post("/exponential/calculate/rabbit-growth")
 async def calculate_rabbit_growth(
@@ -257,9 +312,20 @@ async def calculate_rabbit_growth(
             years=years,
             growth_multiplier=growth_multiplier
         )
-        return result
+        return APIResponse.success_response(
+            data=result,
+            message="兔子增长模拟计算成功"
+        )
+    except CustomException as e:
+        return APIResponse.error_response(
+            message=e.message,
+            error_code=e.error_code
+        )
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        return APIResponse.error_response(
+            message="计算过程中发生未知错误",
+            error_code="UNKNOWN_ERROR"
+        )
 
 
 @router.post("/exponential/calculate/complex-system-failure")
@@ -277,9 +343,20 @@ async def calculate_complex_system_failure(
             time_periods=time_periods,
             recovery_rate=recovery_rate
         )
-        return result
+        return APIResponse.success_response(
+            data=result,
+            message="复杂系统故障计算成功"
+        )
+    except CustomException as e:
+        return APIResponse.error_response(
+            message=e.message,
+            error_code=e.error_code
+        )
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        return APIResponse.error_response(
+            message="计算过程中发生未知错误",
+            error_code="UNKNOWN_ERROR"
+        )
 
 
 @router.post("/exponential/calculate/nano-replication")
@@ -295,9 +372,20 @@ async def calculate_nano_replication(
             replication_cycles=replication_cycles,
             unit_volume_m3=unit_volume_m3
         )
-        return result
+        return APIResponse.success_response(
+            data=result,
+            message="纳米复制计算成功"
+        )
+    except CustomException as e:
+        return APIResponse.error_response(
+            message=e.message,
+            error_code=e.error_code
+        )
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        return APIResponse.error_response(
+            message="计算过程中发生未知错误",
+            error_code="UNKNOWN_ERROR"
+        )
 
 
 @router.post("/exponential/calculate/social-network-growth")
@@ -315,9 +403,20 @@ async def calculate_social_network_growth(
             retention_rate=retention_rate,
             time_periods=time_periods
         )
-        return result
+        return APIResponse.success_response(
+            data=result,
+            message="社交网络增长计算成功"
+        )
+    except CustomException as e:
+        return APIResponse.error_response(
+            message=e.message,
+            error_code=e.error_code
+        )
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        return APIResponse.error_response(
+            message="计算过程中发生未知错误",
+            error_code="UNKNOWN_ERROR"
+        )
 
 @router.post("/exponential/calculate/compare-linear-exponential")
 async def compare_linear_exponential(
@@ -332,9 +431,20 @@ async def compare_linear_exponential(
             rate_percent=rate_percent,
             time_periods=time_periods
         )
-        return result
+        return APIResponse.success_response(
+            data=result,
+            message="线性与指数增长对比计算成功"
+        )
+    except CustomException as e:
+        return APIResponse.error_response(
+            message=e.message,
+            error_code=e.error_code
+        )
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        return APIResponse.error_response(
+            message="计算过程中发生未知错误",
+            error_code="UNKNOWN_ERROR"
+        )
 
 # 复利思维相关端点
 @router.get("/compound/questions")
@@ -496,7 +606,7 @@ async def get_historical_scenarios(include_advanced: bool = Query(default=False,
     scenarios_data = load_historical_scenarios()
 
     if include_advanced:
-        advanced_scenarios = load_advanced_questions_from_json('api-server/data/advanced_historical_cases.json')
+        advanced_scenarios = load_advanced_historical_scenarios()
         scenarios_data.extend(advanced_scenarios)
 
     scenarios = [HistoricalScenario(**s) for s in scenarios_data]
@@ -512,7 +622,7 @@ async def get_historical_scenarios(include_advanced: bool = Query(default=False,
 @router.get("/historical/advanced-scenarios")
 async def get_advanced_historical_scenarios():
     """获取高级历史决策案例"""
-    scenarios_data = load_advanced_questions_from_json('api-server/data/advanced_historical_cases.json')
+    scenarios_data = load_advanced_historical_scenarios()
     scenarios = [HistoricalScenario(**s) for s in scenarios_data]
 
     return {
@@ -626,24 +736,36 @@ async def submit_user_response(response_data: Dict[str, Any]):
             pyramidExplanations=[analysis_result.get('explanation', '') if analysis_result else '']
         )
 
-        return {
-            "success": True,
+        response_data = {
             "sessionId": response_data.get('sessionId', 'session'),
             "analysis": analysis_result,
             "summary": result_summary.dict()
         }
+
+        return APIResponse.success_response(
+            data=response_data,
+            message="用户响应提交成功"
+        )
+    except CustomException as e:
+        return APIResponse.error_response(
+            message=e.message,
+            error_code=e.error_code
+        )
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"提交结果失败: {str(e)}")
+        return APIResponse.error_response(
+            message=f"提交结果失败: {str(e)}",
+            error_code="SUBMISSION_ERROR"
+        )
 
 @router.post("/exponential/check-answer/{question_id}")
 async def check_exponential_answer(question_id: str, answer_data: Dict[str, Any]):
     """检查指数增长问题答案"""
     try:
         from logic.cognitive_bias_analysis import analyze_linear_thinking_bias, analyze_exponential_misconception
-        
+
         user_choice = answer_data.get("userChoice")
         user_estimation = answer_data.get("userEstimation", 0)
-        
+
         # 根据问题ID确定实际值
         actual_value = 0
         if question_id == "exp-001":  # 2^200问题
@@ -655,11 +777,11 @@ async def check_exponential_answer(question_id: str, answer_data: Dict[str, Any]
         else:
             # 如果是其他ID，尝试从参数中获取actualValue
             actual_value = answer_data.get("actualValue", 0)
-        
+
         # 进行认知偏差分析
         bias_analysis = analyze_exponential_misconception(user_estimation, 2, 200)  # 对于2^200问题
-        
-        return {
+
+        response_data = {
             "question_id": question_id,
             "user_choice": user_choice,
             "user_estimation": user_estimation,
@@ -668,96 +790,142 @@ async def check_exponential_answer(question_id: str, answer_data: Dict[str, Any]
             "analysis": bias_analysis,
             "explanation": f"您的估算值为{user_estimation:,.2f}，实际值为{'%.2e' % actual_value if actual_value > 1e10 else f'{actual_value:,.2f}'}，展现了指数增长思维的局限性。"
         }
+
+        return APIResponse.success_response(
+            data=response_data,
+            message="答案检查成功"
+        )
+    except CustomException as e:
+        return APIResponse.error_response(
+            message=e.message,
+            error_code=e.error_code
+        )
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"检查答案失败: {str(e)}")
+        return APIResponse.error_response(
+            message=f"检查答案失败: {str(e)}",
+            error_code="ANSWER_CHECK_ERROR"
+        )
 
 
 @router.get("/results/{user_id}/{session_id}")
 async def get_session_results(user_id: str, session_id: str):
     """获取特定用户的会话结果"""
-    # 在实际实现中，这里会从数据库或内存中获取用户结果
-    # 现在返回一个模拟结果
-    return {
-        "userId": user_id,
-        "sessionId": session_id,
-        "testType": "sample",
-        "responses": [],
-        "summary": {
-            "score": 75.0,
-            "estimationAccuracy": 0.6,
-            "biasIdentification": ["linear_thinking"]
+    try:
+        # 在实际实现中，这里会从数据库或内存中获取用户结果
+        # 现在返回一个模拟结果
+        response_data = {
+            "userId": user_id,
+            "sessionId": session_id,
+            "testType": "sample",
+            "responses": [],
+            "summary": {
+                "score": 75.0,
+                "estimationAccuracy": 0.6,
+                "biasIdentification": ["linear_thinking"]
+            }
         }
-    }
+
+        return APIResponse.success_response(
+            data=response_data,
+            message="获取会话结果成功"
+        )
+    except CustomException as e:
+        return APIResponse.error_response(
+            message=e.message,
+            error_code=e.error_code
+        )
+    except Exception as e:
+        return APIResponse.error_response(
+            message=f"获取会话结果失败: {str(e)}",
+            error_code="SESSION_RESULT_FETCH_ERROR"
+        )
 
 # 认知偏差解释相关端点
 @router.get("/explanations/{bias_type}")
 async def get_bias_explanation(bias_type: str):
     """获取特定认知偏差的详细解释"""
-    explanations = {
-        "linear_thinking": {
-            "explanationId": "bias-exp-001",
-            "biasType": "linear_thinking",
-            "coreConclusion": "人类倾向于认为原因和结果之间存在直接的、成比例的关系",
-            "supportingArguments": [
-                "在复杂系统中，这种思维方式往往会导致错误的决策",
-                "线性思维无法捕捉到非线性反馈和延迟效应"
-            ],
-            "examples": [
-                "2^200规模的误解",
-                "技术发展速度的误判", 
-                "流行病传播的误判"
-            ],
-            "actionableAdvice": [
-                "考虑非线性效应",
-                "关注系统中的反馈循环", 
-                "避免简单的线性外推"
-            ],
-            "relatedTests": ["exponential-growth", "compound-interest"]
-        },
-        "exponential_misconception": {
-            "explanationId": "bias-exp-002",
-            "biasType": "exponential_misconception",
-            "coreConclusion": "人们难以直观理解指数增长的真实含义和威力",
-            "supportingArguments": [
-                "指数增长在初期表现平缓，但后期会出现爆发式增长",
-                "人类大脑习惯于线性思维，难以处理指数级变化"
-            ],
-            "examples": [
-                "2^200远超宇宙原子总数的例子",
-                "病毒传播曲线的陡增阶段",
-                "复利效应的长期影响"
-            ],
-            "actionableAdvice": [
-                "使用计算器验证直觉估算",
-                "学习对数思维理解指数现象",
-                "重视复利效应在长期决策中的作用"
-            ],
-            "relatedTests": ["exponential-growth"]
-        },
-        "compound_interest_misunderstanding": {
-            "explanationId": "bias-comp-001",
-            "biasType": "compound_interest_misunderstanding",
-            "coreConclusion": "人们往往低估复利的长期效应",
-            "supportingArguments": [
-                "复利效应在早期增长缓慢，容易被忽视",
-                "利息再生利息的雪球效应被低估"
-            ],
-            "examples": [
-                "投资中的长期复利增长",
-                "贷款中的复利增长（负债）",
-                "人口增长的复利效应"
-            ],
-            "actionableAdvice": [
-                "充分考虑复利在投资决策中的重要性",
-                "理解复利公式，避免仅凭直觉估算",
-                "在借贷时注意复利对债务增长的影响"
-            ],
-            "relatedTests": ["compound-interest"]
+    try:
+        explanations = {
+            "linear_thinking": {
+                "explanationId": "bias-exp-001",
+                "biasType": "linear_thinking",
+                "coreConclusion": "人类倾向于认为原因和结果之间存在直接的、成比例的关系",
+                "supportingArguments": [
+                    "在复杂系统中，这种思维方式往往会导致错误的决策",
+                    "线性思维无法捕捉到非线性反馈和延迟效应"
+                ],
+                "examples": [
+                    "2^200规模的误解",
+                    "技术发展速度的误判",
+                    "流行病传播的误判"
+                ],
+                "actionableAdvice": [
+                    "考虑非线性效应",
+                    "关注系统中的反馈循环",
+                    "避免简单的线性外推"
+                ],
+                "relatedTests": ["exponential-growth", "compound-interest"]
+            },
+            "exponential_misconception": {
+                "explanationId": "bias-exp-002",
+                "biasType": "exponential_misconception",
+                "coreConclusion": "人们难以直观理解指数增长的真实含义和威力",
+                "supportingArguments": [
+                    "指数增长在初期表现平缓，但后期会出现爆发式增长",
+                    "人类大脑习惯于线性思维，难以处理指数级变化"
+                ],
+                "examples": [
+                    "2^200远超宇宙原子总数的例子",
+                    "病毒传播曲线的陡增阶段",
+                    "复利效应的长期影响"
+                ],
+                "actionableAdvice": [
+                    "使用计算器验证直觉估算",
+                    "学习对数思维理解指数现象",
+                    "重视复利效应在长期决策中的作用"
+                ],
+                "relatedTests": ["exponential-growth"]
+            },
+            "compound_interest_misunderstanding": {
+                "explanationId": "bias-comp-001",
+                "biasType": "compound_interest_misunderstanding",
+                "coreConclusion": "人们往往低估复利的长期效应",
+                "supportingArguments": [
+                    "复利效应在早期增长缓慢，容易被忽视",
+                    "利息再生利息的雪球效应被低估"
+                ],
+                "examples": [
+                    "投资中的长期复利增长",
+                    "贷款中的复利增长（负债）",
+                    "人口增长的复利效应"
+                ],
+                "actionableAdvice": [
+                    "充分考虑复利在投资决策中的重要性",
+                    "理解复利公式，避免仅凭直觉估算",
+                    "在借贷时注意复利对债务增长的影响"
+                ],
+                "relatedTests": ["compound-interest"]
+            }
         }
-    }
-    
-    if bias_type in explanations:
-        explanation = ExplanationFramework(**explanations[bias_type])
-        return explanation.dict()
-    else:
-        raise HTTPException(status_code=404, detail=f"找不到类型为 {bias_type} 的认知偏差解释")
+
+        if bias_type in explanations:
+            explanation = ExplanationFramework(**explanations[bias_type])
+            return APIResponse.success_response(
+                data=explanation.dict(),
+                message="获取认知偏差解释成功"
+            )
+        else:
+            return APIResponse.error_response(
+                message=f"找不到类型为 {bias_type} 的认知偏差解释",
+                error_code="BIAS_EXPLANATION_NOT_FOUND"
+            )
+    except CustomException as e:
+        return APIResponse.error_response(
+            message=e.message,
+            error_code=e.error_code
+        )
+    except Exception as e:
+        return APIResponse.error_response(
+            message=f"获取认知偏差解释失败: {str(e)}",
+            error_code="BIAS_EXPLANATION_FETCH_ERROR"
+        )

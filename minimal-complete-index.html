@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Failure Logic - 认知陷阱教育</title>
+    <link rel="stylesheet" href="minimal-styles.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <nav id="navbar">
+                <div class="nav-brand">Failure Logic</div>
+                <ul class="nav-menu">
+                    <li><a href="#" data-page="home" class="nav-link active">首页</a></li>
+                    <li><a href="#" data-page="scenarios" class="nav-link">场景</a></li>
+                    <li><a href="#" data-page="about" class="nav-link">关于</a></li>
+                    <li><a href="#" data-page="book" class="nav-link">书籍</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <main id="main-content">
+            <!-- 页面内容将动态加载 -->
+        </main>
+        
+        <footer>
+            <p>&copy; 2026 Failure Logic. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <!-- 所有应用模块 -->
+    <script>
+      // 极简应用状态管理
+      const AppState = {
+        currentUser: null,
+        currentScenario: null,
+        currentPage: 'home',
+        isLoading: false,
+        userPreferences: {
+          difficulty: 'beginner'
+        },
+        scenarios: []
+      };
+
+      // UI组件和交互管理
+      const UIManager = {
+        // 显示加载状态
+        showLoading() {
+          AppState.isLoading = true;
+          // 这里可以添加加载指示器
+          console.log('显示加载状态');
+        },
+
+        // 隐藏加载状态
+        hideLoading() {
+          AppState.isLoading = false;
+          // 这里可以移除加载指示器
+          console.log('隐藏加载状态');
+        },
+
+        // 显示通知
+        showToast(message, type = 'info') {
+          // 创建简单的通知元素
+          const toast = document.createElement('div');
+          toast.textContent = message;
+          toast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background-color: ${type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#3b82f6'};
+            color: white;
+            border-radius: 4px;
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+          `;
+
+          document.body.appendChild(toast);
+
+          // 3秒后自动移除
+          setTimeout(() => {
+            document.body.removeChild(toast);
+          }, 3000);
+        },
+
+        // 创建模态框
+        showModal(title, content) {
+          // 创建模态框背景
+          const backdrop = document.createElement('div');
+          backdrop.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          `;
+
+          // 创建模态框内容
+          const modal = document.createElement('div');
+          modal.style.cssText = `
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+          `;
+
+          modal.innerHTML = `
+            <h3 style="margin-top: 0; margin-bottom: 16px;">${title}</h3>
+            <div>${content}</div>
+            <div style="margin-top: 16px; text-align: right;">
+              <button id="close-modal" class="btn">关闭</button>
+            </div>
+          `;
+
+          backdrop.appendChild(modal);
+          document.body.appendChild(backdrop);
+
+          // 关闭事件
+          modal.querySelector('#close-modal').addEventListener('click', () => {
+            document.body.removeChild(backdrop);
+          });
+
+          return backdrop;
+        }
+      };
+
+      // API服务简化版
+      const ApiService = {
+        configManager: new APIConfigManager({
+          timeout: 10000,
+          maxRetries: 3
+        }),
+
+        async fetchScenarios() {
+          try {
+            // 尝试从API获取场景，如果失败则使用模拟数据
+            const response = await this.configManager.request('/scenarios/');
+            if (response && Array.isArray(response.scenarios)) {
+              return response.scenarios;
+            }
+          } catch (error) {
+            console.warn('API请求失败，使用模拟数据:', error);
+          }
+
+          // 模拟数据 - 包含所有9个场景
+          return ScenarioManager.scenarios.map(scenario => ({
+            id: scenario.id,
+            name: scenario.name,
+            description: scenario.description,
+            difficulty: scenario.difficulty
+          }));
+        }
+      };
+
+      // 场景管理模块 - 实现场景的完整体验功能
+      const ScenarioManager = {
+        // 当前激活的场景
+        currentScenario: null,
+
+        // 场景数据
+        scenarios: [
+          {
+            id: "coffee-shop-linear-thinking",
+            name: "咖啡店线性思维",
+            description: "线性思维陷阱场景",
+            difficulty: "beginner",
+            fullDescription: "在这个场景中，您将管理一家咖啡店，体验线性思维在复杂商业环境中的局限性。线性思维是指我们倾向于认为原因和结果之间存在直接的、成比例的关系。但在复杂的系统中，这种思维方式往往会导致错误的决策。",
+            steps: [
+              {
+                id: 1,
+                title: "初始状态",
+                content: "您的咖啡店目前有1000元启动资金，客户满意度50%，声誉50%。",
+                decisions: [
+                  { id: "ad-advertising", text: "投入广告", effect: { satisfaction: 10, resources: -200 } },
+                  { id: "quality-improvement", text: "提升品质", effect: { satisfaction: 15, resources: -300 } },
+                  { id: "price-cut", text: "降价促销", effect: { satisfaction: 5, resources: -100 } }
+                ]
+              },
+              {
+                id: 2,
+                title: "第一轮结果",
+                content: "您做出了选择，现在看看结果如何...",
+                decisions: [
+                  { id: "hire-staff", text: "雇佣员工", effect: { satisfaction: 10, resources: -400 } },
+                  { id: "expand-space", text: "扩大店面", effect: { satisfaction: 15, resources: -600 } },
+                  { id: "buy-equipment", text: "购买设备", effect: { satisfaction: 5, resources: -250 } }
+                ]
+              },
+              {
+                id: 3,
+                title: "最终结果",
+                content: "恭喜您完成了咖啡店经营挑战！您已经体验了线性思维在复杂商业环境中的局限性。",
+                decisions: [
+                  { id: "restart", text: "重新开始", effect: {} },
+                  { id: "next-scenario", text: "下一个场景", effect: {} }
+                ]
+              }
+            ],
+            initialState: {
+              satisfaction: 50,
+              resources: 1000,
+              reputation: 50,
+              turn: 1
+            }
+          },
+          {
+            id: "relationship-time-delay",
+            name: "恋爱关系时间延迟",
+            description: "时间延迟偏差场景",
+            difficulty: "intermediate",
+            fullDescription: "在恋爱关系中体验时间延迟对决策的影响。每个决策的效果会在几回合后显现。时间延迟偏差是指我们倾向于期望立即看到行动的结果，而忽视了在复杂系统中结果往往需要时间才能显现。",
+            steps: [
+              {
+                id: 1,
+                title: "关系初期",
+                content: "您和伴侣刚刚开始交往，信任度50%，满意度50%。",
+                decisions: [
+                  { id: "spend-time", text: "花更多时间相处", effect: { satisfaction: 10, trust: 5 } },
+                  { id: "give-gift", text: "送礼物", effect: { satisfaction: 15, resources: -50 } },
+                  { id: "be-independent", text: "保持独立空间", effect: { trust: 10, satisfaction: -5 } }
+                ]
+              },
+              {
+                id: 2,
+                title: "关系发展",
+                content: "关系进入稳定期，之前的决定开始显现效果...",
+                decisions: [
+                  { id: "meet-family", text: "介绍给家人", effect: { satisfaction: 10, trust: 10 } },
+                  { id: "travel-together", text: "一起旅行", effect: { satisfaction: 15, trust: 15, resources: -200 } },
+                  { id: "discuss-future", text: "讨论未来", effect: { trust: 20, satisfaction: 5 } }
+                ]
+              },
+              {
+                id: 3,
+                title: "关系成熟",
+                content: "恭喜您完成了恋爱关系挑战！您已经体验了时间延迟对决策的影响。",
+                decisions: [
+                  { id: "restart", text: "重新开始", effect: {} },
+                  { id: "next-scenario", text: "下一个场景", effect: {} }
+                ]
+              }
+            ],
+            initialState: {
+              satisfaction: 50,
+              trust: 50,
+              resources: 500,
+              turn: 1
+            }
+          },
+          {
+            id: "investment-confirmation-bias",
+            name: "投资确认偏误",
+            description: "确认偏误场景",
+            difficulty: "advanced",
+            fullDescription: "在投资决策中体验确认偏误如何影响我们的风险判断。确认偏误是指我们倾向于寻找、解释和记住那些证实我们已有信念或假设的信息，而忽视与之相矛盾的信息。",
+            steps: [
+              {
+                id: 1,
+                title: "初始投资",
+                content: "您有10000元可用于投资，知识水平0。",
+                decisions: [
+                  { id: "stocks", text: "投资股票", effect: { portfolio: 2000, knowledge: 10 } },
+                  { id: "bonds", text: "投资债券", effect: { portfolio: 500, knowledge: 5 } },
+                  { id: "education", text: "学习投资知识", effect: { knowledge: 20, resources: -1000 } }
+                ]
+              },
+              {
+                id: 2,
+                title: "市场波动",
+                content: "市场出现波动，需要根据您的知识做出明智决策...",
+                decisions: [
+                  { id: "diversify", text: "分散投资", effect: { portfolio: 1000, risk: -10 } },
+                  { id: "hold", text: "继续持有", effect: { portfolio: 0, risk: 5 } },
+                  { id: "sell", text: "卖出投资", effect: { portfolio: -500, risk: -20 } }
+                ]
+              },
+              {
+                id: 3,
+                title: "长期结果",
+                content: "恭喜您完成了投资决策挑战！您已经体验了确认偏误对风险判断的影响。",
+                decisions: [
+                  { id: "restart", text: "重新开始", effect: {} },
+                  { id: "next-scenario", text: "下一个场景", effect: {} }
+                ]
+              }
+            ],
+            initialState: {
+              portfolio: 10000,
+              knowledge: 0,
+              risk: 10,
+              turn: 1
+            }
+          },
+          {
+            id: "business-strategy-reasoning",
+            name: "商业战略推理游戏",
+            description: "模拟商业决策推理过程，测试用户在复杂商业环境中的决策思维",
+            difficulty: "intermediate",
+            fullDescription: "在这个商业战略推理游戏中，您将面对复杂的商业决策场景，体验多种认知陷阱，包括线性思维、确认偏误和复杂系统误解。游戏涉及市场分析、资源配置、竞争策略等多个维度。",
+            steps: [
+              {
+                id: 1,
+                title: "市场分析",
+                content: "您是一家公司的CEO，当前市场份额25%，现金流50000，团队士气70%。",
+                decisions: [
+                  { id: "market-research", text: "深入市场调研", effect: { marketShare: 5, cashFlow: -5000, teamMorale: 0 } },
+                  { id: "product-development", text: "加大产品开发", effect: { marketShare: 10, cashFlow: -10000, teamMorale: 5 } },
+                  { id: "marketing-campaign", text: "开展营销活动", effect: { marketShare: 8, cashFlow: -8000, teamMorale: 3 } }
+                ]
+              },
+              {
+                id: 2,
+                title: "竞争应对",
+                content: "竞争对手推出了新产品，您的市场份额受到影响...",
+                decisions: [
+                  { id: "price-war", text: "发起价格战", effect: { marketShare: 15, cashFlow: -15000, teamMorale: -5 } },
+                  { id: "innovation-focus", text: "专注创新", effect: { marketShare: 12, cashFlow: -12000, teamMorale: 8 } },
+                  { id: "partnership", text: "寻求合作伙伴", effect: { marketShare: 10, cashFlow: -3000, teamMorale: 10 } }
+                ]
+              },
+              {
+                id: 3,
+                title: "战略回顾",
+                content: "恭喜您完成了商业战略推理挑战！您已经体验了复杂商业环境中的决策思维。",
+                decisions: [
+                  { id: "restart", text: "重新开始", effect: {} },
+                  { id: "next-scenario", text: "下一个场景", effect: {} }
+                ]
+              }
+            ],
+            initialState: {
+              marketShare: 25,
+              cashFlow: 50000,
+              teamMorale: 70,
+              turn: 1
+            }
+          },
+          {
+            id: "public-policy-making",
+            name: "公共政策制定模拟",
+            description: "模拟公共政策制定过程，平衡多方利益相关者需求",
+            difficulty: "intermediate",
+            fullDescription: "在这个公共政策制定模拟中，您将扮演政策制定者，需要平衡选民、利益集团、专家意见等多方需求，体验时间延迟、确认偏误、复杂系统等认知陷阱对政策制定的影响。",
+            steps: [
+              {
+                id: 1,
+                title: "政策议题",
+                content: "您需要制定一项环保政策，当前公众支持率60%，预算100万，利益相关方压力50%。",
+                decisions: [
+                  { id: "strict-regulations", text: "严格管制", effect: { publicSupport: -10, budget: -30000, stakeholderPressure: 20 } },
+                  { id: "incentive-program", text: "激励计划", effect: { publicSupport: 15, budget: -50000, stakeholderPressure: -10 } },
+                  { id: "gradual-approach", text: "渐进方式", effect: { publicSupport: 5, budget: -20000, stakeholderPressure: 5 } }
+                ]
+              },
+              {
+                id: 2,
+                title: "政策实施",
+                content: "政策开始实施，各方反应逐渐显现...",
+                decisions: [
+                  { id: "enforcement", text: "加强执法", effect: { publicSupport: -15, budget: -40000, stakeholderPressure: 30 } },
+                  { id: "compromise", text: "寻求妥协", effect: { publicSupport: 10, budget: -10000, stakeholderPressure: -20 } },
+                  { id: "public-consultation", text: "公众咨询", effect: { publicSupport: 20, budget: -15000, stakeholderPressure: -5 } }
+                ]
+              },
+              {
+                id: 3,
+                title: "政策评估",
+                content: "恭喜您完成了公共政策制定挑战！您已经体验了政策制定中的复杂性。",
+                decisions: [
+                  { id: "restart", text: "重新开始", effect: {} },
+                  { id: "next-scenario", text: "下一个场景", effect: {} }
+                ]
+              }
+            ],
+            initialState: {
+              publicSupport: 60,
+              budget: 1000000,
+              stakeholderPressure: 50,
+              turn: 1
+            }
+          },
+          {
+            id: "personal-finance-decision",
+            name: "个人财务决策模拟",
+            description: "模拟个人长期财务规划决策，体验复利和时间价值概念",
+            difficulty: "beginner",
+            fullDescription: "在这个个人财务决策模拟中，您将制定长期财务规划，体验复利增长、时间价值、风险评估等概念，理解短视偏误和线性思维对财务决策的影响。",
+            steps: [
+              {
+                id: 1,
+                title: "财务规划",
+                content: "您有50000储蓄，月收入5000，债务10000，投资知识30%。",
+                decisions: [
+                  { id: "high-risk", text: "高风险投资", effect: { savings: 10000, investmentKnowledge: 10, debt: 0 } },
+                  { id: "low-risk", text: "低风险投资", effect: { savings: 5000, investmentKnowledge: 5, debt: 0 } },
+                  { id: "debt-reduction", text: "还债优先", effect: { savings: -5000, investmentKnowledge: 0, debt: -5000 } }
+                ]
+              },
+              {
+                id: 2,
+                title: "投资调整",
+                content: "一年过去了，您的财务状况有所变化...",
+                decisions: [
+                  { id: "increase-investment", text: "增加投资", effect: { savings: -8000, investmentKnowledge: 15, debt: 0 } },
+                  { id: "emergency-fund", text: "建立应急基金", effect: { savings: -10000, investmentKnowledge: 5, debt: 0 } },
+                  { id: "diversification", text: "分散投资", effect: { savings: -6000, investmentKnowledge: 10, debt: 0 } }
+                ]
+              },
+              {
+                id: 3,
+                title: "财务回顾",
+                content: "恭喜您完成了个人财务决策挑战！您已经体验了长期财务规划的重要性。",
+                decisions: [
+                  { id: "restart", text: "重新开始", effect: {} },
+                  { id: "next-scenario", text: "下一个场景", effect: {} }
+                ]
+              }
+            ],
+            initialState: {
+              savings: 50000,
+              income: 5000,
+              debt: 10000,
+              investmentKnowledge: 30,
+              turn: 1
+            }
+          },
+          {
+            id: "climate-change-policy",
+            name: "全球气候变化政策制定博弈",
+            description: "模拟多国在气候变化政策制定中的博弈与权衡",
+            difficulty: "advanced",
+            fullDescription: "在这个高级政策制定博弈中，您将代表一个国家参与国际气候谈判，平衡经济发展、环境保护、国际合作等多重目标，体验复杂系统思维、长期规划、跨文化沟通等挑战。",
+            steps: [
+              {
+                id: 1,
+                title: "国家立场",
+                content: "您代表一个国家参与气候谈判，当前碳排放80%，经济增速3.5%，国际声望60%。",
+                decisions: [
+                  { id: "aggressive-reduction", text: "激进减排", effect: { carbonEmissions: -20, economicGrowth: -1, internationalStanding: 10 } },
+                  { id: "moderate-approach", text: "温和方式", effect: { carbonEmissions: -10, economicGrowth: 0, internationalStanding: 5 } },
+                  { id: "technology-focus", text: "技术驱动", effect: { carbonEmissions: -15, economicGrowth: 0.5, internationalStanding: 8 } }
+                ]
+              },
+              {
+                id: 2,
+                title: "国际合作",
+                content: "其他国家对您的提案作出回应...",
+                decisions: [
+                  { id: "leadership-role", text: "领导角色", effect: { carbonEmissions: -10, economicGrowth: -0.5, internationalStanding: 15 } },
+                  { id: "collaboration", text: "合作为主", effect: { carbonEmissions: -8, economicGrowth: 0.2, internationalStanding: 10 } },
+                  { id: "national-interest", text: "国家利益优先", effect: { carbonEmissions: -5, economicGrowth: 0.5, internationalStanding: -5 } }
+                ]
+              },
+              {
+                id: 3,
+                title: "成果评估",
+                content: "恭喜您完成了气候变化政策制定挑战！您已经体验了复杂政策制定的挑战。",
+                decisions: [
+                  { id: "restart", text: "重新开始", effect: {} },
+                  { id: "next-scenario", text: "下一个场景", effect: {} }
+                ]
+              }
+            ],
+            initialState: {
+              carbonEmissions: 80,
+              economicGrowth: 3.5,
+              internationalStanding: 60,
+              turn: 1
+            }
+          },
+          {
+            id: "ai-governance-regulation",
+            name: "AI治理与监管决策模拟",
+            description: "模拟AI治理政策制定，平衡创新、安全、伦理等多方面考量",
+            difficulty: "advanced",
+            fullDescription: "在这个AI治理决策模拟中，您将面对新兴技术治理的复杂挑战，平衡技术创新、安全保障、伦理标准、国际合作等多重目标，体验技术政策制定中的认知陷阱。",
+            steps: [
+              {
+                id: 1,
+                title: "政策框架",
+                content: "您负责制定AI治理政策，当前创新速率为60%，安全标准40%，公众信任55%，国际合作50%。",
+                decisions: [
+                  { id: "innovation-first", text: "创新优先", effect: { innovationRate: 15, safetyStandards: -10, publicTrust: -5, internationalCooperation: -5 } },
+                  { id: "safety-first", text: "安全优先", effect: { innovationRate: -10, safetyStandards: 15, publicTrust: 10, internationalCooperation: 5 } },
+                  { id: "balanced-approach", text: "平衡方式", effect: { innovationRate: 5, safetyStandards: 5, publicTrust: 5, internationalCooperation: 5 } }
+                ]
+              },
+              {
+                id: 2,
+                title: "政策实施",
+                content: "政策开始实施，各方反应逐渐显现...",
+                decisions: [
+                  { id: "strict-compliance", text: "严格合规", effect: { innovationRate: -15, safetyStandards: 20, publicTrust: 15, internationalCooperation: 10 } },
+                  { id: "flexible-framework", text: "灵活框架", effect: { innovationRate: 10, safetyStandards: 10, publicTrust: 8, internationalCooperation: 12 } },
+                  { id: "industry-partnership", text: "产业合作", effect: { innovationRate: 12, safetyStandards: 8, publicTrust: -5, internationalCooperation: 15 } }
+                ]
+              },
+              {
+                id: 3,
+                title: "治理评估",
+                content: "恭喜您完成了AI治理决策挑战！您已经体验了技术治理的复杂性。",
+                decisions: [
+                  { id: "restart", text: "重新开始", effect: {} },
+                  { id: "next-scenario", text: "下一个场景", effect: {} }
+                ]
+              }
+            ],
+            initialState: {
+              innovationRate: 60,
+              safetyStandards: 40,
+              publicTrust: 55,
+              internationalCooperation: 50,
+              turn: 1
+            }
+          },
+          {
+            id: "financial-crisis-response",
+            name: "复杂金融市场危机应对模拟",
+            description: "模拟金融危机应对决策，处理复杂金融系统风险",
+            difficulty: "advanced",
+            fullDescription: "在这个金融危机应对模拟中，您将作为决策者处理复杂的金融系统风险，平衡市场稳定、机构救助、道德风险等多重考量，体验系统性风险、连锁反应、政策传导等复杂概念。",
+            steps: [
+              {
+                id: 1,
+                title: "危机识别",
+                content: "金融市场出现动荡，当前市场稳定性70%，银行偿付能力65%，投资者信心55%，系统性风险水平40%。",
+                decisions: [
+                  { id: "early-intervention", text: "早期干预", effect: { marketStability: 10, bankSolventcy: 5, investorConfidence: 10, systemicRiskLevel: -10 } },
+                  { id: "monitoring", text: "密切监控", effect: { marketStability: 5, bankSolventcy: 2, investorConfidence: 5, systemicRiskLevel: -5 } },
+                  { id: "wait-and-see", text: "观望态度", effect: { marketStability: -5, bankSolventcy: -3, investorConfidence: -5, systemicRiskLevel: 10 } }
+                ]
+              },
+              {
+                id: 2,
+                title: "危机应对",
+                content: "危机加剧，需要采取果断措施...",
+                decisions: [
+                  { id: "large-stimulus", text: "大规模刺激", effect: { marketStability: 20, bankSolventcy: 15, investorConfidence: 15, systemicRiskLevel: -15 } },
+                  { id: "targeted-assistance", text: "定向援助", effect: { marketStability: 15, bankSolventcy: 20, investorConfidence: 10, systemicRiskLevel: -10 } },
+                  { id: "structural-reform", text: "结构性改革", effect: { marketStability: 10, bankSolventcy: 10, investorConfidence: 20, systemicRiskLevel: -20 } }
+                ]
+              },
+              {
+                id: 3,
+                title: "复苏评估",
+                content: "恭喜您完成了金融危机应对挑战！您已经体验了复杂系统风险管理的重要性。",
+                decisions: [
+                  { id: "restart", text: "重新开始", effect: {} },
+                  { id: "next-scenario", text: "下一个场景", effect: {} }
+                ]
+              }
+            ],
+            initialState: {
+              marketStability: 70,
+              bankSolventcy: 65,
+              investorConfidence: 55,
+              systemicRiskLevel: 40,
+              turn: 1
+            }
+          }
+        ],
+
+        // 启动场景
+        startScenario(scenarioId) {
+          const scenario = this.scenarios.find(s => s.id === scenarioId);
+          if (!scenario) {
+            UIManager.showToast('场景未找到', 'error');
+            return;
+          }
+
+          this.currentScenario = {...scenario};
+          this.currentScenario.state = {...scenario.initialState};
+          this.currentScenario.currentStep = 0;
+
+          this.renderScenario();
+        },
+
+        // 渲染场景界面
+        renderScenario() {
+          const container = document.createElement('div');
+          container.className = 'scenario-container';
+
+          // 场景头部信息
+          container.innerHTML = `
+            <div class="scenario-header">
+              <h2>${this.currentScenario.name}</h2>
+              <p>${this.currentScenario.fullDescription}</p>
+            </div>
+
+            <div class="scenario-state">
+              <div class="state-item">
+                <span>满意度: <strong>${this.currentScenario.state.satisfaction || 0}</strong></span>
+              </div>
+              <div class="state-item">
+                <span>资源: <strong>${this.currentScenario.state.resources || 0}</strong></span>
+              </div>
+              <div class="state-item">
+                <span>信任度: <strong>${this.currentScenario.state.trust || 0}</strong></span>
+              </div>
+              <div class="state-item">
+                <span>回合: <strong>${this.currentScenario.state.turn || 1}</strong></span>
+              </div>
+            </div>
+
+            <div class="scenario-content">
+              <!-- 步骤内容将动态插入 -->
+            </div>
+          `;
+
+          // 渲染当前步骤
+          this.renderCurrentStep(container.querySelector('.scenario-content'));
+
+          // 替换主内容区域
+          const mainContent = document.getElementById('main-content');
+          mainContent.innerHTML = '';
+          mainContent.appendChild(container);
+
+          // 添加返回按钮
+          const backButton = document.createElement('button');
+          backButton.className = 'btn btn-outline';
+          backButton.textContent = '返回场景列表';
+          backButton.style.marginTop = '1rem';
+          backButton.addEventListener('click', () => {
+            Router.navigateTo('scenarios');
+          });
+
+          mainContent.appendChild(backButton);
+        },
+
+        // 渲染当前步骤
+        renderCurrentStep(contentContainer) {
+          const step = this.currentScenario.steps[this.currentScenario.currentStep];
+          if (!step) {
+            UIManager.showToast('场景结束', 'success');
+            return;
+          }
+
+          contentContainer.innerHTML = `
+            <div class="step-card">
+              <h3>${step.title}</h3>
+              <p>${step.content}</p>
+
+              <div class="decisions-container">
+                <h4>请选择您的行动:</h4>
+                <div class="decisions-grid">
+                  ${step.decisions.map(decision => `
+                    <button class="decision-btn btn" data-decision="${decision.id}">
+                      ${decision.text}
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+
+          // 为决策按钮添加事件
+          contentContainer.querySelectorAll('.decision-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+              const decisionId = e.target.getAttribute('data-decision');
+              this.executeDecision(decisionId);
+            });
+          });
+        },
+
+        // 执行决策
+        executeDecision(decisionId) {
+          const step = this.currentScenario.steps[this.currentScenario.currentStep];
+          const decision = step.decisions.find(d => d.id === decisionId);
+
+          if (!decision) return;
+
+          // 应用决策效果
+          Object.keys(decision.effect).forEach(key => {
+            if (this.currentScenario.state.hasOwnProperty(key)) {
+              this.currentScenario.state[key] += decision.effect[key];
+              // 确保数值不会变成负数（除非特别指定）
+              if (this.currentScenario.state[key] < 0 && key !== 'resources' && key !== 'portfolio') {
+                this.currentScenario.state[key] = 0;
+              }
+            } else {
+              this.currentScenario.state[key] = decision.effect[key];
+            }
+          });
+
+          // 增加回合数
+          this.currentScenario.state.turn += 1;
+
+          // 移动到下一步
+          this.currentScenario.currentStep += 1;
+
+          // 检查是否完成场景
+          if (this.currentScenario.currentStep >= this.currentScenario.steps.length) {
+            this.completeScenario();
+          } else {
+            // 重新渲染当前步骤
+            const contentContainer = document.querySelector('.scenario-content');
+            this.renderCurrentStep(contentContainer);
+
+            // 更新状态显示
+            this.updateStateDisplay();
+          }
+        },
+
+        // 更新状态显示
+        updateStateDisplay() {
+          const stateElements = document.querySelectorAll('.state-item span strong');
+          const state = this.currentScenario.state;
+
+          // 更新满意度
+          const satisfactionEl = Array.from(stateElements).find(el =>
+            el.parentElement.textContent.includes('满意度')
+          );
+          if (satisfactionEl) satisfactionEl.textContent = state.satisfaction || 0;
+
+          // 更新资源
+          const resourcesEl = Array.from(stateElements).find(el =>
+            el.parentElement.textContent.includes('资源')
+          );
+          if (resourcesEl) resourcesEl.textContent = state.resources || 0;
+
+          // 更新信任度
+          const trustEl = Array.from(stateElements).find(el =>
+            el.parentElement.textContent.includes('信任度')
+          );
+          if (trustEl) trustEl.textContent = state.trust || 0;
+
+          // 更新回合
+          const turnEl = Array.from(stateElements).find(el =>
+            el.parentElement.textContent.includes('回合')
+          );
+          if (turnEl) turnEl.textContent = state.turn || 1;
+        },
+
+        // 完成场景
+        completeScenario() {
+          UIManager.showToast('恭喜！您已完成此场景', 'success');
+
+          // 显示完成界面
+          const contentContainer = document.querySelector('.scenario-content');
+          contentContainer.innerHTML = `
+            <div class="completion-card">
+              <h3>场景完成！</h3>
+              <p>您已成功完成 "${this.currentScenario.name}" 场景。</p>
+              <p>在这一过程中，您体验了${this.extractLearningPoint(this.currentScenario.id)}。</p>
+              <div class="completion-actions">
+                <button id="complete-restart" class="btn">重新开始</button>
+                <button id="complete-next" class="btn btn-outline">下一个场景</button>
+              </div>
+            </div>
+          `;
+
+          // 添加完成后的操作事件
+          document.getElementById('complete-restart').addEventListener('click', () => {
+            this.restartScenario();
+          });
+
+          document.getElementById('complete-next').addEventListener('click', () => {
+            Router.navigateTo('scenarios');
+          });
+        },
+
+        // 重新开始场景
+        restartScenario() {
+          this.currentScenario.state = {...this.currentScenario.initialState};
+          this.currentScenario.currentStep = 0;
+          this.renderScenario();
+        },
+
+        // 提取学习要点
+        extractLearningPoint(scenarioId) {
+          switch(scenarioId) {
+            case 'coffee-shop':
+              return '线性思维在复杂商业环境中的局限性';
+            case 'relationship':
+              return '时间延迟对决策的影响';
+            case 'investment':
+              return '确认偏误如何影响风险判断';
+            default:
+              return '相关的认知陷阱和思维局限';
+          }
+        }
+      };
+
+      // 极简路由管理
+      const Router = {
+        routes: {
+          'home': this.renderHome,
+          'scenarios': this.renderScenarios,
+          'about': this.renderAbout,
+          'book': this.renderBook
+        },
+
+        navigateTo(page) {
+          AppState.currentPage = page;
+
+          // 更新URL
+          window.history.pushState({ page }, '', `#${page}`);
+
+          // 更新导航高亮
+          document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.toggle('active', link.dataset.page === page);
+          });
+
+          // 渲染页面
+          this.renderPage(page);
+        },
+
+        renderPage(page) {
+          // 隐藏所有页面
+          document.querySelectorAll('.page').forEach(el => {
+            el.classList.remove('active');
+          });
+
+          // 获取或创建页面容器
+          let pageContainer = document.getElementById(`${page}-page`);
+          if (!pageContainer) {
+            pageContainer = document.createElement('div');
+            pageContainer.id = `${page}-page`;
+            pageContainer.className = 'page';
+            document.getElementById('main-content').appendChild(pageContainer);
+          }
+
+          // 清空并渲染内容
+          pageContainer.innerHTML = '';
+
+          const renderer = this.routes[page];
+          if (renderer) {
+            pageContainer.appendChild(renderer());
+            pageContainer.classList.add('active');
+          } else {
+            pageContainer.innerHTML = '<h2>页面未找到</h2>';
+            pageContainer.classList.add('active');
+          }
+        },
+
+        // 页面渲染函数
+        renderHome() {
+          const container = document.createElement('div');
+          container.className = 'hero';
+
+          container.innerHTML = `
+            <h1>Failure Logic</h1>
+            <p>通过互动式挑战，体验认知陷阱与思维局限</p>
+            <div>
+              <button id="start-journey" class="btn">开始认知之旅</button>
+              <button id="learn-more" class="btn btn-outline" style="margin-left: 1rem;">了解更多</button>
+            </div>
+          `;
+
+          // 添加事件监听
+          container.querySelector('#start-journey').addEventListener('click', () => {
+            Router.navigateTo('scenarios');
+          });
+
+          container.querySelector('#learn-more').addEventListener('click', () => {
+            Router.navigateTo('about');
+          });
+
+          return container;
+        },
+
+        renderScenarios() {
+          const container = document.createElement('div');
+
+          container.innerHTML = `
+            <h1>认知场景</h1>
+            <p>选择一个场景开始挑战</p>
+            <div class="difficulty-control">
+              <label for="difficulty">难度: </label>
+              <select id="difficulty">
+                <option value="beginner">初级</option>
+                <option value="intermediate">中级</option>
+                <option value="advanced">高级</option>
+              </select>
+            </div>
+            <div id="scenarios-list" class="grid"></div>
+          `;
+
+          // 加载场景
+          this.loadScenarios(container.querySelector('#scenarios-list'));
+
+          // 难度选择事件
+          container.querySelector('#difficulty').addEventListener('change', (e) => {
+            AppState.userPreferences.difficulty = e.target.value;
+            this.loadScenarios(container.querySelector('#scenarios-list'));
+          });
+
+          return container;
+        },
+
+        async loadScenarios(container) {
+          container.innerHTML = '<p>加载中...</p>';
+
+          try {
+            const scenarios = await ApiService.fetchScenarios();
+            AppState.scenarios = scenarios;
+
+            container.innerHTML = '';
+
+            scenarios.forEach(scenario => {
+              const card = document.createElement('div');
+              card.className = 'card';
+              card.innerHTML = `
+                <h3>${scenario.name}</h3>
+                <p>${scenario.description}</p>
+                <p><small>难度: ${scenario.difficulty}</small></p>
+                <button class="btn" data-id="${scenario.id}">开始挑战</button>
+              `;
+
+              card.querySelector('button').addEventListener('click', () => {
+                ScenarioManager.startScenario(scenario.id);
+              });
+
+              container.appendChild(card);
+            });
+          } catch (error) {
+            container.innerHTML = '<p>加载失败，请稍后重试</p>';
+          }
+        },
+
+        renderAbout() {
+          const container = document.createElement('div');
+
+          container.innerHTML = `
+            <h1>关于认知陷阱</h1>
+            <p>人类在面对复杂系统时，由于认知局限性和思维偏差而导致的系统性决策错误模式。</p>
+            <h2>主要认知偏差类型</h2>
+            <ul>
+              <li>确认偏误：倾向于寻找支持自己观点的信息</li>
+              <li>线性思维：无法理解非线性关系</li>
+              <li>时间延迟：期望立即看到行动的结果</li>
+              <li>短期导向：忽视长期后果</li>
+            </ul>
+          `;
+
+          return container;
+        },
+
+        renderBook() {
+          const container = document.createElement('div');
+
+          container.innerHTML = `
+            <h1>《失败的逻辑》</h1>
+            <p>本书探讨了人类思维在面对复杂性时的系统性缺陷，以及如何通过互动游戏培养系统思维能力。</p>
+            <h2>核心概念</h2>
+            <ul>
+              <li>系统思维框架</li>
+              <li>认知偏差类型</li>
+              <li>复杂系统理解</li>
+              <li>决策质量提升</li>
+            </ul>
+          `;
+
+          return container;
+        }
+      };
+
+      // 初始化路由
+      window.addEventListener('popstate', (event) => {
+        if (event.state && event.state.page) {
+          Router.renderPage(event.state.page);
+          AppState.currentPage = event.state.page;
+        }
+      });
+
+      // 应用初始化
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log('Failure Logic 应用已启动');
+
+        // 初始化导航事件
+        setupNavigation();
+
+        // 根据URL哈希或默认值渲染页面
+        const initialPage = window.location.hash.replace('#', '') || 'home';
+        Router.navigateTo(initialPage);
+      });
+
+      // 设置导航事件
+      function setupNavigation() {
+        // 为所有导航链接添加点击事件
+        document.querySelectorAll('.nav-link').forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const page = e.target.getAttribute('data-page');
+            if (page) {
+              Router.navigateTo(page);
+            }
+          });
+        });
+      }
+
+      // 暴露全局函数供HTML使用
+      window.navigateTo = (page) => {
+        Router.navigateTo(page);
+      };
+    </script>
+</body>
+</html>

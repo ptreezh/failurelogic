@@ -1,0 +1,144 @@
+::ffff:127.0.0.1 - - [23/Jan/2026 17:15:56] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:15:59] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:15:59] "GET /assets/css/normalize.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:15:59] "GET /assets/css/main.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:15:59] "GET /assets/css/components.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:15:59] "GET /assets/css/game-styles.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:15:59] code 404, message File not found
+::1 - - [23/Jan/2026 17:15:59] "GET /assets/css/turn-based-game.css HTTP/1.1" 404 -
+::1 - - [23/Jan/2026 17:15:59] "GET /assets/css/scenarios/relationship-time-delay.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:15:59] "GET /assets/js/api-config-manager.js?v=20251104-2 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:15:59] "GET /assets/js/app.js?v=20260116-0150 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:15:59] code 404, message File not found
+::1 - - [23/Jan/2026 17:15:59] "GET /favicon.ico HTTP/1.1" 404 -
+::ffff:127.0.0.1 - - [23/Jan/2026 17:20:27] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:20:30] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:20:30] "GET /assets/css/normalize.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:20:30] "GET /assets/css/main.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:20:30] "GET /assets/css/components.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:20:30] "GET /assets/css/game-styles.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:20:30] code 404, message File not found
+::1 - - [23/Jan/2026 17:20:30] "GET /assets/css/turn-based-game.css HTTP/1.1" 404 -
+::1 - - [23/Jan/2026 17:20:30] "GET /assets/js/app.js?v=20260116-0150 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:20:30] "GET /assets/css/scenarios/relationship-time-delay.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:20:30] "GET /assets/js/api-config-manager.js?v=20251104-2 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:20:30] code 404, message File not found
+::1 - - [23/Jan/2026 17:20:30] "GET /favicon.ico HTTP/1.1" 404 -
+::ffff:127.0.0.1 - - [23/Jan/2026 17:26:44] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:26:47] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:26:47] "GET /assets/css/normalize.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:26:47] "GET /assets/css/main.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:26:47] "GET /assets/css/components.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:26:47] "GET /assets/css/game-styles.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:26:47] code 404, message File not found
+::1 - - [23/Jan/2026 17:26:47] "GET /assets/css/turn-based-game.css HTTP/1.1" 404 -
+::1 - - [23/Jan/2026 17:26:47] "GET /assets/css/scenarios/relationship-time-delay.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:26:47] "GET /assets/js/api-config-manager.js?v=20251104-2 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:26:47] "GET /assets/js/app.js?v=20260116-0150 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:26:47] code 404, message File not found
+::1 - - [23/Jan/2026 17:26:47] "GET /favicon.ico HTTP/1.1" 404 -
+::ffff:127.0.0.1 - - [23/Jan/2026 17:29:41] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:29:44] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:29:44] "GET /assets/css/normalize.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:29:44] "GET /assets/css/main.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:29:44] "GET /assets/css/components.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:29:44] "GET /assets/css/game-styles.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:29:44] code 404, message File not found
+::1 - - [23/Jan/2026 17:29:44] "GET /assets/css/turn-based-game.css HTTP/1.1" 404 -
+::1 - - [23/Jan/2026 17:29:44] "GET /assets/css/scenarios/relationship-time-delay.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:29:44] "GET /assets/js/api-config-manager.js?v=20251104-2 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:29:44] "GET /assets/js/app.js?v=20260116-0150 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:29:45] code 404, message File not found
+::1 - - [23/Jan/2026 17:29:45] "GET /favicon.ico HTTP/1.1" 404 -
+::ffff:127.0.0.1 - - [23/Jan/2026 17:30:58] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:31:01] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:31:01] "GET /assets/css/normalize.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:31:01] "GET /assets/css/main.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:31:01] "GET /assets/css/components.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:31:01] "GET /assets/css/game-styles.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:31:01] code 404, message File not found
+::1 - - [23/Jan/2026 17:31:01] "GET /assets/css/turn-based-game.css HTTP/1.1" 404 -
+::1 - - [23/Jan/2026 17:31:01] "GET /assets/css/scenarios/relationship-time-delay.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:31:01] "GET /assets/js/api-config-manager.js?v=20251104-2 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:31:01] "GET /assets/js/app.js?v=20260116-0150 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:31:01] code 404, message File not found
+::1 - - [23/Jan/2026 17:31:01] "GET /favicon.ico HTTP/1.1" 404 -
+::ffff:127.0.0.1 - - [23/Jan/2026 17:34:32] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:34:35] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:34:35] "GET /assets/css/normalize.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:34:35] "GET /assets/css/main.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:34:35] "GET /assets/css/components.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:34:35] "GET /assets/css/game-styles.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:34:35] code 404, message File not found
+::1 - - [23/Jan/2026 17:34:35] "GET /assets/css/turn-based-game.css HTTP/1.1" 404 -
+::1 - - [23/Jan/2026 17:34:35] "GET /assets/css/scenarios/relationship-time-delay.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:34:35] "GET /assets/js/api-config-manager.js?v=20251104-2 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:34:35] "GET /assets/js/app.js?v=20260116-0150 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:34:35] code 404, message File not found
+::1 - - [23/Jan/2026 17:34:35] "GET /favicon.ico HTTP/1.1" 404 -
+::ffff:127.0.0.1 - - [23/Jan/2026 17:42:23] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:43:22] "HEAD /assets/js/app.js HTTP/1.1" 200 -
+::ffff:127.0.0.1 - - [23/Jan/2026 17:45:45] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:47:05] "HEAD / HTTP/1.1" 200 -
+::ffff:127.0.0.1 - - [23/Jan/2026 17:49:03] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:49:06] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:49:06] "GET /assets/css/normalize.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:49:06] "GET /assets/css/main.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:49:06] "GET /assets/css/components.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:49:06] "GET /assets/css/game-styles.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:49:06] code 404, message File not found
+::1 - - [23/Jan/2026 17:49:06] "GET /assets/css/turn-based-game.css HTTP/1.1" 404 -
+::1 - - [23/Jan/2026 17:49:06] "GET /assets/css/scenarios/relationship-time-delay.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:49:06] "GET /assets/js/api-config-manager.js?v=20251104-2 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:49:06] "GET /assets/js/app.js?v=20260116-0150 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:49:07] code 404, message File not found
+::1 - - [23/Jan/2026 17:49:07] "GET /favicon.ico HTTP/1.1" 404 -
+::ffff:127.0.0.1 - - [23/Jan/2026 17:53:48] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:53:51] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:53:51] "GET /assets/css/normalize.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:53:51] "GET /assets/css/main.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:53:51] "GET /assets/css/game-styles.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:53:51] "GET /assets/css/components.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:53:51] code 404, message File not found
+::1 - - [23/Jan/2026 17:53:51] "GET /assets/css/turn-based-game.css HTTP/1.1" 404 -
+::1 - - [23/Jan/2026 17:53:51] "GET /assets/js/api-config-manager.js?v=20251104-2 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:53:51] "GET /assets/js/app.js?v=20260116-0150 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:53:51] "GET /assets/css/scenarios/relationship-time-delay.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 17:53:51] code 404, message File not found
+::1 - - [23/Jan/2026 17:53:51] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [23/Jan/2026 18:03:53] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:03:53] "GET /assets/css/normalize.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:03:53] "GET /assets/css/main.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:03:53] "GET /assets/css/components.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:03:53] "GET /assets/css/game-styles.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:03:53] code 404, message File not found
+::1 - - [23/Jan/2026 18:03:53] "GET /assets/css/turn-based-game.css HTTP/1.1" 404 -
+::1 - - [23/Jan/2026 18:03:53] "GET /assets/css/scenarios/relationship-time-delay.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:03:53] "GET /assets/js/api-config-manager.js?v=20251104-2 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:03:53] "GET /assets/js/app.js?v=20260116-0150 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:03:54] "GET /manifest.json HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:03:54] code 404, message File not found
+::1 - - [23/Jan/2026 18:03:54] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [23/Jan/2026 18:03:54] code 404, message File not found
+::1 - - [23/Jan/2026 18:03:54] "GET /assets/icons/icon-144x144.png HTTP/1.1" 404 -
+::1 - - [23/Jan/2026 18:08:52] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:08:53] "GET /assets/css/normalize.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:08:53] "GET /assets/css/main.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:08:53] "GET /assets/css/components.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:08:53] "GET /assets/css/game-styles.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:08:53] code 404, message File not found
+::1 - - [23/Jan/2026 18:08:53] "GET /assets/css/scenarios/relationship-time-delay.css HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:08:53] "GET /assets/css/turn-based-game.css HTTP/1.1" 404 -
+::1 - - [23/Jan/2026 18:08:53] "GET /assets/js/app.js?v=20260116-0150 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:08:53] "GET /assets/js/api-config-manager.js?v=20251104-2 HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:08:54] "GET /manifest.json HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:08:54] code 404, message File not found
+::1 - - [23/Jan/2026 18:08:54] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [23/Jan/2026 18:08:54] code 404, message File not found
+::1 - - [23/Jan/2026 18:08:54] "GET /assets/icons/icon-144x144.png HTTP/1.1" 404 -
+::1 - - [23/Jan/2026 18:09:49] "GET / HTTP/1.1" 200 -
+::1 - - [23/Jan/2026 18:11:31] code 404, message File not found
+::1 - - [23/Jan/2026 18:11:31] "GET /assets/css/turn-based-game.css HTTP/1.1" 404 -
+::1 - - [23/Jan/2026 18:11:31] "GET /assets/js/app.js?v=20260116-0150 HTTP/1.1" 304 -
+::1 - - [23/Jan/2026 18:11:31] code 404, message File not found
+::1 - - [23/Jan/2026 18:11:31] "GET /assets/icons/icon-144x144.png HTTP/1.1" 404 -

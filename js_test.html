@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript测试页面</title>
+</head>
+<body>
+    <h1>JavaScript初始化测试</h1>
+    <p>此页面用于测试NavigationManager是否正确初始化</p>
+    <button id="test-btn" onclick="testInitialization()">测试初始化</button>
+    <div id="result"></div>
+
+    <!-- 加载应用JavaScript -->
+    <script src="assets/js/api-config-manager.js?v=20251104-2"></script>
+    <script src="assets/js/app.js?v=20260116-0150"></script>
+
+    <script>
+        function testInitialization() {
+            const resultDiv = document.getElementById('result');
+            
+            // 检查NavigationManager是否存在
+            if (typeof NavigationManager !== 'undefined') {
+                resultDiv.innerHTML += '<p>✅ NavigationManager类定义存在</p>';
+                
+                // 检查NavigationManager是否已暴露到window对象
+                if (window.NavigationManager) {
+                    resultDiv.innerHTML += '<p>✅ window.NavigationManager存在</p>';
+                    
+                    // 检查关键方法是否存在
+                    if (typeof window.NavigationManager.navigateTo === 'function') {
+                        resultDiv.innerHTML += '<p>✅ NavigationManager.navigateTo方法存在</p>';
+                    } else {
+                        resultDiv.innerHTML += '<p>❌ NavigationManager.navigateTo方法不存在</p>';
+                    }
+                    
+                    if (typeof window.NavigationManager.renderPage === 'function') {
+                        resultDiv.innerHTML += '<p>✅ NavigationManager.renderPage方法存在</p>';
+                    } else {
+                        resultDiv.innerHTML += '<p>❌ NavigationManager.renderPage方法不存在</p>';
+                    }
+                } else {
+                    resultDiv.innerHTML += '<p>❌ window.NavigationManager不存在</p>';
+                }
+            } else {
+                resultDiv.innerHTML += '<p>❌ NavigationManager类定义不存在</p>';
+            }
+            
+            // 检查是否有JavaScript错误
+            resultDiv.innerHTML += '<p>页面加载完成，检查浏览器控制台是否有错误信息</p>';
+        }
+        
+        // 页面加载完成后自动测试
+        window.addEventListener('load', function() {
+            console.log('页面加载完成');
+            testInitialization();
+        });
+    </script>
+</body>
+</html>

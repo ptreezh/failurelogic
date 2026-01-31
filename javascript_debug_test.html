@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Test</title>
+</head>
+<body>
+    <div id="app">
+        <h1>Debug Test Page</h1>
+        <button onclick="testFunction()">Test JavaScript</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+      console.log('开始测试JavaScript...');
+      
+      // 测试APIConfigManager定义
+      if (typeof APIConfigManager === 'undefined') {
+        console.log('APIConfigManager未定义，创建模拟对象...');
+        
+        class APIConfigManager {
+          constructor(options = {}) {
+            this.options = {
+              timeout: options.timeout || 10000,
+              maxRetries: options.maxRetries || 3,
+              ...options
+            };
+          }
+
+          async request(endpoint, requestOptions = {}) {
+            console.log('模拟API请求:', endpoint);
+            // 模拟API响应
+            if (endpoint.includes('/scenarios')) {
+              return {
+                scenarios: [
+                  {
+                    id: "coffee-shop-linear-thinking",
+                    name: "咖啡店线性思维",
+                    description: "线性思维陷阱场景",
+                    difficulty: "beginner"
+                  }
+                ]
+              };
+            }
+            return {};
+          }
+        }
+
+        window.APIConfigManager = new APIConfigManager();
+        console.log('APIConfigManager已创建');
+      }
+      
+      // 测试AppState定义
+      const AppState = {
+        currentUser: null,
+        currentScenario: null,
+        currentPage: 'home',
+        isLoading: false,
+        userPreferences: {
+          difficulty: 'beginner'
+        },
+        scenarios: [
+          {
+            id: "coffee-shop-linear-thinking",
+            name: "咖啡店线性思维",
+            description: "线性思维陷阱场景",
+            difficulty: "beginner"
+          }
+        ]
+      };
+      console.log('AppState已初始化:', AppState);
+      
+      // 测试UIManager定义
+      const UIManager = {
+        showLoading() {
+          console.log('显示加载状态');
+        },
+        hideLoading() {
+          console.log('隐藏加载状态');
+        },
+        showToast(message, type = 'info') {
+          console.log('显示通知:', message);
+        },
+        showModal(title, content) {
+          console.log('显示模态框:', title);
+        }
+      };
+      console.log('UIManager已初始化');
+      
+      // 测试ApiService定义
+      const ApiService = {
+        async fetchScenarios() {
+          console.log('正在获取场景数据...');
+          try {
+            const scenarios = AppState.scenarios;
+            console.log('返回场景数据:', scenarios);
+            return scenarios;
+          } catch (error) {
+            console.error('获取场景失败:', error);
+            return [];
+          }
+        }
+      };
+      console.log('ApiService已初始化');
+      
+      // 测试ScenarioManager定义
+      const ScenarioManager = {
+        currentScenario: null,
+        scenarios: AppState.scenarios,
+        
+        startScenario(scenarioId) {
+          console.log('开始场景:', scenarioId);
+          const scenario = this.scenarios.find(s => s.id === scenarioId);
+          if (!scenario) {
+            UIManager.showToast('场景未找到', 'error');
+            return;
+          }
+
+          this.currentScenario = {...scenario};
+          this.currentScenario.state = {...scenario.initialState};
+          this.currentScenario.currentStep = 0;
+          
+          console.log('场景启动成功:', this.currentScenario);
+        }
+      };
+      console.log('ScenarioManager已初始化');
+      
+      // 测试Router定义
+      const Router = {
+        routes: {
+          'home': this.renderHome,
+          'scenarios': this.renderScenarios,
+          'about': this.renderAbout,
+          'book': this.renderBook
+        },
+
+        navigateTo(page) {
+          console.log('导航到页面:', page);
+          // 简化版本，仅用于测试
+        },
+
+        renderHome() {
+          console.log('渲染首页');
+          const container = document.createElement('div');
+          container.innerHTML = '<h2>首页内容</h2>';
+          return container;
+        },
+
+        renderScenarios() {
+          console.log('渲染场景页面');
+          const container = document.createElement('div');
+          container.innerHTML = '<h2>场景页面内容</h2>';
+          return container;
+        },
+
+        renderAbout() {
+          console.log('渲染关于页面');
+          const container = document.createElement('div');
+          container.innerHTML = '<h2>关于页面内容</h2>';
+          return container;
+        },
+
+        renderBook() {
+          console.log('渲染书籍页面');
+          const container = document.createElement('div');
+          container.innerHTML = '<h2>书籍页面内容</h2>';
+          return container;
+        }
+      };
+      console.log('Router已初始化');
+      
+      // 测试函数
+      function testFunction() {
+        document.getElementById('result').innerHTML = 'JavaScript运行正常！';
+        console.log('测试函数执行成功');
+      }
+      
+      // 页面加载完成后执行
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM内容已加载');
+        testFunction(); // 自动执行测试
+      });
+      
+      console.log('JavaScript测试完成');
+    </script>
+</body>
+</html>

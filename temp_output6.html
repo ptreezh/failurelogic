@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+    <title>SocienceAI - AI赋能社会科学研究</title>
+    <meta name="description" content="SocienceAI致力于构建AI与社会科学研究的双向赋能体系，通过AI释放人类研究者自由创新的核心潜力，提升AI智能体的集体智能和社会智能">
+    <meta name="robots" content="index,follow">
+    <meta name="keywords" content="AI,社会科学,研究,智能体,创新,学术工具">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="SocienceAI - 社会科学研究AI平台">
+    <meta property="og:description" content="SocienceAI致力于构建AI与社会科学研究的双向赋能体系，通过AI释放人类研究者自由创新的核心潜力，提升AI智能体的集体智能和社会智能">
+    <meta property="og:url" content="https://socienceAI.com">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://socienceAI.com/og-image.jpg">
+    <meta property="og:image:alt" content="SocienceAI - 社会科学研究AI平台">
+    <meta property="og:locale" content="zh_CN">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@socienceai_research">
+    <meta name="twitter:creator" content="@socienceai_research">
+
+    <!-- Favicon -->
+
+    <!-- CSS Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        .footer-content {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+        }
+
+        .footer-content > div {
+            flex: 1;
+            min-width: 0; /* Prevents flex items from overflowing */
+        }
+
+        /* 确保在小屏幕上仍然可以换行 */
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+
+        /* 服务卡片主题样式 - 美化背景色 */
+        .agent-theme {
+            background: linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%);
+            border: 1px solid #e0e7ff;
+        }
+
+        .agent-theme::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .agent-theme:hover {
+            background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+        }
+
+        .popular-theme {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 1px solid #bbf7d0;
+        }
+
+        .popular-theme::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .popular-theme:hover {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+        }
+
+        .multi-theme {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 1px solid #fde68a;
+        }
+
+        .multi-theme::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .multi-theme:hover {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        }
+
+        .custom-theme {
+            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+            border: 1px solid #e9d5ff;
+        }
+
+        .custom-theme::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #8b5cf6 0%, #7c3aed 100%);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .custom-theme:hover {
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+        }
+
+        .activation-theme {
+            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+            border: 1px solid #fbcfe8;
+        }
+
+        .activation-theme::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ec4899 0%, #db2777 100%);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .activation-theme:hover {
+            background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+        }
+
+        .project-theme {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 1px solid #bfdbfe;
+        }
+
+        .project-theme::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #1e40af 0%, #1e3a8a 100%);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .project-theme:hover {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        }
+
+        /* 悬停效果 */
+        .modern-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .modern-card {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* 双向赋能区块样式 */
+        .dual-empowerment-section {
+            position: relative;
+            padding: 5rem 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+            min-height: 800px;
+        }
+
+        .yin-yang-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .yin-yang-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1400px;
+            height: 700px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, rgba(248, 250, 255, 0.8) 0%, rgba(240, 244, 255, 0.6) 50%, rgba(254, 243, 199, 0.6) 100%);
+            z-index: 1;
+            backdrop-filter: blur(5px);
+        }
+
+        .yang-half {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.4) 0%, rgba(118, 75, 162, 0.3) 100%);
+            overflow: hidden;
+        }
+
+        .yang-circle {
+            position: absolute;
+            top: 50%;
+            right: -25%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.5) 0%, rgba(118, 75, 162, 0.4) 100%);
+            border-radius: 50%;
+        }
+
+        .yang-small-circle {
+            position: absolute;
+            top: 25%;
+            right: 0%;
+            width: 25%;
+            height: 25%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.6);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .yin-half {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.4) 0%, rgba(251, 146, 60, 0.3) 100%);
+            overflow: hidden;
+        }
+
+        .yin-circle {
+            position: absolute;
+            top: 50%;
+            left: -25%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.5) 0%, rgba(251, 146, 60, 0.4) 100%);
+            border-radius: 50%;
+        }
+
+        .yin-small-circle {
+            position: absolute;
+            top: 75%;
+            left: 25%;
+            width: 25%;
+            height: 25%;
+            background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+            border-radius: 50%;
+            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.6);
+            animation: float 4s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-10px) scale(1.05); }
+        }
+
+        .relative-position {
+            position: relative;
+            z-index: 2;
+        }
+
+        .empowerment-main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 3;
+        }
+
+        .empowerment-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 2rem;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .empowerment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .empowerment-card:hover::before {
+            opacity: 1;
+        }
+
+        .empowerment-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .card-glow {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.15) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .empowerment-card:hover .card-glow {
+            opacity: 1;
+        }
+
+        .ai-first {
+            border-left: 4px solid #667eea;
+            background: rgba(102, 126, 234, 0.12);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .social-first {
+            border-left: 4px solid #f59e0b;
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .ai-first:hover {
+            background: rgba(102, 126, 234, 0.18);
+        }
+
+        .social-first:hover {
+            background: rgba(245, 158, 11, 0.18);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .empowerment-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .empowerment-content {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: -1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .content-section {
+            margin-bottom: 2rem;
+        }
+
+        .content-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .social-first .section-title::before {
+            background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+        }
+
+        .empowerment-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .empowerment-list li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .empowerment-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        .social-first .empowerment-list li::before {
+            color: #f59e0b;
+        }
+
+        .unity-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .unity-symbol {
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .unity-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .yin-yang-bg {
+                width: 1200px;
+                height: 600px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .yin-yang-bg {
+                width: 1000px;
+                height: 500px;
+            }
+            
+            .empowerment-main-grid {
+                gap: 2rem;
+            }
+            
+            .empowerment-card {
+                padding: 2rem;
+            }
+            
+            .unity-symbol {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .yin-yang-bg {
+                width: 800px;
+                height: 400px;
+                opacity: 0.8;
+            }
+            
+            .yang-small-circle, .yin-small-circle {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dual-empowerment-section {
+                padding: 3rem 0;
+                min-height: auto;
+            }
+            
+            .yin-yang-bg {
+                width: 600px;
+                height: 300px;
+                opacity: 0.6;
+            }
+            
+            .empowerment-main-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .empowerment-card {
+                padding: 1.5rem;
+                background: rgba(255, 255, 255, 0.98);
+            }
+            
+            .empowerment-title {
+                font-size: 1.3rem;
+            }
+            
+            .unity-center {
+                position: static;
+                transform: none;
+                margin-top: 2rem;
+                text-align: center;
+            }
+            
+            .unity-symbol {
+                font-size: 2.5rem;
+            }
+            
+            .yang-half, .yin-half, .yang-circle, .yin-circle {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .yin-yang-bg {
+                display: none;
+            }
+            
+            .empowerment-card {
+                padding: 1.25rem;
+                background: rgba(255, 255, 255, 0.98);
+            }
+            
+            .card-header {
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="modern-nav">
+        <div class="modern-container">
+            <div style="display: flex; justify-content: space-between; align-items: center; height: 80px;">
+                <a href="/" class="nav-brand">
+                    <img src="logo.png" alt="SocienceAI Logo" class="nav-logo">
+                    <div>
+                        <div style="font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">SocienceAI</div>
+                        <div style="font-size: 0.875rem; color: var(--text-secondary); font-weight: 400;">让社会科学与AI双向赋能</div>
+                    </div>
+                </a>
+
+                <ul class="nav-menu">
+                    <li><a href="/" class="nav-link">首页</a></li>
+                    <li><a href="ai-agents.html" class="nav-link">Agent服务</a></li>
+                    <li><a href="resources.html" class="nav-link">精品AI</a></li>
+                    <li><a href="Tech/index.html" class="nav-link">赋能工具</a></li>
+                    <li><a href="courses/courses.html" class="nav-link">培训课程</a></li>
+                    <li><a href="whitePaper/index.html" class="nav-link">白皮书</a></li>
+                    <li><a href="Dao/index.html" class="nav-link">关于我们</a></li>
+                    <li><a href="http://www.socienceai.com/blog/" class="nav-link">博客</a></li>
+                    <li><a href="contact.html" class="nav-link">联系我们</a></li>
+                </ul>
+
+                <!-- 移动端菜单按钮 -->
+                <button id="mobile-menu-btn" style="display: none; background: none; border: none; cursor: pointer; padding: 0.5rem;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12h18M3 6h18M3 18h18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="modern-container">
+            <div class="hero-content animate-fade-in">
+                <!-- Banner图片 -->
+                <img src="banner.png" alt="社会科学AI实验室" style="width: 100%; max-width: 800px; height: auto; border-radius: 1rem; margin-bottom: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+
+                <h1 class="hero-title" style="font-size: 2.5rem;">让学术研究更独立，让创新思维更自由</h1>
+                <p class="hero-description">
+                    AI赋能社会科学研究<br/>社会科学研究赋能AI与智能体研究<br/>
+                    构建AI与社会科学研究双向赋能体系，释放人类研究者创新潜力，提升AI集体智能与社会智能。开放协同，开创人机双智研究新范式！
+                </p>
+                <div class="hero-buttons">
+                    <a href="Dao/index.html" class="btn btn-primary">
+                        了解我们 →
+                    </a>
+                    <a href="Tech/heterogeneous-agent-collaboration-system/index.html" class="btn btn-secondary">
+                        智能体协同平台 →
+                    </a>
+                    <a href="agents/dist/QUICK_INSTALL.html" class="btn btn-primary">
+                        快速上手 →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 知识发布新标准 -->
+    <section id="knowledge-standard" style="padding: 4rem 0; background: linear-gradient(135deg, #f0f4ff 0%, #e6f2ff 100%);">
+        <div class="modern-container">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2 style="font-size: 2.2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1.5rem;">
+                    未来知识的标准：以AI为尺度的效度与信度
+                </h2>
+                <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 900px; margin: 0 auto; line-height: 1.7;">
+                    <strong>效度（可用性）：</strong>AI认知友好，便于大模型训练习得，便于Agent内化为可拓展的能力<br>
+                    <strong>信度（价值性）：</strong>增进大模型智慧，有效赋能智能体，促进人类智识的全面提升
+                </p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; max-width: 1200px; margin: 0 auto;">
+                <div class="modern-card" style="background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(102, 126, 234, 0.2); backdrop-filter: blur(10px);">
+                    <div style="font-size: 2.5rem; margin-bottom: 1.5rem; text-align: center;">🔍</div>
+                    <h3 style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem; text-align: center;">AI认知适配</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7; text-align: center;">
+                        高质量智识内容应转化为符合AI认知特点的格式，使其更容易被Agent内化为可工作技能的核心能力
+                    </p>
+                </div>
+
+                <div class="modern-card" style="background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(102, 126, 234, 0.2); backdrop-filter: blur(10px);">
+                    <div style="font-size: 2.5rem; margin-bottom: 1.5rem; text-align: center;">⚖️</div>
+                    <h3 style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem; text-align: center;">多维审核体系</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7; text-align: center;">
+                        对AIGC内容建立多维度严格的审核机制，结合社会共识计算与核验，确保知识可信度
+                    </p>
+                </div>
+
+                <div class="modern-card" style="background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(102, 126, 234, 0.2); backdrop-filter: blur(10px);">
+                    <div style="font-size: 2.5rem; margin-bottom: 1.5rem; text-align: center;">🔄</div>
+                    <h3 style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem; text-align: center;">正向循环</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7; text-align: center;">
+                        通过优化知识表达效率，构建知识更可信、AI更智能、人类智慧整体提升的正向循环生态
+                    </p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2.5rem; padding: 1.5rem; background: rgba(102, 126, 234, 0.1); border-radius: 1rem; max-width: 800px; margin: 3rem auto 0;">
+                <p style="font-size: 1.1rem; color: var(--text-primary); line-height: 1.7; font-weight: 500;">
+                    <strong>警醒：</strong>劣质AIGC污染智慧生态，形成"AI越智能→AIGC越多→AI越降智"的恶性循环。
+                    我们构建高质量知识生态，以真知破茧，为人机协同智慧奠基！
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 核心功能 -->
+    <section id="features" style="padding: 2.5rem 0; background: white;">
+        <div class="modern-container">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <h2 style="font-size: 2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;">AI与社会科学的双向赋能服务</h2>
+                <p style="font-size: 1.25rem; color: var(--text-secondary); max-width: 800px; margin: 0 auto; line-height: 1.7;">
+                    AI赋能超级个体的时代，我们致力于社会科学与AI的双向赋能，通过AI技术放大研究者的核心洞察力、问题意识和价值判断，在跨学科智识融合中构建更可靠的AI应用。
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <div class="modern-card agent-theme">
+                    <h3 class="card-title">社会科学专业智能体</h3>
+                    <p class="card-description">扎根理论分析、场域分析、社会网络分析等专业智能体，为社会科学研究提供智能辅助。</p>
+                    <a href="ai-agents.html" class="card-link">了解更多 →</a>
+                </div>
+
+                <div class="modern-card popular-theme">
+                    <h3 class="card-title">AI驾驭普及服务</h3>
+                    <p class="card-description">让AI成为您的研究助手，无需技术基础，专为社科研究者设计的易用AI可信工具，零门槛上手，抑制幻觉，提升效率，让数据更精准，让思想更自由。</p>
+                    <a href="courses/courses.html" class="card-link">了解更多 →</a>
+                </div>
+
+                <div class="modern-card multi-theme">
+                    <h3 class="card-title">不同学科专业AI应用与合作</h3>
+                    <p class="card-description">商科、社会实验等具体学科领域的AI应用，专业化研究支持。</p>
+                    <a href="Law/index.html" class="card-link">了解更多 →</a>
+                </div>
+
+                <div class="modern-card custom-theme">
+                    <h3 class="card-title">专业智能体定制服务</h3>
+                    <p class="card-description">为您的学科研究量身打造智能助手，大幅提升研究效率，让复杂分析变得简单，让创新想法更快落地。</p>
+                    <a href="Tech/custom-agent-services.html" class="card-link">了解更多 →</a>
+                </div>
+
+                <div class="modern-card activation-theme">
+                    <h3 class="card-title">知识活泛化工程</h3>
+                    <p class="card-description">为专家学者提供个人知识转化为AI能力，将高质量学术思想转化为AI可理解、可应用的智能形式，发挥学术价值、拓展学术影响力，打造个人智能体在线服务</p>
+                    <a href="Tech/knowledge-activation-project.html" class="card-link">了解更多 →</a>
+                </div>
+
+                <div class="modern-card project-theme">
+                    <h3 class="card-title">项目联合服务</h3>
+                    <p class="card-description">联合申报，承接委外，社会服务的AI技术后援合作</p>
+                    <a href="contact.html" class="card-link">联系我们 →</a>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 双向赋能的理念 -->
+    <section class="dual-empowerment-section">
+        <div class="yin-yang-container">
+            <div class="yin-yang-bg">
+                <div class="yang-half">
+                    <div class="yang-circle"></div>
+                    <div class="yang-small-circle"></div>
+                </div>
+                <div class="yin-half">
+                    <div class="yin-circle"></div>
+                    <div class="yin-small-circle"></div>
+                </div>
+            </div>
+            
+            <div class="modern-container relative-position">
+                <div style="text-align: center; margin-bottom: 3rem; position: relative;">
+                    <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem; 
+                        background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 30%, #667eea 70%, #764ba2 100%); 
+                        -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+                        text-shadow: 2px 2px 8px rgba(0,0,0,0.3), 0 0 20px rgba(102,126,234,0.5);
+                        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+                        position: relative; z-index: 10;">
+                        双向赋能的理念
+                    </h2>
+                    <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); 
+                        padding: 1.5rem 2rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.2); 
+                        max-width: 800px; margin: 0 auto; position: relative; z-index: 10;">
+                        <p style="font-size: 1.3rem; font-weight: 600; color: #ffffff; line-height: 1.6; margin: 0; 
+                            text-shadow: 1px 1px 4px rgba(0,0,0,0.4);">
+                            <span style="color: #fbbf24;">在AI赋能</span>
+                            <span style="color: #ffffff;">超级个体的时代，</span>
+                            <span style="color: #60a5fa;">社会科学与AI的双向赋能</span>
+                            <span style="color: #fbbf24;">开创</span>
+                            <span style="color: #ffffff;">人机协同智慧新范式</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="empowerment-main-grid">
+                    <!-- AI赋能社会科学研究 -->
+                    <div class="empowerment-card ai-first">
+                        <div class="card-glow"></div>
+                        <div class="card-header">
+                            <h3 class="empowerment-title">AI赋能社会科学研究</h3>
+                        </div>
+                        <div class="empowerment-content">
+                            <div class="content-section">
+                                <h4 class="section-title">专业智能体集群</h4>
+                                <ul class="empowerment-list">
+                                    <li><strong>理论研究智能体：</strong>扎根理论、社会网络分析、场域分析</li>
+                                    <li><strong>数字理论家：</strong>数字马克思、数字韦伯、数字涂尔干</li>
+                                    <li><strong>方法论智能体：</strong>mvQCA/fsQCA、DID分析、行动者网络分析</li>
+                                </ul>
+                            </div>
+                            <div class="content-section">
+                                <h4 class="section-title">AI工具服务体系</h4>
+                                <ul class="empowerment-list">
+                                    <li><strong>异质智能体协同系统：</strong>跨厂商AI协作网络</li>
+                                    <li><strong>数据智能分析：</strong>自动化处理、模式发现、预测建模</li>
+                                    <li><strong>知识工程：</strong>文献综述、理论构建、假设验证</li>
+                                </ul>
+                            </div>
+                            <div class="content-section">
+                                <h4 class="section-title">研究效率革命</h4>
+                                <ul class="empowerment-list">
+                                    <li>复杂数据分析自动化与智能化</li>
+                                    <li>跨学科知识整合与关联发现</li>
+                                    <li>创新思维激发与理论验证加速</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 社会科学赋能AI -->
+                    <div class="empowerment-card social-first">
+                        <div class="card-glow"></div>
+                        <div class="card-header">
+                            <h3 class="empowerment-title">社会科学赋能AI</h3>
+                        </div>
+                        <div class="empowerment-content">
+                            <div class="content-section">
+                                <h4 class="section-title">学科理论注入</h4>
+                                <ul class="empowerment-list">
+                                    <li><strong>经济学：</strong>市场机制算法、资源配置优化、决策理论</li>
+                                    <li><strong>社会学：</strong>社会关系建构、文化适应、群体行为</li>
+                                    <li><strong>心理学：</strong>认知模型、行为预测、用户体验</li>
+                                </ul>
+                            </div>
+                            <div class="content-section">
+                                <h4 class="section-title">高质量知识工程</h4>
+                                <ul class="empowerment-list">
+                                    <li><strong>知识结构化：</strong>将学术思想转化为AI可理解、可应用的格式</li>
+                                    <li><strong>可信度验证：</strong>建立多维度审核机制，确保知识内容的准确性</li>
+                                    <li><strong>认知适配：</strong>优化知识表达，符合AI学习和推理机制</li>
+                                </ul>
+                            </div>
+                            <div class="content-section">
+                                <h4 class="section-title">价值体系构建</h4>
+                                <ul class="empowerment-list">
+                                    <li>人文关怀与社会责任注入AI系统</li>
+                                    <li>多元文化理解与跨文化适应能力</li>
+                                    <li>道德判断与价值平衡机制建立</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="unity-center">
+                    <div class="unity-symbol">☯</div>
+                    <p class="unity-text">人机协同 · 智慧共生</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="modern-container">
+            <h2 class="cta-title">开始您的AI赋能研究之旅</h2>
+            <p class="cta-description">
+                无论您是社会科学研究者还是对AI与社会科学交叉领域感兴趣的学习者，都可以从这里开始探索AI如何赋能您的研究工作
+            </p>
+            <div class="cta-buttons">
+                <a href="ai-agents.html" class="btn btn-primary">AI智能体服务</a>
+                <a href="Tech/index.html" class="btn btn-secondary">赋能工具导航</a>
+                <a href="courses/courses.html" class="btn btn-primary">AI赋能课程</a>
+                <a href="Law/index.html" class="btn btn-secondary">学科分类</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="modern-footer">
+        <div class="modern-container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-brand">
+                        <div class="footer-logo">AI</div>
+                        <div class="footer-title">SocienceAI</div>
+                    </div>
+                    <p class="footer-description">
+                        SocienceAI致力于构建AI与社会科学研究的双向赋能体系，通过AI释放人类研究者自由创新的核心潜力，提升AI智能体的集体智能和社会智能。
+                    </p>
+                </div>
+
+                <div>
+                    <h4>AI社科方法</h4>
+                    <ul class="footer-links">
+                        <li><a href="agents/grounded-theory.html">扎根理论</a></li>
+                        <li><a href="agents/social-network-analysis.html">社会网络分析</a></li>
+                        <li><a href="agents/actor-network-analysis.html">行动者网络分析</a></li>
+                        <li><a href="agents/bourdieu-field-analysis.html">布迪厄场域分析</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4>社科智能体</h4>
+                    <ul class="footer-links">
+                        <li><a href="agents/digital-durkheim.html">数字迪尔凯姆专家</a></li>
+                        <li><a href="agents/digital-marx.html">数字马克思专家</a></li>
+                        <li><a href="agents/digital-weber.html">数字韦伯专家</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4>AI与商业</h4>
+                    <ul class="footer-links">
+                        <li><a href="Tech/AiProductDesign.html">AI产品设计</a></li>
+                        <li><a href="Tech/AiMarketingTechnology.html">AI营销技术</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4>关于我们</h4>
+                    <ul class="footer-links">
+                        <li><a href="Dao/index.html">关于我们</a></li>
+                        <li><a href="Dao/Manifesto.html">项目使命</a></li>
+                        <li><a href="contact.html">联系我们</a></li>
+                        <li><a href="privacy.html">隐私政策</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 SocienceAI. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 移动端菜单切换
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const navMenu = document.querySelector('.nav-menu');
+            navMenu.classList.toggle('active');
+        });
+
+        // 点击菜单项后关闭移动端菜单
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                const navMenu = document.querySelector('.nav-menu');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 滚动动画
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // 观察所有卡片
+        document.querySelectorAll('.modern-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

@@ -111,6 +111,14 @@ npm run test:scenarios                     # Specific scenario tests
 - `tests/e2e/scenarios-interaction.spec.js`: End-to-end tests for scenario interactions
 - `api-server/data/`: Scenario data files in JSON format
 - `api-server/logic/llm/`: LLM integration for enhanced interactivity
+- `COMPREHENSIVE_SKILLS_CATALOG.md`: Complete catalog of all available skills
+- `QUICK_SKILLS_REFERENCE.md`: Quick reference for commonly used skills
+- `SKILLS_USAGE_GUIDE.md`: Practical guide for using skills effectively
+- `SKILLS_INITIALIZATION_SYSTEM.md`: System for auto-loading skills on session start
+- `C:\Users\Zhang\.stigmergy\skills\USER_SKILLS_DOCUMENTATION.md`: User-level comprehensive skills documentation
+- `C:\Users\Zhang\.stigmergy\skills\SKILLS_QUICK_REFERENCE_CARD.md`: User-level quick reference card
+- `cognitive-trap-expert\SKILL.md`: Expert skill for cognitive trap platform development
+- `C:\Users\Zhang\.stigmergy\skills\cognitive-trap-expert\SKILL.md`: User-level cognitive trap expert skill
 
 ## Testing Structure
 - **E2E Tests** (`tests/e2e/`): Playwright tests for UI interactions

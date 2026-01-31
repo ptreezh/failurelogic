@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Failure Logic - 认知陷阱教育 (最终修复版)</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1e293b;
+            background-color: #ffffff;
+        }
+        
+        #app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header and Navigation */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+        
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2563eb;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-link {
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: #2563eb;
+            background-color: rgba(37, 99, 235, 0.1);
+        }
+        
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        /* Page Styles */
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #2563eb;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.2s ease;
+        }
+        
+        .btn:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid #2563eb;
+            color: #2563eb;
+        }
+        
+        .btn-outline:hover {
+            background-color: #2563eb;
+            color: white;
+        }
+        
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .card h3 {
+            color: #2563eb;
+            margin-bottom: 0.75rem;
+        }
+        
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        /* Scenario Styles */
+        .scenario-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .scenario-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+        }
+        
+        .scenario-header h2 {
+            color: #2563eb;
+            margin-bottom: 0.5rem;
+        }
+        
+        .scenario-state {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .state-item {
+            background-color: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+        
+        .state-item span {
+            display: block;
+        }
+        
+        .state-item strong {
+            font-size: 1.25rem;
+            color: #2563eb;
+        }
+        
+        .step-card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .step-card h3 {
+            color: #2563eb;
+            margin-bottom: 1rem;
+        }
+        
+        .decisions-container {
+            margin-top: 1.5rem;
+        }
+        
+        .decisions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .decision-btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            text-align: center;
+        }
+        
+        .completion-card {
+            text-align: center;
+            padding: 2rem;
+            background-color: #f0fdf4;
+            border-radius: 0.5rem;
+            border: 2px solid #10b981;
+        }
+        
+        .completion-card h3 {
+            color: #10b981;
+            margin-bottom: 1rem;
+        }
+        
+        .completion-actions {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        /* Difficulty Control */
+        .difficulty-control {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #64748b;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .nav-menu {
+                gap: 1rem;
+            }
+            
+            main {
+                padding: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .scenario-state {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .decisions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .completion-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+    <script>
+      // 修复APIConfigManager未定义的问题
+      if (typeof APIConfigManager === 'undefined') {
+        console.log('APIConfigManager未定义，创建模拟对象...');
+        
+        class APIConfigManager {
+          constructor(options = {}) {
+            this.options = {
+              timeout: options.timeout || 10000,
+              maxRetries: options.maxRetries || 3,
+              ...options
+            };
+          }
+          
+          async request(endpoint, requestOptions = {}) {
+            console.log('模拟API请求:', endpoint);
+            // 模拟API响应
+            if (endpoint.includes('/scenarios')) {
+              return {
+                scenarios: [
+                  {
+                    id: "coffee-shop-linear-thinking",
+                    name: "咖啡店线性思维",
+                    description: "线性思维陷阱场景",
+                    difficulty: "beginner"
+                  },
+                  {
+                    id: "relationship-time-delay",
+                    name: "恋爱关系时间延迟",
+                    description: "时间延迟偏差场景",
+                    difficulty: "intermediate"
+                  },
+                  {
+                    id: "investment-confirmation-bias",
+                    name: "投资确认偏误",
+                    description: "确认偏误场景",
+                    difficulty: "advanced"
+                  }
+                ]
+              };
+            }
+            return {};
+          }
+        }
+        
+        window.APIConfigManager = new APIConfigManager();
+        console.log('APIConfigManager已创建');
+      }
+    </script>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <nav id="navbar">
+                <div class="nav-brand">Failure Logic</div>
+                <ul class="nav-menu">
+                    <li><a href="#" data-page="home" class="nav-link active">首页</a></li>
+                    <li><a href="#" data-page="scenarios" class="nav-link">场景</a></li>
+                    <li><a href="#" data-page="about" class="nav-link">关于</a></li>
+                    <li><a href="#" data-page="book" class="nav-link">书籍</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main id="main-content">
+            <!-- 页面内容将动态加载 -->
+            <div id="initial-content">
+                <h1>Failure Logic - 认知陷阱教育</h1>
+                <p>欢迎来到Failure Logic平台，这里可以帮助您体验和理解认知陷阱与思维局限。</p>
+                <p>点击上方导航菜单开始探索。</p>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Failure Logic. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+      console.log('开始加载Failure Logic应用...');
+      
+      // 应用状态管理
+      const AppState = {
+        currentUser: null,
+        currentScenario: null,
+        currentPage: 'home',
+        isLoading: false,
+        userPreferences: {
+          difficulty: 'beginner'
+        },
+        scenarios: [
+          {
+            id: "coffee-shop-linear-thinking",
+            name: "咖啡店线性思维",
+            description: "线性思维陷阱场景",
+            difficulty: "beginner"
+          },
+          {
+            id: "relationship-time-delay",
+            name: "恋爱关系时间延迟",
+            description: "时间延迟偏差场景",
+            difficulty: "intermediate"
+          },
+          {
+            id: "investment-confirmation-bias",
+            name: "投资确认偏误",
+            description: "确认偏误场景",
+            difficulty: "advanced"
+          }
+        ]
+      };
+      console.log('AppState已初始化:', AppState);
+
+      // UI管理器
+      const UIManager = {
+        showLoading() {
+          AppState.isLoading = true;
+          console.log('显示加载状态');
+        },
+
+        hideLoading() {
+          AppState.isLoading = false;
+          console.log('隐藏加载状态');
+        },
+
+        showToast(message, type = 'info') {
+          console.log('显示通知:', message);
+          // 创建简单的通知元素
+          const toast = document.createElement('div');
+          toast.textContent = message;
+          toast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background-color: ${type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#3b82f6'};
+            color: white;
+            border-radius: 4px;
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+          `;
+
+          document.body.appendChild(toast);
+
+          // 3秒后自动移除
+          setTimeout(() => {
+            document.body.removeChild(toast);
+          }, 3000);
+        }
+      };
+      console.log('UIManager已初始化');
+
+      // 场景管理器
+      const ScenarioManager = {
+        currentScenario: null,
+        
+        scenarios: [
+          {
+            id: "coffee-shop-linear-thinking",
+            name: "咖啡店线性思维",
+            description: "线性思维陷阱场景",
+            difficulty: "beginner",
+            fullDescription: "在这个场景中，您将管理一家咖啡店，体验线性思维在复杂商业环境中的局限性。",
+            steps: [
+              {
+                id: 1,
+                title: "初始状态",
+                content: "您的咖啡店目前有1000元启动资金，客户满意度50%，声誉50%。",
+                decisions: [
+                  { id: "ad-advertising", text: "投入广告", effect: { satisfaction: 10, resources: -200 } },
+                  { id: "quality-improvement", text: "提升品质", effect: { satisfaction: 15, resources: -300 } },
+                  { id: "price-cut", text: "降价促销", effect: { satisfaction: 5, resources: -100 } }
+                ]
+              },
+              {
+                id: 2,
+                title: "第一轮结果",
+                content: "您做出了选择，现在看看结果如何...",
+                decisions: [
+                  { id: "hire-staff", text: "雇佣员工", effect: { satisfaction: 10, resources: -400 } },
+                  { id: "expand-space", text: "扩大店面", effect: { satisfaction: 15, resources: -600 } },
+                  { id: "buy-equipment", text: "购买设备", effect: { satisfaction: 5, resources: -250 } }
+                ]
+              },
+              {
+                id: 3,
+                title: "最终结果",
+                content: "恭喜您完成了咖啡店经营挑战！您已经体验了线性思维在复杂商业环境中的局限性。",
+                decisions: [
+                  { id: "restart", text: "重新开始", effect: {} },
+                  { id: "next-scenario", text: "下一个场景", effect: {} }
+                ]
+              }
+            ],
+            initialState: {
+              satisfaction: 50,
+              resources: 1000,
+              reputation: 50,
+              turn: 1
+            }
+          },
+          {
+            id: "relationship-time-delay",
+            name: "恋爱关系时间延迟",
+            description: "时间延迟偏差场景",
+            difficulty: "intermediate",
+            fullDescription: "在恋爱关系中体验时间延迟对决策的影响。每个决策的效果会在几回合后显现。",
+            steps: [
+              {
+                id: 1,
+                title: "关系初期",
+                content: "您和伴侣刚刚开始交往，信任度50%，满意度50%。",
+                decisions: [
+                  { id: "spend-time", text: "花更多时间相处", effect: { satisfaction: 10, trust: 5 } },
+                  { id: "give-gift", text: "送礼物", effect: { satisfaction: 15, resources: -50 } },
+                  { id: "be-independent", text: "保持独立空间", effect: { trust: 10, satisfaction: -5 } }
+                ]
+              },
+              {
+                id: 2,
+                title: "关系发展",
+                content: "关系进入稳定期，之前的决定开始显现效果...",
+                decisions: [
+                  { id: "meet-family", text: "介绍给家人", effect: { satisfaction: 10, trust: 10 } },
+                  { id: "travel-together", text: "一起旅行", effect: { satisfaction: 15, trust: 15, resources: -200 } },
+                  { id: "discuss-future", text: "讨论未来", effect: { trust: 20, satisfaction: 5 } }
+                ]
+              },
+              {
+                id: 3,
+                title: "关系成熟",
+                content: "恭喜您完成了恋爱关系挑战！您已经体验了时间延迟对决策的影响。",
+                decisions: [
+                  { id: "restart", text: "重新开始", effect: {} },
+                  { id: "next-scenario", text: "下一个场景", effect: {} }
+                ]
+              }
+            ],
+            initialState: {
+              satisfaction: 50,
+              trust: 50,
+              resources: 500,
+              turn: 1
+            }
+          },
+          {
+            id: "investment-confirmation-bias",
+            name: "投资确认偏误",
+            description: "确认偏误场景",
+            difficulty: "advanced",
+            fullDescription: "在投资决策中体验确认偏误如何影响我们的风险判断。",
+            steps: [
+              {
+                id: 1,
+                title: "初始投资",
+                content: "您有10000元可用于投资，知识水平0。",
+                decisions: [
+                  { id: "stocks", text: "投资股票", effect: { portfolio: 2000, knowledge: 10 } },
+                  { id: "bonds", text: "投资债券", effect: { portfolio: 500, knowledge: 5 } },
+                  { id: "education", text: "学习投资知识", effect: { knowledge: 20, resources: -1000 } }
+                ]
+              },
+              {
+                id: 2,
+                title: "市场波动",
+                content: "市场出现波动，需要根据您的知识做出明智决策...",
+                decisions: [
+                  { id: "diversify", text: "分散投资", effect: { portfolio: 1000, risk: -10 } },
+                  { id: "hold", text: "继续持有", effect: { portfolio: 0, risk: 5 } },
+                  { id: "sell", text: "卖出投资", effect: { portfolio: -500, risk: -20 } }
+                ]
+              },
+              {
+                id: 3,
+                title: "长期结果",
+                content: "恭喜您完成了投资决策挑战！您已经体验了确认偏误对风险判断的影响。",
+                decisions: [
+                  { id: "restart", text: "重新开始", effect: {} },
+                  { id: "next-scenario", text: "下一个场景", effect: {} }
+                ]
+              }
+            ],
+            initialState: {
+              portfolio: 10000,
+              knowledge: 0,
+              risk: 10,
+              turn: 1
+            }
+          }
+        ],
+
+        startScenario(scenarioId) {
+          console.log('开始场景:', scenarioId);
+          const scenario = this.scenarios.find(s => s.id === scenarioId);
+          if (!scenario) {
+            UIManager.showToast('场景未找到', 'error');
+            return;
+          }
+
+          this.currentScenario = {...scenario};
+          this.currentScenario.state = {...scenario.initialState};
+          this.currentScenario.currentStep = 0;
+          
+          this.renderScenario();
+        },
+
+        renderScenario() {
+          console.log('渲染场景:', this.currentScenario);
+          const container = document.createElement('div');
+          container.className = 'scenario-container';
+          
+          container.innerHTML = `
+            <div class="scenario-header">
+              <h2>${this.currentScenario.name}</h2>
+              <p>${this.currentScenario.fullDescription}</p>
+            </div>
+            
+            <div class="scenario-state">
+              <div class="state-item">
+                <span>满意度: <strong>${this.currentScenario.state.satisfaction || 0}</strong></span>
+              </div>
+              <div class="state-item">
+                <span>资源: <strong>${this.currentScenario.state.resources || 0}</strong></span>
+              </div>
+              <div class="state-item">
+                <span>信任度: <strong>${this.currentScenario.state.trust || 0}</strong></span>
+              </div>
+              <div class="state-item">
+                <span>回合: <strong>${this.currentScenario.state.turn || 1}</strong></span>
+              </div>
+            </div>
+            
+            <div class="scenario-content">
+              <!-- 步骤内容将动态插入 -->
+            </div>
+          `;
+          
+          this.renderCurrentStep(container.querySelector('.scenario-content'));
+          
+          const mainContent = document.getElementById('main-content');
+          mainContent.innerHTML = '';
+          mainContent.appendChild(container);
+          
+          const backButton = document.createElement('button');
+          backButton.className = 'btn btn-outline';
+          backButton.textContent = '返回场景列表';
+          backButton.style.marginTop = '1rem';
+          backButton.addEventListener('click', () => {
+            Router.navigateTo('scenarios');
+          });
+          
+          mainContent.appendChild(backButton);
+        },
+
+        renderCurrentStep(contentContainer) {
+          const step = this.currentScenario.steps[this.currentScenario.currentStep];
+          if (!step) {
+            UIManager.showToast('场景结束', 'success');
+            return;
+          }
+          
+          contentContainer.innerHTML = `
+            <div class="step-card">
+              <h3>${step.title}</h3>
+              <p>${step.content}</p>
+              
+              <div class="decisions-container">
+                <h4>请选择您的行动:</h4>
+                <div class="decisions-grid">
+                  ${step.decisions.map(decision => `
+                    <button class="decision-btn btn" data-decision="${decision.id}">
+                      ${decision.text}
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+          
+          contentContainer.querySelectorAll('.decision-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+              const decisionId = e.target.getAttribute('data-decision');
+              console.log('执行决策:', decisionId);
+              this.executeDecision(decisionId);
+            });
+          });
+        },
+
+        executeDecision(decisionId) {
+          const step = this.currentScenario.steps[this.currentScenario.currentStep];
+          const decision = step.decisions.find(d => d.id === decisionId);
+          
+          if (!decision) return;
+          
+          Object.keys(decision.effect).forEach(key => {
+            if (this.currentScenario.state.hasOwnProperty(key)) {
+              this.currentScenario.state[key] += decision.effect[key];
+              if (this.currentScenario.state[key] < 0 && key !== 'resources' && key !== 'portfolio') {
+                this.currentScenario.state[key] = 0;
+              }
+            } else {
+              this.currentScenario.state[key] = decision.effect[key];
+            }
+          });
+          
+          this.currentScenario.state.turn += 1;
+          this.currentScenario.currentStep += 1;
+          
+          if (this.currentScenario.currentStep >= this.currentScenario.steps.length) {
+            this.completeScenario();
+          } else {
+            this.renderCurrentStep(document.querySelector('.scenario-content'));
+            this.updateStateDisplay();
+          }
+        },
+
+        updateStateDisplay() {
+          const stateElements = document.querySelectorAll('.state-item span strong');
+          const state = this.currentScenario.state;
+          
+          // 更新满意度
+          const satisfactionEl = Array.from(stateElements).find(el => 
+            el.parentElement.textContent.includes('满意度')
+          );
+          if (satisfactionEl) satisfactionEl.textContent = state.satisfaction || 0;
+          
+          // 更新资源
+          const resourcesEl = Array.from(stateElements).find(el => 
+            el.parentElement.textContent.includes('资源')
+          );
+          if (resourcesEl) resourcesEl.textContent = state.resources || 0;
+          
+          // 更新信任度
+          const trustEl = Array.from(stateElements).find(el => 
+            el.parentElement.textContent.includes('信任度')
+          );
+          if (trustEl) trustEl.textContent = state.trust || 0;
+          
+          // 更新回合
+          const turnEl = Array.from(stateElements).find(el => 
+            el.parentElement.textContent.includes('回合')
+          );
+          if (turnEl) turnEl.textContent = state.turn || 1;
+        },
+
+        completeScenario() {
+          UIManager.showToast('恭喜！您已完成此场景', 'success');
+          
+          const contentContainer = document.querySelector('.scenario-content');
+          contentContainer.innerHTML = `
+            <div class="completion-card">
+              <h3>场景完成！</h3>
+              <p>您已成功完成 "${this.currentScenario.name}" 场景。</p>
+              <p>在这一过程中，您体验了${this.extractLearningPoint(this.currentScenario.id)}。</p>
+              <div class="completion-actions">
+                <button id="complete-restart" class="btn">重新开始</button>
+                <button id="complete-next" class="btn btn-outline">下一个场景</button>
+              </div>
+            </div>
+          `;
+          
+          document.getElementById('complete-restart').addEventListener('click', () => {
+            this.restartScenario();
+          });
+          
+          document.getElementById('complete-next').addEventListener('click', () => {
+            Router.navigateTo('scenarios');
+          });
+        },
+
+        restartScenario() {
+          this.currentScenario.state = {...this.currentScenario.initialState};
+          this.currentScenario.currentStep = 0;
+          this.renderScenario();
+        },
+
+        extractLearningPoint(scenarioId) {
+          switch(scenarioId) {
+            case 'coffee-shop-linear-thinking':
+              return '线性思维在复杂商业环境中的局限性';
+            case 'relationship-time-delay':
+              return '时间延迟对决策的影响';
+            case 'investment-confirmation-bias':
+              return '确认偏误如何影响风险判断';
+            default:
+              return '相关的认知陷阱和思维局限';
+          }
+        }
+      };
+      console.log('ScenarioManager已初始化');
+
+      // 路由管理器
+      const Router = {
+        navigateTo(page) {
+          console.log('导航到页面:', page);
+          AppState.currentPage = page;
+          
+          // 更新URL
+          window.history.pushState({ page }, '', `#${page}`);
+          
+          // 更新导航高亮
+          document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.toggle('active', link.getAttribute('data-page') === page);
+          });
+          
+          // 渲染页面
+          this.renderPage(page);
+        },
+
+        renderPage(page) {
+          console.log('渲染页面:', page);
+          // 隐藏所有页面
+          document.querySelectorAll('.page').forEach(el => {
+            el.classList.remove('active');
+          });
+          
+          // 获取或创建页面容器
+          let pageContainer = document.getElementById(`${page}-page`);
+          if (!pageContainer) {
+            pageContainer = document.createElement('div');
+            pageContainer.id = `${page}-page`;
+            pageContainer.className = 'page';
+            document.getElementById('main-content').appendChild(pageContainer);
+          }
+          
+          // 清空并渲染内容
+          pageContainer.innerHTML = '';
+          
+          switch(page) {
+            case 'home':
+              pageContainer.innerHTML = `
+                <div class="hero">
+                  <h1>Failure Logic</h1>
+                  <p>通过互动式挑战，体验认知陷阱与思维局限</p>
+                  <div>
+                    <button id="start-journey" class="btn">开始认知之旅</button>
+                    <button id="learn-more" class="btn btn-outline" style="margin-left: 1rem;">了解更多</button>
+                  </div>
+                </div>
+              `;
+              
+              pageContainer.querySelector('#start-journey').addEventListener('click', () => {
+                Router.navigateTo('scenarios');
+              });
+              
+              pageContainer.querySelector('#learn-more').addEventListener('click', () => {
+                Router.navigateTo('about');
+              });
+              break;
+              
+            case 'scenarios':
+              pageContainer.innerHTML = `
+                <h1>认知场景</h1>
+                <p>选择一个场景开始挑战</p>
+                <div class="difficulty-control">
+                  <label for="difficulty">难度: </label>
+                  <select id="difficulty">
+                    <option value="beginner">初级</option>
+                    <option value="intermediate">中级</option>
+                    <option value="advanced">高级</option>
+                  </select>
+                </div>
+                <div id="scenarios-list" class="grid"></div>
+              `;
+              
+              // 加载场景
+              this.loadScenarios(pageContainer.querySelector('#scenarios-list'));
+              
+              // 难度选择事件
+              pageContainer.querySelector('#difficulty').addEventListener('change', (e) => {
+                AppState.userPreferences.difficulty = e.target.value;
+                this.loadScenarios(pageContainer.querySelector('#scenarios-list'));
+              });
+              break;
+              
+            case 'about':
+              pageContainer.innerHTML = `
+                <h1>关于认知陷阱</h1>
+                <p>人类在面对复杂系统时，由于认知局限性和思维偏差而导致的系统性决策错误模式。</p>
+                <h2>主要认知偏差类型</h2>
+                <ul>
+                  <li>确认偏误：倾向于寻找支持自己观点的信息</li>
+                  <li>线性思维：无法理解非线性关系</li>
+                  <li>时间延迟：期望立即看到行动的结果</li>
+                  <li>短期导向：忽视长期后果</li>
+                </ul>
+              `;
+              break;
+              
+            case 'book':
+              pageContainer.innerHTML = `
+                <h1>《失败的逻辑》</h1>
+                <p>本书探讨了人类思维在面对复杂性时的系统性缺陷，以及如何通过互动游戏培养系统思维能力。</p>
+                <h2>核心概念</h2>
+                <ul>
+                  <li>系统思维框架</li>
+                  <li>认知偏差类型</li>
+                  <li>复杂系统理解</li>
+                  <li>决策质量提升</li>
+                </ul>
+              `;
+              break;
+              
+            default:
+              pageContainer.innerHTML = '<h2>页面未找到</h2>';
+          }
+          
+          pageContainer.classList.add('active');
+        },
+
+        async loadScenarios(container) {
+          console.log('加载场景到容器:', container);
+          container.innerHTML = '<p>加载中...</p>';
+          
+          // 使用内置场景数据
+          const scenarios = AppState.scenarios;
+          console.log('获取到的场景:', scenarios);
+          
+          container.innerHTML = '';
+          
+          scenarios.forEach(scenario => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+              <h3>${scenario.name}</h3>
+              <p>${scenario.description}</p>
+              <p><small>难度: ${scenario.difficulty}</small></p>
+              <button class="btn start-scenario-btn" data-id="${scenario.id}">开始挑战</button>
+            `;
+            
+            card.querySelector('.start-scenario-btn').addEventListener('click', () => {
+              ScenarioManager.startScenario(scenario.id);
+            });
+            
+            container.appendChild(card);
+          });
+        }
+      };
+      console.log('Router已初始化');
+
+      // 初始化应用
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM内容已加载，开始初始化应用');
+        
+        // 移除初始内容
+        const initialContent = document.getElementById('initial-content');
+        if (initialContent) {
+          initialContent.remove();
+        }
+        
+        // 初始化导航事件
+        document.querySelectorAll('.nav-link').forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const page = e.target.getAttribute('data-page');
+            if (page) {
+              Router.navigateTo(page);
+            }
+          });
+        });
+        
+        // 根据URL哈希或默认值渲染页面
+        const initialPage = window.location.hash.replace('#', '') || 'home';
+        console.log('初始页面:', initialPage);
+        Router.navigateTo(initialPage);
+      });
+
+      console.log('Failure Logic应用加载完成');
+    </script>
+</body>
+</html>

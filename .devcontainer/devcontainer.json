@@ -1,0 +1,38 @@
+{
+  "name": "Failure Logic - Cognitive Trap Platform",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "onCreateCommand": "./deploy_codespaces.sh",
+  "openFiles": ["api-server/start.py"],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter",
+        "ms-vscode.vscode-json",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "terminal.integrated.shell.linux": "/bin/bash",
+        "python.linting.enabled": true,
+        "python.formatting.provider": "black",
+        "editor.formatOnSave": true
+      }
+    }
+  },
+  "forwardPorts": [3000, 8000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Frontend",
+      "onAutoForward": "openPreview"
+    },
+    "8000": {
+      "label": "API Server",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "pip install --upgrade pip && cd api-server && pip install fastapi uvicorn python-multipart requests pydantic[email]",
+  "remoteUser": "vscode"
+}
