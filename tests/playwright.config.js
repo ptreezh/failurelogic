@@ -31,8 +31,8 @@ export default defineConfig({
 
   // Global settings
   use: {
-    // Base URL for tests - can be overridden via environment
-    baseURL: process.env.BASE_URL || 'http://localhost:8000',
+    // Base URL for tests - frontend server (not API)
+    baseURL: process.env.BASE_URL || 'http://localhost:3000',
 
     // Collect trace when retrying the failed test
     trace: 'on-first-retry',

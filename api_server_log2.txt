@@ -1,0 +1,15 @@
+INFO:     Started server process [118308]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('0.0.0.0', 8000): 通常每个套接字地址(协议/网络地址/端口)只允许使用一次。
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+✅ 加载了 3 个游戏场景
+✅ 加载了 3 个高级游戏场景
+✅ 加载了 3 个历史案例
+📊 总共加载了 9 个额外场景
+🎯 场景总数: 12
+测试结果端点不可用
+✗ LLM互动式端点不可用: No module named 'endpoints.interactive'
+🚀 启动认知陷阱平台API服务器 (端口: 8000)
+📊 API文档: http://localhost:8000/docs

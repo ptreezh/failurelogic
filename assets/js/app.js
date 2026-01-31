@@ -8086,6 +8086,7 @@ class GameManager {
     const gameContainer = document.getElementById('game-container');
     if (!gameContainer) return;
 
+    try {
     // Special handling for turn-based scenarios with PageRouter
     if (scenarioId === 'coffee-shop-linear-thinking') {
       GameManager.startCoffeeShopGame();

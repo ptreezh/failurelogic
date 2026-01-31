@@ -1,0 +1,32 @@
+/* Placeholder for turn-based game styles */
+/* This file was added to fix missing CSS reference in index.html */
+
+.turn-based-game-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.game-board {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.game-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+.game-turn-indicator {
+  text-align: center;
+  padding: 0.5rem;
+  background-color: #dbeafe;
+  border-bottom: 1px solid #bfdbfe;
+}

@@ -1,0 +1,55 @@
+INFO:     Started server process [60608]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8082 (Press CTRL+C to quit)
+✅ 加载了 3 个游戏场景
+✅ 加载了 3 个高级游戏场景
+✅ 加载了 3 个历史案例
+📊 总共加载了 9 个额外场景
+🎯 场景总数: 12
+测试结果端点不可用
+✗ LLM互动式端点不可用: No module named 'endpoints.interactive'
+🚀 启动认知陷阱平台API服务器 (端口: 8082)
+📊 API文档: http://localhost:8082/docs
+INFO:     127.0.0.1:62796 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58329 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53009 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49399 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60571 - "GET /api/exponential/questions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60572 - "GET /api/compound/questions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60573 - "GET /api/historical/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60574 - "GET /api/explanations/linear_thinking HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60575 - "GET /api/exponential/calculate/exponential HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60576 - "GET /api/compound/calculate/interest HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60577 - "GET /api/results/submit HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60841 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57505 - "GET /api/exponential/questions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57506 - "GET /api/compound/questions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57507 - "GET /api/historical/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57508 - "GET /api/explanations/linear_thinking HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57509 - "GET /api/exponential/calculate/exponential HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57510 - "GET /api/compound/calculate/interest HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57511 - "GET /api/results/submit HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57611 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54846 - "GET /api/exponential/questions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54847 - "GET /api/compound/questions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54848 - "GET /api/historical/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54849 - "GET /api/explanations/linear_thinking HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54850 - "GET /api/exponential/calculate/exponential HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54851 - "GET /api/compound/calculate/interest HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54852 - "GET /api/results/submit HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55274 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50627 - "GET /api/exponential/questions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50628 - "GET /api/compound/questions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50629 - "GET /api/historical/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50630 - "GET /api/explanations/linear_thinking HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60393 - "HEAD /assets/js/app.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60570 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60571 - "GET /api/exponential/questions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60572 - "GET /api/compound/questions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60573 - "GET /api/historical/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60574 - "GET /api/explanations/linear_thinking HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50140 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52512 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53485 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55304 - "GET /health HTTP/1.1" 200 OK

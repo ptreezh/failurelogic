@@ -1,9 +1,12 @@
 /**
  * Bias diagnosis E2E tests (API-level)
- * These tests enforce the project’s core goal: the backend must correctly classify key cognitive traps.
+ * These tests enforce the project's core goal: the backend must correctly classify key cognitive traps.
  */
 
 import { test, expect } from '@playwright/test';
+
+// Use the API server URL directly (not the frontend baseURL)
+const API_BASE_URL = 'http://localhost:8000';
 
 test.describe('Cognitive trap diagnosis (API)', () => {
   test('flags exponential misconception', async ({ request }) => {
@@ -18,13 +21,14 @@ test.describe('Cognitive trap diagnosis (API)', () => {
       exponentialPower: 200,
     };
 
-    const res = await request.post('/api/results/submit', { data: payload });
+    const res = await request.post(`${API_BASE_URL}/api/results/submit`, { data: payload });
     expect(res.ok()).toBeTruthy();
 
     const body = await res.json();
     expect(body.success).toBeTruthy();
-    expect(body.analysis).toBeTruthy();
-    expect(body.analysis.bias_type).toBe('exponential_misconception');
+    expect(body.data).toBeTruthy();
+    expect(body.data.analysis).toBeTruthy();
+    expect(body.data.analysis.bias_type).toBe('exponential_misconception');
   });
 
   test('flags compound interest misunderstanding (linear intuition)', async ({ request }) => {
@@ -41,16 +45,17 @@ test.describe('Cognitive trap diagnosis (API)', () => {
       compounding_frequency: 1,
     };
 
-    const res = await request.post('/api/results/submit', { data: payload });
+    const res = await request.post(`${API_BASE_URL}/api/results/submit`, { data: payload });
     expect(res.ok()).toBeTruthy();
 
     const body = await res.json();
     expect(body.success).toBeTruthy();
-    expect(body.analysis).toBeTruthy();
-    expect(body.analysis.bias_type).toBe('compound_interest_misunderstanding');
-    expect(body.analysis.likely_thinking_pattern).toBe('线性思维');
-    expect(body.analysis.calculation_details).toBeTruthy();
-    expect(body.analysis.calculation_details.compound_amount).toBeDefined();
+    expect(body.data).toBeTruthy();
+    expect(body.data.analysis).toBeTruthy();
+    expect(body.data.analysis.bias_type).toBe('compound_interest_misunderstanding');
+    expect(body.data.analysis.likely_thinking_pattern).toBe('线性思维');
+    expect(body.data.analysis.calculation_details).toBeTruthy();
+    expect(body.data.analysis.calculation_details.compound_amount).toBeDefined();
   });
 
   test('flags complex system underestimation as complex_system_misunderstanding', async ({ request }) => {
@@ -64,12 +69,13 @@ test.describe('Cognitive trap diagnosis (API)', () => {
       actualValue: 10_000_000_000,
     };
 
-    const res = await request.post('/api/results/submit', { data: payload });
+    const res = await request.post(`${API_BASE_URL}/api/results/submit`, { data: payload });
     expect(res.ok()).toBeTruthy();
 
     const body = await res.json();
     expect(body.success).toBeTruthy();
-    expect(body.analysis).toBeTruthy();
-    expect(body.analysis.bias_type).toBe('complex_system_misunderstanding');
+    expect(body.data).toBeTruthy();
+    expect(body.data.analysis).toBeTruthy();
+    expect(body.data.analysis.bias_type).toBe('complex_system_misunderstanding');
   });
 });

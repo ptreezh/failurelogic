@@ -8,7 +8,7 @@ import os
 # 添加api-server到路径
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from api_server.logic.exponential_calculations import (
+from exponential_calculations import (
     calculate_exponential,
     calculate_exponential_granary_problem,
     calculate_rabbit_growth_simulation,
@@ -63,14 +63,17 @@ class TestExponentialCalculations:
         """测试溢出处理"""
         # Given
         base = 2
-        exponent = 1000  # 会导致溢出的大数
-        
-        # When
-        result = calculate_exponential(base, exponent)
-        
-        # Then
-        # 应该返回一个数值而非抛出异常
-        assert isinstance(result, (float, int))
+        exponent = 1000  # 会导致输入验证失败的大数
+
+        # When & Then
+        # 现在应该抛出异常，因为输入验证会拒绝过大的指数
+        try:
+            result = calculate_exponential(base, exponent)
+            raised = False
+        except Exception:
+            raised = True
+
+        assert raised, "Expected exception for large exponent due to input validation"
     
     def test_calculate_exponential_granary_problem_basic(self):
         """测试米粒问题基本计算"""
