@@ -1,0 +1,19 @@
+[phases.build]
+cmds = ["pip install --no-cache-dir -r api-server/requirements.txt"]
+
+[phases.start]
+cmds = ["python api-server/start.py"]
+
+[static]
+# Set the port to 8000 (Railway's default PORT will be overridden)
+# The start.py should read PORT from environment variable
+
+[[services.port]]
+port = 8000
+type = "HTTP"
+
+[healthcheck]
+path = "/health"
+interval = "30s"
+timeout = "10s"
+retries = 3
