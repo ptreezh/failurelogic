@@ -217,6 +217,14 @@
   visibility: visible;
 }
 
+/* Prevent body scroll when modal is open */
+body.modal-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
 .modal-content {
   background: var(--bg-primary);
   border-radius: var(--radius-xl);
@@ -224,9 +232,32 @@
   max-height: 90vh;
   width: 600px;
   box-shadow: var(--shadow-xl);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   transform: scale(0.9);
   transition: transform var(--transition-normal);
+  
+  /* Custom scrollbar for better visibility */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-light) transparent;
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
 }
 
 .modal.active .modal-content {
@@ -269,7 +300,8 @@
 
 .modal-body {
   padding: var(--space-lg);
-  overflow-y: auto;
+  /* Remove overflow-y to prevent nested scroll containers */
+  /* overflow-y: auto; */
 }
 
 .modal-footer {

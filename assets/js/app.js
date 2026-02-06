@@ -7997,6 +7997,15 @@ class GameManager {
         scenario_progress: 0      // ✅ Track overall scenario progress
       };
 
+      // Hide any existing modal before showing new one
+      const modal = document.getElementById('game-modal');
+      if (modal && modal.classList.contains('active')) {
+        console.warn('Modal already active, hiding first');
+        this.hideGameModal();
+        // Wait for modal to close before opening new one
+        await new Promise(resolve => setTimeout(resolve, 400));
+      }
+      
       // Show game modal immediately to give feedback to user
       this.showGameModal();
 
@@ -8939,22 +8948,58 @@ class GameManager {
 
   static showGameModal() {
     const modal = document.getElementById('game-modal');
-    if (modal) {
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      console.log('Game modal shown');
+    if (!modal) {
+      console.error('Game modal element not found');
+      return;
     }
+    
+    // Check if modal is already active or in transition
+    if (modal.classList.contains('active')) {
+      console.warn('Game modal is already active, skipping show');
+      return;
+    }
+    
+    // Add active class to show modal
+    modal.classList.add('active');
+    
+    // Add modal-open class to prevent body scroll
+    document.body.classList.add('modal-open');
+    
+    console.log('Game modal shown');
   }
 
   static hideGameModal() {
     const modal = document.getElementById('game-modal');
     if (modal) {
+      // Remove active class to start close animation
       modal.classList.remove('active');
-      document.body.style.overflow = 'auto';
-      console.log('Game modal hidden');
+      
+      // Wait for animation to complete before cleaning up
+      setTimeout(() => {
+        // Double-check modal is still not active
+        if (!modal.classList.contains('active')) {
+          // Remove modal-open class and restore body scroll
+          document.body.classList.remove('modal-open');
+          document.body.style.overflow = '';
+          document.body.style.position = '';
+          document.body.style.width = '';
+          document.body.style.height = '';
+          
+          // Clear game container content
+          const gameContainer = document.getElementById('game-container');
+          if (gameContainer) {
+            gameContainer.innerHTML = '';
+          }
+          
+          console.log('Game modal hidden and cleaned up');
+        }
+      }, 300); // Wait for transition to complete
     }
 
-    AppState.gameSession = null;
+    // Clear game session after a delay to allow cleanup
+    setTimeout(() => {
+      AppState.gameSession = null;
+    }, 350);
   }
 
   static async executeGameTurn(decisions) {
@@ -12618,19 +12663,95 @@ document.addEventListener('DOMContentLoaded', () => {
   window.AppState = AppState;
   window.PersonalizedLearningEngine = PersonalizedLearningEngine;
   
-  // Bind modal close buttons if present
-  try {
-    const closeModalBtn = document.getElementById('close-modal');
-    if (closeModalBtn) closeModalBtn.addEventListener('click', () => GameManager.hideGameModal());
+  // Bind modal close buttons and events
+  const closeModalBtn = document.getElementById('close-modal');
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', () => {
+      console.log('Close modal button clicked');
+      GameManager.hideGameModal();
+    });
+    console.log('Close modal button bound successfully');
+  } else {
+    console.warn('Close modal button not found');
+  }
 
-    const closeInvitationBtn = document.getElementById('close-invitation-modal');
-    if (closeInvitationBtn) closeInvitationBtn.addEventListener('click', () => document.getElementById('invitation-modal').style.display = 'none');
+  // Add click outside to close modal
+  const gameModal = document.getElementById('game-modal');
+  if (gameModal) {
+    gameModal.addEventListener('click', (e) => {
+      if (e.target === gameModal) {
+        console.log('Clicked outside modal, closing');
+        GameManager.hideGameModal();
+      }
+    });
+    console.log('Modal outside click handler bound');
+  }
 
-    const closeShareSuccess = document.getElementById('close-share-success');
-    if (closeShareSuccess) closeShareSuccess.addEventListener('click', () => document.getElementById('share-success-modal').style.display = 'none');
-  } catch (e) {
-    // ignore if DOM elements not available
-    console.debug('Modal bindings skipped:', e);
+  // Add ESC key to close modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('game-modal');
+      if (modal && modal.classList.contains('active')) {
+        console.log('ESC pressed, closing modal');
+        GameManager.hideGameModal();
+      }
+    }
+  });
+  console.log('ESC key handler bound for modal');
+
+  // Add mouse wheel support for modal scrolling
+  if (gameModal) {
+    const modalContent = gameModal.querySelector('.modal-content');
+    if (modalContent) {
+      // Prevent page scroll when mouse is over modal
+      modalContent.addEventListener('mouseenter', () => {
+        document.body.style.overflow = 'hidden';
+        console.log('Modal mouseenter: prevented page scroll');
+      });
+      
+      modalContent.addEventListener('mouseleave', () => {
+        document.body.style.overflow = '';
+        console.log('Modal mouseleave: restored page scroll');
+      });
+      
+      // Ensure modal content is scrollable
+      modalContent.addEventListener('wheel', (e) => {
+        const isAtTop = modalContent.scrollTop === 0;
+        const isAtBottom = modalContent.scrollTop + modalContent.clientHeight >= modalContent.scrollHeight - 1;
+        const isScrollingUp = e.deltaY < 0;
+        const isScrollingDown = e.deltaY > 0;
+        
+        // Prevent page scroll when modal can be scrolled
+        if ((!isAtTop && isScrollingUp) || (!isAtBottom && isScrollingDown)) {
+          e.stopPropagation();
+          console.log('Modal wheel: scrolling content');
+        }
+      }, { passive: false });
+      
+      console.log('Modal wheel scroll handler bound');
+    }
+  }
+
+  const closeInvitationBtn = document.getElementById('close-invitation-modal');
+  if (closeInvitationBtn) {
+    closeInvitationBtn.addEventListener('click', () => {
+      const modal = document.getElementById('invitation-modal');
+      if (modal) {
+        modal.style.display = 'none';
+        console.log('Invitation modal closed');
+      }
+    });
+  }
+
+  const closeShareSuccess = document.getElementById('close-share-success');
+  if (closeShareSuccess) {
+    closeShareSuccess.addEventListener('click', () => {
+      const modal = document.getElementById('share-success-modal');
+      if (modal) {
+        modal.style.display = 'none';
+        console.log('Share success modal closed');
+      }
+    });
   }
   
   // Add page exit warning for active games
