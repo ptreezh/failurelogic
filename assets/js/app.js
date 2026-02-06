@@ -7944,32 +7944,8 @@ class GameManager {
   static async startScenario(scenarioId) {
     console.log('Starting scenario:', scenarioId);
 
-    // Check if this is a turn-based scenario
-    if (scenarioId === 'coffee-shop-linear-thinking') {
-      this.startCoffeeShopGame();
-      return;
-    } else if (scenarioId === 'business-strategy-reasoning') {
-      this.startBusinessStrategyGame();
-      return;
-    } else if (scenarioId === 'public-policy-making') {
-      this.startPublicPolicyGame();
-      return;
-    } else if (scenarioId === 'personal-finance-decision') {
-      this.startPersonalFinanceGame();
-      return;
-    } else if (scenarioId === 'climate-change-policy') {
-      this.startClimateChangeGame();
-      return;
-    } else if (scenarioId === 'ai-governance-regulation') {
-      this.startAIGovernanceGame();
-      return;
-    } else if (scenarioId === 'financial-crisis-response') {
-      this.startFinancialCrisisGame();
-      return;
-    } else if (scenarioId === 'extended-multi-phase') {
-      this.startExtendedMultiPhaseGame();
-      return;
-    }
+    // ✅ FIXED: Removed hardcoded scenario checks to allow all scenarios to load
+    // All scenarios now go through the unified API-based loading mechanism
 
     // Get the selected difficulty from user preferences
     const difficulty = AppState.userPreferences.difficulty;
@@ -8096,35 +8072,8 @@ class GameManager {
     if (!gameContainer) return;
 
     try {
-    // Special handling for turn-based scenarios with PageRouter
-    if (scenarioId === 'coffee-shop-linear-thinking') {
-      GameManager.startCoffeeShopGame();
-      return;
-    } else if (scenarioId === 'relationship-time-delay') {
-      GameManager.startRelationshipTimeDelayGame();
-      return;
-    } else if (scenarioId === 'investment-confirmation-bias') {
-      GameManager.startInvestmentConfirmationBiasGame();
-      return;
-    } else if (scenarioId === 'business-strategy-reasoning') {
-      GameManager.startBusinessStrategyGame();
-      return;
-    } else if (scenarioId === 'public-policy-making') {
-      GameManager.startPublicPolicyGame();
-      return;
-    } else if (scenarioId === 'personal-finance-decision') {
-      GameManager.startPersonalFinanceGame();
-      return;
-    } else if (scenarioId === 'climate-change-policy') {
-      GameManager.startClimateChangeGame();
-      return;
-    } else if (scenarioId === 'ai-governance-regulation') {
-      GameManager.startAIGovernanceGame();
-      return;
-    } else if (scenarioId === 'financial-crisis-response') {
-      GameManager.startFinancialCrisisGame();
-      return;
-    }
+    // ✅ FIXED: Removed hardcoded scenario checks to allow all scenarios to load
+    // All scenarios now use the unified static content loading mechanism
 
     // Try to get scenario data from mock scenarios
       const scenarios = NavigationManager.getMockScenarios();

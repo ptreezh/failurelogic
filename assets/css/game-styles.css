@@ -6,10 +6,11 @@
 }
 
 .modal.game-modal .modal-content {
-  max-width: 90vw;
-  max-height: 90vh;
-  width: 800px;
+  max-width: 95vw;
+  max-height: 95vh;
+  width: 900px;  /* ✅ Increased width */
   height: auto;
+  min-height: 80vh;  /* ✅ Added min-height to ensure content is visible */
 }
 
 /* Game Header */
@@ -38,8 +39,8 @@
 
 /* Game Content */
 .game-content {
-  padding: var(--space-xl);
-  max-height: 60vh;
+  padding: var(--space-md);  /* ✅ Reduced from xl to md */
+  max-height: 75vh;  /* ✅ Increased from 60vh */
   overflow-y: auto;
 }
 
