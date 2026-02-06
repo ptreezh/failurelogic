@@ -1132,8 +1132,78 @@
     <script src="assets/js/api-config-manager.js?v=20251104-2"></script>
     <script src="assets/js/love-relationship-router.js"></script>
     <script type="module" src="assets/js/app.js?v=20260116-0150"></script>
+    <script src="scenario_page_fix.js"></script>
 
     <script>
+    // 确保NavigationManager可用后再执行修复
+    function waitForNavigationManagerAndFix() {
+        if (window.NavigationManager && typeof window.NavigationManager.loadScenariosPage === 'function') {
+            console.log('NavigationManager已就绪，应用场景加载修复...');
+            
+            // 重写showStaticPage方法以确保场景网格可见
+            const originalShowStaticPage = window.NavigationManager.showStaticPage;
+            window.NavigationManager.showStaticPage = function(page) {
+                // 调用原始方法
+                originalShowStaticPage.call(this, page);
+                
+                // 特别处理场景页面
+                if (page === 'scenarios') {
+                    console.log('场景页面被激活，确保网格可见...');
+                    
+                    // 确保场景网格可见
+                    const scenariosGrid = document.getElementById('scenarios-grid');
+                    if (scenariosGrid) {
+                        scenariosGrid.style.display = 'grid';
+                        scenariosGrid.style.visibility = 'visible';
+                        scenariosGrid.style.opacity = '1';
+                        
+                        // 检查是否有场景卡片，如果没有则强制加载
+                        const scenarioCards = scenariosGrid.querySelectorAll('.scenario-card');
+                        if (scenarioCards.length === 0) {
+                            console.log('未发现场景卡片，触发场景加载...');
+                            setTimeout(() => {
+                                if (window.NavigationManager && typeof window.NavigationManager.loadScenariosPage === 'function') {
+                                    window.NavigationManager.loadScenariosPage();
+                                }
+                            }, 500);
+                        }
+                    }
+                    
+                    // 确保加载指示器正确处理
+                    const loadingEl = document.getElementById('scenarios-loading');
+                    if (loadingEl) {
+                        // 如果已经有场景内容，隐藏加载指示器
+                        const hasScenarios = scenariosGrid && scenariosGrid.children.length > 1;
+                        if (hasScenarios) {
+                            loadingEl.style.display = 'none';
+                        } else {
+                            loadingEl.style.display = 'block';
+                        }
+                    }
+                }
+            };
+            
+            // 如果当前页面是场景页面，重新加载
+            if (window.AppState && window.AppState.currentPage === 'scenarios') {
+                console.log('当前为场景页面，重新加载...');
+                setTimeout(() => {
+                    window.NavigationManager.loadScenariosPage();
+                }, 1000);
+            }
+        } else {
+            // 如果NavigationManager还未就绪，稍后重试
+            setTimeout(waitForNavigationManagerAndFix, 500);
+        }
+    }
+    
+    // 页面加载完成后开始等待NavigationManager
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', waitForNavigationManagerAndFix);
+    } else {
+        // 如果页面已经加载完成，立即开始等待
+        setTimeout(waitForNavigationManagerAndFix, 100);
+    }
+
     // 难度选择功能
     function updateDifficultyDisplay(difficulty) {
         const displayElement = document.getElementById("current-difficulty");
