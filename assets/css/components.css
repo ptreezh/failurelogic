@@ -228,15 +228,15 @@ body.modal-open {
 .modal-content {
   background: var(--bg-primary);
   border-radius: var(--radius-xl);
-  max-width: 90vw;
-  max-height: 90vh;
-  width: 600px;
+  max-width: 95vw;
+  max-height: 95vh;
+  width: 800px;  /* ✅ Increased width for better content display */
   box-shadow: var(--shadow-xl);
   overflow-y: auto;
   overflow-x: hidden;
   transform: scale(0.9);
   transition: transform var(--transition-normal);
-  
+
   /* Custom scrollbar for better visibility */
   scrollbar-width: thin;
   scrollbar-color: var(--border-light) transparent;
@@ -299,7 +299,7 @@ body.modal-open {
 }
 
 .modal-body {
-  padding: var(--space-lg);
+  padding: var(--space-md);  /* ✅ Reduced from lg to md for more compact layout */
   /* Remove overflow-y to prevent nested scroll containers */
   /* overflow-y: auto; */
 }
