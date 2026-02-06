@@ -48,11 +48,11 @@ class APIConfigManager {
       return ['http://localhost:8000'];
     }
 
-    // Production environment - GitHub Pages only (no custom domains)
-    // Note: API endpoints are on Codespaces, which may need to be started manually
+    // Production environment - Railway as primary, with fallbacks
     return [
-      'https://psychic-meme-rvq4v7pqwx3xxrr-8000.app.github.dev', // Primary: Codespaces (port 8000)
-      'https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev',  // Backup: Old Codespaces
+      'https://failure-logic-api-production.up.railway.app', // Primary: Railway (always available)
+      'https://psychic-meme-rvq4v7pqwx3xxrr-8000.app.github.dev', // Backup: Codespaces (port 8000)
+      'https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev',  // Legacy: Old Codespaces
     ];
   }
 
