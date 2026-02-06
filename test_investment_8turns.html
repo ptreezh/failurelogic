@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投资确认偏误 - 8轮测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #666;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .status.pass {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.fail {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        #game-container {
+            margin-top: 20px;
+            min-height: 400px;
+            border: 2px dashed #ddd;
+            border-radius: 5px;
+            padding: 20px;
+        }
+        .log {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-left: 3px solid #007bff;
+            padding-left: 10px;
+        }
+        .log-entry.error {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+        .log-entry.success {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>📈 投资确认偏误场景 - 8轮完整测试</h1>
+
+        <div class="test-section">
+            <h3>测试目标</h3>
+            <p>验证投资确认偏误场景能够完整运行8个季度，无 delayedEffects 错误</p>
+            <ul>
+                <li>✅ 初始化游戏状态</li>
+                <li>✅ 完成8个季度决策</li>
+                <li>✅ 正确处理延迟效果</li>
+                <li>✅ 显示确认偏误分析</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h3>测试控制</h3>
+            <button onclick="startTest()">🚀 开始测试</button>
+            <button onclick="runAutoTest()">⚡ 自动运行8轮</button>
+            <button onclick="showResults()">📊 显示结果</button>
+            <button onclick="resetTest()">🔄 重置</button>
+        </div>
+
+        <div class="test-section">
+            <h3>测试状态</h3>
+            <div id="test-status" class="status info">等待开始测试...</div>
+        </div>
+
+        <div class="test-section">
+            <h3>游戏界面</h3>
+            <div id="game-container">游戏将在这里加载...</div>
+        </div>
+
+        <div class="test-section">
+            <h3>测试日志</h3>
+            <div id="test-log" class="log"></div>
+        </div>
+    </div>
+
+    <script src="assets/js/app.js"></script>
+    <script>
+        let testRouter = null;
+        let testResults = {
+            turnsCompleted: 0,
+            errors: [],
+            delayedEffectsCount: 0,
+            finalPortfolio: 0,
+            finalKnowledge: 0
+        };
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('test-log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('test-status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+
+        function startTest() {
+            log('开始测试：投资确认偏误场景', 'info');
+            updateStatus('正在初始化游戏...', 'info');
+
+            try {
+                // 调用 GameManager 启动游戏
+                GameManager.startInvestmentConfirmationBiasGame();
+                testRouter = window.investmentRouter;
+
+                if (testRouter) {
+                    log('✅ 游戏初始化成功', 'success');
+                    updateStatus('游戏已初始化，可以进行8轮测试', 'pass');
+                    document.getElementById('game-container').innerHTML = testRouter.renderPage();
+                } else {
+                    log('❌ 游戏初始化失败：testRouter 为 null', 'error');
+                    updateStatus('游戏初始化失败', 'fail');
+                }
+            } catch (error) {
+                log(`❌ 初始化异常: ${error.message}`, 'error');
+                log(error.stack, 'error');
+                updateStatus('初始化异常', 'fail');
+            }
+        }
+
+        function runAutoTest() {
+            if (!testRouter) {
+                log('❌ 请先点击"开始测试"按钮', 'error');
+                return;
+            }
+
+            log('开始自动运行8轮游戏...', 'info');
+            updateStatus('正在自动运行8轮...', 'info');
+
+            let currentTurn = 1;
+            const maxTurns = 8;
+
+            function runTurn() {
+                if (currentTurn > maxTurns) {
+                    log('✅ 8轮游戏全部完成！', 'success');
+                    updateStatus('8轮测试完成', 'pass');
+                    showResults();
+                    return;
+                }
+
+                log(`--- 第 ${currentTurn} 季度 ---`, 'info');
+
+                try {
+                    // 选择信息源
+                    testRouter.selectSource('news');
+                    testRouter.selectSource('research');
+
+                    // 提交决策
+                    testRouter.makeDecision('sources', testRouter.tempSources);
+
+                    // 检查 delayed_effects
+                    if (testRouter.gameState.delayed_effects &&
+                        testRouter.gameState.delayed_effects.length > 0) {
+                        testResults.delayedEffectsCount += testRouter.gameState.delayed_effects.length;
+                        log(`✅ 检测到 ${testRouter.gameState.delayed_effects.length} 个延迟效果`, 'success');
+                    }
+
+                    // 提交回合
+                    testRouter.submitTurn();
+
+                    testResults.turnsCompleted = currentTurn;
+                    testResults.finalPortfolio = testRouter.gameState.portfolio;
+                    testResults.finalKnowledge = testRouter.gameState.knowledge;
+
+                    log(`第 ${currentTurn} 季度完成：资金 ¥${testResults.finalPortfolio.toFixed(2)}，知识 ${testResults.finalKnowledge}`, 'success');
+
+                    // 更新显示
+                    document.getElementById('game-container').innerHTML = testRouter.renderPage();
+
+                    currentTurn++;
+                    setTimeout(runTurn, 500);
+                } catch (error) {
+                    log(`❌ 第 ${currentTurn} 季度异常: ${error.message}`, 'error');
+                    testResults.errors.push(`Turn ${currentTurn}: ${error.message}`);
+                    updateStatus(`测试失败：第 ${currentTurn} 季度出错`, 'fail');
+                }
+            }
+
+            runTurn();
+        }
+
+        function showResults() {
+            if (!testRouter) {
+                log('❌ 没有测试结果可显示', 'error');
+                return;
+            }
+
+            const results = `
+                <h4>📊 测试结果</h4>
+                <ul>
+                    <li>完成回合: ${testResults.turnsCompleted}/8</li>
+                    <li>最终资金: ¥${testResults.finalPortfolio.toFixed(2)}</li>
+                    <li>最终知识: ${testResults.finalKnowledge}</li>
+                    <li>延迟效果触发: ${testResults.delayedEffectsCount} 次</li>
+                    <li>错误数: ${testResults.errors.length}</li>
+                </ul>
+            `;
+
+            if (testResults.errors.length > 0) {
+                results += '<h4>❌ 错误列表:</h4><ul>';
+                testResults.errors.forEach(error => {
+                    results += `<li>${error}</li>`;
+                });
+                results += '</ul>';
+            }
+
+            if (testResults.turnsCompleted === 8 && testResults.errors.length === 0) {
+                updateStatus('✅ 测试通过：8轮游戏完成，无错误', 'pass');
+                log('✅ 测试通过！', 'success');
+            } else {
+                updateStatus('⚠️ 测试未完全通过', 'fail');
+            }
+
+            document.getElementById('game-container').innerHTML = results;
+            log(results.replace(/<[^>]*>/g, ''), 'info');
+        }
+
+        function resetTest() {
+            testRouter = null;
+            testResults = {
+                turnsCompleted: 0,
+                errors: [],
+                delayedEffectsCount: 0,
+                finalPortfolio: 0,
+                finalKnowledge: 0
+            };
+            document.getElementById('game-container').innerHTML = '游戏将在这里加载...';
+            document.getElementById('test-log').innerHTML = '';
+            updateStatus('已重置，等待开始测试...', 'info');
+            log('测试已重置', 'info');
+        }
+
+        // 页面加载完成后的初始化
+        window.addEventListener('load', () => {
+            log('测试页面已加载', 'info');
+            log('点击"开始测试"按钮开始测试', 'info');
+        });
+    </script>
+</body>
+</html>

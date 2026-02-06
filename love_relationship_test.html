@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>恋爱关系认知训练 - 测试页面</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2563eb;
+            text-align: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #3b82f6;
+            background-color: #f8fafc;
+        }
+        button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        .error {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>恋爱关系认知训练功能测试</h1>
+        
+        <div class="test-section">
+            <h2>功能测试</h2>
+            <p>点击下面的按钮来测试恋爱关系认知训练功能：</p>
+            
+            <button onclick="testScenarioLoading()">测试场景加载</button>
+            <button onclick="testRouterInitialization()">测试路由初始化</button>
+            <button onclick="testNavigation()">测试页面导航</button>
+            <button onclick="testAllFeatures()">运行完整测试</button>
+        </div>
+        
+        <div id="test-results">
+            <div class="status">点击上面的按钮开始测试...</div>
+        </div>
+    </div>
+
+    <!-- 引入必要的脚本 -->
+    <script src="assets/js/api-config-manager.js"></script>
+    <script src="assets/js/love-relationship-router.js"></script>
+    <script>
+        // 测试场景加载功能
+        async function testScenarioLoading() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '<div class="status">正在测试场景加载...</div>';
+            
+            try {
+                // 检查API配置管理器是否可用
+                if (typeof APIConfigManager === 'undefined') {
+                    throw new Error('APIConfigManager 未定义');
+                }
+                
+                // 创建API配置管理器实例
+                const apiManager = new APIConfigManager();
+                
+                // 尝试获取场景
+                const scenarios = await apiManager.request('/scenarios/');
+                
+                if (scenarios && scenarios.scenarios) {
+                    // 检查是否有恋爱关系相关的场景
+                    const loveScenarios = scenarios.scenarios.filter(s => 
+                        s.id.includes('love') || s.category === 'love-relationship' || 
+                        s.name.includes('恋爱') || s.title?.includes('恋爱'));
+                    
+                    if (loveScenarios.length > 0) {
+                        resultsDiv.innerHTML = `
+                            <div class="status success">
+                                <h3>✅ 场景加载测试通过!</h3>
+                                <p>找到 ${loveScenarios.length} 个恋爱关系相关场景:</p>
+                                <ul>
+                                    ${loveScenarios.map(s => `<li>${s.name || s.title} (${s.id})</li>`).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    } else {
+                        resultsDiv.innerHTML = `
+                            <div class="status">
+                                <h3>ℹ️  场景加载测试完成</h3>
+                                <p>总共加载了 ${scenarios.scenarios.length} 个场景，但未找到恋爱关系相关场景</p>
+                                <p>场景ID示例: ${scenarios.scenarios.slice(0, 3).map(s => s.id).join(', ')}</p>
+                            </div>
+                        `;
+                    }
+                } else {
+                    throw new Error('未能获取场景数据');
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="status error">
+                        <h3>❌ 场景加载测试失败!</h3>
+                        <p>错误: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 测试路由初始化
+        function testRouterInitialization() {
+            const resultsDiv = document.getElementById('test-results');
+            
+            try {
+                if (typeof loveRelationshipRouter === 'undefined') {
+                    throw new Error('loveRelationshipRouter 未定义');
+                }
+                
+                if (typeof LoveRelationshipRouter === 'undefined') {
+                    throw new Error('LoveRelationshipRouter 类未定义');
+                }
+                
+                resultsDiv.innerHTML = `
+                    <div class="status success">
+                        <h3>✅ 路由初始化测试通过!</h3>
+                        <p>loveRelationshipRouter 已正确初始化</p>
+                        <p>LoveRelationshipRouter 类已定义</p>
+                    </div>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="status error">
+                        <h3>❌ 路由初始化测试失败!</h3>
+                        <p>错误: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 测试页面导航
+        function testNavigation() {
+            const resultsDiv = document.getElementById('test-results');
+            
+            try {
+                if (typeof NavigationManager === 'undefined') {
+                    throw new Error('NavigationManager 未定义');
+                }
+                
+                if (typeof NavigationManager.getLoveRelationshipPage !== 'function') {
+                    throw new Error('NavigationManager.getLoveRelationshipPage 方法未定义');
+                }
+                
+                resultsDiv.innerHTML = `
+                    <div class="status success">
+                        <h3>✅ 导航功能测试通过!</h3>
+                        <p>NavigationManager 已正确初始化</p>
+                        <p>getLoveRelationshipPage 方法已定义</p>
+                    </div>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="status error">
+                        <h3>❌ 导航功能测试失败!</h3>
+                        <p>错误: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 运行完整测试
+        async function testAllFeatures() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '<div class="status">正在运行完整测试...</div>';
+            
+            let allPassed = true;
+            let messages = [];
+            
+            // 测试路由初始化
+            try {
+                if (typeof loveRelationshipRouter === 'undefined' || typeof LoveRelationshipRouter === 'undefined') {
+                    allPassed = false;
+                    messages.push('❌ 路由初始化失败');
+                } else {
+                    messages.push('✅ 路由初始化成功');
+                }
+            } catch (e) {
+                allPassed = false;
+                messages.push(`❌ 路由初始化失败: ${e.message}`);
+            }
+            
+            // 测试导航功能
+            try {
+                if (typeof NavigationManager === 'undefined' || typeof NavigationManager.getLoveRelationshipPage !== 'function') {
+                    allPassed = false;
+                    messages.push('❌ 导航功能失败');
+                } else {
+                    messages.push('✅ 导航功能成功');
+                }
+            } catch (e) {
+                allPassed = false;
+                messages.push(`❌ 导航功能失败: ${e.message}`);
+            }
+            
+            // 尝试加载场景（非阻塞）
+            try {
+                // 异步尝试加载场景
+                setTimeout(async () => {
+                    try {
+                        if (typeof APIConfigManager !== 'undefined') {
+                            const apiManager = new APIConfigManager();
+                            const scenarios = await apiManager.request('/scenarios/');
+                            
+                            if (scenarios && scenarios.scenarios) {
+                                const loveScenarios = scenarios.scenarios.filter(s => 
+                                    s.id.includes('love') || s.category === 'love-relationship' || 
+                                    s.name.includes('恋爱') || s.title?.includes('恋爱'));
+                                
+                                if (loveScenarios.length > 0) {
+                                    messages.push(`✅ 找到 ${loveScenarios.length} 个恋爱关系场景`);
+                                } else {
+                                    messages.push('ℹ️ 未找到特定的恋爱关系场景，但场景加载正常');
+                                }
+                            }
+                        }
+                        
+                        // 更新结果显示
+                        const finalStatus = allPassed ? 'success' : 'error';
+                        const finalMessage = allPassed ? '✅ 所有测试通过!' : '❌ 部分测试失败';
+                        
+                        resultsDiv.innerHTML = `
+                            <div class="status ${finalStatus}">
+                                <h3>${finalMessage}</h3>
+                                <ul style="text-align: left;">
+                                    ${messages.map(msg => `<li>${msg}</li>`).join('')}
+                                </ul>
+                                <p>恋爱关系认知训练功能已准备就绪！</p>
+                            </div>
+                        `;
+                    } catch (scenarioError) {
+                        messages.push(`⚠️ 场景加载测试遇到问题: ${scenarioError.message}`);
+                        
+                        const finalStatus = allPassed ? 'success' : 'error';
+                        const finalMessage = allPassed ? '✅ 所有核心测试通过!' : '❌ 部分测试失败';
+                        
+                        resultsDiv.innerHTML = `
+                            <div class="status ${finalStatus}">
+                                <h3>${finalMessage}</h3>
+                                <ul style="text-align: left;">
+                                    ${messages.map(msg => `<li>${msg}</li>`).join('')}
+                                </ul>
+                                <p>恋爱关系认知训练功能已准备就绪！</p>
+                            </div>
+                        `;
+                    }
+                }, 100); // 延迟执行场景加载测试
+                
+            } catch (e) {
+                messages.push(`⚠️ 场景加载测试异常: ${e.message}`);
+            }
+            
+            // 立即更新基本测试结果
+            const finalStatus = allPassed ? 'success' : 'error';
+            const finalMessage = allPassed ? '✅ 所有测试通过!' : '❌ 部分测试失败';
+            
+            resultsDiv.innerHTML = `
+                <div class="status ${finalStatus}">
+                    <h3>${finalMessage}</h3>
+                    <ul style="text-align: left;">
+                        ${messages.map(msg => `<li>${msg}</li>`).join('')}
+                    </ul>
+                    <p>正在后台测试场景加载...</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

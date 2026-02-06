@@ -1,146 +1,146 @@
 #!/usr/bin/env python3
 """
-认知陷阱测试平台 - 端点可用性验证
-验证所有API端点是否正确注册和可用
+API 端点验证脚本
+验证所有 API 端点是否正确注册并可访问
 """
 
 import requests
 import sys
-import json
-from datetime import datetime
+import time
+from typing import List, Tuple
 
-def test_api_endpoints():
-    """测试API端点可用性"""
-    base_url = "http://localhost:8000"
+def check_endpoint(base_url: str, endpoint: str, method: str = "GET", payload: dict = None) -> Tuple[bool, str, float]:
+    """
+    检查单个端点
+    返回: (是否成功, 响应消息, 响应时间)
+    """
+    url = f"{base_url}{endpoint}"
+    start_time = time.time()
     
-    print("🔍 开始验证认知陷阱平台API端点...")
-    print(f"📍 测试地址: {base_url}")
-    print("="*60)
-    
-    # 测试基础端点
-    tests = [
-        ("GET", "/"),
-        ("GET", "/scenarios/"),
-        ("GET", "/api/exponential/questions"),
-        ("GET", "/api/compound/questions"), 
-        ("GET", "/api/historical/scenarios"),
-        ("GET", "/api/game/scenarios"),
-        ("GET", "/api/explanations/linear_thinking")
+    try:
+        if method.upper() == "GET":
+            response = requests.get(url, timeout=10)
+        elif method.upper() == "POST":
+            response = requests.post(url, json=payload or {}, timeout=10)
+        else:
+            return False, f"不支持的方法: {method}", 0
+            
+        response_time = time.time() - start_time
+        
+        if response.status_code in [200, 201, 400, 404, 422]:  # 400和422也是正常的API响应
+            return True, f"HTTP {response.status_code}", response_time
+        else:
+            return False, f"HTTP {response.status_code}", response_time
+            
+    except requests.exceptions.Timeout:
+        return False, "请求超时", 10.0
+    except requests.exceptions.ConnectionError:
+        return False, "连接错误", 0
+    except Exception as e:
+        return False, str(e), 0
+
+def validate_all_endpoints(base_url: str) -> List[Tuple[str, str, str, float]]:
+    """
+    验证所有端点
+    返回: [(端点, 方法, 结果, 响应时间), ...]
+    """
+    endpoints = [
+        ("/health", "GET", None),
+        ("/scenarios/", "GET", None),
+        ("/api/exponential/questions", "GET", None),
+        ("/api/exponential/advanced-questions", "GET", None),
+        ("/api/exponential/calculate/exponential", "POST", {"base": 2, "exponent": 10}),
+        ("/api/exponential/calculate/granary", "POST", {}),
+        ("/api/exponential/calculate/rabbit-growth", "POST", {}),
+        ("/api/exponential/calculate/complex-system-failure", "POST", {}),
+        ("/api/exponential/calculate/nano-replication", "POST", {}),
+        ("/api/exponential/calculate/social-network-growth", "POST", {}),
+        ("/api/exponential/calculate/compare-linear-exponential", "POST", {"initial_amount": 100, "rate_percent": 10, "time_periods": 10}),
+        ("/api/compound/questions", "GET", None),
+        ("/api/compound/advanced-questions", "GET", None),
+        ("/api/compound/calculate/interest", "POST", {"principal": 10000, "annual_rate": 8, "time_years": 30, "compounding_frequency": 1}),
+        ("/api/compound/calculate/with-contributions", "POST", {}),
+        ("/api/compound/calculate/with-inflation", "POST", {}),
+        ("/api/compound/calculate/tax-affected", "POST", {}),
+        ("/api/compound/calculate/variable-rates", "POST", {"rates_schedule": "5,6,7,8,9"}),
+        ("/api/compound/calculate/double-compound", "POST", {}),
+        ("/api/historical/scenarios", "GET", None),
+        ("/api/historical/advanced-scenarios", "GET", None),
+        ("/api/game/scenarios", "GET", None),
+        ("/api/game/advanced-scenarios", "GET", None),
+        ("/api/results/submit", "POST", {"questionId": "test", "userEstimation": 1000, "questionType": "exponential"}),
+        ("/api/results/test-user/test-session", "GET", None),
+        ("/api/explanations/linear_thinking", "GET", None),
+        ("/api/explanations/exponential_misconception", "GET", None),
+        ("/api/explanations/compound_interest_misunderstanding", "GET", None),
+        ("/api/interactive/health", "GET", None),
+        ("/api/interactive/chat", "POST", {"user_input": "hello", "test_type": "general"}),
+        ("/api/interactive/analyze-decision", "POST", {"user_input": "I think the first option is best because it's the most popular"}),
+        ("/api/interactive/guided-tour", "GET", None),
     ]
     
     results = []
+    print(f"🔍 开始验证 {len(endpoints)} 个 API 端点...")
+    print(f"🌐 目标 URL: {base_url}\n")
     
-    for method, endpoint in tests:
-        try:
-            url = f"{base_url}{endpoint}"
-            if method == "GET":
-                response = requests.get(url)
-            elif method == "POST":
-                response = requests.post(url, json={})
+    for i, (endpoint, method, payload) in enumerate(endpoints, 1):
+        print(f"[{i:2d}/{len(endpoints)}] 检查 {method} {endpoint}...", end="", flush=True)
+        
+        success, message, response_time = check_endpoint(base_url, endpoint, method, payload)
+        
+        if success:
+            status = "✅"
+        else:
+            status = "❌"
             
-            status_ok = response.status_code in [200, 400, 404, 422]  # 200是成功，400/404/422是预期错误码
-            results.append((method, endpoint, response.status_code, status_ok))
-            print(f"{'✓' if status_ok else '✗'} [{method}] {endpoint} -> {response.status_code}")
-        except Exception as e:
-            results.append((method, endpoint, f"ERROR: {e}", False))
-            print(f"✗ [{method}] {endpoint} -> ERROR: {e}")
+        results.append((f"{method} {endpoint}", status, message, response_time))
+        
+        print(f" {status} {message} ({response_time:.2f}s)")
     
-    print("="*60)
-    
-    # 计算结果
+    return results
+
+def print_summary(results: List[Tuple[str, str, str, float]]):
+    """打印验证摘要"""
     total = len(results)
-    successful = len([r for r in results if r[3]])
+    successful = len([r for r in results if r[1] == "✅"])
+    failed = total - successful
     
-    print(f"📊 测试结果: {successful}/{total} 端点正常工作")
+    print(f"\n📊 验证摘要:")
+    print(f"   总端点数: {total}")
+    print(f"   成功: {successful}")
+    print(f"   失败: {failed}")
+    print(f"   成功率: {(successful/total)*100:.1f}%")
     
-    if successful == total:
-        print("🎉 所有API端点验证通过！")
-        print()
-        print("✅ 系统功能完成度:")
-        print("   - 指数增长误区测试 (2^200规模问题)")
-        print("   - 复利思维陷阱测试 (银行贷款利息比较)") 
-        print("   - 历史决策失败案例重现 (挑战者号等)")
-        print("   - 互动推理游戏 (暴露思维局限)")
-        print("   - 金字塔原理解释系统")
-        print()
-        print("✅ 认知陷阱测试平台已完全实现并可正常运行")
-        return True
-    else:
-        print(f"❌ {total - successful} 个端点验证失败")
-        return False
-
-
-def run_comprehensive_tests():
-    """运行综合功能测试"""
-    print("\n🧪 执行综合功能测试...")
-    
-    try:
-        # 测试指数增长计算功能
-        print("\n🔢 测试指数增长计算功能...")
-        exp_response = requests.get("http://localhost:8000/api/exponential/questions")
-        if exp_response.status_code == 200:
-            print("✓ 指数增长问题端点正常")
-        else:
-            print(f"✗ 指数增长问题端点异常: {exp_response.status_code}")
-        
-        # 测试复利计算功能
-        print("\n💰 测试复利计算功能...")
-        comp_response = requests.get("http://localhost:8000/api/compound/questions")
-        if comp_response.status_code == 200:
-            print("✓ 复利问题端点正常")
-        else:
-            print(f"✗ 复利问题端点异常: {comp_response.status_code}")
-            
-        # 测试历史案例功能
-        print("\n📜 测试历史案例功能...")
-        hist_response = requests.get("http://localhost:8000/api/historical/scenarios")
-        if hist_response.status_code == 200:
-            print("✓ 历史场景端点正常")
-        else:
-            print(f"✗ 历史场景端点异常: {hist_response.status_code}")
-            
-        # 测试推理游戏功能
-        print("\n🎮 测试推理游戏功能...")
-        game_response = requests.get("http://localhost:8000/api/game/scenarios")
-        if game_response.status_code == 200:
-            print("✓ 游戏场景端点正常") 
-        else:
-            print(f"✗ 游戏场景端点异常: {game_response.status_code}")
-            
-        return True
-        
-    except Exception as e:
-        print(f"❌ 综合功能测试失败: {e}")
-        return False
-
+    if failed > 0:
+        print(f"\n❌ 失败的端点:")
+        for endpoint, status, message, response_time in results:
+            if status == "❌":
+                print(f"   {endpoint} - {message}")
 
 def main():
-    """主函数"""
-    print("🎯 认知陷阱测试平台 - 系统功能验证")
-    print("📦 基于《失败的逻辑》理论的思维误区揭示系统")
-    print()
-    
-    # 运行端点验证
-    endpoints_ok = test_api_endpoints()
-    
-    # 运行综合测试
-    comprehensive_ok = run_comprehensive_tests()
-    
-    print("\n" + "="*60)
-    print("📋 最终验证报告:")
-    
-    if endpoints_ok and comprehensive_ok:
-        print("✅ 所有验证通过！")
-        print("✅ 认知陷阱测试平台已完整实现")
-        print("✅ 2^200指数增长、兔子繁殖问题(10只兔子11年后80亿只)等场景已实现")
-        print("✅ 复利思维、历史决策、推理游戏等功能正常运行")
-        print("✅ 金字塔原理解释系统已就绪")
-        print("✅ 系统已准备好暴露用户思维局限")
-        return 0
+    # 默认测试本地服务器
+    if len(sys.argv) > 1:
+        base_url = sys.argv[1]
     else:
-        print("❌ 验证未完全通过，请检查API服务器状态")
+        base_url = "http://localhost:8000"  # 默认本地测试
+    
+    print("🧪 API 端点验证工具")
+    print("="*60)
+    
+    try:
+        results = validate_all_endpoints(base_url)
+        print_summary(results)
+        
+        # 如果有失败的端点，返回非零退出码
+        failed = len([r for r in results if r[1] == "❌"])
+        return 1 if failed > 0 else 0
+        
+    except KeyboardInterrupt:
+        print("\n⚠️  验证被用户中断")
         return 1
-
+    except Exception as e:
+        print(f"\n💥 验证过程中发生错误: {e}")
+        return 1
 
 if __name__ == "__main__":
     sys.exit(main())

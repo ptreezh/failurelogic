@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>恋爱关系时间延迟场景 - 完整测试</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #666;
+      font-size: 18px;
+    }
+
+    .status-panel {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .status-item {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+
+    .status-item label {
+      display: block;
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    .status-item .value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .game-container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      min-height: 500px;
+    }
+
+    .game-page {
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .start-page {
+      text-align: center;
+    }
+
+    .start-page h1 {
+      color: #667eea;
+      margin-bottom: 20px;
+    }
+
+    .intro {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      line-height: 1.8;
+    }
+
+    .warning {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 5px;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: bold;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .decision-page h2 {
+      color: #667eea;
+      margin-bottom: 20px;
+    }
+
+    .decision-section {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .decision-section h3 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .decision-desc {
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .options {
+      display: grid;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .option-card {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .option-card:hover {
+      border-color: #667eea;
+      box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
+    }
+
+    .option-card input[type="radio"] {
+      margin-right: 15px;
+      width: 20px;
+      height: 20px;
+    }
+
+    .expectation-display {
+      background: #e7f3ff;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #2196F3;
+    }
+
+    .feedback-page h2 {
+      color: #667eea;
+      margin-bottom: 20px;
+    }
+
+    .feedback-content {
+      display: grid;
+      gap: 20px;
+    }
+
+    .your-expectation, .delay-warning {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .delay-warning {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+    }
+
+    .risk-warning {
+      background: #f8d7da;
+      border-left: 4px solid #dc3545;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .timeline-section {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    .timeline {
+      margin-top: 15px;
+    }
+
+    .timeline-item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: white;
+      border-radius: 5px;
+    }
+
+    .timeline-item.pending {
+      border-left: 3px solid #ffc107;
+    }
+
+    .timeline-item.active {
+      border-left: 3px solid #28a745;
+    }
+
+    .timeline-marker {
+      font-size: 20px;
+      margin-right: 15px;
+    }
+
+    .awakening-page {
+      text-align: center;
+    }
+
+    .awakening-content {
+      background: #f8f9fa;
+      padding: 30px;
+      border-radius: 15px;
+    }
+
+    .pattern-reveal, .theory-lesson {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      text-align: left;
+    }
+
+    .strategy-options {
+      display: grid;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .ending-page {
+      text-align: center;
+    }
+
+    .final-results {
+      background: #f8f9fa;
+      padding: 30px;
+      border-radius: 15px;
+    }
+
+    .rating {
+      font-size: 32px;
+      font-weight: bold;
+      color: #667eea;
+      margin-bottom: 20px;
+    }
+
+    .final-stats {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      text-align: left;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .lessons-learned {
+      background: #d4edda;
+      border-left: 4px solid #28a745;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .lessons {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .lessons li {
+      padding: 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>💕 恋爱关系时间延迟</h1>
+      <p>完整场景测试 - 10轮（5个月）游戏流程</p>
+    </div>
+
+    <div class="status-panel">
+      <div class="status-grid">
+        <div class="status-item">
+          <label>当前回合</label>
+          <div class="value" id="stat-turn">1</div>
+        </div>
+        <div class="status-item">
+          <label>当前周</label>
+          <div class="value" id="stat-week">1</div>
+        </div>
+        <div class="status-item">
+          <label>满意度</label>
+          <div class="value" id="stat-satisfaction">60</div>
+        </div>
+        <div class="status-item">
+          <label>能量</label>
+          <div class="value" id="stat-energy">80</div>
+        </div>
+        <div class="status-item">
+          <label>小林好感度</label>
+          <div class="value" id="stat-affection">50</div>
+        </div>
+        <div class="status-item">
+          <label>关系稳定性</label>
+          <div class="value" id="stat-stability">40</div>
+        </div>
+        <div class="status-item">
+          <label>延迟效果</label>
+          <div class="value" id="stat-pending">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-container">
+      <div id="game-content"></div>
+    </div>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    // 状态更新函数
+    function updateStatusPanel() {
+      if (!window.relationshipTimeDelayRouter) return;
+
+      const state = window.relationshipTimeDelayRouter.gameState;
+
+      document.getElementById('stat-turn').textContent = state.turn_number;
+      document.getElementById('stat-week').textContent = state.week_number;
+      document.getElementById('stat-satisfaction').textContent = state.satisfaction;
+      document.getElementById('stat-energy').textContent = state.energy;
+      document.getElementById('stat-affection').textContent = state.affection;
+      document.getElementById('stat-stability').textContent = state.stability;
+      document.getElementById('stat-pending').textContent = state.pending_effects.length;
+    }
+
+    // 渲染游戏内容
+    function renderGame() {
+      const container = document.getElementById('game-content');
+      if (window.relationshipTimeDelayRouter) {
+        container.innerHTML = window.relationshipTimeDelayRouter.renderPage();
+        updateStatusPanel();
+      }
+    }
+
+    // 初始化游戏
+    function initGame() {
+      console.log('🚀 初始化恋爱关系时间延迟场景...');
+
+      // 创建游戏状态
+      const initialState = {
+        satisfaction: 60,
+        energy: 80,
+        affection: 50,
+        stability: 40,
+        week_number: 1,
+        turn_number: 1,
+        decision_history: [],
+        pending_effects: [],
+        chat_messages: []
+      };
+
+      // 创建路由器
+      window.relationshipTimeDelayRouter = new RelationshipTimeDelayPageRouter(initialState);
+
+      // 渲染游戏
+      renderGame();
+
+      console.log('✅ 游戏初始化完成');
+    }
+
+    // 页面加载完成后初始化
+    window.addEventListener('DOMContentLoaded', initGame);
+
+    // 重写render方法以更新状态面板
+    const originalRender = window.relationshipTimeDelayRouter?.render;
+    if (window.relationshipTimeDelayRouter) {
+      window.relationshipTimeDelayRouter.render = function() {
+        const container = document.getElementById('game-content');
+        if (container) {
+          container.innerHTML = this.renderPage();
+          updateStatusPanel();
+        }
+      };
+    }
+  </script>
+</body>
+</html>

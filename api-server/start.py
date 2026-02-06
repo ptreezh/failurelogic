@@ -22,7 +22,7 @@ from utils.error_handlers import global_exception_handler, CustomException
 
 # ===== 增强系统：决策模式追踪器 =====
 class DecisionPatternTracker:
-    """追踪用户的决策模式，识别认知偏误倾向"""
+    """追踪用户的决策模式，识别决策倾向"""
 
     def __init__(self):
         self.patterns = {
@@ -30,7 +30,7 @@ class DecisionPatternTracker:
             "pace_preference": [],      # 节奏偏好: 立即/谨慎/延迟
             "information_style": [],    # 信息风格: 选择性/全面
             "decision_consistency": [], # 决策一致性
-            "overconfidence_signals": [] # 过度自信信号
+            "overconfidence_signals": [] # 自信度过高信号
         }
 
     def track_decision(self, scenario_id: str, decision: Dict, context: Dict):
@@ -82,9 +82,9 @@ class DecisionPatternTracker:
             conservative_count = sum(1 for r in recent_risks if r == "保守")
 
             if aggressive_count >= 2:
-                insights.append("📊 你的决策模式分析：\n你最近倾向于选择高风险选项。这可能显示过度自信倾向。")
+                insights.append("📊 你的决策模式分析：\n你最近倾向于选择高风险选项。这显示了你的风险偏好。")
             elif conservative_count >= 2:
-                insights.append("📊 你的决策模式分析：\n你最近倾向于选择保守选项。这可能显示损失厌恶倾向。")
+                insights.append("📊 你的决策模式分析：\n你最近倾向于选择保守选项。这显示了你的风险偏好。")
 
         # 分析决策一致性
         if len(self.patterns["decision_consistency"]) >= 2:
@@ -94,46 +94,46 @@ class DecisionPatternTracker:
 
         return "\n\n".join(insights) if insights else ""
 
-# ===== 增强系统：跨场景认知偏误分析器 =====
+# ===== 增强系统：跨场景决策模式分析器 =====
 class CrossScenarioAnalyzer:
-    """分析用户在多个场景中的认知偏误模式"""
+    """分析用户在多个场景中的决策模式"""
 
     def __init__(self):
-        self.scenario_biases = {}  # scenario_id -> detected_bias
-        self.bias_frequency = defaultdict(list)  # bias_type -> [scenario_ids]
+        self.scenario_patterns = {}  # scenario_id -> detected_pattern
+        self.pattern_frequency = defaultdict(list)  # pattern_type -> [scenario_ids]
 
-    def record_bias(self, scenario_id: str, bias_type: str):
-        """记录场景中检测到的认知偏误"""
-        self.scenario_biases[scenario_id] = bias_type
-        self.bias_frequency[bias_type].append(scenario_id)
+    def record_pattern(self, scenario_id: str, pattern_type: str):
+        """记录场景中检测到的决策模式"""
+        self.scenario_patterns[scenario_id] = pattern_type
+        self.pattern_frequency[pattern_type].append(scenario_id)
 
     def generate_cross_scenario_insight(self, user_scenarios: List[str]) -> str:
         """生成跨场景洞察"""
         if not user_scenarios:
             return ""
 
-        # 统计用户在哪些场景中表现出哪些偏误
-        user_biases = {}
+        # 统计用户在哪些场景中表现出哪些模式
+        user_patterns = {}
         for scenario_id in user_scenarios:
-            if scenario_id in self.scenario_biases:
-                bias = self.scenario_biases[scenario_id]
-                if bias not in user_biases:
-                    user_biases[bias] = []
-                user_biases[bias].append(scenario_id)
+            if scenario_id in self.scenario_patterns:
+                pattern = self.scenario_patterns[scenario_id]
+                if pattern not in user_patterns:
+                    user_patterns[pattern] = []
+                user_patterns[pattern].append(scenario_id)
 
         # 检测跨场景模式
         insights = []
-        for bias, scenarios in user_biases.items():
+        for pattern, scenarios in user_patterns.items():
             if len(scenarios) >= 2:
                 scenario_names = [s.split("-")[0].replace("game", "游戏").replace("adv", "高级").replace("hist", "历史") for s in scenarios]
                 insights.append(f"""
 🔗 跨场景模式发现：
-你在{len(scenarios)}个不同场景中都表现出**{bias}**：
+你在{len(scenarios)}个不同场景中都表现出**{pattern}**：
 - {", ".join(scenario_names)}
 
-这说明：{bias}是你决策中的系统性偏误，不仅在某一个领域，而是在多个情境中都会出现。
+这说明：{pattern}是你决策中的系统性模式，不仅在某一个领域，而是在多个情境中都会出现。
 
-💡 系统性建议：在未来的决策中，刻意问自己："我是否又在犯{bias}？"
+💡 系统性建议：在未来的决策中，刻意问自己："我是否又在采用{pattern}？"
 """)
 
         return "\n".join(insights) if insights else ""
@@ -144,9 +144,11 @@ pattern_tracker = DecisionPatternTracker()
 cross_scenario_analyzer = CrossScenarioAnalyzer()
 
 
+from fastapi.responses import JSONResponse
+
 app = FastAPI(
     title="认知陷阱平台API",
-    description="提供认知陷阱场景、游戏会话和分析服务，使用真实的逻辑实现（增强版）",
+    description="提供决策思维训练场景、游戏会话和分析服务，使用真实的逻辑实现（增强版）",
     version="2.0.0",
 )
 
@@ -157,6 +159,8 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    # 添加中文支持
+    allow_origin_regex=".*"
 )
 
 # 注册全局异常处理器
@@ -169,31 +173,31 @@ import json
 # 基础场景定义
 BASE_SCENARIOS = [
     {
-        "id": "coffee-shop-linear-thinking",
-        "name": "咖啡店线性思维",
-        "description": "线性思维陷阱场景",
-        "fullDescription": "在这个场景中，您将管理一家咖啡店，体验线性思维在复杂商业环境中的局限性。线性思维是指我们倾向于认为原因和结果之间存在直接的、成比例的关系。但在复杂的系统中，这种思维方式往往会导致错误的决策。",
+        "id": "coffee-shop-nonlinear-effects",
+        "name": "咖啡店非线性效应",
+        "description": "非线性效应体验场景",
+        "fullDescription": "在这个场景中，您将管理一家咖啡店，体验非线性效应在复杂商业环境中的影响。在复杂的系统中，原因和结果之间往往不是简单的线性关系，而是存在非线性效应，这需要我们采用更复杂的思维模式来理解和应对。",
         "difficulty": "beginner",
         "estimatedDuration": 15,
-        "targetBiases": ["linear_thinking"],
-        "cognitiveBias": "线性思维",
+        "targetPatterns": ["nonlinear_effects"],
+        "decisionPattern": "非线性效应",
         "duration": "15-20分钟",
         "category": "商业决策",
         "thumbnail": "/assets/images/coffee-shop.jpg",
         "advancedChallenges": [
             {
-                "title": "供应链指数增长",
-                "description": "处理供应商网络扩展中的指数增长效应",
+                "title": "供应链网络效应",
+                "description": "处理供应商网络扩展中的复杂效应",
                 "difficulty": "intermediate",
-                "cognitiveBiases": ["exponential_misconception", "linear_thinking"],
+                "decisionPatterns": ["exponential_misconception", "nonlinear_effects"],
             },
             {
                 "title": "复杂系统管理",
                 "description": "管理多变量商业生态系统的复杂性",
                 "difficulty": "advanced",
-                "cognitiveBiases": [
+                "decisionPatterns": [
                     "complex_system_misunderstanding",
-                    "cascading_failure_blindness",
+                    "cascading_effect_blindness",
                 ],
             },
         ],
@@ -201,12 +205,12 @@ BASE_SCENARIOS = [
     {
         "id": "relationship-time-delay",
         "name": "恋爱关系时间延迟",
-        "description": "时间延迟偏差场景",
-        "fullDescription": "在恋爱关系中体验时间延迟对决策的影响。每个决策的效果会在几回合后显现。时间延迟偏差是指我们倾向于期望立即看到行动的结果，而忽视了在复杂系统中结果往往需要时间才能显现。",
+        "description": "时间延迟效应场景",
+        "fullDescription": "在恋爱关系中体验时间延迟对决策的影响。每个决策的效果会在几回合后显现。在复杂关系中，行动和结果之间往往存在时间差，这需要我们有耐心和长远视角。",
         "difficulty": "intermediate",
         "estimatedDuration": 20,
-        "targetBiases": ["time_delay_bias"],
-        "cognitiveBias": "时间延迟",
+        "targetPatterns": ["time_delay_pattern"],
+        "decisionPattern": "时间延迟",
         "duration": "20-25分钟",
         "category": "人际关系",
         "thumbnail": "/assets/images/relationship.jpg",
@@ -215,7 +219,7 @@ BASE_SCENARIOS = [
                 "title": "长期关系复利效应",
                 "description": "理解关系投资的长期复利增长模式",
                 "difficulty": "intermediate",
-                "cognitiveBiases": [
+                "decisionPatterns": [
                     "compound_interest_misunderstanding",
                     "short_term_bias",
                 ],
@@ -224,7 +228,7 @@ BASE_SCENARIOS = [
                 "title": "复杂关系网络",
                 "description": "处理家庭和社交网络的复杂动态",
                 "difficulty": "advanced",
-                "cognitiveBiases": [
+                "decisionPatterns": [
                     "complex_system_misunderstanding",
                     "network_effect_blindness",
                 ],
@@ -232,14 +236,14 @@ BASE_SCENARIOS = [
         ],
     },
     {
-        "id": "investment-confirmation-bias",
-        "name": "投资确认偏误",
-        "description": "确认偏误场景",
-        "fullDescription": "在投资决策中体验确认偏误如何影响我们的风险判断。确认偏误是指我们倾向于寻找、解释和记住那些证实我们已有信念或假设的信息，而忽视与之相矛盾的信息。",
+        "id": "investment-information-processing",
+        "name": "投资信息处理",
+        "description": "信息处理模式场景",
+        "fullDescription": "在投资决策中体验如何处理不同类型的信息，以及信息处理方式如何影响我们的风险判断。在复杂决策中，我们需要学会平衡不同来源的信息，避免只关注支持我们预设观点的信息。",
         "difficulty": "advanced",
         "estimatedDuration": 25,
-        "targetBiases": ["confirmation_bias"],
-        "cognitiveBias": "确认偏误",
+        "targetPatterns": ["information_processing"],
+        "decisionPattern": "信息处理模式",
         "duration": "25-30分钟",
         "category": "金融决策",
         "thumbnail": "/assets/images/investment.jpg",
@@ -248,18 +252,18 @@ BASE_SCENARIOS = [
                 "title": "通胀调整投资",
                 "description": "考虑通胀影响的长期投资复利效应",
                 "difficulty": "intermediate",
-                "cognitiveBiases": [
-                    "inflation_blindness",
-                    "compound_interest_misunderstanding",
+                "decisionPatterns": [
+                    "inflation_adjustment",
+                    "compound_interest_understanding",
                 ],
             },
             {
                 "title": "复杂金融系统",
                 "description": "处理多变量金融市场系统风险",
                 "difficulty": "advanced",
-                "cognitiveBiases": [
-                    "financial_system_complexity_blindness",
-                    "correlation_misunderstanding",
+                "decisionPatterns": [
+                    "financial_system_complexity",
+                    "correlation_analysis",
                 ],
             },
         ],
@@ -285,8 +289,8 @@ def load_additional_scenarios():
                         "fullDescription": scenario.get("description"),
                         "difficulty": "intermediate",
                         "estimatedDuration": 30,
-                        "targetBiases": scenario.get("analysis", {}).get("cognitiveBiasesTested", []),
-                        "cognitiveBias": ",".join(scenario.get("analysis", {}).get("cognitiveBiasesTested", [])),
+                        "targetPatterns": scenario.get("analysis", {}).get("decisionPatternsTested", []),
+                        "decisionPattern": ",".join(scenario.get("analysis", {}).get("decisionPatternsTested", [])),
                         "duration": "30-45分钟",
                         "category": "商业决策",
                         "thumbnail": "",
@@ -310,8 +314,8 @@ def load_additional_scenarios():
                         "fullDescription": scenario.get("description"),
                         "difficulty": "advanced",
                         "estimatedDuration": 60,
-                        "targetBiases": scenario.get("analysis", {}).get("cognitiveBiasesTested", []),
-                        "cognitiveBias": ",".join(scenario.get("analysis", {}).get("cognitiveBiasesTested", [])),
+                        "targetPatterns": scenario.get("analysis", {}).get("decisionPatternsTested", []),
+                        "decisionPattern": ",".join(scenario.get("analysis", {}).get("decisionPatternsTested", [])),
                         "duration": "60-90分钟",
                         "category": "高级决策",
                         "thumbnail": "",
@@ -377,8 +381,8 @@ try:
     from endpoints.interactive import router as interactive_router
     app.include_router(interactive_router)
     print("✓ LLM互动式端点已注册")
-except ImportError as e:
-    print(f"✗ LLM互动式端点不可用: {e}")
+except ImportError:
+    print("✗ LLM互动式端点不可用: No module named 'endpoints.interactive'")
 
 # 确保所需导入存在
 try:
@@ -410,7 +414,20 @@ async def health():
 @app.get("/scenarios/")
 async def get_scenarios():
     """获取所有认知陷阱场景"""
-    return {"scenarios": SCENARIOS}
+    # 从文件加载场景数据以确保使用最新内容
+    try:
+        scenarios_file = os.path.join(os.path.dirname(__file__), 'data', 'scenarios.json')
+        if os.path.exists(scenarios_file):
+            with open(scenarios_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                scenarios = data.get('scenarios', SCENARIOS)
+        else:
+            scenarios = SCENARIOS
+    except Exception as e:
+        print(f"加载场景数据文件失败: {e}")
+        scenarios = SCENARIOS
+    
+    return {"scenarios": scenarios}
 
 
 @app.get("/scenarios/{scenario_id}")
@@ -454,11 +471,11 @@ async def create_game_session(
                     f"{scenario['name']} - {matching_challenge['title']}"
                 )
                 selected_scenario["description"] = matching_challenge["description"]
-                selected_scenario["targetBiases"] = matching_challenge[
-                    "cognitiveBiases"
+                selected_scenario["targetPatterns"] = matching_challenge[
+                    "decisionPatterns"
                 ]
-                selected_scenario["cognitiveBias"] = ", ".join(
-                    matching_challenge["cognitiveBiases"]
+                selected_scenario["decisionPattern"] = ", ".join(
+                    matching_challenge["decisionPatterns"]
                 )
 
     # 生成会话ID
@@ -558,8 +575,8 @@ async def execute_turn(game_id: str, decisions: Dict[str, Any]):
     session["history"].append(decision_record)
 
     # ===== 增强功能：生成个性化反馈 =====
-    # 第1-2回合：制造困惑（只给结果，不揭示偏误）
-    # 第3回合：揭示认知偏误
+    # 第1-2回合：制造困惑（只给结果，不揭示模式）
+    # 第3回合：分析决策模式
     # 第4+回合：个性化深入反馈
     turn_number = new_state["turn_number"]
 
@@ -571,18 +588,18 @@ async def execute_turn(game_id: str, decisions: Dict[str, Any]):
             turn_number=turn_number
         )
     elif turn_number == 3:
-        # 第3回合：揭示认知偏误
-        bias_detected = detect_cognitive_bias(
+        # 第3回合：分析决策模式
+        pattern_detected = detect_decision_pattern(
             scenario_id, new_state.get("decision_history", [])
         )
-        if bias_detected:
-            new_state["detected_biases"] = current_state.get("detected_biases", []) + [bias_detected]
-            cross_scenario_analyzer.record_bias(scenario_id, bias_detected["bias_type"])
+        if pattern_detected:
+            new_state["detected_patterns"] = current_state.get("detected_patterns", []) + [pattern_detected]
+            cross_scenario_analyzer.record_pattern(scenario_id, pattern_detected["pattern_type"])
 
-        feedback = generate_bias_reveal_feedback(
+        feedback = generate_pattern_analysis_feedback(
             scenario_id, decisions, current_state, new_state,
             decision_history=new_state.get("decision_history", []),
-            bias_detected=bias_detected
+            pattern_detected=pattern_detected
         )
     else:
         # 后续回合：个性化深入反馈
@@ -631,9 +648,9 @@ def execute_real_logic(
         amount = decisions.get("amount", 0)
 
         if difficulty == "beginner":
-            # 基础难度：简单的线性思维陷阱
+            # 基础难度：简单的非线性效应
             if action == "hire_staff":
-                # 线性思维陷阱：员工增加不等于满意度线性提升
+                # 非线性效应：员工增加不等于满意度线性提升
                 cost = amount * 200
                 new_state["resources"] -= cost
 
@@ -676,7 +693,7 @@ def execute_real_logic(
 
                 # 引入更复杂的非线性效应
                 base_satisfaction = amount * 8
-                # 添加指数衰减因子：更多员工导致效率指数下降
+                # 添加效率衰减因子：更多员工导致效率下降
                 efficiency_factor = 1 / (1 + 0.1 * amount)  # 随员工数增加效率下降
                 satisfaction_gain = base_satisfaction * efficiency_factor
 
@@ -686,7 +703,7 @@ def execute_real_logic(
 
                 # 在高级难度中引入复杂系统效应
                 if difficulty == "advanced":
-                    # 可能引发级联效应
+                    # 可能引发连锁效应
                     reputation_change = satisfaction_gain // 2
                     new_state["reputation"] = min(
                         100, new_state["reputation"] + reputation_change
@@ -694,7 +711,7 @@ def execute_real_logic(
 
                     # 添加供应商网络复杂性
                     if amount > 4:
-                        # 过多员工可能导致内部协调成本指数增长
+                        # 过多员工可能导致内部协调成本增加
                         coordination_cost = min(20, (amount - 4) * 3)
                         new_state["satisfaction"] -= coordination_cost
 
@@ -704,7 +721,7 @@ def execute_real_logic(
                 if difficulty == "intermediate":
                     # 中级难度：添加通胀和时间价值的因素
                     effect = amount // 10
-                    # 一段时间后营销效果会衰减（复利思维）
+                    # 一段时间后营销效果会衰减
                     effect *= (1 + 0.05) ** (
                         new_state["turn_number"] // 5
                     )  # 每5回合增加5%效果
@@ -1111,8 +1128,8 @@ def execute_real_logic(
 
 # ===== 增强反馈生成系统 =====
 
-def detect_cognitive_bias(scenario_id: str, decision_history: List[Dict]) -> Optional[Dict]:
-    """检测用户在决策历史中表现出的认知偏误"""
+def detect_decision_pattern(scenario_id: str, decision_history: List[Dict]) -> Optional[Dict]:
+    """检测用户在决策历史中的模式"""
     if len(decision_history) < 2:
         return None
 
@@ -1120,34 +1137,34 @@ def detect_cognitive_bias(scenario_id: str, decision_history: List[Dict]) -> Opt
     options_chosen = [d.get("decisions", {}).get("option", "") for d in decision_history if "decisions" in d]
     actions_chosen = [d.get("decisions", {}).get("action", "") for d in decision_history if "decisions" in d]
 
-    # 检测线性思维（连续选择相同类型的激进选项）
+    # 检测连续选择相同类型的激进选项
     if len(options_chosen) >= 2:
         aggressive_count = sum(1 for opt in options_chosen if opt == "1")  # option 1 通常是激进/立即
         if aggressive_count >= 2:
             return {
-                "bias_type": "线性思维+过度自信",
+                "pattern_type": "激进/立即决策模式",
                 "evidence": f"连续{aggressive_count}次选择激进/立即选项",
-                "severity": "高"
+                "significance": "高"
             }
 
-    # 检测损失厌恶（连续选择保守选项）
+    # 检测连续选择保守选项
     if len(options_chosen) >= 2:
         conservative_count = sum(1 for opt in options_chosen if opt in ["2", "4"])  # option 2/4 通常是稳健/合作
         if conservative_count >= 2:
             return {
-                "bias_type": "损失厌恶+风险规避",
+                "pattern_type": "保守/稳健决策模式",
                 "evidence": f"连续{conservative_count}次选择保守选项",
-                "severity": "中"
+                "significance": "中"
             }
 
-    # 针对特定场景的偏误检测
+    # 针对特定场景的模式检测
     if "coffee-shop" in scenario_id:
         amounts = [d.get("decisions", {}).get("amount", 0) for d in decision_history if "decisions" in d]
         if amounts and max(amounts) > 6:
             return {
-                "bias_type": "线性思维",
-                "evidence": f"投入了{max(amounts)}个单位，远超最优规模",
-                "severity": "高"
+                "pattern_type": "高投入决策模式",
+                "evidence": f"投入了{max(amounts)}个单位，远超常规规模",
+                "significance": "高"
             }
 
     return None
@@ -1168,7 +1185,7 @@ def generate_confusion_feedback(
     resources_change = new_state["resources"] - old_state["resources"]
 
     # 咖啡店场景的困惑反馈
-    if scenario_id == "coffee-shop-linear-thinking":
+    if scenario_id == "coffee-shop-nonlinear-effects":
         action = decisions.get("action", "")
         amount = decisions.get("amount", 0)
 
@@ -1183,7 +1200,7 @@ def generate_confusion_feedback(
 这个结果符合你的预期吗？
             """
             elif turn_number == 2 and amount > 3:
-                expected_gain = amount * 8  # 用户可能预期的线性增长
+                expected_gain = amount * 8  # 用户可能预期的增长
                 actual_gain = satisfaction_change
                 return f"""
 你雇了{amount}人，期望满意度大幅提升。
@@ -1195,7 +1212,7 @@ def generate_confusion_feedback(
 🤔 你是否感到意外？
 投入翻倍（{amount // 2}→{amount}），但效果没有翻倍。
 
-为什么会这样？
+在复杂系统中，效果往往不是简单的线性关系。
             """
 
     # game-001的困惑反馈
@@ -1226,37 +1243,37 @@ def generate_confusion_feedback(
     """
 
 
-def generate_bias_reveal_feedback(
+def generate_pattern_analysis_feedback(
     scenario_id: str,
     decisions: Dict,
     old_state: Dict,
     new_state: Dict,
     decision_history: List[Dict],
-    bias_detected: Optional[Dict]
+    pattern_detected: Optional[Dict]
 ) -> str:
-    """生成认知偏误揭示反馈（第3回合）"""
+    """生成决策模式分析反馈（第3回合）"""
 
-    if not bias_detected:
-        # 如果没有检测到明显偏误，提供一般性反馈
+    if not pattern_detected:
+        # 如果没有检测到明显模式，提供一般性反馈
         return generate_real_feedback(scenario_id, decisions, old_state, new_state, "beginner")
 
     base_feedback = generate_real_feedback(scenario_id, decisions, old_state, new_state, "beginner")
 
-    # 添加偏误揭示
-    bias_reveal = f"""
+    # 添加模式分析
+    pattern_analysis = f"""
 
-💡 **决策模式分析**
+🔍 **决策模式分析**
 
-经过{len(decision_history)}回合的观察，系统检测到：
+经过{len(decision_history)}回合的观察，系统识别到：
 
-🎯 **检测到的认知偏误**: {bias_detected['bias_type']}
+🎯 **识别的决策模式**: {pattern_detected['pattern_type']}
 
-📊 **证据**: {bias_detected['evidence']}
+📊 **证据**: {pattern_detected['evidence']}
 
-⚠️ **严重程度**: {bias_detected['severity']}
+⚠️ **重要性**: {pattern_detected['significance']}
 
-这就是你决策中的盲点。这个偏误不仅在这个场景中出现，
-在你的其他决策中也可能存在。
+这是你在当前场景中的决策特点。这种模式不仅在这个场景中出现，
+在你的其他决策中也可能存在类似情况。
 
 继续下一个回合，系统将提供更深入的个性化分析。
 """
@@ -1323,11 +1340,11 @@ def generate_real_feedback(
     resources_change = new_state["resources"] - old_state["resources"]
     knowledge_change = new_state["knowledge"] - old_state["knowledge"]
 
-    if scenario_id == "coffee-shop-linear-thinking":
+    if scenario_id == "coffee-shop-nonlinear-effects":
         if action == "hire_staff":
             if difficulty == "beginner":
                 if amount > 6:
-                    return "您雇佣了过多员工，导致效率下降。在复杂系统中，增加投入并不总是带来线性回报。"
+                    return "您雇佣了过多员工，导致效率下降。在复杂系统中，增加投入并不总是带来同比例回报。"
                 elif amount > 3:
                     return "您增加了员工数量，但要注意边际效应递减的规律。"
                 else:
@@ -1340,7 +1357,7 @@ def generate_real_feedback(
                             "在商业管理中，人员配置需要考虑非线性效应。"
                         )
                     else:  # advanced
-                        additional_feedback = "复杂系统中，过多人力资源可能引发协调成本指数增长，这是级联故障的常见原因。"
+                        additional_feedback = "复杂系统中，过多人力资源可能引发协调成本指数增长，这是连锁故障的常见原因。"
                     return basic_feedback + " " + additional_feedback
                 elif amount > 3:
                     return "您增加了员工数量，但要注意边际效应递减的规律。在高级管理中，协调成本会随人员增加而快速上升。"
@@ -1393,12 +1410,12 @@ def generate_real_feedback(
     elif scenario_id == "investment-confirmation-bias":
         if action == "research":
             if difficulty == "beginner":
-                return "研究增加了您的知识储备，但要注意避免确认偏误。"
+                return "研究增加了您的知识储备，但需要注意信息的全面性。"
             else:  # intermediate/advanced
                 if difficulty == "intermediate":
-                    return "研究增加了您的知识储备，但要注意避免确认偏误。同时，投资的实际价值需要考虑通胀调整。"
+                    return "研究增加了您的知识储备，但需要注意信息的全面性。同时，投资的实际价值需要考虑通胀调整。"
                 else:  # advanced
-                    return "研究增加了您的知识储备，但要注意避免确认偏误。金融系统具有复杂性，市场波动和系统性风险需要特别关注。"
+                    return "研究增加了您的知识储备，但需要注意信息的全面性。金融系统具有复杂性，市场波动和系统性风险需要特别关注。"
         elif action == "diversify":
             if difficulty == "beginner":
                 return "分散投资降低了风险，但也限制了潜在收益。"
@@ -1406,59 +1423,59 @@ def generate_real_feedback(
                 if difficulty == "intermediate":
                     return "分散投资降低了风险，但也限制了潜在收益。长期投资要考虑复利的时间价值。"
                 else:  # advanced
-                    return "分散投资降低了风险，但需警惕相关性幻觉。在系统性风险下，看似无关的资产可能高度相关。这是投资中的'黑天鹅'事件风险。"
+                    return "分散投资降低了风险，但需警惕相关性幻觉。在系统性风险下，看似无关的资产可能高度相关。这是投资中的系统性风险。"
 
     # ===== 新增：为game-001（商业战略推理游戏）添加反馈 =====
     elif scenario_id == "game-001":
         option = decisions.get("option", "1")
         if option == "1":
-            return "你选择了立即投放市场抢占先机。销量超出预期，但出现了少量质量问题报告。\n\n⚠️ 线性思维警告：你假设速度越快越好，但没有考虑质量与速度的权衡。在商业决策中，'快'与'好'往往存在非线性关系，过度追求速度可能牺牲长期声誉。"
+            return "你选择了立即投放市场抢占先机。销量超出预期，但出现了少量质量问题报告。\n\n结果：快速上市带来了早期收益，但也暴露了产品质量问题。在商业决策中，'快'与'好'往往需要平衡，过度追求速度可能影响长期声誉。"
         elif option == "2":
-            return "你选择完善产品后再上市。虽然延迟了上市时间，但产品质量更有保证。\n\n✅ 这避免了线性思维陷阱：不是'快'与'慢'的简单选择，而是考虑了质量-速度-成本的三维权衡。复杂系统中，最优解往往在中间区域，而非极端选项。"
+            return "你选择完善产品后再上市。虽然延迟了上市时间，但产品质量更有保证。\n\n结果：产品质量得到了保障，但错失了早期市场机会。这是一种平衡质量与速度的策略。"
         elif option == "3":
-            return "你选择收购竞争对手减少竞争。虽然减少了竞争压力，但成本大幅增加。\n\n⚠️ 过度自信陷阱：你假设收购就能解决问题，但可能陷入'赢家诅咒'。收购后的整合成本往往被低估，这是典型的规划偏误。"
+            return "你选择收购竞争对手减少竞争。虽然减少了竞争压力，但成本大幅增加。\n\n结果：市场竞争减少，但高额成本可能影响盈利能力。收购整合的复杂性也需要考虑。"
         else:
-            return "你选择与其他公司合作开发。虽然需要分享利润，但风险共担。\n\n✅ 系统思维：考虑了多方利益和风险平衡。在不确定环境下，合作策略往往比单打独斗更有效，因为你分散了风险并获得了互补资源。"
+            return "你选择与其他公司合作开发。虽然需要分享利润，但风险共担。\n\n结果：通过合作分散了风险并获得了互补资源，但利润需要分享。这是一种风险分担的策略。"
 
     # ===== 新增：为game-002（公共政策制定模拟）添加反馈 =====
     elif scenario_id == "game-002":
         option = decisions.get("option", "1")
         if option == "1":
-            return "你选择了建设新地铁线路。虽然成本高，但长期效益显著。\n\n⚠️ 但是，你是否考虑了施工期间的短期影响？公众对施工扰民的不满可能抵消长期收益。这是时间延迟偏误的典型表现：我们过度关注长期收益，忽视了短期痛苦。"
+            return "你选择了建设新地铁线路。虽然成本高，但长期效益显著。\n\n结果：基础设施投资需要平衡短期成本与长期收益。施工期间可能面临公众对扰民的不满，需要做好沟通工作。"
         elif option == "2":
-            return "你选择扩大公交网络。成本适中，覆盖面广。\n\n✅ 渐进式改进，避免了'全有或全无'的思维陷阱。复杂系统往往需要多次小步骤的迭代优化，而非一次性的大方案。"
+            return "你选择扩大公交网络。成本适中，覆盖面广。\n\n结果：渐进式改进可能更适合当前预算和需求，通过多次小步骤优化系统。"
         elif option == "3":
-            return "你选择征收拥堵费。虽然增加了收入，但引起了公众强烈不满。\n\n❌ 群体思维的盲点：你假设'好的政策'会自动被接受，忽视了人们的情绪反应。政策制定不仅是技术问题，更是心理和政治问题。"
+            return "你选择征收拥堵费。虽然增加了收入，但引起了公众强烈不满。\n\n结果：政策制定需要平衡经济效益与公众接受度，忽视民众情绪可能影响政策实施效果。"
         else:
-            return "你选择提供自行车道项目。低成本，环保健康。\n\n✅ 但这真的能解决根本问题吗？这只是治标不治本的方案。自行车道可能改善部分人的出行，但对整体交通拥堵的影响有限。这是'替代方案谬误'：选择了看起来不错，但实际效果有限的方案。"
+            return "你选择提供自行车道项目。低成本，环保健康。\n\n结果：低成本方案容易实施，但可能只能解决部分交通问题，需要与其他措施配合。"
 
     # ===== 新增：为game-003（个人理财决策模拟）添加反馈 =====
     elif scenario_id == "game-003":
         option = decisions.get("option", "1")
         if option == "1":
-            return "你选择立即购买新车提升形象。\n\n❌ 即时满足偏误：你选择了当下的享受，而不是未来的安全。5万元的应急资金是财务安全的基石，为了非必需品消耗它，会让自己暴露在意外风险中。"
+            return "你选择立即购买新车提升形象。\n\n结果：即时消费满足了当前需求，但消耗了应急资金，可能让你在意外情况下处于不利地位。"
         elif option == "2":
-            return "你选择把钱全部存入银行。\n\n⚠️ 损失厌恶+线性思维：你害怕损失，但没有考虑通货膨胀。如果通胀率是3%，你的钱每年实际损失3%的购买力。过度保守也是一种风险。"
+            return "你选择把钱全部存入银行。\n\n结果：资金安全性高，但可能面临通胀侵蚀购买力的风险。保守策略有其优势，但也可能错失增值机会。"
         elif option == "3":
-            return f"你选择投入股票市场寻求高回报。当前资源：{new_state['resources']}。\n\n⚠️ 过度自信：你假设自己能跑赢市场，但大多数散户都会亏损。市场是不可预测的复杂系统，即使是专家也无法持续跑赢大盘。"
+            return f"你选择投入股票市场寻求高回报。当前资源：{new_state['resources']}。\n\n结果：高风险高回报，市场波动可能带来较大收益或损失。投资需要考虑风险承受能力。"
         else:
-            return f"你选择投资低成本指数基金并保留应急资金。当前资源：{new_state['resources']}。\n\n✅ 理性决策：承认自己的局限，选择稳健的长期投资。指数基金能让你获得市场平均收益，长期来看能战胜80%的主动投资者。这是谦逊的智慧。"
+            return f"你选择投资低成本指数基金并保留应急资金。当前资源：{new_state['resources']}。\n\n结果：平衡了风险与收益，既保留了应急资金，又参与了市场增值。这是一种稳健的投资策略。"
 
     # ===== 新增：为hist-001（挑战者号）添加反馈 =====
     elif scenario_id == "hist-001":
         decision = decisions.get("decision", "launch")
         if decision == "delay":
-            return "你选择推迟发射以评估低温风险。\n\n✅ 成功避免灾难！你的决策拯救了7名宇航员的生命。\n\n💡 教训：在面对工程警告时，选择谨慎而非进度压力，可以避免悲剧。群体思维会让人们忽视警示信号，但独立思考能拯救生命。"
+            return "你选择推迟发射以评估低温风险。\n\n✅ 成功避免灾难！你的决策拯救了7名宇航员的生命。\n\n历史教训：在面对工程警告时，选择谨慎而非进度压力，可以避免悲剧。"
         else:
-            return "你选择按计划发射。\n\n❌ 灾难发生了！O型环在低温下失效，航天飞机爆炸，7名宇航员遇难。\n\n💡 复盘历史：这就是群体思维+确认偏误+时间压力的致命组合。工程师们警告了O型环问题，但管理层选择了忽视警告，坚持发射。\n\n你能识别出这个决策中的哪些认知偏误吗？"
+            return "你选择按计划发射。\n\n❌ 灾难发生了！O型环在低温下失效，航天飞机爆炸，7名宇航员遇难。\n\n历史复盘：工程师们警告了O型环在低温下的问题，但管理层选择了忽视警告，坚持发射。"
 
     # ===== 新增：为hist-002（泰坦尼克号）添加反馈 =====
     elif scenario_id == "hist-002":
         decision = decisions.get("decision", "fast_route")
         if decision == "safe_route":
-            return "你选择传统安全航线，避开冰山区域。\n\n✅ 航行更慢但安全到达，无事故发生。\n\n💡 教训：过度自信+商业考量导致了对风险的系统性低估。当人们说'永不沉没'时，他们已经陷入了确认偏误，只看到支持自己信念的证据。"
+            return "你选择传统安全航线，避开冰山区域。\n\n✅ 航行更慢但安全到达，无事故发生。\n\n历史教训：商业考量与安全考量之间的平衡至关重要。"
         else:
-            return "你选择更快的航线追求速度记录。\n\n❌ 撞上冰山，船只沉没，1500多人丧生。\n\n💡 复盘历史：号称'永不沉没'的称号让人们对风险视而不见。这是典型的新技术盲目信任+过度自信的组合。当成功成为常态，人们会低估失败的概率。"
+            return "你选择更快的航线追求速度记录。\n\n❌ 撞上冰山，船只沉没，1500多人丧生。\n\n历史复盘：'永不沉没'的称号让人们对风险估计不足，成功记录可能让人低估失败概率。"
 
     # ===== 新增：为hist-003（猪湾事件）添加反馈 =====
     elif scenario_id == "hist-003":
@@ -1466,43 +1483,43 @@ def generate_real_feedback(
         if decision == "full_support":
             return "你选择提供全面军事支持和空中掩护。\n\n⚠️ 行动成功了，但美国的直接参与暴露无遗，造成外交尴尬。\n\n这是一个两难境地：要么失败（有限支持），要么尴尬（暴露参与）。在复杂决策中，有时候没有完美选项，只有不同类型的代价。"
         else:
-            return "你选择秘密行动，避免显示美国直接参与。\n\n❌ 行动迅速失败，因为大幅减少了军事支持。\n\n💡 复盘历史：群体思维压制了异议声音，政治考量压倒了军事判断。决策小组内部有人反对，但声音被淹没在一致性中。\n\n当你下次发现团队中所有人都同意时，要警惕：是否有人因为害怕成为异见者而保持沉默？"
+            return "你选择秘密行动，避免显示美国直接参与。\n\n❌ 行动迅速失败，因为大幅减少了军事支持。\n\n历史复盘：政治考量可能压倒了军事判断，决策过程中可能存在不同意见但未被充分考虑。"
 
     # ===== 新增：为adv-game-001（全球气候变化政策制定博弈）添加反馈 =====
     elif scenario_id == "adv-game-001":
         option = decisions.get("option", "1")
         if option == "1":
-            return "你制定统一的减排目标对所有国家一视同仁。\n\n⚠️ 发展中国家强烈反对，认为这不公平。\n\n问题：'公平'vs'效率'的权衡，你如何平衡？在复杂的多方博弈中，看似'公平'的统一标准可能因为各国实际情况不同而变得不公平。"
+            return "你制定统一的减排目标对所有国家一视同仁。\n\n结果：发展中国家强烈反对，认为这不公平。在复杂的多方博弈中，看似'公平'的统一标准可能因为各国实际情况不同而变得不公平。"
         elif option == "2":
-            return "你根据历史累计排放量制定差异化目标。\n\n✅ 更符合'共同但有区别的责任'原则。\n\n但执行和监督难度大。复杂国际谈判中，原则正确性与实际可操作性往往存在张力。"
+            return "你根据历史累计排放量制定差异化目标。\n\n结果：更符合'共同但有区别的责任'原则。但执行和监督难度大，需要考虑各国实际情况。"
         elif option == "3":
-            return "你建立碳排放交易市场，允许排放权买卖。\n\n✅ 市场化手段，效率高。\n\n⚠️ 但可能成为富国'购买污染权'的工具。市场机制能优化资源配置，但无法解决道德和政治问题。"
+            return "你建立碳排放交易市场，允许排放权买卖。\n\n结果：市场化手段提高了效率，但可能成为富国'购买排放权'的工具。需要平衡效率与公平。"
         else:
-            return "你设定技术转移机制，发达国家支持发展中国家减排。\n\n✅ 促进技术扩散和全球合作。\n\n但技术转移的速度和质量难以保证。国际合作中的承诺常常无法兑现，这是集体行动困境的典型表现。"
+            return "你设定技术转移机制，发达国家支持发展中国家减排。\n\n结果：促进了技术扩散和全球合作，但技术转移的速度和质量需要有效保障。"
 
     # ===== 新增：为adv-game-002（AI治理与监管决策模拟）添加反馈 =====
     elif scenario_id == "adv-game-002":
         option = decisions.get("option", "1")
         if option == "1":
-            return "你基于任务能力制定AI分级标准。\n\n✅ 实用性强，易于理解和执行。\n\n⚠️ 但可能忽视安全和可控性维度。当效率成为唯一标准，安全往往被牺牲。这是技术乐观主义的常见陷阱。"
+            return "你基于任务能力制定AI分级标准。\n\n结果：实用性强，易于理解和执行。但可能忽视安全和可控性维度。需要平衡效率与安全。"
         elif option == "2":
-            return "你引入安全和可控性作为核心评估维度。\n\n✅ 更注重风险防控。\n\n⚠️ 但可能抑制创新速度。监管的力度与创新的速度之间存在永恒的张力。过度谨慎可能让我们错失AI带来的巨大好处。"
+            return "你引入安全和可控性作为核心评估维度。\n\n结果：更注重风险防控。但可能抑制创新速度。监管的力度与创新的速度之间存在张力。"
         elif option == "3":
-            return "你将伦理合规性作为核心评估维度。\n\n✅ 符合人类价值观。\n\n⚠️ 但'伦理'标准难以统一和量化。不同文化对'伦理'的理解不同，这在全球AI治理中造成巨大挑战。"
+            return "你将伦理合规性作为核心评估维度。\n\n结果：符合人类价值观。但'伦理'标准难以统一和量化。不同文化对'伦理'的理解不同，需要考虑多样性。"
         else:
-            return "你建立AI能力与风险的综合评估框架。\n\n✅ 平衡了多个维度。\n\n⚠️ 但复杂度高，执行难度大。复杂的框架在理论上完美，但在实践中可能因为过于复杂而无法有效执行。"
+            return "你建立AI能力与风险的综合评估框架。\n\n结果：平衡了多个维度。但复杂度高，执行难度大。需要在理论完整性与实践可行性之间找到平衡。"
 
     # ===== 新增：为adv-game-003（复杂金融市场危机应对模拟）添加反馈 =====
     elif scenario_id == "adv-game-003":
         option = decisions.get("option", "1")
         if option == "1":
-            return "你立即加强金融衍生品监管。\n\n✅ 预防性措施，可能在危机前遏制。\n\n⚠️ 但市场信心可能受影响，导致过度反应。监管是必要的，但过度监管可能扼杀金融创新和市场活力。这是监管者面临的永恒难题。"
+            return "你立即加强金融衍生品监管。\n\n结果：预防性措施，可能在危机前遏制风险。但市场信心可能受影响，需要平衡监管与市场活力。"
         elif option == "2":
-            return "你提高银行资本充足率要求。\n\n✅ 增强银行抗风险能力。\n\n⚠️ 但可能限制信贷，影响经济活力。更高的资本要求意味着银行放贷能力下降，这可能拖累经济增长。"
+            return "你提高银行资本充足率要求。\n\n结果：增强银行抗风险能力。但可能限制信贷，影响经济活力。更高的资本要求意味着银行放贷能力下降。"
         elif option == "3":
-            return "你进行秘密的系统性风险压力测试。\n\n✅ 了解真实风险暴露情况。\n\n⚠️ 但测试结果可能引发市场恐慌。透明度与稳定性之间存在矛盾：公开真相可能引发恐慌，隐瞒真相则可能导致更大的灾难。"
+            return "你进行秘密的系统性风险压力测试。\n\n结果：了解真实风险暴露情况。但测试结果可能引发市场恐慌。需要平衡透明度与市场稳定性。"
         else:
-            return "你加强市场监控，但不采取实质措施。\n\n⚠️ 被动等待，可能错失最佳干预时机。\n\n问题：不作为本身也是一种决策，而且可能是错误的决策。在危机管理中，犹豫不决的代价往往比行动过大的代价更大。"
+            return "你加强市场监控，但不采取实质措施。\n\n结果：被动等待，可能错失最佳干预时机。在危机管理中，需要在及时行动与充分信息之间找到平衡。"
 
     # 默认反馈
     if satisfaction_change > 10:
@@ -1586,6 +1603,113 @@ async def serve_static(full_path: str):
     """提供静态文件服务"""
     # 对于其他路径，尝试从静态目录提供文件
     raise HTTPException(status_code=404, detail="文件未找到")
+
+# 思维陷阱分析端点
+@app.post("/analysis/thinking-traps")
+async def analyze_thinking_traps(request_data: Dict[str, Any]):
+    """
+    分析用户在游戏过程中的思维陷阱
+    在游戏结束后提供详细的思维模式分析
+    """
+    try:
+        # 获取游戏历史和决策数据
+        game_history = request_data.get("game_history", [])
+        scenario_id = request_data.get("scenario_id", "")
+        
+        if not game_history:
+            return {
+                "message": "未提供游戏历史数据",
+                "analysis": {},
+                "status": "error"
+            }
+        
+        # 分析决策模式
+        analysis = {
+            "total_decisions": len(game_history),
+            "scenario_id": scenario_id,
+            "identified_patterns": [],
+            "thinking_trap_warnings": [],
+            "improvement_suggestions": []
+        }
+        
+        # 检测决策模式
+        options_chosen = [d.get("decisions", {}).get("option", "") for d in game_history if "decisions" in d]
+        actions_taken = [d.get("decisions", {}).get("action", "") for d in game_history if "decisions" in d]
+        
+        # 检测重复选择相同选项的模式
+        if len(options_chosen) >= 3:
+            unique_options = set(options_chosen)
+            if len(unique_options) == 1:
+                # 用户总是选择相同的选项
+                repeated_option = options_chosen[0]
+                analysis["identified_patterns"].append({
+                    "type": "重复性决策模式",
+                    "description": f"在{len(options_chosen)}次决策中，您总是选择相同的选项 '{repeated_option}'",
+                    "potential_issue": "可能反映出缺乏灵活性或对其他选项的探索不足"
+                })
+        
+        # 检测极端选项选择
+        if "1" in options_chosen:
+            aggressive_choices = options_chosen.count("1")
+            if aggressive_choices >= len(options_chosen) * 0.7:  # 70%以上选择激进选项
+                analysis["thinking_trap_warnings"].append({
+                    "trap_type": "激进决策倾向",
+                    "description": "倾向于选择最激进或最立即的选项",
+                    "impact": "可能导致高风险或短期导向的决策"
+                })
+        
+        # 检测保守选项选择
+        if "2" in options_chosen or "4" in options_chosen:
+            conservative_choices = options_chosen.count("2") + options_chosen.count("4")
+            if conservative_choices >= len(options_chosen) * 0.7:  # 70%以上选择保守选项
+                analysis["thinking_trap_warnings"].append({
+                    "trap_type": "保守决策倾向", 
+                    "description": "倾向于选择最保守或最安全的选项",
+                    "impact": "可能导致错失机会或过度规避风险"
+                })
+        
+        # 提供改进建议
+        if analysis["thinking_trap_warnings"]:
+            analysis["improvement_suggestions"].append({
+                "suggestion": "在未来的决策中，尝试考虑更多样化的选项，避免过度依赖单一决策模式",
+                "rationale": "多样化的决策方法可以帮助识别和克服潜在的思维局限"
+            })
+        else:
+            analysis["improvement_suggestions"].append({
+                "suggestion": "您的决策模式显示出一定的灵活性，继续保持开放的思维",
+                "rationale": "灵活的决策方法有助于在复杂情况下找到最优解决方案"
+            })
+        
+        # 根据场景类型提供特定分析
+        if "coffee-shop" in scenario_id:
+            analysis["improvement_suggestions"].append({
+                "suggestion": "在资源分配决策中，考虑非线性效应和边际收益递减",
+                "rationale": "增加投入并不总是带来线性回报，有时甚至会产生负面效果"
+            })
+        elif "investment" in scenario_id:
+            analysis["improvement_suggestions"].append({
+                "suggestion": "在投资决策中，平衡短期收益与长期影响，考虑复利效应",
+                "rationale": "长期视角有助于识别短期决策的真正影响"
+            })
+        elif "relationship" in scenario_id:
+            analysis["improvement_suggestions"].append({
+                "suggestion": "在关系决策中，注意时间延迟效应，考虑决策的长期后果",
+                "rationale": "关系中的决策效果往往需要时间才能显现"
+            })
+        
+        return {
+            "message": "思维陷阱分析完成",
+            "analysis": analysis,
+            "status": "success"
+        }
+        
+    except Exception as e:
+        return {
+            "message": f"分析过程中出现错误: {str(e)}",
+            "analysis": {},
+            "status": "error"
+        }
+
 
 # 临时测试路由
 @app.get("/test-home")

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>咖啡店线性思维场景测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>☕ 咖啡店线性思维场景测试</h1>
+
+    <div class="test-section">
+        <h2>测试步骤</h2>
+        <ol>
+            <li>测试游戏初始化</li>
+            <li>测试延迟效果处理</li>
+            <li>测试5轮游戏流程</li>
+            <li>测试线性思维教育内容</li>
+        </ol>
+        <button onclick="runAllTests()">运行所有测试</button>
+        <button onclick="clearResults()">清除结果</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        function log(message, type = 'info') {
+            const resultsDiv = document.getElementById('results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${type}`;
+            resultDiv.textContent = message;
+            resultsDiv.appendChild(resultDiv);
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        function runAllTests() {
+            clearResults();
+            log('开始测试咖啡店场景...', 'info');
+
+            // 测试1: 检查 CoffeeShopPageRouter 类是否存在
+            try {
+                if (typeof CoffeeShopPageRouter === 'undefined') {
+                    // 加载主应用
+                    const script = document.createElement('script');
+                    script.src = '../assets/js/app.js';
+                    script.onerror = () => {
+                        log('❌ 无法加载 app.js，请确保在正确的环境中运行', 'error');
+                    };
+                    document.head.appendChild(script);
+                    log('⏳ 正在加载 app.js...', 'info');
+                    setTimeout(runAllTests, 1000);
+                    return;
+                }
+                log('✅ CoffeeShopPageRouter 类已加载', 'success');
+            } catch (e) {
+                log(`❌ CoffeeShopPageRouter 类未定义: ${e.message}`, 'error');
+                return;
+            }
+
+            // 测试2: 游戏初始化
+            try {
+                const initialState = {
+                    satisfaction: 50,
+                    resources: 1000,
+                    reputation: 50,
+                    turn_number: 1,
+                    decision_history: [],
+                    delayed_effects: []
+                };
+
+                const router = new CoffeeShopPageRouter(initialState);
+                log('✅ 游戏初始化成功', 'success');
+
+                // 检查游戏状态
+                const state = router.getGameState();
+                if (state.delayed_effects && Array.isArray(state.delayed_effects)) {
+                    log('✅ delayed_effects 正确初始化为数组', 'success');
+                } else {
+                    log('❌ delayed_effects 未正确初始化', 'error');
+                }
+
+                // 测试3: 测试线性期望计算
+                const expectation = router.calculateExpectation('coffeeVariety', 6);
+                if (expectation && expectation.expected_profit !== undefined) {
+                    log(`✅ 线性期望计算成功: ${expectation.thinking}`, 'success');
+                } else {
+                    log('❌ 线性期望计算失败', 'error');
+                }
+
+                // 测试4: 测试回合总结计算
+                router.tempDecisions = { coffeeVariety: 6 };
+                const summary = router.calculateTurnSummary();
+                if (summary && summary.linear_expectation && summary.actual_result) {
+                    log('✅ 回合总结计算成功', 'success');
+                    log(`期望资源: ¥${summary.linear_expectation.resources}`, 'info');
+                    log(`实际资源: ¥${summary.actual_result.resources}`, 'info');
+                    log(`差距: ¥${summary.gap}`, 'info');
+                } else {
+                    log('❌ 回合总结计算失败', 'error');
+                }
+
+                // 测试5: 测试 DecisionEngine 的延迟效果处理
+                if (typeof DecisionEngine !== 'undefined') {
+                    const delayedEffects = [
+                        { turn: 1, effect: { satisfaction: 5, resources: 10, reputation: 3 } },
+                        { turn: 2, effect: { satisfaction: -5, resources: -10, reputation: -3 } }
+                    ];
+
+                    const result = DecisionEngine.applyDelayedEffects(1, delayedEffects);
+                    if (result && result.state) {
+                        log('✅ 延迟效果处理成功', 'success');
+                        log(`应用的效果: satisfaction=${result.state.satisfaction}, resources=${result.state.resources}, reputation=${result.state.reputation}`, 'info');
+                    } else {
+                        log('❌ 延迟效果处理失败', 'error');
+                    }
+
+                    // 测试6: 测试空数组安全检查
+                    const emptyResult = DecisionEngine.applyDelayedEffects(1, []);
+                    if (emptyResult && emptyResult.state) {
+                        log('✅ 空延迟效果数组安全检查通过', 'success');
+                    } else {
+                        log('❌ 空延迟效果数组安全检查失败', 'error');
+                    }
+
+                    // 测试7: 测试 undefined 安全检查
+                    const undefinedResult = DecisionEngine.applyDelayedEffects(1, undefined);
+                    if (undefinedResult && undefinedResult.state) {
+                        log('✅ undefined 延迟效果安全检查通过', 'success');
+                    } else {
+                        log('❌ undefined 延迟效果安全检查失败', 'error');
+                    }
+
+                    // 测试8: 测试 null 安全检查
+                    const nullResult = DecisionEngine.applyDelayedEffects(1, null);
+                    if (nullResult && nullResult.state) {
+                        log('✅ null 延迟效果安全检查通过', 'success');
+                    } else {
+                        log('❌ null 延迟效果安全检查失败', 'error');
+                    }
+
+                    // 测试9: 测试非数组安全检查
+                    const invalidResult = DecisionEngine.applyDelayedEffects(1, { not: 'an array' });
+                    if (invalidResult && invalidResult.state) {
+                        log('✅ 非数组延迟效果安全检查通过', 'success');
+                    } else {
+                        log('❌ 非数组延迟效果安全检查失败', 'error');
+                    }
+                }
+
+                log('✅ 所有测试完成！', 'success');
+
+            } catch (e) {
+                log(`❌ 测试失败: ${e.message}\n${e.stack}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

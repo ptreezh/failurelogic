@@ -1,12 +1,14 @@
+[build]
+builder = "NIXPACKS"
+
+[build.env]
+NIXPACKS_PYTHON_VERSION = "3.12"
+
 [phases.build]
-cmds = ["pip install --no-cache-dir -r api-server/requirements.txt"]
+cmds = ["python -m pip install --no-cache-dir -r api-server/requirements.txt"]
 
-[phases.start]
-cmds = ["python api-server/start.py"]
-
-[static]
-# Set the port to 8000 (Railway's default PORT will be overridden)
-# The start.py should read PORT from environment variable
+[start]
+cmd = "exec python api-server/start.py"
 
 [[services.port]]
 port = 8000

@@ -1,0 +1,48 @@
+# Qwen Slash Commands for Planning with Files
+
+# /planning-with-files:start
+# 初始化规划文件
+command_start:
+  name: "/planning-with-files:start"
+  description: "Initialize planning files (task_plan.md, findings.md, progress.md) for a new task"
+  action:
+    steps:
+      - "Execute init-session script based on OS"
+      - "For Linux/macOS: ./init-session.sh"
+      - "For Windows: ./init-session.bat"
+      - "Provide template files if scripts don't exist"
+    prerequisites:
+      - "User should be in the project directory where planning files should be created"
+    success_message: "Planning files initialized successfully. Please fill in task_plan.md with your task goal and phases."
+    failure_message: "Failed to initialize planning files. Please check if you have write permissions in the current directory."
+
+# /planning-with-files:status
+# 检查当前任务状态
+command_status:
+  name: "/planning-with-files:status"
+  description: "Check the current status of the task by reading planning files"
+  action:
+    steps:
+      - "Read task_plan.md to show current phase and status"
+      - "Summarize any errors logged in task_plan.md"
+      - "Show recent entries from progress.md"
+      - "Show recent findings from findings.md"
+    prerequisites:
+      - "Planning files (task_plan.md, progress.md, findings.md) must exist"
+    success_message: "Current task status displayed above."
+    failure_message: "Could not retrieve task status. Planning files may not exist or be readable."
+
+# /planning-with-files:catchup
+# 恢复上次会话上下文
+command_catchup:
+  name: "/planning-with-files:catchup"
+  description: "Recover context from previous session after context reset"
+  action:
+    steps:
+      - "Analyze recent activity in planning files"
+      - "Show unsynchronized context from previous work"
+      - "Recommend next steps based on last known state"
+    prerequisites:
+      - "Planning files should exist and contain previous work"
+    success_message: "Previous session context recovered. Please update planning files based on the information above."
+    failure_message: "Could not recover previous session context. This may be a new task or planning files are empty."

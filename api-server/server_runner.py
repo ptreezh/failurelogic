@@ -23,7 +23,7 @@ try:
     logger.info("Successfully imported uvicorn")
     
     logger.info("Starting server on port 8082...")
-    uvicorn.run(app, host="0.0.0.0", port=8082, log_level="info")
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8082)), log_level="info")
     
 except Exception as e:
     logger.error(f"Error running server: {e}")

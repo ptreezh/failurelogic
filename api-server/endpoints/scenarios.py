@@ -119,6 +119,26 @@ def _load_additional_scenarios() -> List[Dict[str, Any]]:
     except Exception as e:
         logger.error(f"✗ 加载历史案例失败: {e}", exc_info=True)
 
+    # Load love_relationship_scenarios.json
+    try:
+        love_relationship_file = os.path.join(data_dir, 'love_relationship_scenarios.json')
+        logger.info(f"恋爱关系场景文件路径: {love_relationship_file}")
+        logger.info(f"文件存在: {os.path.exists(love_relationship_file)}")
+        if os.path.exists(love_relationship_file):
+            with open(love_relationship_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                scenarios = data.get('game_scenarios', [])
+                logger.info(f"找到 {len(scenarios)} 个恋爱关系场景")
+                for e in scenarios:
+                    normalized = normalize(e, 'love-relationship', 'intermediate', 25)
+                    combined.append(normalized)
+                    logger.info(f"  加载恋爱关系场景: {normalized.get('id')}")
+            logger.info(f"✓ 加载了 {len(scenarios)} 个恋爱关系场景")
+        else:
+            logger.error(f"⚠ 恋爱关系场景文件不存在: {love_relationship_file}")
+    except Exception as e:
+        logger.error(f"✗ 加载恋爱关系场景失败: {e}", exc_info=True)
+
     logger.info(f"总计加载了 {len(combined)} 个额外场景")
     logger.info("=" * 60)
     return combined

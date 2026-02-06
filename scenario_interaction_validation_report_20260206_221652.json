@@ -1,0 +1,188 @@
+{
+  "total_scenarios": 30,
+  "successful_validations": 30,
+  "failed_validations": 0,
+  "success_rate": 100.0,
+  "results": {
+    "coffee-shop-linear-thinking": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "relationship-time-delay": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "investment-confirmation-bias": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "game-001": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "game-002": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "game-003": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "adv-game-001": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "adv-game-002": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "adv-game-003": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-001": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-002": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-003": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-004": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-005": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-006": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-007": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-008": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-009": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-010": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-011": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-012": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-013": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-014": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-015": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-016": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-017": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-018": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-019": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-020": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    },
+    "hist-021": {
+      "status": "success",
+      "session_created": true,
+      "turn_executed": true,
+      "feedback_received": true
+    }
+  }
+}

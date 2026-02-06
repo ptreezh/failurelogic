@@ -28,8 +28,8 @@
 
     <!-- Preconnect to API for performance -->
     <link rel="preconnect" href="http://localhost:8000">
-    <link rel="preconnect" href="https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev">
-    <link rel="preconnect" href="https://failurelogic-api.vercel.app">
+    <link rel="preconnect" href="http://localhost:8082">
+    <link rel="preconnect" href="http://localhost:8082">
 
     <!-- Preload Critical Resources -->
     <link rel="preload" href="assets/js/api-config-manager.js?v=20251104-2" as="script">
@@ -81,7 +81,14 @@
                         <span>场景</span>
                     </button>
 
-  
+                    <button class="nav-item" data-page="love-relationship">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M9.663 11.916A1 1 0 0010 10.25V9.5C10 8.837 10.255 8.25 10.677 7.75H9a1 1 0 100 2h.586l-1.293 1.293a1 1 0 001.414 1.414L11 10.414V10.25a2.5 2.5 0 00-2.5 2.5v.5c0 .552.226 1.052.587 1.413a1 1 0 001.426 0A2.5 2.5 0 0012.5 13.75v-.5a1 1 0 00-.337-1.833z"/>
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 6.22a.75.75 0 00-1.06 1.06L8.94 9.25 7.47 10.72a.75.75 0 001.06 1.06L10 10.31l1.47 1.47a.75.75 0 101.06-1.06L11.06 9.25l1.47-1.47a.75.75 0 00-1.06-1.06L10 8.19 8.53 6.72a.75.75 0 00-1.06-1.06z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>恋爱关系</span>
+                    </button>
+
                     <button class="nav-item" data-page="exponential">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" fill="#2563eb"/>
@@ -704,6 +711,54 @@
                 </div>
             </div>
 
+            <!-- Love Relationship Page -->
+            <div id="love-relationship-page" class="page">
+                <div class="page-container">
+                    <section class="page-header">
+                        <h1 class="page-title">恋爱关系认知训练</h1>
+                        <p class="page-subtitle">通过模拟恋爱关系中的各种情境，提升情感认知和决策能力</p>
+                    </section>
+
+                    <div class="love-relationship-intro">
+                        <div class="intro-content">
+                            <h2>恋爱关系中的认知陷阱</h2>
+                            <p>在恋爱关系中，我们常常受到各种认知偏差的影响，如理想化偏见、确认偏误、沉没成本谬误等。通过这些模拟场景，您可以：</p>
+                            <ul>
+                                <li>识别恋爱关系中的常见认知偏差</li>
+                                <li>学习健康的沟通和冲突解决技巧</li>
+                                <li>建立合理的期望和边界</li>
+                                <li>提升情感智商和决策能力</li>
+                            </ul>
+                        </div>
+
+                        <div class="scenarios-list">
+                            <h3>可用场景</h3>
+                            <div class="scenario-cards" id="love-relationship-scenarios">
+                                <div class="loading" id="love-relationship-loading" style="text-align: center; padding: 40px;">
+                                    <p>加载恋爱关系场景中...</p>
+                                </div>
+                                <!-- Love relationship scenarios will be loaded dynamically -->
+                            </div>
+                        </div>
+
+                        <div class="love-relationship-guidelines">
+                            <h3>参与指南</h3>
+                            <ol>
+                                <li>仔细阅读每个情境的描述</li>
+                                <li>考虑每个选项的可能后果</li>
+                                <li>选择您认为最合适的决策</li>
+                                <li>反思系统提供的反馈和分析</li>
+                                <li>将学到的经验应用到实际生活中</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="navigation-controls">
+                        <button class="btn btn-secondary" onclick="NavigationManager.navigateTo('scenarios')">返回所有场景</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Book Page -->
             <div id="book-page" class="page">
                 <div class="page-container">
@@ -1075,6 +1130,7 @@
 
     <!-- JavaScript -->
     <script src="assets/js/api-config-manager.js?v=20251104-2"></script>
+    <script src="assets/js/love-relationship-router.js"></script>
     <script type="module" src="assets/js/app.js?v=20260116-0150"></script>
 
     <script>

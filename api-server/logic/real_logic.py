@@ -5,16 +5,16 @@ def execute_real_logic(scenario_id: str, current_state: Dict, decisions: Dict) -
     """执行真实的业务逻辑"""
     new_state = current_state.copy()
     
-    if scenario_id == "coffee-shop-linear-thinking":
-        # 咖啡店场景：线性思维陷阱
+    if scenario_id == "coffee-shop-nonlinear-effects":
+        # 咖啡店场景：非线性效应
         action = decisions.get("action", "")
         amount = decisions.get("amount", 0)
-        
+
         if action == "hire_staff":
-            # 线性思维陷阱：员工增加不等于满意度线性提升
+            # 非线性效应：员工增加不等于满意度线性提升
             cost = amount * 200
             new_state["resources"] -= cost
-            
+
             # 非线性效果：员工过多反而效率下降
             if amount <= 3:
                 satisfaction_gain = amount * 8  # 每个员工增加8点满意度
@@ -22,7 +22,7 @@ def execute_real_logic(scenario_id: str, current_state: Dict, decisions: Dict) -
                 satisfaction_gain = amount * 5  # 效率下降
             else:
                 satisfaction_gain = amount * 2  # 严重效率下降
-                
+
             new_state["satisfaction"] = min(100, new_state["satisfaction"] + satisfaction_gain)
             new_state["reputation"] = min(100, new_state["reputation"] + satisfaction_gain // 2)
             

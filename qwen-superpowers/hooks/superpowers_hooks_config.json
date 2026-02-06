@@ -1,0 +1,48 @@
+{
+  "qwen_superpowers": {
+    "enabled": true,
+    "priority": 10,
+    "onPrompt": true,
+    "onResponse": true,
+    "context_injection": {
+      "enabled": true,
+      "max_context_length": 2000,
+      "trigger_keywords": [
+        "task",
+        "project",
+        "plan",
+        "code",
+        "function",
+        "debug",
+        "server",
+        "config",
+        "research",
+        "analyze",
+        "implement",
+        "develop",
+        "create",
+        "build",
+        "multi-step"
+      ]
+    }
+  },
+  "cross_cli_adapter": {
+    "enabled": true,
+    "supported_tools": [
+      "claude",
+      "gemini",
+      "qwen",
+      "iflow",
+      "qodercli",
+      "codebuddy",
+      "copilot",
+      "codex"
+    ],
+    "trigger_patterns": [
+      "use\\s+(\\w+)\\s+to\\s+(.+)$",
+      "call\\s+(\\w+)\\s+(.+)$",
+      "ask\\s+(\\w+)\\s+(.+)$",
+      "stigmergy\\s+(\\w+)\\s+(.+)$"
+    ]
+  }
+}

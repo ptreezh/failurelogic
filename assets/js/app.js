@@ -6,7 +6,7 @@
 // Application Configuration
 const APP_CONFIG = {
   // 智能API端点选择
-  apiBaseUrl: (() => {
+  apiBaseUrl: 'http://localhost:8082' => {
     const hostname = window.location.hostname;
 
     // 本地开发环境
@@ -16,10 +16,10 @@ const APP_CONFIG = {
 
     // GitHub Pages环境 - 只使用已验证工作的API地址
     const apiSources = [
-      'https://psychic-meme-rvq4v7pqwx3xxrr-8000.app.github.dev',  // Primary: New working Codespaces (已验证工作)
-      'https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev',  // Backup: Old Codespaces
-      'https://failurelogic-api.vercel.app',      // Vercel部署 (备用)
-      'https://failurelogic.vercel.app'          // 备用Vercel
+      'http://localhost:8082',  // Primary: New working Codespaces (已验证工作)
+      'http://localhost:8082',  // Backup: Old Codespaces
+      'http://localhost:8082',      // Vercel部署 (备用)
+      'http://localhost:8082'          // 备用Vercel
     ];
 
     // 返回新工作的Codespaces作为首选 (已验证正常工作)
@@ -107,7 +107,8 @@ class NavigationManager {
     '/profile': 'profile',
     '/settings': 'settings',
     '/about': 'about',
-    '/contact': 'contact'
+    '/contact': 'contact',
+    '/love-relationship': 'love-relationship'
   };
 
   static navigateTo(page) {
@@ -168,6 +169,8 @@ class NavigationManager {
         return this.getAboutPage();
       case 'contact':
         return this.getContactPage();
+      case 'love-relationship':
+        return this.getLoveRelationshipPage();
       default:
         return this.getErrorPage();
     }
@@ -177,13 +180,13 @@ class NavigationManager {
     return [
       {
         id: "coffee-shop-linear-thinking",
-        name: "咖啡店线性思维",
-        description: "线性思维陷阱场景",
-        fullDescription: "在这个场景中，您将管理一家咖啡店，体验线性思维在复杂商业环境中的局限性。线性思维是指我们倾向于认为原因和结果之间存在直接的、成比例的关系。但在复杂的系统中，这种思维方式往往会导致错误的决策。",
+        name: "咖啡店非线性效应",
+        description: "非线性效应体验场景",
+        fullDescription: "在这个场景中，您将管理一家咖啡店，体验非线性效应在复杂商业环境中的影响。在复杂的系统中，原因和结果之间往往不是简单的线性关系，而是存在非线性效应，这需要我们采用更复杂的思维模式来理解和应对。",
         difficulty: "beginner",
         estimatedDuration: 15,
-        targetBiases: ["linear_thinking"],
-        cognitiveBias: "线性思维",
+        targetPatterns: ["nonlinear_effects"],
+        decisionPattern: "非线性效应",
         duration: "15-20分钟",
         category: "商业决策",
         thumbnail: "/assets/images/coffee-shop.jpg",
@@ -242,13 +245,13 @@ class NavigationManager {
       },
       {
         id: "investment-confirmation-bias",
-        name: "投资确认偏误",
-        description: "确认偏误场景",
-        fullDescription: "在投资决策中体验确认偏误如何影响我们的风险判断。确认偏误是指我们倾向于寻找、解释和记住那些证实我们已有信念或假设的信息，而忽视与之相矛盾的信息。",
+        name: "投资信息处理",
+        description: "信息处理模式场景",
+        fullDescription: "在投资决策中体验如何处理不同类型的信息，以及信息处理方式如何影响我们的风险判断。在复杂决策中，我们需要学会平衡不同来源的信息，避免只关注支持我们预设观点的信息。",
         difficulty: "advanced",
         estimatedDuration: 25,
-        targetBiases: ["confirmation_bias"],
-        cognitiveBias: "确认偏误",
+        targetPatterns: ["information_processing"],
+        decisionPattern: "信息处理模式",
         duration: "25-30分钟",
         category: "金融决策",
         thumbnail: "/assets/images/investment.jpg",
@@ -277,11 +280,11 @@ class NavigationManager {
         id: "business-strategy-reasoning",
         name: "商业战略推理游戏",
         description: "模拟商业决策推理过程，测试用户在复杂商业环境中的决策思维",
-        fullDescription: "在这个商业战略推理游戏中，您将面对复杂的商业决策场景，体验多种认知陷阱，包括线性思维、确认偏误和复杂系统误解。游戏涉及市场分析、资源配置、竞争策略等多个维度。",
+        fullDescription: "在这个商业战略推理游戏中，您将面对复杂的商业决策场景，体验多种决策挑战，包括线性效应、信息处理和复杂系统理解。游戏涉及市场分析、资源配置、竞争策略等多个维度。",
         difficulty: "intermediate",
         estimatedDuration: 30,
-        targetBiases: ["linear_thinking", "confirmation_bias", "complex_system_misunderstanding"],
-        cognitiveBias: "商业决策认知陷阱",
+        targetPatterns: ["linear_effects", "information_processing", "complex_system_understanding"],
+        decisionPattern: "商业决策思维模式",
         duration: "30-45分钟",
         category: "商业战略",
         thumbnail: "/assets/images/business-strategy.jpg",
@@ -1696,7 +1699,7 @@ class CoffeeShopPageRouter {
 
     if (finalResources >= 1200) {
       rating = '🏆 经营大师';
-      message = '你成功克服了线性思维陷阱，理解了复杂系统的运作规律！';
+      message = '你理解了复杂系统的运作规律！';
     } else if (finalResources >= 1000) {
       rating = '⭐ 优秀经营者';
       message = '你学会了警惕线性思维，做出了明智的决策。';
@@ -1737,7 +1740,7 @@ class CoffeeShopPageRouter {
           <div class="lessons-learned">
             <h3>🎓 你学到了什么</h3>
             <ul class="lessons">
-              <li>✅ 识别了线性思维陷阱</li>
+              <li>✅ 识别了非线性效应</li>
               <li>✅ 理解了复杂系统的非线性特征</li>
               <li>✅ 学会了考虑边际效益递减</li>
               <li>✅ 意识到了协调成本的存在</li>
@@ -2176,9 +2179,24 @@ class RelationshipTimeDelayPageRouter {
     const currentPage = this.currentPage;
 
     if (currentPage.includes('DECISION_1_FEEDBACK')) {
-      // 进入第二个决策
-      this.currentPage = currentPage.replace('DECISION_1_FEEDBACK', 'DECISION_2');
-      this.currentDecisionIndex = 1;
+      // 检查是否有第二个决策
+      const turn = this.gameState.turn_number;
+      const configs = this.decisionConfig[`TURN_${turn}`] || [];
+
+      if (configs.length > 1) {
+        // 进入第二个决策
+        this.currentPage = currentPage.replace('DECISION_1_FEEDBACK', 'DECISION_2');
+        this.currentDecisionIndex = 1;
+      } else {
+        // 没有第二个决策
+        if (turn === 5) {
+          // 最后一轮，直接进入结局
+          this.currentPage = 'TURN_5_ENDING';
+        } else {
+          // 进入总结
+          this.finishMonth();
+        }
+      }
     } else if (currentPage.includes('DECISION_2_FEEDBACK')) {
       // 完成本月，进入总结
       this.finishMonth();
@@ -2231,8 +2249,7 @@ class RelationshipTimeDelayPageRouter {
     // 进入月总结页面（使用当前回合数）
     this.currentPage = `TURN_${this.gameState.turn_number}_SUMMARY`;
 
-    // 递增回合数（为下个月做准备）
-    this.gameState.turn_number++;
+    // 注意：不要在这里递增回合数，让nextTurn()来处理
   }
 
   simulateWeeks(weeks) {
@@ -2333,7 +2350,7 @@ class RelationshipTimeDelayPageRouter {
           <p>你刚刚开始和小林交往，这是一段充满期待的关系。</p>
           <p>但是，在恋爱关系中，你的投入和反馈之间存在<strong>时间延迟</strong>。</p>
           <p>你现在的付出，可能要几周后才会看到效果。</p>
-          <p class="warning">⚠️ 线性思维陷阱：你以为"每天发消息=立即增加好感"，但现实是...</p>
+          <p class="warning">⚠️ 非线性效应：你以为"每天发消息=立即增加好感"，但现实是...</p>
         </div>
         <div class="actions">
           <button class="btn btn-primary" onclick="window.relationshipTimeDelayRouter.startGame(); window.relationshipTimeDelayRouter.render();">
@@ -2345,7 +2362,7 @@ class RelationshipTimeDelayPageRouter {
   }
 
   renderDecisionPage() {
-    const turn = this.currentTurn;
+    const turn = this.gameState.turn_number;
     const decisionIndex = this.currentDecisionIndex;
 
     const configs = this.decisionConfig[`TURN_${turn}`] || [];
@@ -2643,7 +2660,7 @@ class RelationshipTimeDelayPageRouter {
     } else if (affection >= 40) {
       return { level: '💔 渐行渐远', message: '关系出现裂痕，需要反思。' };
     } else {
-      return { level: '📚 需要反思', message: '线性思维导致了关系问题。' };
+      return { level: '📚 需要反思', message: '简单思维模式导致了关系问题。' };
     }
   }
 
@@ -2866,13 +2883,13 @@ class DecisionEngine {
     else if (gameState.resources >= 500) score += 1;
 
     if (score >= 7) {
-      message = '表现优秀！你成功避免了线性思维陷阱。';
+      message = '表现优秀！你成功理解了非线性效应。';
       return { result: 'success', score, message };
     } else if (score >= 4) {
       message = '表现良好，但仍有改进空间。';
       return { result: 'average', score, message };
     } else {
-      message = '表现不佳，你可能陷入了线性思维陷阱。';
+      message = '表现不佳，你可能需要重新考虑决策方式。';
       return { result: 'poor', score, message };
     }
   }
@@ -2889,7 +2906,7 @@ class DecisionEngine {
 
     // Coffee shop patterns
     if (patterns.linearThinking) {
-      analysis += `🔴 **主要问题：线性思维陷阱**\n`;
+      analysis += `🔴 **主要问题：简单线性思维**\n`;
       analysis += `你连续${patterns.linearTurns}回合都在增加投入，期望得到线性的回报提升。但复杂系统中，边际收益是递减的。\n\n`;
     }
 
@@ -2900,7 +2917,7 @@ class DecisionEngine {
 
     // Investment patterns
     if (patterns.overResearch) {
-      analysis += `🔴 **主要问题：确认偏误（过度研究）**\n`;
+      analysis += `🔴 **主要问题：信息处理偏向（过度研究）**\n`;
       analysis += `你连续${patterns.researchTurns}回合都在过度研究（超过50小时），期望找到完美信息。但研究的效果有时间延迟，而且过度研究会错过投资机会。\n\n`;
     }
 
@@ -2964,8 +2981,8 @@ class DecisionEngine {
     }
 
     if (patterns.overResearch) {
-      analysis += `🔴 **识别到的模式：确认偏误**\n`;
-      analysis += `你连续${patterns.researchTurns}回合都在过度研究，试图寻找完美信息。这就是确认偏误的典型表现。\n\n`;
+      analysis += `🔴 **识别到的模式：信息处理偏向**\n`;
+      analysis += `你连续${patterns.researchTurns}回合都在过度研究，试图寻找完美信息。这是信息处理偏向的典型表现。\n\n`;
     }
 
     if (patterns.overInvestment) {
@@ -3910,7 +3927,8 @@ class DecisionEngine {
   static applyPublicPolicyDelayedEffects(currentTurn, delayedEffects, currentState) {
     let state = { ...currentState };
 
-    if (!delayedEffects || delayedEffects.length === 0) {
+    // 安全检查：确保 delayedEffects 是数组
+    if (!Array.isArray(delayedEffects) || delayedEffects.length === 0) {
       return { state };
     }
 
@@ -4271,7 +4289,8 @@ class DecisionEngine {
   static applyPersonalFinanceDelayedEffects(currentTurn, delayedEffects, currentState) {
     let state = { ...currentState };
 
-    if (!delayedEffects || delayedEffects.length === 0) {
+    // 安全检查：确保 delayedEffects 是数组
+    if (!Array.isArray(delayedEffects) || delayedEffects.length === 0) {
       return { state };
     }
 
@@ -4759,7 +4778,8 @@ class DecisionEngine {
   static applyClimateChangeDelayedEffects(currentTurn, delayedEffects, currentState) {
     let state = { ...currentState };
 
-    if (!delayedEffects || delayedEffects.length === 0) {
+    // 安全检查：确保 delayedEffects 是数组
+    if (!Array.isArray(delayedEffects) || delayedEffects.length === 0) {
       return { state };
     }
 
@@ -5375,7 +5395,8 @@ class DecisionEngine {
   static applyAIGovernanceDelayedEffects(currentTurn, delayedEffects, currentState) {
     let state = { ...currentState };
 
-    if (!delayedEffects || delayedEffects.length === 0) {
+    // 安全检查：确保 delayedEffects 是数组
+    if (!Array.isArray(delayedEffects) || delayedEffects.length === 0) {
       return { state };
     }
 
@@ -5994,7 +6015,8 @@ class DecisionEngine {
   static applyFinancialCrisisDelayedEffects(currentTurn, delayedEffects, currentState) {
     let state = { ...currentState };
 
-    if (!delayedEffects || delayedEffects.length === 0) {
+    // 安全检查：确保 delayedEffects 是数组
+    if (!Array.isArray(delayedEffects) || delayedEffects.length === 0) {
       return { state };
     }
 
@@ -6146,7 +6168,8 @@ class DecisionEngine {
   static applyBusinessStrategyDelayedEffects(currentTurn, delayedEffects, currentState) {
     let state = { ...currentState };
 
-    if (!delayedEffects || delayedEffects.length === 0) {
+    // 安全检查：确保 delayedEffects 是数组
+    if (!Array.isArray(delayedEffects) || delayedEffects.length === 0) {
       return { state };
     }
 
@@ -6217,7 +6240,14 @@ class DecisionEngine {
 
     // Apply delayed effects from previous turns
     const delayedEffectsResult = this.applyDelayedEffects(turn, delayedEffects);
-    result.newGameState = delayedEffectsResult.state;
+
+    // Start with current game state
+    result.newGameState = { ...gameState };
+
+    // Apply delayed effects
+    result.newGameState.satisfaction += delayedEffectsResult.state.satisfaction;
+    result.newGameState.resources += delayedEffectsResult.state.resources;
+    result.newGameState.reputation += delayedEffectsResult.state.reputation;
 
     // Apply current turn effects
     result.newGameState.satisfaction += actual.effects.satisfaction;
@@ -6490,7 +6520,8 @@ class DecisionEngine {
       reputation: 0
     };
 
-    if (!delayedEffects || delayedEffects.length === 0) {
+    // 安全检查：确保 delayedEffects 是数组
+    if (!Array.isArray(delayedEffects) || delayedEffects.length === 0) {
       return { state, triggered: [] };
     }
 
@@ -6498,9 +6529,9 @@ class DecisionEngine {
 
     delayedEffects.forEach(effect => {
       if (effect.turn === currentTurn) {
-        if (effect.effect.satisfaction) state.satisfaction += effect.effect.satisfaction;
-        if (effect.effect.resources) state.resources += effect.effect.resources;
-        if (effect.effect.reputation) state.reputation += effect.effect.reputation;
+        if (effect.effect && effect.effect.satisfaction) state.satisfaction += effect.effect.satisfaction;
+        if (effect.effect && effect.effect.resources) state.resources += effect.effect.resources;
+        if (effect.effect && effect.effect.reputation) state.reputation += effect.effect.reputation;
         triggered.push(effect);
       }
     });
@@ -6747,7 +6778,7 @@ class DecisionEngine {
       explanation = this.getCoffeeShopBiasExplanation(linearExpectation, actualResult);
       suggestion = '在复杂系统中，投入和产出往往不是简单的线性关系。考虑：边际效应递减（每增加一份投入，收益递减）、协同成本（人多了反而混乱）、时间延迟（营销效果需要时间显现）。';
     } else if (scenarioId === 'investment-confirmation-bias') {
-      detectedBias = '确认偏误';
+      detectedBias = '信息处理偏向';
       explanation = this.getInvestmentBiasExplanation(linearExpectation, actualResult);
       suggestion = '投资中要避免只寻找支持自己观点的信息。过度研究可能导致"分析瘫痪"，错过最佳时机。接受不确定性，适度分散风险。';
     } else if (scenarioId === 'relationship-time-delay') {
@@ -6778,7 +6809,7 @@ class DecisionEngine {
     if (Math.abs(portfolioGap) > 500) {
       return `你期望投资组合价值${linear.portfolio}，但实际是${actual.portfolio}。差距${portfolioGap > 0 ? portfolioGap : -portfolioGap}元。这是因为市场有波动性，过度研究可能让你错过机会，且多样化虽然降低风险但也限制了收益。`;
     }
-    return `你的线性期望是：${linear.thinking}。但投资中存在确认偏误：我们倾向于寻找支持自己观点的信息，忽视反面证据。`;
+    return `你的线性期望是：${linear.thinking}。但投资中存在信息处理偏向：我们倾向于寻找支持自己观点的信息，忽视反面证据。`;
   }
 
   static getRelationshipBiasExplanation(linear, actual) {
@@ -6929,7 +6960,7 @@ class DecisionEngine {
       const biasRisk = lastDecision.bias_risk || 0;
 
       if (biasRisk > 70) {
-        narrative = '你的投资决策受到严重确认偏误影响。你过度依赖单一信息来源，忽视了重要的风险信号。';
+        narrative = '你的投资决策受到信息处理偏向影响。你过度依赖单一信息来源，忽视了重要的风险信号。';
         performance = 'poor';
       } else if (biasRisk > 40) {
         narrative = '你的投资决策有一定偏误迹象。注意不要只寻找支持自己观点的信息。';
@@ -6985,23 +7016,32 @@ class DecisionEngine {
    * @returns {object} 回合总结
    */
   static calculateInvestmentTurnSummary(decisions, gameState) {
-    const engine = new DecisionEngine();
-    const history = gameState.decision_history || [];
+    // 计算线性期望（用户的直觉期望）
+    const linearExpectation = DecisionEngine.getInvestmentLinearExpectation(decisions, gameState);
 
-    const turnSummary = engine.calculateTurnSummary(gameState, history);
-    const narrative = engine.generateTurnNarrative(gameState, {
-      actual_portfolio: gameState.portfolio,
-      bias_penalty: decisions.bias_penalty || 0,
-      delayed_effects: decisions.delayed_effects || []
-    });
+    // 计算实际效果（复杂系统结果）
+    const effectsResult = DecisionEngine.calculateInvestmentEffects(decisions, gameState);
+    const actualResult = DecisionEngine.getInvestmentActualResult(effectsResult.effects, gameState);
 
+    // 计算偏差（线性思维 vs 复杂现实）
+    const gap = actualResult.portfolio - linearExpectation.portfolio;
+
+    // 生成叙述文本
+    let narrative = `本季度你的投资决策产生了${gap >= 0 ? '正向' : '负向'}偏差。`;
+
+    // 添加延迟效果信息
+    if (effectsResult.delayedEffects && effectsResult.delayedEffects.length > 0) {
+      narrative += ` ⏰ 延迟效果：${effectsResult.delayedEffects[0].description}，将在${effectsResult.delayedEffects[0].turn_delay}回合后显现。`;
+    }
+
+    // 返回完整的数据结构
     return {
-      summary: turnSummary,
-      narrative: narrative,
-      actual_result: {
-        portfolio: gameState.portfolio,
-        knowledge: gameState.knowledge
-      }
+      linear_expectation: linearExpectation,  // ✅ 用户期望的线性结果
+      actual_result: actualResult,            // ✅ 实际发生的复杂结果
+      gap: gap,                               // ✅ 期望与实际的差距
+      gap_percent: Math.abs(gap / linearExpectation.portfolio * 100),  // ✅ 偏差百分比
+      narrative: narrative,                   // ✅ 叙述文本
+      delayed_effects: effectsResult.delayedEffects || []  // ✅ 延迟效果数组
     };
   }
 }
@@ -7073,8 +7113,8 @@ class InvestmentConfirmationBiasPageRouter {
   
   makeDecision(key, value) {
     this.tempDecisions[key] = value;
-    
-    // 页面流转逻辑
+
+    // 页面流转逻辑（支持8轮游戏）
     if (this.currentPage === 'TURN_1_DECISION_1') {
       this.currentPage = 'TURN_1_DECISION_1_FEEDBACK';
     } else if (this.currentPage === 'TURN_1_DECISION_2') {
@@ -7087,8 +7127,12 @@ class InvestmentConfirmationBiasPageRouter {
       this.currentPage = 'TURN_3_DECISION_1_FEEDBACK';
     } else if (this.currentPage === 'TURN_4_DECISION_1') {
       this.currentPage = 'TURN_4_DECISION_1_FEEDBACK';
-    } else if (this.currentPage === 'TURN_5_DECISION_1') {
-      this.currentPage = 'TURN_5_DECISION_1_FEEDBACK';
+    } else if (this.currentPage === 'TURN_5_DECISION_1' ||
+               this.currentPage === 'TURN_6_DECISION_1' ||
+               this.currentPage === 'TURN_7_DECISION_1' ||
+               this.currentPage === 'TURN_8_DECISION_1') {
+      // 第5-8季度：信息源选择后直接进入反馈
+      this.currentPage = this.currentPage.replace('DECISION_1', 'DECISION_1_FEEDBACK');
     }
   }
 
@@ -7110,8 +7154,13 @@ class InvestmentConfirmationBiasPageRouter {
     } else if (currentPage === 'TURN_4_DECISION_1_FEEDBACK') {
       // 觉醒后进入第5回合
       this.nextTurn();
-    } else if (currentPage === 'TURN_5_DECISION_1_FEEDBACK') {
-      this.currentPage = 'TURN_5_ENDING';
+    } else if (currentPage === 'TURN_5_DECISION_1_FEEDBACK' ||
+               currentPage === 'TURN_6_DECISION_1_FEEDBACK' ||
+               currentPage === 'TURN_7_DECISION_1_FEEDBACK' ||
+               currentPage === 'TURN_8_DECISION_1_FEEDBACK') {
+      // 第5-8季度：直接进入下一回合
+      const turnNum = currentPage.match(/TURN_(\d+)_DECISION_1_FEEDBACK/)[1];
+      this.currentPage = `TURN_${turnNum}_SUMMARY`;
     }
   }
 
@@ -7127,17 +7176,25 @@ class InvestmentConfirmationBiasPageRouter {
     this.tempDecisions = {};
     this.tempSources = [];
     
-    // 设置下一回合的页面
+    // 设置下一回合的页面（扩展到8轮游戏）
     if (this.currentTurn === 2) {
       this.currentPage = 'TURN_2_DECISION_1';
     } else if (this.currentTurn === 3) {
       this.currentPage = 'TURN_3_DECISION_1';
     } else if (this.currentTurn === 4) {
+      // 第4季度为觉醒时刻
       this.currentPage = 'TURN_4_DECISION_1';
     } else if (this.currentTurn === 5) {
       this.currentPage = 'TURN_5_DECISION_1';
-    } else if (this.currentTurn >= 6) {
-      this.currentPage = 'TURN_5_ENDING';
+    } else if (this.currentTurn === 6) {
+      this.currentPage = 'TURN_6_DECISION_1';
+    } else if (this.currentTurn === 7) {
+      this.currentPage = 'TURN_7_DECISION_1';
+    } else if (this.currentTurn === 8) {
+      this.currentPage = 'TURN_8_DECISION_1';
+    } else if (this.currentTurn >= 9) {
+      // 游戏结束
+      this.currentPage = 'TURN_8_ENDING';
     }
   }
   
@@ -7147,21 +7204,30 @@ class InvestmentConfirmationBiasPageRouter {
       this.tempDecisions,
       this.gameState
     );
-    
+
     // 更新游戏状态
     this.gameState.portfolio = summary.actual_result.portfolio;
     this.gameState.knowledge = summary.actual_result.knowledge;
     this.gameState.turn_number++;
-    
+
+    // ✅ 添加新的延迟效果到队列
+    if (summary.delayed_effects && summary.delayed_effects.length > 0) {
+      if (!this.gameState.delayed_effects) {
+        this.gameState.delayed_effects = [];
+      }
+      // 将新的延迟效果添加到现有队列
+      this.gameState.delayed_effects.push(...summary.delayed_effects);
+    }
+
     // 更新信息源质量
     this.updateSourceQuality(this.tempSources);
-    
+
     // 计算偏误风险
     const biasResult = BiasAnalyzer.analyzeConfirmationBias(
       this.gameState.decision_history
     );
     this.gameState.bias_risk = biasResult.biasRisk;
-    
+
     // 添加到决策历史
     this.gameState.decision_history.push({
       turn: this.currentTurn,
@@ -7172,10 +7238,10 @@ class InvestmentConfirmationBiasPageRouter {
       gap: summary.gap,
       bias_metrics: biasResult
     });
-    
+
     // 应用延迟效果
     this.applyDelayedEffects();
-    
+
     // 清空临时决策
     this.tempDecisions = {};
     this.tempSources = [];
@@ -7246,6 +7312,9 @@ class InvestmentConfirmationBiasPageRouter {
       case 'TURN_2_DECISION_1':
       case 'TURN_3_DECISION_1':
       case 'TURN_5_DECISION_1':
+      case 'TURN_6_DECISION_1':
+      case 'TURN_7_DECISION_1':
+      case 'TURN_8_DECISION_1':
         return this.renderInformationSourcePage();
       case 'TURN_1_DECISION_2':
         return this.renderDecisionPage(1, 2, 'research_time', {
@@ -7268,12 +7337,19 @@ class InvestmentConfirmationBiasPageRouter {
       case 'TURN_3_DECISION_1_FEEDBACK':
       case 'TURN_4_DECISION_1_FEEDBACK':
       case 'TURN_5_DECISION_1_FEEDBACK':
+      case 'TURN_6_DECISION_1_FEEDBACK':
+      case 'TURN_7_DECISION_1_FEEDBACK':
+      case 'TURN_8_DECISION_1_FEEDBACK':
         return this.renderFeedbackPage();
       case 'TURN_1_SUMMARY':
       case 'TURN_2_SUMMARY':
       case 'TURN_3_SUMMARY':
+      case 'TURN_5_SUMMARY':
+      case 'TURN_6_SUMMARY':
+      case 'TURN_7_SUMMARY':
+      case 'TURN_8_SUMMARY':
         return this.renderTurnSummaryPage();
-      case 'TURN_5_ENDING':
+      case 'TURN_8_ENDING':
         return this.renderEndingPage();
       default:
         return '<div>页面开发中...</div>';
@@ -7303,7 +7379,7 @@ class InvestmentConfirmationBiasPageRouter {
               <li>"坚持自己的判断，忽略不同观点"</li>
             </ul>
           </div>
-          <p class="game-goal"><strong>🎯 目标：</strong>投资5个季度，实现资金增值并学习多元化投资</p>
+          <p class="game-goal"><strong>🎯 目标：</strong>投资8个季度，实现资金增值并学习多元化投资</p>
         </div>
         <div class="actions">
           <button class="btn btn-primary" onclick="window.investmentRouter.startGame(); window.investmentRouter.render();">开始投资</button>
@@ -7323,7 +7399,7 @@ class InvestmentConfirmationBiasPageRouter {
     return `
       <div class="game-page information-source-page">
         <h2>📋 第${this.currentTurn}季度 - 信息源选择</h2>
-        <div class="progress">季度 ${this.currentTurn}/5</div>
+        <div class="progress">季度 ${this.currentTurn}/8</div>
         
         <div class="state-display">
           <h3>📊 当前状态</h3>
@@ -7376,7 +7452,7 @@ class InvestmentConfirmationBiasPageRouter {
       <div class="game-page decision-page turn-${turn}-decision-${decisionNum}">
         <div class="page-header">
           <h2>📈 第${turn}季度 - 决策${decisionNum}/2</h2>
-          <div class="progress">季度 ${this.currentTurn}/5</div>
+          <div class="progress">季度 ${this.currentTurn}/8</div>
         </div>
         
         <div class="state-display">
@@ -7568,16 +7644,16 @@ class InvestmentConfirmationBiasPageRouter {
     
     if (finalPortfolio >= 15000 && biasRisk < 40) {
       rating = '🏆 投资大师';
-      message = '你成功克服了确认偏误，实现了多元化投资！';
+      message = '你成功克服了信息处理偏向，实现了多元化投资！';
     } else if (finalPortfolio >= 12000 || biasRisk < 50) {
       rating = '⭐ 优秀投资者';
-      message = '你学会了警惕确认偏误，做出了更明智的决策。';
+      message = '你学会了警惕信息处理偏向，做出了更明智的决策。';
     } else if (finalPortfolio >= 10000) {
       rating = '👍 合格投资者';
       message = '你经历了一些挫折，获得了宝贵的经验。';
     } else {
       rating = '📚 需要学习';
-      message = '确认偏误导致了投资损失，建议重新学习《失败的逻辑》。';
+      message = '信息处理偏向导致了投资损失，建议重新学习《失败的逻辑》。';
     }
     
     return `
@@ -7609,10 +7685,10 @@ class InvestmentConfirmationBiasPageRouter {
           <div class="lessons-learned">
             <h3>🎓 你学到了什么</h3>
             <ul>
-              <li>确认偏误如何影响投资决策</li>
+              <li>信息处理偏向如何影响投资决策</li>
               <li>多元化信息源的重要性</li>
               <li>选择性接收信息的危害</li>
-              <li>如何识别和克服确认偏误</li>
+              <li>如何识别和克服信息处理偏向</li>
             </ul>
           </div>
         </div>
@@ -7944,8 +8020,18 @@ class GameManager {
   static async startScenario(scenarioId) {
     console.log('Starting scenario:', scenarioId);
 
-    // ✅ FIXED: Removed hardcoded scenario checks to allow all scenarios to load
-    // All scenarios now go through the unified API-based loading mechanism
+    // ✅ Keep special handling for scenarios with custom UI/game logic
+    // But use API for data when possible
+    if (scenarioId === 'coffee-shop-linear-thinking') {
+      this.startCoffeeShopGame();
+      return;
+    } else if (scenarioId === 'relationship-time-delay') {
+      this.startRelationshipTimeDelayGame();
+      return;
+    } else if (scenarioId === 'investment-confirmation-bias') {
+      this.startInvestmentConfirmationBiasGame();
+      return;
+    }
 
     // Get the selected difficulty from user preferences
     const difficulty = AppState.userPreferences.difficulty;
@@ -8072,8 +8158,18 @@ class GameManager {
     if (!gameContainer) return;
 
     try {
-    // ✅ FIXED: Removed hardcoded scenario checks to allow all scenarios to load
-    // All scenarios now use the unified static content loading mechanism
+    // ✅ Keep special handling for scenarios with custom UI
+    // But ensure ALL scenarios can load properly
+    if (scenarioId === 'coffee-shop-linear-thinking') {
+      GameManager.startCoffeeShopGame();
+      return;
+    } else if (scenarioId === 'relationship-time-delay') {
+      GameManager.startRelationshipTimeDelayGame();
+      return;
+    } else if (scenarioId === 'investment-confirmation-bias') {
+      GameManager.startInvestmentConfirmationBiasGame();
+      return;
+    }
 
     // Try to get scenario data from mock scenarios
       const scenarios = NavigationManager.getMockScenarios();
@@ -8206,7 +8302,11 @@ class GameManager {
           </button>
         </div>
 
-        <div id="feedback-display" class="feedback-section"></div>
+        <div id="feedback-display" class="feedback-section">
+          <div class="feedback-instructions">
+            <p><strong>提示：</strong>每次决策后，系统将展示结果。观察不同决策对业务指标的影响。</p>
+          </div>
+        </div>
       </div>
 
       <div class="game-actions">
@@ -8304,6 +8404,59 @@ class GameManager {
   }
 
   static generateGameScenarioUI(scenarioId, scenario) {
+    // 生成基于步骤的UI，如果场景有steps属性
+    let stepsSection = '';
+    if (scenario.steps && scenario.steps.length > 0) {
+      // 初始化游戏会话中的步骤信息
+      if (AppState.gameSession) {
+        AppState.gameSession.currentStep = 0; // 从第一步开始
+        AppState.gameSession.totalSteps = scenario.steps.length;
+      }
+      
+      const currentStep = scenario.steps[0]; // 显示当前步骤
+      const stepNumber = 1; // 当前是第几步
+      const totalSteps = scenario.steps.length; // 总共有几步
+      
+      const optionsHtml = currentStep.options?.map((option, idx) => `
+        <div class="option-card">
+          <button class="option-btn" data-option="${idx + 1}" data-step="${stepNumber}" onclick="GameManager.selectOption(${idx + 1})">
+            <span class="option-letter">${String.fromCharCode(65 + idx)}.</span>
+            <span class="option-text">${option}</span>
+          </button>
+        </div>
+      `).join('');
+
+      stepsSection = `
+        <div class="scenario-step">
+          <div class="step-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${(stepNumber / totalSteps) * 100}%"></div>
+            </div>
+            <div class="progress-text">第 ${stepNumber}/${totalSteps} 步</div>
+          </div>
+          
+          <div class="step-header">
+            <h4>情境描述</h4>
+          </div>
+          <div class="step-situation">
+            <p>${currentStep.situation}</p>
+          </div>
+          <div class="step-options">
+            <h5>请选择您的决策：</h5>
+            <div class="options-grid">
+              ${optionsHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    } else {
+      stepsSection = `
+        <div id="decision-options">
+          <p>请选择您的决策策略...</p>
+        </div>
+      `;
+    }
+
     return `
       <div class="game-header">
         <h2>${scenario.name}</h2>
@@ -8337,21 +8490,23 @@ class GameManager {
         </div>
 
         <div class="game-controls">
-          <h3>决策选项</h3>
-          <div id="decision-options">
-            <p>请选择您的决策策略...</p>
-          </div>
+          <h3>当前决策</h3>
+          ${stepsSection}
 
           <div class="turn-info">
             <span class="turn-number">回合: <span id="current-turn">1</span></span>
           </div>
 
-          <button class="btn btn-primary btn-large" id="submit-decision">
+          <button class="btn btn-primary btn-large" id="submit-decision" style="display:none;">
             提交决策
           </button>
         </div>
 
-        <div id="feedback-display" class="feedback-section"></div>
+        <div id="feedback-display" class="feedback-section">
+          <div class="feedback-instructions">
+            <p><strong>提示：</strong>点击选项以做出决策，然后提交。观察不同决策对结果的影响。</p>
+          </div>
+        </div>
       </div>
 
       <div class="game-actions">
@@ -8437,8 +8592,14 @@ class GameManager {
       const selectedOption = document.querySelector('.option-btn.selected');
       if (selectedOption) {
         decision = {
-          option: selectedOption.dataset.option || '1'
+          option: selectedOption.dataset.option || '1',
+          action: selectedOption.textContent.trim() // 保存选项文本用于反馈
         };
+      } else {
+        // 如果没有选择选项，显示提示
+        this.displayError('请先选择一个决策选项');
+        reEnableButton();
+        return;
       }
     }
 
@@ -8628,6 +8789,35 @@ class GameManager {
       const turnDisplay = document.getElementById('current-turn');
       if (turnDisplay) {
         turnDisplay.textContent = newGameState.turn_number;
+      }
+
+      // For game-* scenarios, check if we need to show next step
+      if (scenarioId.startsWith('game-')) {
+        // Check if scenario has steps and if we have more steps to show
+        let scenarioData;
+        if (AppState.scenarios) {
+          scenarioData = AppState.scenarios.find(s => s.id === scenarioId);
+        } else {
+          scenarioData = NavigationManager.getMockScenarios().find(s => s.id === scenarioId);
+        }
+
+        if (scenarioData && scenarioData.steps && scenarioData.steps.length > 0) {
+          const currentStep = AppState.gameSession.currentStep !== undefined ? 
+            AppState.gameSession.currentStep : 0;
+          const totalSteps = scenarioData.steps.length;
+
+          if (currentStep < totalSteps - 1) {
+            // More steps to go, show next step after a delay to show feedback
+            setTimeout(() => {
+              this.showNextStep();
+            }, 3000); // Wait 3 seconds to show feedback before moving to next step
+          } else {
+            // All steps completed, show completion screen after a delay
+            setTimeout(() => {
+              this.showScenarioComplete();
+            }, 3000);
+          }
+        }
       }
 
       console.log('Decision submitted successfully with real calculations');
@@ -8893,6 +9083,190 @@ class GameManager {
     `;
     feedbackDisplay.className = 'feedback-section feedback game-feedback error';
     feedbackDisplay.style.display = 'block';
+  }
+
+  // 处理选项选择
+  static selectOption(optionNumber) {
+    // 移除之前的选择
+    const previouslySelected = document.querySelector('.option-btn.selected');
+    if (previouslySelected) {
+      previouslySelected.classList.remove('selected');
+    }
+
+    // 高亮当前选择的选项
+    const selectedBtn = document.querySelector(`.option-btn[data-option="${optionNumber}"]`);
+    if (selectedBtn) {
+      selectedBtn.classList.add('selected');
+      
+      // 同时显示提交按钮
+      const submitBtn = document.getElementById('submit-decision');
+      if (submitBtn) {
+        submitBtn.style.display = 'inline-block';
+      }
+    }
+  }
+
+  // 显示下一步的决策
+  static showNextStep() {
+    if (!AppState.gameSession || !AppState.gameSession.scenarioId.startsWith('game-')) {
+      return;
+    }
+
+    const scenarioId = AppState.gameSession.scenarioId;
+    
+    // 获取场景数据
+    let scenario;
+    if (AppState.scenarios) {
+      scenario = AppState.scenarios.find(s => s.id === scenarioId);
+    } else {
+      // 如果没有全局场景数据，尝试从模拟数据获取
+      scenario = NavigationManager.getMockScenarios().find(s => s.id === scenarioId);
+    }
+
+    if (!scenario || !scenario.steps || scenario.steps.length === 0) {
+      return;
+    }
+
+    // 更新当前步骤
+    const currentStep = AppState.gameSession.currentStep !== undefined ? 
+      AppState.gameSession.currentStep : 0;
+    const nextStepIndex = currentStep + 1;
+
+    if (nextStepIndex < scenario.steps.length) {
+      // 显示下一步
+      AppState.gameSession.currentStep = nextStepIndex;
+      this.renderStep(nextStepIndex, scenario);
+    } else {
+      // 所有步骤完成，显示结束画面
+      this.showScenarioComplete();
+    }
+  }
+
+  // 渲染指定步骤
+  static renderStep(stepIndex, scenario) {
+    const step = scenario.steps[stepIndex];
+    if (!step) return;
+
+    const stepContainer = document.querySelector('.scenario-step');
+    if (!stepContainer) return;
+
+    const totalSteps = scenario.steps.length;
+    const optionsHtml = step.options?.map((option, idx) => `
+      <div class="option-card">
+        <button class="option-btn" data-option="${idx + 1}" data-step="${stepIndex + 1}" onclick="GameManager.selectOption(${idx + 1})">
+          <span class="option-letter">${String.fromCharCode(65 + idx)}.</span>
+          <span class="option-text">${option}</span>
+        </button>
+      </div>
+    `).join('');
+
+    stepContainer.innerHTML = `
+      <div class="step-progress">
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: ${((stepIndex + 1) / totalSteps) * 100}%"></div>
+        </div>
+        <div class="progress-text">第 ${stepIndex + 1}/${totalSteps} 步</div>
+      </div>
+      
+      <div class="step-header">
+        <h4>情境描述</h4>
+      </div>
+      <div class="step-situation">
+        <p>${step.situation}</p>
+      </div>
+      <div class="step-options">
+        <h5>请选择您的决策：</h5>
+        <div class="options-grid">
+          ${optionsHtml}
+        </div>
+      </div>
+    `;
+  }
+
+  // 显示场景完成画面
+  static showScenarioComplete() {
+    const gameContainer = document.getElementById('game-container');
+    if (!gameContainer) return;
+
+    gameContainer.innerHTML = `
+      <div class="game-header">
+        <h2>场景完成！</h2>
+        <div class="game-meta">
+          <span class="difficulty-badge">完成</span>
+        </div>
+      </div>
+
+      <div class="game-content">
+        <div class="completion-message">
+          <div class="completion-icon">🎉</div>
+          <h3>恭喜！您已完成此场景</h3>
+          <p>您已成功完成所有决策步骤，系统已记录您的决策历程。</p>
+        </div>
+
+        <div class="completion-analysis">
+          <h4>决策分析</h4>
+          <div id="decision-analysis-content">
+            <p>系统正在分析您的决策模式...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-actions">
+        <button class="btn btn-primary" onclick="NavigationManager.navigateTo('scenarios')">选择其他场景</button>
+        <button class="btn btn-secondary" onclick="GameManager.restartScenario()">重新开始</button>
+        <button class="btn btn-tertiary" onclick="GameManager.hideGameModal()">关闭</button>
+      </div>
+    `;
+
+    // 执行决策分析
+    this.performDecisionAnalysis();
+  }
+
+  // 执行决策分析
+  static performDecisionAnalysis() {
+    if (!AppState.gameSession || !AppState.gameSession.decision_history) {
+      return;
+    }
+
+    const decisions = AppState.gameSession.decision_history;
+    const analysisContent = document.getElementById('decision-analysis-content');
+    
+    if (!analysisContent) {
+      return;
+    }
+
+    // 简单的分析 - 实际应用中可以更复杂
+    const totalDecisions = decisions.length;
+    let totalSatisfactionChange = 0;
+    let totalResourceChange = 0;
+
+    decisions.forEach(record => {
+      if (record.state_after && record.state_before) {
+        totalSatisfactionChange += (record.state_after.satisfaction || 0) - (record.state_before.satisfaction || 0);
+        totalResourceChange += (record.state_after.resources || 0) - (record.state_before.resources || 0);
+      }
+    });
+
+    analysisContent.innerHTML = `
+      <div class="analysis-summary">
+        <div class="analysis-item">
+          <h5>决策总数</h5>
+          <p>${totalDecisions}</p>
+        </div>
+        <div class="analysis-item">
+          <h5>满意度变化</h5>
+          <p>${totalSatisfactionChange >= 0 ? '+' : ''}${totalSatisfactionChange}</p>
+        </div>
+        <div class="analysis-item">
+          <h5>资源变化</h5>
+          <p>${totalResourceChange >= 0 ? '+' : ''}${totalResourceChange}</p>
+        </div>
+      </div>
+      <div class="analysis-insights">
+        <h5>洞察与建议</h5>
+        <p>您的决策显示出对长期影响的关注。在复杂系统中，短期决策的长期后果往往不如预期那样直接。</p>
+      </div>
+    `;
   }
 
   static showGameModal() {
@@ -13345,7 +13719,7 @@ class HistoricalCasesPage {
 
   renderBiasSelection() {
     const commonBiases = [
-      "确认偏误 (Confirmation Bias)",
+      "信息处理偏向 (Information Processing Bias)",
       "群体思维 (Groupthink)", 
       "过度自信 (Overconfidence)",
       "锚定效应 (Anchoring)",
@@ -13507,3 +13881,78 @@ class HistoricalCasesPage {
     `;
   }
 }
+
+// 添加恋爱关系场景页面
+NavigationManager.getLoveRelationshipPage = function() {
+  return `
+    <section class="page-section love-relationship-page">
+      <header class="page-header">
+        <h1>恋爱关系认知训练</h1>
+        <p>通过模拟恋爱关系中的各种情境，提升情感认知和决策能力</p>
+      </header>
+
+      <div class="love-relationship-intro">
+        <div class="intro-content">
+          <h2>恋爱关系中的认知陷阱</h2>
+          <p>在恋爱关系中，我们常常受到各种认知偏差的影响，如理想化偏见、确认偏误、沉没成本谬误等。通过这些模拟场景，您可以：</p>
+          <ul>
+            <li>识别恋爱关系中的常见认知偏差</li>
+            <li>学习健康的沟通和冲突解决技巧</li>
+            <li>建立合理的期望和边界</li>
+            <li>提升情感智商和决策能力</li>
+          </ul>
+        </div>
+
+        <div class="scenarios-list">
+          <h3>可用场景</h3>
+          <div class="scenario-cards">
+            <div class="card scenario-card" onclick="loveRelationshipRouter.initScenario('love-relationship-001')" style="cursor: pointer;">
+              <h3>初识阶段</h3>
+              <p>探索恋爱关系初识阶段的决策挑战</p>
+              <div class="scenario-meta">
+                <span class="badge intermediate">中级</span>
+                <span class="scenario-duration">25-35分钟</span>
+              </div>
+              <button class="btn btn-primary" onclick="event.stopPropagation(); loveRelationshipRouter.initScenario('love-relationship-001')">开始体验</button>
+            </div>
+
+            <div class="card scenario-card" onclick="loveRelationshipRouter.initScenario('love-relationship-002')" style="cursor: pointer;">
+              <h3>长期关系维护</h3>
+              <p>处理长期恋爱关系中的挑战与决策</p>
+              <div class="scenario-meta">
+                <span class="badge advanced">高级</span>
+                <span class="scenario-duration">30-40分钟</span>
+              </div>
+              <button class="btn btn-primary" onclick="event.stopPropagation(); loveRelationshipRouter.initScenario('love-relationship-002')">开始体验</button>
+            </div>
+
+            <div class="card scenario-card" onclick="loveRelationshipRouter.initScenario('love-relationship-003')" style="cursor: pointer;">
+              <h3>沟通与理解</h3>
+              <p>专注于恋爱关系中的沟通技巧和相互理解</p>
+              <div class="scenario-meta">
+                <span class="badge intermediate">中级</span>
+                <span class="scenario-duration">20-30分钟</span>
+              </div>
+              <button class="btn btn-primary" onclick="event.stopPropagation(); loveRelationshipRouter.initScenario('love-relationship-003')">开始体验</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="love-relationship-guidelines">
+          <h3>参与指南</h3>
+          <ol>
+            <li>仔细阅读每个情境的描述</li>
+            <li>考虑每个选项的可能后果</li>
+            <li>选择您认为最合适的决策</li>
+            <li>反思系统提供的反馈和分析</li>
+            <li>将学到的经验应用到实际生活中</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="navigation-controls">
+        <button class="btn btn-secondary" onclick="NavigationManager.navigateTo('scenarios')">返回所有场景</button>
+      </div>
+    </section>
+  `;
+};
