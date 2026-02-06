@@ -1,122 +1,61 @@
-# Railway 部署指南
+# 部署到Railway的说明
 
 ## 部署步骤
 
-### 1. 访问 Railway 并登录
-
-1. 访问 https://railway.com/new
-2. 点击 "Continue with GitHub" 授权登录
-
-### 2. 创建新项目
-
-1. 登录后，点击 **"New Project"** 按钮
-2. 选择 **"Deploy from GitHub repo"**
-3. 搜索并选择 `ptreezh/failurelogic` 仓库
-
-### 3. 配置部署
-
-Railway 会自动检测项目配置：
-
-- **Builder**: Nixpacks（通过 `nixpacks.toml` 配置）
-- **Start Command**: `python api-server/start.py`
-- **Port**: 自动检测（通过 `PORT` 环境变量）
-
-### 4. 部署设置
-
-确认以下配置：
-
-| 设置项 | 值 |
-|--------|-----|
-| Root Directory | `/` |
-| Build Command | `pip install --no-cache-dir -r api-server/requirements.txt` |
-| Start Command | `python api-server/start.py` |
-| Healthcheck Path | `/health` |
-
-### 5. 环境变量（可选）
-
-如需配置环境变量，在项目设置中添加：
-
-| 变量名 | 说明 |
-|--------|------|
-| PORT | Railway 自动设置（通常 8000） |
-| PYTHON_VERSION | Python 版本（默认 3.x） |
-
-### 6. 部署
-
-1. 点击 **"Deploy"** 按钮
-2. 等待构建完成（约 2-3 分钟）
-3. 部署成功后，Railway 会分配一个公网 URL
-
-### 7. 获取部署 URL
-
-部署完成后：
-1. 进入项目 → **Settings** → **Domains**
-2. 复制生成的 URL（如：`https://xxx.up.railway.app`）
-
-### 8. 验证部署
-
-访问以下端点验证：
-
+1. 确保Railway CLI已安装：
 ```bash
-# 健康检查
-curl https://xxx.up.railway.app/health
-
-# API 文档
-# 浏览器访问：https://xxx.up.railway.app/docs
-
-# 根路径（前端）
-# 浏览器访问：https://xxx.up.railway.app/
+npm install -g @railway/cli
 ```
 
-### 9. 更新前端 API 配置
-
-编辑 `assets/js/api-config-manager.js`，在 `API_SOURCES` 数组中添加 Railway URL：
-
-```javascript
-const API_SOURCES = [
-  {
-    url: 'https://xxx.up.railway.app',
-    name: 'Railway Production',
-    priority: 1  // 最高优先级
-  },
-  // ... 其他备用源
-];
+2. 登录Railway：
+```bash
+railway login
 ```
 
----
+3. 将项目链接到Railway：
+```bash
+railway init
+```
 
-## 故障排查
+4. 设置环境变量（如果需要）：
+```bash
+railway vars set ENVIRONMENT=production
+```
 
-### 构建失败
+5. 部署项目：
+```bash
+railway up
+```
 
-- 检查 `api-server/requirements.txt` 是否存在
-- 查看构建日志确认错误信息
+## API配置说明
 
-### 启动失败
+项目中的API配置已更新以支持多种部署环境：
 
-- 确认 `api-server/start.py` 支持环境变量 `PORT`
-- 检查日志：Railway → 项目 → Logs
+- 本地开发：`http://localhost:8082`
+- Railway部署：动态检测主机名并相应调整API端点
+- GitHub Pages：使用代理API端点
 
-### 404 错误
+## 验证部署
 
-- 确认 `Root Directory` 设置正确
-- 检查路由配置
+部署完成后，可以通过以下方式验证：
 
----
+1. 访问前端URL，确认页面正常加载
+2. 导航到场景页面，确认场景列表正确显示
+3. 尝试启动一个场景，确认游戏功能正常
+4. 检查浏览器控制台，确认没有错误
 
-## Railway 配置文件
+## 故障排除
 
-项目中已包含以下配置文件：
+如果部署后遇到问题：
 
-- `nixpacks.toml` - Nixpacks 构建配置
-- `railway.json` - Railway 项目元数据
-- `api-server/requirements.txt` - Python 依赖
+1. 检查API端点是否正确配置
+2. 确认CORS设置允许前端域名访问
+3. 验证后端服务是否正常运行
+4. 检查日志以获取更多信息
 
----
+## 后续步骤
 
-## 下一步
-
-部署成功后：
-1. 将 Railway URL 添加到前端 API 配置
-2. 提交并推送更新
-3. 前端将自动使用 Railway 作为主要 API 源
+1. 部署后端API服务到Railway
+2. 配置前端以使用部署的后端API
+3. 测试所有场景功能
+4. 验证移动端兼容性

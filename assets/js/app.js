@@ -494,32 +494,36 @@ class NavigationManager {
 
     // Try to load from API first with timeout, fallback to mock data
     try {
-      const response = await Promise.race([
-        ApiService.scenarios.getAll(),
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('API timeout after 3 seconds')), 3000)
-        )
-      ]);
+      console.log('Attempting to load scenarios from API...');
+      
+      // Direct fetch to bypass potential service issues
+      const response = await fetch(`${APP_CONFIG.apiBaseUrl}/scenarios/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8'
+        }
+      });
 
-      if (response && Array.isArray(response.scenarios)) {
-        // Update global state with API data
-        AppState.scenarios = response.scenarios;
-        console.log('Loaded scenarios from API:', response.scenarios.length);
+      if (response.ok) {
+        const data = await response.json();
+        if (data && Array.isArray(data.scenarios)) {
+          // Update global state with API data
+          AppState.scenarios = data.scenarios;
+          console.log('✅ Loaded scenarios from API:', data.scenarios.length);
+        } else {
+          // Fallback to mock data
+          AppState.scenarios = this.getMockScenarios();
+          console.log('⚠️  API returned unexpected format, using mock scenarios:', AppState.scenarios.length);
+        }
       } else {
-        // Fallback to mock data
+        console.warn('⚠️  API request failed, status:', response.status);
         AppState.scenarios = this.getMockScenarios();
-        console.log('Using mock scenarios:', AppState.scenarios.length);
       }
     } catch (error) {
-      console.warn('Failed to load scenarios from API, attempting local fallback:', error);
+      console.warn('⚠️  Failed to load scenarios from API, using fallback:', error.message);
       try {
-        const localResp = await Promise.race([
-          fetch('assets/data/scenarios.json'),
-          new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('Local file timeout after 2 seconds')), 2000)
-          )
-        ]);
-
+        // Try local file as secondary fallback
+        const localResp = await fetch('assets/data/scenarios.json');
         if (localResp.ok) {
           const data = await localResp.json();
           AppState.scenarios = data.scenarios || this.getMockScenarios();
@@ -527,7 +531,7 @@ class NavigationManager {
           AppState.scenarios = this.getMockScenarios();
         }
       } catch (fetchError) {
-        console.warn('Local fallback failed, using built-in mock scenarios:', fetchError);
+        console.warn('⚠️  Local fallback failed, using built-in mock scenarios:', fetchError.message);
         AppState.scenarios = this.getMockScenarios();
       }
     }
@@ -536,7 +540,7 @@ class NavigationManager {
     // Render scenarios into the static HTML scenarios-grid element
     const container = document.getElementById('scenarios-grid');
     if (container && Array.isArray(AppState.scenarios)) {
-      console.log('Rendering scenarios into grid:', AppState.scenarios.length);
+      console.log('🎨 Rendering scenarios into grid:', AppState.scenarios.length);
       this.renderScenarios(AppState.scenarios, container);
 
       // Hide loading state
@@ -549,8 +553,12 @@ class NavigationManager {
       if (scenariosCountEl) {
         scenariosCountEl.textContent = String(AppState.scenarios.length);
       }
+      
+      // Make sure the scenarios grid is visible
+      container.style.display = 'grid';
+      container.style.visibility = 'visible';
     } else {
-      console.error('scenarios-grid element not found or no scenarios to render');
+      console.error('❌ scenarios-grid element not found or no scenarios to render');
       // Ensure loading is hidden even on error
       if (loadingEl) {
         loadingEl.style.display = 'none';
