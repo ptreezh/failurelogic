@@ -4,3 +4,5 @@ pydantic>=2.5.0
 pytest-asyncio
 pytest-playwright
 playwright
+python-multipart>=0.0.6
+python-dotenv>=1.0.0

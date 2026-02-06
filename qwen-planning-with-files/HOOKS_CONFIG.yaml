@@ -1,0 +1,35 @@
+# Qwen Hooks Configuration for Planning with Files
+
+# PreToolUse Hook
+# 在执行重要操作前自动读取规划文件
+pre_tool_use_hook:
+  enabled: true
+  trigger_on:
+    - write
+    - edit
+    - bash
+    - read
+    - glob
+    - grep
+  action:
+    description: "Read task_plan.md before important operations to refresh goals in attention window"
+    command: "read_file('./task_plan.md', limit=30) if file_exists('./task_plan.md') else None"
+
+# PostToolUse Hook
+# 在文件更新后提醒同步规划状态
+post_tool_use_hook:
+  enabled: true
+  trigger_on:
+    - write
+    - edit
+  action:
+    description: "Remind to update planning files after file operations"
+    message: "[planning-with-files] File updated. If this completes a phase, update task_plan.md status."
+
+# Stop Hook
+# 在结束任务前验证所有阶段完成
+stop_hook:
+  enabled: true
+  action:
+    description: "Verify all phases are complete before stopping"
+    command: "./check-complete.sh || ./check-complete.bat"

@@ -1,0 +1,37 @@
+// ============================================================
+// 修复投资确认偏误场景的 calculateInvestmentTurnSummary 方法
+// ============================================================
+// 位置：assets/js/app.js 第 6991 行
+// 问题：返回数据结构不匹配 renderTurnSummaryPage 的期望
+// 修复：返回正确的数据结构，包含 linear_expectation, gap 等
+// ============================================================
+
+static calculateInvestmentTurnSummary(decisions, gameState) {
+  // 计算线性期望（用户的直觉期望）
+  const linearExpectation = DecisionEngine.getInvestmentLinearExpectation(decisions, gameState);
+
+  // 计算实际效果（复杂系统结果）
+  const effectsResult = DecisionEngine.calculateInvestmentEffects(decisions, gameState);
+  const actualResult = DecisionEngine.getInvestmentActualResult(effectsResult.effects, gameState);
+
+  // 计算偏差（线性思维 vs 复杂现实）
+  const gap = actualResult.portfolio - linearExpectation.portfolio;
+
+  // 生成叙述文本
+  let narrative = `本季度你的投资决策产生了${gap >= 0 ? '正向' : '负向'}偏差。`;
+
+  // 添加延迟效果信息
+  if (effectsResult.delayedEffects && effectsResult.delayedEffects.length > 0) {
+    narrative += ` ⏰ 延迟效果：${effectsResult.delayedEffects[0].description}，将在${effectsResult.delayedEffects[0].turn_delay}回合后显现。`;
+  }
+
+  // 返回完整的数据结构
+  return {
+    linear_expectation: linearExpectation,  // ✅ 用户期望的线性结果
+    actual_result: actualResult,            // ✅ 实际发生的复杂结果
+    gap: gap,                               // ✅ 期望与实际的差距
+    gap_percent: Math.abs(gap / linearExpectation.portfolio * 100),  // ✅ 偏差百分比
+    narrative: narrative,                   // ✅ 叙述文本
+    delayed_effects: effectsResult.delayedEffects || []  // ✅ 延迟效果数组
+  };
+}

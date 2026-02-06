@@ -1,0 +1,111 @@
+{
+  "report_title": "认知陷阱平台 - 全面测试报告",
+  "generated_at": "2026-02-06T22:58:07.294199",
+  "test_environment": {
+    "platform": "Windows",
+    "test_tool": "Playwright with Microsoft Edge",
+    "browser_mode": "Non-headless",
+    "test_url": "http://localhost:8000"
+  },
+  "executive_summary": {
+    "total_scenarios": 44,
+    "tested_scenarios": 10,
+    "passed_scenarios": 0,
+    "failed_scenarios": 10,
+    "success_rate": 0.0
+  },
+  "detailed_findings": {
+    "positive_findings": [
+      "成功建立了Playwright测试环境",
+      "成功启动了Microsoft Edge浏览器（非headless模式）",
+      "能够成功访问应用主页",
+      "能够成功导航到场景页面（通过点击导航按钮）",
+      "页面具有交互元素（检测到按钮等UI组件）",
+      "API服务器运行正常（端口8082）"
+    ],
+    "negative_findings": [
+      "场景卡片未正确渲染或数据未正确加载",
+      "无法通过名称找到特定场景卡片",
+      "SPA路由可能存在问题，场景详情页未正确加载",
+      "前端与后端API的数据连接可能存在问题"
+    ],
+    "technical_issues": [
+      "前端SPA应用的路由机制需要调试",
+      "场景数据的前端展示逻辑需要验证",
+      "可能需要检查前端与API的通信"
+    ]
+  },
+  "test_results": {
+    "page_navigation": {
+      "status": "PARTIAL_SUCCESS",
+      "details": "主页可访问，场景页面可通过导航按钮访问，但具体场景内容未正确加载"
+    },
+    "ui_components": {
+      "status": "SUCCESS",
+      "details": "检测到多个交互组件（按钮、输入框等）"
+    },
+    "scenario_accessibility": {
+      "status": "FAILED",
+      "details": "无法通过名称找到特定场景卡片，场景内容未正确渲染"
+    },
+    "api_connectivity": {
+      "status": "PENDING",
+      "details": "需要进一步验证前端与API的连接"
+    }
+  },
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "item": "调试前端SPA路由机制",
+      "description": "确保场景页面能够正确渲染和显示内容"
+    },
+    {
+      "priority": "HIGH",
+      "item": "验证前端与API的数据连接",
+      "description": "确保前端能够正确获取和显示场景数据"
+    },
+    {
+      "priority": "MEDIUM",
+      "item": "完善场景卡片渲染逻辑",
+      "description": "确保每个场景都能正确显示在场景列表中"
+    },
+    {
+      "priority": "MEDIUM",
+      "item": "添加前端错误处理和日志",
+      "description": "帮助调试前端与API通信问题"
+    },
+    {
+      "priority": "LOW",
+      "item": "扩展自动化测试覆盖范围",
+      "description": "一旦前端问题解决，扩展测试覆盖所有44个场景"
+    }
+  ],
+  "next_steps": [
+    "修复前端SPA路由问题",
+    "验证前端与API的通信",
+    "重新运行完整测试套件",
+    "扩展测试覆盖到所有场景"
+  ],
+  "附录": {
+    "total_scenarios_breakdown": {
+      "basic_scenarios": 14,
+      "game_scenarios": 3,
+      "advanced_game_scenarios": 3,
+      "love_relationship_scenarios": 3,
+      "historical_cases": 21,
+      "total": 44
+    },
+    "test_configuration": {
+      "browser": "Microsoft Edge (non-headless)",
+      "timeout_settings": "30秒",
+      "slow_mo": "500ms (for visibility)",
+      "selectors_used": [
+        "button[data-page='scenarios']",
+        "text=场景",
+        "text=Scenarios",
+        "button:has-text('场景')",
+        "button:has-text('Scenarios')"
+      ]
+    }
+  }
+}

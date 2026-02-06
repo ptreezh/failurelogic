@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>恋爱关系认知训练 - 认知陷阱平台</title>
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/components.css">
+    <link rel="stylesheet" href="/assets/css/game-styles.css">
+    <style>
+        /* 恋爱关系场景专用样式 */
+        .love-relationship-scenario {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .scenario-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            border-radius: 10px;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .scenario-step {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+        
+        .situation-description {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #e91e63;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .decision-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        @media (min-width: 768px) {
+            .decision-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .option-btn {
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .option-btn:hover {
+            border-color: #e91e63;
+            background-color: #fff0f5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.15);
+        }
+        
+        .option-btn.selected {
+            border-color: #e91e63;
+            background-color: #fce4ec;
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.2);
+        }
+        
+        .feedback-section {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #e8f5e9;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff9a9e, #fad0c4);
+            width: 33%;
+            transition: width 0.5s ease;
+        }
+        
+        .game-controls {
+            text-align: center;
+            margin: 25px 0;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #e91e63, #9c27b0);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.3);
+        }
+        
+        .btn-primary:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .scenario-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            min-width: 120px;
+            margin: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e91e63;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="love-relationship-app">
+        <header class="page-header">
+            <nav class="top-nav">
+                <div class="nav-brand">
+                    <h1>认知陷阱平台</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="/" onclick="navigateTo('home')">首页</a></li>
+                    <li><a href="/scenarios" onclick="navigateTo('scenarios')">所有场景</a></li>
+                    <li><a href="/about" onclick="navigateTo('about')">关于</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <section class="love-relationship-scenario">
+                <div class="scenario-header">
+                    <h1>💕 恋爱关系认知训练</h1>
+                    <p>通过模拟恋爱关系中的各种情境，提升情感认知和决策能力</p>
+                </div>
+
+                <div class="scenario-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="satisfaction-value">50</div>
+                        <div class="stat-label">满意度</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="trust-value">50</div>
+                        <div class="stat-label">信任度</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="turn-value">1</div>
+                        <div class="stat-label">回合数</div>
+                    </div>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+
+                <div id="scenario-content">
+                    <!-- 场景内容将通过JavaScript动态加载 -->
+                    <div class="loading-state">
+                        <p>正在加载恋爱关系场景...</p>
+                    </div>
+                </div>
+
+                <div class="game-controls">
+                    <button class="btn-primary" id="submit-decision-btn" onclick="submitDecision()" disabled>
+                        提交决策
+                    </button>
+                    <button class="btn-primary" onclick="resetScenario()" style="background: #607d8b; margin-left: 10px;">
+                        重新开始
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // 恋爱关系场景数据
+        const loveScenarios = {
+            "love-relationship-001": {
+                title: "恋爱关系认知训练 - 初识阶段",
+                description: "模拟恋爱关系初识阶段的决策过程，测试用户在情感决策中的思维模式",
+                steps: [
+                    {
+                        step: 1,
+                        situation: "你在一个朋友聚会上认识了一个很有吸引力的人，感觉彼此很聊得来。聚会结束后，对方提出交换联系方式。此时你会如何回应？",
+                        options: [
+                            "立即交换联系方式，并提议明天见面",
+                            "交换联系方式，但保持适当距离，慢慢了解",
+                            "礼貌拒绝，觉得还不够了解对方",
+                            "只交换社交媒体账号，先线上了解"
+                        ],
+                        explanation: "不同的选择反映了用户在亲密关系中的风险偏好和期望管理方式。立即推进可能反映理想化倾向，而过度谨慎可能反映回避型依恋。"
+                    },
+                    {
+                        step: 2,
+                        situation: "经过几周的交流，你们决定正式约会。第一次约会后，对方对你表达了强烈的兴趣，希望尽快确立关系。你发现自己对这段关系也有一些期待，但内心仍有疑虑。",
+                        options: [
+                            "同意确立关系，珍惜这份感情",
+                            "表达需要更多时间了解，建议继续约会观察",
+                            "坦诚告知自己的疑虑，讨论彼此的期望",
+                            "开始考虑其他选择，不急于确定关系"
+                        ],
+                        explanation: "此决策测试用户如何平衡情感冲动与理性判断，以及在关系中的沟通能力。"
+                    },
+                    {
+                        step: 3,
+                        situation: "关系确立后几个月，你注意到一些之前未曾察觉的行为模式：对方有时会忽视你的感受，或者在重要决定上不征求你的意见。你开始质疑这段关系是否健康。",
+                        options: [
+                            "直接与对方沟通这些问题，寻求改变",
+                            "暂时忽略这些问题，希望它们会自然改善",
+                            "向朋友或家人寻求建议",
+                            "开始考虑结束这段关系"
+                        ],
+                        explanation: "此决策测试用户在面对关系问题时的应对策略，以及自我价值的认知。"
+                    }
+                ]
+            },
+            "love-relationship-002": {
+                title: "恋爱关系认知训练 - 长期关系维护",
+                description: "模拟长期恋爱关系中的挑战与决策，测试用户在维持关系中的认知能力",
+                steps: [
+                    {
+                        step: 1,
+                        situation: "你和伴侣在一起两年了，关系稳定。最近你们开始讨论未来规划，包括居住地、职业发展和是否要孩子等问题。你们在某些问题上有分歧。",
+                        options: [
+                            "坚持自己的观点，认为自己的想法更合理",
+                            "完全迁就伴侣的想法，避免冲突",
+                            "寻求折中方案，平衡双方需求",
+                            "推迟讨论，认为时间会解决分歧"
+                        ],
+                        explanation: "此决策测试用户在长期关系中的沟通和妥协能力，以及对冲突的态度。"
+                    },
+                    {
+                        step: 2,
+                        situation: "在一次重要争吵后，你们进入了冷战期。你感到受伤和失望，但同时也想念对方。此时你会如何处理？",
+                        options: [
+                            "主动道歉并尝试和解，即使觉得自己没错",
+                            "等待对方先主动联系",
+                            "通过共同朋友传达和解意愿",
+                            "冷静一段时间后再沟通，准备充分的谈话"
+                        ],
+                        explanation: "此决策测试用户在冲突后的情感调节能力和修复关系的意愿。"
+                    },
+                    {
+                        step: 3,
+                        situation: "你们的关系经历了起伏，现在面临一个重要决定：是否同居或结婚。双方家庭也对此有不同的期望和意见。",
+                        options: [
+                            "按照原计划推进，不考虑外界意见",
+                            "暂停决定，花更多时间评估关系",
+                            "寻求专业咨询师的建议",
+                            "根据家庭意见调整计划"
+                        ],
+                        explanation: "此决策测试用户在重大人生决定中的独立思考能力，以及处理外部压力的能力。"
+                    }
+                ]
+            },
+            "love-relationship-003": {
+                title: "恋爱关系认知训练 - 沟通与理解",
+                description: "专注于恋爱关系中的沟通技巧和相互理解，测试用户的情感智商",
+                steps: [
+                    {
+                        step: 1,
+                        situation: "你的伴侣最近工作压力很大，回家后显得疲惫和烦躁。当你试图关心时，对方显得不耐烦甚至有些冷漠。",
+                        options: [
+                            "直接询问对方发生了什么，要求详细解释",
+                            "给予空间，暂时不打扰",
+                            "表达自己的感受，说明关心对方",
+                            "准备一些放松的活动来缓解气氛"
+                        ],
+                        explanation: "此决策测试用户在伴侣情绪低落时的支持方式和沟通技巧。"
+                    },
+                    {
+                        step: 2,
+                        situation: "你发现伴侣对你隐瞒了一些事情，虽然不是原则性问题，但让你感到被欺骗。你不确定是否应该直接询问。",
+                        options: [
+                            "直接询问，强调诚实的重要性",
+                            "等待合适的时机再提起",
+                            "观察是否会自行解决",
+                            "反思自己是否也有类似行为"
+                        ],
+                        explanation: "此决策测试用户在面对信任问题时的处理方式和沟通策略。"
+                    }
+                ]
+            }
+        };
+
+        // 游戏状态
+        let gameState = {
+            currentScenario: null,
+            currentStep: 0,
+            satisfaction: 50,
+            trust: 50,
+            turn: 1,
+            selectedOption: null,
+            decisionHistory: []
+        };
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', function() {
+            loadScenario('love-relationship-001'); // 默认加载第一个场景
+        });
+
+        // 加载场景
+        function loadScenario(scenarioId) {
+            const scenario = loveScenarios[scenarioId];
+            if (!scenario) {
+                console.error('未找到场景:', scenarioId);
+                return;
+            }
+
+            gameState.currentScenario = scenario;
+            gameState.currentStep = 0;
+            gameState.satisfaction = 50;
+            gameState.trust = 50;
+            gameState.turn = 1;
+            gameState.selectedOption = null;
+            gameState.decisionHistory = [];
+
+            updateStatsDisplay();
+            renderCurrentStep();
+        }
+
+        // 渲染当前步骤
+        function renderCurrentStep() {
+            if (!gameState.currentScenario || gameState.currentStep >= gameState.currentScenario.steps.length) {
+                showScenarioComplete();
+                return;
+            }
+
+            const step = gameState.currentScenario.steps[gameState.currentStep];
+            const contentDiv = document.getElementById('scenario-content');
+
+            let optionsHtml = '';
+            step.options.forEach((option, index) => {
+                optionsHtml += `
+                    <button class="option-btn" data-option="${index + 1}" onclick="selectOption(${index + 1})">
+                        <strong>选项 ${String.fromCharCode(65 + index)}:</strong> ${option}
+                    </button>
+                `;
+            });
+
+            contentDiv.innerHTML = `
+                <div class="scenario-step">
+                    <h3>情境 ${step.step}/${gameState.currentScenario.steps.length}</h3>
+                    <div class="situation-description">
+                        ${step.situation}
+                    </div>
+                    <div class="decision-options">
+                        ${optionsHtml}
+                    </div>
+                    <div class="explanation-section" id="explanation-section" style="display: none; margin-top: 20px; padding: 15px; background-color: #e3f2fd; border-radius: 8px;">
+                        <h4>决策解析</h4>
+                        <p id="explanation-text"></p>
+                    </div>
+                </div>
+            `;
+
+            // 更新进度条
+            const progressFill = document.getElementById('progress-fill');
+            const progressPercent = ((gameState.currentStep) / gameState.currentScenario.steps.length) * 100;
+            progressFill.style.width = `${progressPercent}%`;
+        }
+
+        // 选择选项
+        function selectOption(optionIndex) {
+            // 移除之前的选择
+            const previouslySelected = document.querySelector('.option-btn.selected');
+            if (previouslySelected) {
+                previouslySelected.classList.remove('selected');
+            }
+
+            // 高亮当前选择
+            const selectedBtn = document.querySelector(`.option-btn[data-option="${optionIndex}"]`);
+            if (selectedBtn) {
+                selectedBtn.classList.add('selected');
+                gameState.selectedOption = optionIndex;
+
+                // 显示解释
+                const explanationSection = document.getElementById('explanation-section');
+                const explanationText = document.getElementById('explanation-text');
+                if (explanationSection && explanationText) {
+                    explanationSection.style.display = 'block';
+                    explanationText.textContent = gameState.currentScenario.steps[gameState.currentStep].explanation;
+                }
+
+                // 启用提交按钮
+                document.getElementById('submit-decision-btn').disabled = false;
+            }
+        }
+
+        // 提交决策
+        function submitDecision() {
+            if (gameState.selectedOption === null) {
+                alert('请选择一个选项');
+                return;
+            }
+
+            // 记录决策
+            const step = gameState.currentScenario.steps[gameState.currentStep];
+            gameState.decisionHistory.push({
+                step: step.step,
+                situation: step.situation,
+                selectedOption: gameState.selectedOption,
+                optionText: step.options[gameState.selectedOption - 1]
+            });
+
+            // 根据选择更新状态（这里简化处理）
+            // 在实际应用中，这里会调用API来计算真实结果
+            if (gameState.selectedOption === 1) { // 激进选项
+                gameState.satisfaction += 5;
+                gameState.trust += 3;
+            } else if (gameState.selectedOption === 2) { // 保守选项
+                gameState.satisfaction += 3;
+                gameState.trust += 5;
+            } else if (gameState.selectedOption === 3) { // 平衡选项
+                gameState.satisfaction += 4;
+                gameState.trust += 4;
+            } else { // 其他选项
+                gameState.satisfaction += 2;
+                gameState.trust += 2;
+            }
+
+            // 确保数值在合理范围内
+            gameState.satisfaction = Math.min(100, Math.max(0, gameState.satisfaction));
+            gameState.trust = Math.min(100, Math.max(0, gameState.trust));
+
+            // 更新显示
+            updateStatsDisplay();
+
+            // 移动到下一步
+            gameState.currentStep++;
+            gameState.turn++;
+            gameState.selectedOption = null;
+
+            // 禁用提交按钮直到再次选择
+            document.getElementById('submit-decision-btn').disabled = true;
+
+            // 渲染下一步
+            setTimeout(renderCurrentStep, 1000); // 延迟1秒以显示反馈
+        }
+
+        // 更新统计数据显示
+        function updateStatsDisplay() {
+            document.getElementById('satisfaction-value').textContent = gameState.satisfaction;
+            document.getElementById('trust-value').textContent = gameState.trust;
+            document.getElementById('turn-value').textContent = gameState.turn;
+        }
+
+        // 显示场景完成画面
+        function showScenarioComplete() {
+            const contentDiv = document.getElementById('scenario-content');
+            contentDiv.innerHTML = `
+                <div class="scenario-step" style="text-align: center; padding: 40px;">
+                    <h2>🎉 恭喜！您已完成此场景</h2>
+                    <p>您已成功完成 "${gameState.currentScenario.title}" 的所有决策挑战。</p>
+                    
+                    <div style="margin: 30px 0;">
+                        <h3>您的表现总结</h3>
+                        <div class="scenario-stats">
+                            <div class="stat-card">
+                                <div class="stat-value">${gameState.satisfaction}</div>
+                                <div class="stat-label">最终满意度</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${gameState.trust}</div>
+                                <div class="stat-label">最终信任度</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${gameState.decisionHistory.length}</div>
+                                <div class="stat-label">决策次数</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 20px 0;">
+                        <h3>学习要点</h3>
+                        <ul style="text-align: left; max-width: 600px; margin: 0 auto; padding-left: 20px;">
+                            <li>在恋爱关系中，平衡情感冲动与理性判断很重要</li>
+                            <li>有效沟通是解决关系问题的关键</li>
+                            <li>了解自己的依恋模式有助于建立健康关系</li>
+                            <li>在重大决定前给自己足够时间思考</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="margin-top: 30px;">
+                        <button class="btn-primary" onclick="loadScenario('love-relationship-001')" style="margin-right: 10px;">体验其他场景</button>
+                        <button class="btn-primary" onclick="navigateTo('scenarios')" style="background: #2196f3;">返回所有场景</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 重置场景
+        function resetScenario() {
+            if (gameState.currentScenario) {
+                loadScenario(gameState.currentScenario.steps[0].step === 1 ? 'love-relationship-001' : 
+                           gameState.currentScenario.steps[0].step === 4 ? 'love-relationship-002' : 'love-relationship-003');
+            }
+        }
+
+        // 导航函数
+        function navigateTo(page) {
+            window.location.href = `/${page}`;
+        }
+    </script>
+</body>
+</html>
