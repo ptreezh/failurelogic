@@ -94,6 +94,29 @@ const ApiService = {
       }),
   },
 
+  // Interactive endpoints
+  interactive: {
+    chat: (message) => 
+      ApiService.configManager.request('/interactive/chat', {
+        method: 'POST',
+        body: JSON.stringify(message)
+      }),
+    analyzeDecision: (decisionData) =>
+      ApiService.configManager.request('/interactive/analyze-decision', {
+        method: 'POST',
+        body: JSON.stringify(decisionData)
+      }),
+    getGuidedTour: () =>
+      ApiService.configManager.request('/interactive/guided-tour', {
+        method: 'GET'
+      }),
+    getPersonalizedFeedback: (userProfile) =>
+      ApiService.configManager.request('/interactive/personalized-feedback', {
+        method: 'POST',
+        body: JSON.stringify(userProfile)
+      })
+  },
+
   async healthCheck() {
     try {
       const response = await ApiService.configManager.request('/');
