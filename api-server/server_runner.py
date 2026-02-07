@@ -22,8 +22,10 @@ try:
     import uvicorn
     logger.info("Successfully imported uvicorn")
     
-    logger.info("Starting server on port 8082...")
-    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8082)), log_level="info")
+    # 使用环境变量中的端口，这对于Railway部署很重要
+    port = int(os.environ.get("PORT", 8082))
+    logger.info(f"Starting server on port {port}...")
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
     
 except Exception as e:
     logger.error(f"Error running server: {e}")

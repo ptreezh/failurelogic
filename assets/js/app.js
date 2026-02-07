@@ -6,24 +6,31 @@
 // Application Configuration
 const APP_CONFIG = {
   // 智能API端点选择
-  apiBaseUrl: 'http://localhost:8082' => {
+  apiBaseUrl: (() => {
     const hostname = window.location.hostname;
+
+    // GitHub Pages环境 - 使用部署的Railway后端API
+    if (hostname.includes('github.io')) {
+      return 'https://insightful-enthusiasm-production.up.railway.app';
+    }
 
     // 本地开发环境
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      return 'http://localhost:8000';
+      return 'http://localhost:8082';
     }
 
-    // GitHub Pages环境 - 只使用已验证工作的API地址
-    const apiSources = [
-      'http://localhost:8082',  // Primary: New working Codespaces (已验证工作)
-      'http://localhost:8082',  // Backup: Old Codespaces
-      'http://localhost:8082',      // Vercel部署 (备用)
-      'http://localhost:8082'          // 备用Vercel
-    ];
+    // Railway部署环境
+    if (hostname.includes('railway.app')) {
+      return 'https://' + hostname; // 使用相同域名
+    }
 
-    // 返回新工作的Codespaces作为首选 (已验证正常工作)
-    return apiSources[0];
+    // Vercel部署环境
+    if (hostname.includes('vercel.app')) {
+      return 'https://' + hostname.replace('frontend', 'api'); // 假设API在api子域名
+    }
+
+    // 默认回退到当前主机的API端口
+    return window.location.protocol + '//' + window.location.host + ':8082';
   })(),
 
   version: '2.0.0',
