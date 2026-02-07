@@ -1564,49 +1564,20 @@ if os.path.exists(os.path.join(_project_root, "web-app")):
 
 # 为根路径提供主页（放在静态文件挂载之后，但路由会按定义顺序处理）
 @app.get("/")
-async def serve_home():
-    """专门处理根路径，提供主页"""
-    try:
-        import os
-        # 获取项目根目录 - 相对于start.py文件向上两级
-        _current_dir = os.path.dirname(os.path.abspath(__file__))
-        _project_root = os.path.dirname(_current_dir)
-        index_path = os.path.join(_project_root, "index.html")
-
-        print(f"DEBUG: 尝试从路径加载index.html: {index_path}")
-        print(f"DEBUG: 文件是否存在: {os.path.exists(index_path)}")
-
-        # 检查index.html是否存在
-        if os.path.exists(index_path):
-            with open(index_path, "r", encoding="utf-8") as f:
-                content = f.read()
-            print(f"DEBUG: 成功读取 {len(content)} 字符的文件")
-            return HTMLResponse(content=content)
-        else:
-            # 如果在上级目录找不到，尝试在当前目录查找
-            index_path = os.path.join(_current_dir, "index.html")
-            print(f"DEBUG: 尝试从当前目录加载index.html: {index_path}")
-            print(f"DEBUG: 文件是否存在: {os.path.exists(index_path)}")
-
-            if os.path.exists(index_path):
-                with open(index_path, "r", encoding="utf-8") as f:
-                    content = f.read()
-                print(f"DEBUG: 成功读取 {len(content)} 字符的文件")
-                return HTMLResponse(content=content)
-            else:
-                # 如果都没找到，返回错误信息
-                print(f"DEBUG: 未找到index.html文件")
-                return HTMLResponse(content=f"<h1>错误：未找到index.html文件</h1><p>尝试路径：{index_path}</p>")
-    except Exception as e:
-        print(f"DEBUG: 加载主页时出错: {str(e)}")
-        return {"message": f"加载主页时出错: {str(e)}", "status": "error"}
-
-# 为其他路径提供静态文件服务
-@app.get("/{full_path:path}")
-async def serve_static(full_path: str):
-    """提供静态文件服务"""
-    # 对于其他路径，尝试从静态目录提供文件
-    raise HTTPException(status_code=404, detail="文件未找到")
+async def serve_api_status():
+    """根路径路由 - 返回API状态信息"""
+    return {
+        "status": "success",
+        "message": "认知陷阱平台API服务正常运行",
+        "version": "2.0.0",
+        "endpoints": {
+            "scenarios": "/scenarios/",
+            "scenario_detail": "/scenarios/{scenario_id}",
+            "create_session": "/scenarios/create_game_session",
+            "process_turn": "/scenarios/{game_id}/turn",
+            "health": "/health"
+        }
+    }
 
 # 思维陷阱分析端点
 @app.post("/analysis/thinking-traps")
@@ -1730,6 +1701,17 @@ async def test_home():
         return HTMLResponse(content=f"<h1>测试路由</h1><p>文件存在，前500个字符：</p><pre>{content}</pre>")
     else:
         return {"message": "index.html not found in project root", "path_checked": index_path}
+
+# 为其他路径提供静态文件服务（必须放在所有其他路由之后）
+# 使用更具体的路径模式以避免干扰API路由
+@app.get("/{path:path}")
+async def serve_static(path: str):
+    """提供静态文件服务 - 通配符路由，必须放在最后"""
+    # 对于API路径，返回特定的404以避免干扰
+    if path.startswith('api/') or path.startswith('scenarios') or path.startswith('health'):
+        raise HTTPException(status_code=404, detail="API端点未找到")
+    # 对于其他路径，返回404
+    raise HTTPException(status_code=404, detail="页面未找到")
 
 if __name__ == "__main__":
     # 优先使用环境变量 PORT（Railway、Render 等云平台）

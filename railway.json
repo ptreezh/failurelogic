@@ -17,7 +17,7 @@ phases = {
   },
   start = {
     cmd = [
-      "python -m api-server.server_runner"
+      "python debug_start.py"
     ]
   }
 }
