@@ -18,6 +18,10 @@ from pydantic import BaseModel
 from collections import defaultdict
 
 # 导入错误处理模块
+import sys
+import os
+# 添加当前目录到Python路径，以便正确导入utils模块
+sys.path.append(os.path.join(os.path.dirname(__file__)))
 from utils.error_handlers import global_exception_handler, CustomException
 
 # ===== 增强系统：决策模式追踪器 =====

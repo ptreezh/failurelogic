@@ -1,0 +1,27 @@
+# Railway配置文件
+# 用于部署认知陷阱平台API后端
+
+[build]
+builder = "NIXPACKS"
+
+[nixpacks]
+phases = {
+  setup = {
+    nixPkgs = ["python310", "nodejs-18_x", "gcc", "libffi", "openssl"]
+  },
+  install = {
+    cmd = [
+      "pip install --upgrade pip",
+      "pip install -r requirements.txt"
+    ]
+  },
+  start = {
+    cmd = [
+      "python -m api-server.server_runner"
+    ]
+  }
+}
+
+[deploy]
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
