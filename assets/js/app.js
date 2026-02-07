@@ -97,21 +97,21 @@ const ApiService = {
   // Interactive endpoints
   interactive: {
     chat: (message) => 
-      ApiService.configManager.request('/interactive/chat', {
+      ApiService.configManager.request('/api/interactive/chat', {
         method: 'POST',
         body: JSON.stringify(message)
       }),
     analyzeDecision: (decisionData) =>
-      ApiService.configManager.request('/interactive/analyze-decision', {
+      ApiService.configManager.request('/api/interactive/analyze-decision', {
         method: 'POST',
         body: JSON.stringify(decisionData)
       }),
     getGuidedTour: () =>
-      ApiService.configManager.request('/interactive/guided-tour', {
+      ApiService.configManager.request('/api/interactive/guided-tour', {
         method: 'GET'
       }),
     getPersonalizedFeedback: (userProfile) =>
-      ApiService.configManager.request('/interactive/personalized-feedback', {
+      ApiService.configManager.request('/api/interactive/personalized-feedback', {
         method: 'POST',
         body: JSON.stringify(userProfile)
       })
