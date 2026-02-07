@@ -1704,14 +1704,22 @@ async def test_home():
 
 # 为其他路径提供静态文件服务（必须放在所有其他路由之后）
 # 使用更具体的路径模式以避免干扰API路由
-@app.get("/{path:path}")
-async def serve_static(path: str):
+@app.get("/{full_path:path}")
+async def serve_static(full_path: str):
     """提供静态文件服务 - 通配符路由，必须放在最后"""
-    # 对于API路径，返回特定的404以避免干扰
-    if path.startswith('api/') or path.startswith('scenarios') or path.startswith('health'):
+    # 定义API相关的路径前缀，这些不应该被通配符路由捕获
+    api_paths = ['scenarios', 'health', 'api', 'docs', 'openapi.json', 'redoc']
+    
+    # 检查路径是否属于API端点
+    path_parts = full_path.split('/')
+    first_segment = path_parts[0] if path_parts and path_parts[0] else (path_parts[1] if len(path_parts) > 1 else '')
+    
+    if any(api_path in full_path for api_path in api_paths) or first_segment in api_paths:
+        # 如果是API路径，返回404但不干扰API路由系统
         raise HTTPException(status_code=404, detail="API端点未找到")
-    # 对于其他路径，返回404
-    raise HTTPException(status_code=404, detail="页面未找到")
+    else:
+        # 对于非API路径，返回404
+        raise HTTPException(status_code=404, detail="页面未找到")
 
 if __name__ == "__main__":
     # 优先使用环境变量 PORT（Railway、Render 等云平台）
