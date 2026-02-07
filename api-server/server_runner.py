@@ -4,6 +4,12 @@ Script to run the API server
 """
 import sys
 import os
+
+# 修复部署环境中的路径问题
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
+
 import logging
 
 # Add the current directory to the path

@@ -279,6 +279,41 @@ class NavigationManager {
           }
         ]
       },
+      // Investment Information Processing Scenario (investment-information-processing)
+      {
+        id: "investment-information-processing",
+        name: "投资信息处理",
+        description: "学习如何处理和整合多元投资信息源，避免确认偏误",
+        fullDescription: "在投资决策中体验如何筛选、整合和评估不同来源的信息，学习避免确认偏误和信息茧房效应。通过多轮投资决策，掌握多元化信息处理策略，提高决策质量。",
+        difficulty: "intermediate",
+        estimatedDuration: 30,
+        targetPatterns: ["information_processing", "confirmation_bias_avoidance", "diversity_in_decision_making"],
+        decisionPattern: "信息处理模式",
+        duration: "30-40分钟",
+        category: "金融决策",
+        thumbnail: "/assets/images/investment-info-processing.jpg",
+        initialState: {
+          portfolio: 10000,
+          knowledge: 0,
+          turn: 1,
+          information_diversity: 0,
+          confidence_level: 50
+        },
+        advancedChallenges: [
+          {
+            title: "信息源质量评估",
+            description: "学习评估不同信息源的可靠性和偏误",
+            difficulty: "intermediate",
+            cognitiveBiases: ["source_credibility_bias", "confirmation_bias"]
+          },
+          {
+            title: "信息过载管理",
+            description: "在信息过载环境中做出有效决策",
+            difficulty: "advanced",
+            cognitiveBiases: ["information_overload_blindness", "signal_noise_confusion"]
+          }
+        ]
+      },
       // Business Strategy Reasoning Game (business-strategy-reasoning)
       {
         id: "business-strategy-reasoning",
@@ -7394,7 +7429,7 @@ class InvestmentConfirmationBiasPageRouter {
           <p class="game-goal"><strong>🎯 目标：</strong>投资8个季度，实现资金增值并学习多元化投资</p>
         </div>
         <div class="actions">
-          <button class="btn btn-primary" onclick="window.investmentRouter.startGame(); window.investmentRouter.render();">开始投资</button>
+          <button class="btn btn-enhanced btn-enhanced-primary btn-enhanced-large" onclick="window.investmentRouter.startGame(); window.investmentRouter.render();">开始投资</button>
         </div>
       </div>
     `;
@@ -7446,7 +7481,7 @@ class InvestmentConfirmationBiasPageRouter {
         </div>
         
         <div class="actions">
-          <button class="btn btn-primary confirm-btn"
+          <button class="btn btn-enhanced btn-enhanced-primary confirm-btn"
                   ${this.tempSources.length === 0 ? 'disabled' : ''}
                   onclick="window.investmentRouter.makeDecision('sources', window.investmentRouter.tempSources); window.investmentRouter.render();">
             确认选择 (${this.tempSources.length}个信息源)
@@ -7509,7 +7544,7 @@ class InvestmentConfirmationBiasPageRouter {
         </div>
         
         <div class="actions">
-          <button class="btn btn-primary confirm-btn"
+          <button class="btn btn-enhanced btn-enhanced-primary confirm-btn"
                   onclick="window.investmentRouter.makeDecision('${decisionId}', window.investmentRouter.tempDecisions['${decisionId}']); window.investmentRouter.render();">
             确认选择
           </button>
@@ -7533,7 +7568,7 @@ class InvestmentConfirmationBiasPageRouter {
         </div>
         
         <div class="actions">
-          <button class="btn btn-primary" onclick="window.investmentRouter.confirmFeedback(); window.investmentRouter.render();">继续</button>
+          <button class="btn btn-enhanced btn-enhanced-primary" onclick="window.investmentRouter.confirmFeedback(); window.investmentRouter.render();">继续</button>
         </div>
       </div>
     `;
@@ -7591,7 +7626,7 @@ class InvestmentConfirmationBiasPageRouter {
         </div>
         
         <div class="actions">
-          <button class="btn btn-primary" onclick="window.investmentRouter.nextTurn(); window.investmentRouter.render();">
+          <button class="btn btn-enhanced btn-enhanced-primary" onclick="window.investmentRouter.nextTurn(); window.investmentRouter.render();">
             进入第${this.currentTurn + 1}季度 →
           </button>
         </div>
@@ -7627,15 +7662,15 @@ class InvestmentConfirmationBiasPageRouter {
           <div class="choice">
             <h3>🎯 最后一季度：你会如何决策？</h3>
             <div class="awakening-options">
-              <button class="btn btn-option" onclick="window.investmentRouter.makeAwakeningDecision('continue'); window.investmentRouter.render();">
+              <button class="btn btn-enhanced btn-enhanced-primary btn-option" onclick="window.investmentRouter.makeAwakeningDecision('continue'); window.investmentRouter.render();">
                 🔄 继续现状
                 <small>坚持当前策略</small>
               </button>
-              <button class="btn btn-option" onclick="window.investmentRouter.makeAwakeningDecision('diversify'); window.investmentRouter.render();">
+              <button class="btn btn-enhanced btn-enhanced-primary btn-option" onclick="window.investmentRouter.makeAwakeningDecision('diversify'); window.investmentRouter.render();">
                 🎯 多元投资
                 <small>分散风险，多样化信息源</small>
               </button>
-              <button class="btn btn-option" onclick="window.investmentRouter.makeAwakeningDecision('question'); window.investmentRouter.render();">
+              <button class="btn btn-enhanced btn-enhanced-primary btn-option" onclick="window.investmentRouter.makeAwakeningDecision('question'); window.investmentRouter.render();">
                 ❓ 重新思考
                 <small>质疑现有策略，寻求不同观点</small>
               </button>
@@ -7706,7 +7741,7 @@ class InvestmentConfirmationBiasPageRouter {
         </div>
         
         <div class="actions">
-          <button class="btn btn-primary" onclick="window.investmentRouter.resetGame(); window.investmentRouter.render();">重新挑战</button>
+          <button class="btn btn-enhanced btn-enhanced-primary" onclick="window.investmentRouter.resetGame(); window.investmentRouter.render();">重新挑战</button>
         </div>
       </div>
     `;
@@ -8042,6 +8077,9 @@ class GameManager {
       return;
     } else if (scenarioId === 'investment-confirmation-bias') {
       this.startInvestmentConfirmationBiasGame();
+      return;
+    } else if (scenarioId === 'investment-information-processing') {
+      this.startInvestmentInformationProcessingGame();
       return;
     }
 
@@ -11276,6 +11314,55 @@ class GameManager {
     }
 
     console.log('✅ Investment Confirmation Bias game initialized');
+  }
+
+  static startInvestmentInformationProcessingGame() {
+    console.log('🚀 Starting Investment Information Processing game...');
+
+    // Initialize game state for investment information processing scenario
+    const initialState = {
+      portfolio: 10000,
+      knowledge: 0,
+      turn_number: 1,
+      decision_history: [],
+      delayed_effects: [],
+      selected_sources: [],
+      source_quality: {},
+      bias_risk: 0,
+      achievements: [],
+      information_diversity: 0,
+      market_volatility: 0.1,
+      confidence_level: 50
+    };
+
+    // Create page router
+    const router = new InvestmentInformationProcessingPageRouter(initialState);
+
+    // Store router in global scope for page interactions
+    window.investmentInfoRouter = router;
+
+    // Store session
+    AppState.gameSession = {
+      gameId: 'investment-info-processing-' + Date.now(),
+      scenarioId: 'investment-information-processing',
+      difficulty: 'intermediate',
+      status: 'active',
+      gameState: initialState,
+      currentTurn: 1,
+      decision_history: [],
+      delayed_effects: [],
+      patterns: []
+    };
+
+    this.showGameModal();
+
+    // Render the start page
+    const container = document.getElementById('game-container');
+    if (container) {
+      container.innerHTML = router.renderPage();
+    }
+
+    console.log('✅ Investment Information Processing game initialized');
   }
 
   static generatePersonalizedRecommendations(isFailure = false) {

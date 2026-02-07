@@ -223,7 +223,7 @@ class BusinessStrategyPageRouter {
           <p class="game-goal"><strong>🎯 目标：</strong>在竞争激烈的市场中取得领先地位，避免常见的商业决策陷阱</p>
         </div>
         <div class="actions">
-          <button class="btn btn-primary" onclick="window.businessStrategyRouter.startGame(); window.businessStrategyRouter.render();">开始决策</button>
+          <button class="btn btn-enhanced btn-enhanced-primary btn-enhanced-large" onclick="window.businessStrategyRouter.startGame(); window.businessStrategyRouter.render();">开始决策</button>
         </div>
       </div>
     `;
@@ -352,7 +352,7 @@ class BusinessStrategyPageRouter {
                     ${option.expected_profit >= 0 ? '+' : ''}¥${option.expected_profit}
                   </span>
                 </div>` : ''}
-                <button class="choice-btn" onclick="window.businessStrategyRouter.makeDecision('strategy_choice_${turn}', '${option.id}'); window.businessStrategyRouter.render();">
+                <button class="btn btn-enhanced btn-enhanced-primary choice-btn" onclick="window.businessStrategyRouter.makeDecision('strategy_choice_${turn}', '${option.id}'); window.businessStrategyRouter.render();">
                   选择此策略
                 </button>
               </div>
@@ -386,7 +386,7 @@ class BusinessStrategyPageRouter {
         </div>
         
         <div class="actions">
-          <button class="btn btn-primary" onclick="window.businessStrategyRouter.confirmFeedback(); window.businessStrategyRouter.render();">继续</button>
+          <button class="btn btn-enhanced btn-enhanced-primary" onclick="window.businessStrategyRouter.confirmFeedback(); window.businessStrategyRouter.render();">继续</button>
         </div>
       </div>
     `;
@@ -424,7 +424,7 @@ class BusinessStrategyPageRouter {
         </div>
         
         <div class="actions">
-          <button class="btn btn-primary" onclick="window.businessStrategyRouter.nextTurn(); window.businessStrategyRouter.render();">
+          <button class="btn btn-enhanced btn-enhanced-primary" onclick="window.businessStrategyRouter.nextTurn(); window.businessStrategyRouter.render();">
             进入第${this.currentTurn + 1}回合 →
           </button>
         </div>
@@ -491,8 +491,8 @@ class BusinessStrategyPageRouter {
         </div>
         
         <div class="actions">
-          <button class="btn btn-primary" onclick="window.businessStrategyRouter.resetGame(); window.businessStrategyRouter.render();">重新挑战</button>
-          <button class="btn btn-secondary" onclick="NavigationManager.navigateTo('scenarios')">选择其他场景</button>
+          <button class="btn btn-enhanced btn-enhanced-primary" onclick="window.businessStrategyRouter.resetGame(); window.businessStrategyRouter.render();">重新挑战</button>
+          <button class="btn btn-enhanced btn-enhanced-secondary" onclick="NavigationManager.navigateTo('scenarios')">选择其他场景</button>
         </div>
       </div>
     `;
