@@ -114,8 +114,7 @@ class NavigationManager {
     '/profile': 'profile',
     '/settings': 'settings',
     '/about': 'about',
-    '/contact': 'contact',
-    '/love-relationship': 'love-relationship'
+    '/contact': 'contact'
   };
 
   static navigateTo(page) {
@@ -176,8 +175,6 @@ class NavigationManager {
         return this.getAboutPage();
       case 'contact':
         return this.getContactPage();
-      case 'love-relationship':
-        return this.getLoveRelationshipPage();
       default:
         return this.getErrorPage();
     }
@@ -13897,77 +13894,3 @@ class HistoricalCasesPage {
   }
 }
 
-// 添加恋爱关系场景页面
-NavigationManager.getLoveRelationshipPage = function() {
-  return `
-    <section class="page-section love-relationship-page">
-      <header class="page-header">
-        <h1>恋爱关系认知训练</h1>
-        <p>通过模拟恋爱关系中的各种情境，提升情感认知和决策能力</p>
-      </header>
-
-      <div class="love-relationship-intro">
-        <div class="intro-content">
-          <h2>恋爱关系中的认知陷阱</h2>
-          <p>在恋爱关系中，我们常常受到各种认知偏差的影响，如理想化偏见、确认偏误、沉没成本谬误等。通过这些模拟场景，您可以：</p>
-          <ul>
-            <li>识别恋爱关系中的常见认知偏差</li>
-            <li>学习健康的沟通和冲突解决技巧</li>
-            <li>建立合理的期望和边界</li>
-            <li>提升情感智商和决策能力</li>
-          </ul>
-        </div>
-
-        <div class="scenarios-list">
-          <h3>可用场景</h3>
-          <div class="scenario-cards">
-            <div class="card scenario-card" onclick="loveRelationshipRouter.initScenario('love-relationship-001')" style="cursor: pointer;">
-              <h3>初识阶段</h3>
-              <p>探索恋爱关系初识阶段的决策挑战</p>
-              <div class="scenario-meta">
-                <span class="badge intermediate">中级</span>
-                <span class="scenario-duration">25-35分钟</span>
-              </div>
-              <button class="btn btn-primary" onclick="event.stopPropagation(); loveRelationshipRouter.initScenario('love-relationship-001')">开始体验</button>
-            </div>
-
-            <div class="card scenario-card" onclick="loveRelationshipRouter.initScenario('love-relationship-002')" style="cursor: pointer;">
-              <h3>长期关系维护</h3>
-              <p>处理长期恋爱关系中的挑战与决策</p>
-              <div class="scenario-meta">
-                <span class="badge advanced">高级</span>
-                <span class="scenario-duration">30-40分钟</span>
-              </div>
-              <button class="btn btn-primary" onclick="event.stopPropagation(); loveRelationshipRouter.initScenario('love-relationship-002')">开始体验</button>
-            </div>
-
-            <div class="card scenario-card" onclick="loveRelationshipRouter.initScenario('love-relationship-003')" style="cursor: pointer;">
-              <h3>沟通与理解</h3>
-              <p>专注于恋爱关系中的沟通技巧和相互理解</p>
-              <div class="scenario-meta">
-                <span class="badge intermediate">中级</span>
-                <span class="scenario-duration">20-30分钟</span>
-              </div>
-              <button class="btn btn-primary" onclick="event.stopPropagation(); loveRelationshipRouter.initScenario('love-relationship-003')">开始体验</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="love-relationship-guidelines">
-          <h3>参与指南</h3>
-          <ol>
-            <li>仔细阅读每个情境的描述</li>
-            <li>考虑每个选项的可能后果</li>
-            <li>选择您认为最合适的决策</li>
-            <li>反思系统提供的反馈和分析</li>
-            <li>将学到的经验应用到实际生活中</li>
-          </ol>
-        </div>
-      </div>
-
-      <div class="navigation-controls">
-        <button class="btn btn-secondary" onclick="NavigationManager.navigateTo('scenarios')">返回所有场景</button>
-      </div>
-    </section>
-  `;
-};
