@@ -1704,12 +1704,19 @@ async def test_home():
 
 # 为其他路径提供静态文件服务（必须放在所有其他路由之后）
 # 为其他路径提供默认响应（必须放在所有其他路由之后）
+# 修复：使用更具体的模式以避免干扰API路由
 @app.get("/{full_path:path}")
 async def serve_not_found(full_path: str):
     """默认404响应 - 通配符路由，必须放在最后"""
-    # 这个路由只处理没有被其他路由匹配的路径
-    # 由于FastAPI的路由匹配机制，这个路由会捕获所有未被其他路由处理的请求
-    # 但我们返回一个标准的404响应
+    # 检查是否是API相关路径，如果是则返回特定错误以避免干扰
+    api_paths = ['scenarios', 'health', 'api', 'docs', 'openapi.json', 'redoc', 'interactive', 'analysis', 'test']
+    
+    # 如果路径包含API相关关键词，返回更具体的错误信息
+    for api_path in api_paths:
+        if api_path in full_path:
+            raise HTTPException(status_code=404, detail=f"API端点未找到: /{full_path}")
+    
+    # 对于其他路径，返回通用404
     raise HTTPException(status_code=404, detail="页面未找到")
 
 if __name__ == "__main__":
