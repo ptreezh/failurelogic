@@ -382,41 +382,37 @@ except ImportError:
 
 # 导入并注册互动式认知测试端点（新增 LLM 集成）
 try:
-    # 使用相对导入方式
     import sys
     import os
     import importlib.util
     
-    # 方法1: 直接导入
-    from api_server.endpoints.interactive import router as interactive_router
+    # 方法1: 添加当前目录到路径后导入
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    if current_dir not in sys.path:
+        sys.path.insert(0, current_dir)
+    
+    # 添加endpoints目录到路径
+    endpoints_dir = os.path.join(current_dir, 'endpoints')
+    if endpoints_dir not in sys.path:
+        sys.path.insert(0, endpoints_dir)
+    
+    from endpoints.interactive import router as interactive_router
     app.include_router(interactive_router)
     print("✓ LLM互动式端点已注册")
 except ImportError as e1:
     try:
-        # 方法2: 使用importlib
-        spec = importlib.util.spec_from_file_location(
-            "interactive", 
-            os.path.join(os.path.dirname(__file__), "endpoints", "interactive.py")
-        )
+        # 方法2: 使用importlib直接加载模块
+        interactive_path = os.path.join(os.path.dirname(__file__), "endpoints", "interactive.py")
+        spec = importlib.util.spec_from_file_location("endpoints.interactive", interactive_path)
         interactive_module = importlib.util.module_from_spec(spec)
+        sys.modules["endpoints.interactive"] = interactive_module
         spec.loader.exec_module(interactive_module)
         interactive_router = interactive_module.router
         app.include_router(interactive_router)
         print("✓ LLM互动式端点已通过importlib方式注册")
     except Exception as e2:
-        try:
-            # 方法3: 添加路径后导入
-            endpoints_path = os.path.join(os.path.dirname(__file__), 'endpoints')
-            if endpoints_path not in sys.path:
-                sys.path.insert(0, endpoints_path)
-            
-            import interactive
-            from interactive import router as interactive_router
-            app.include_router(interactive_router)
-            print("✓ LLM互动式端点已通过路径添加方式注册")
-        except ImportError as e3:
-            print(f"✗ LLM互动式端点不可用: {e3}")
-            print("✗ 所有导入方法都失败了")
+        print(f"✗ LLM互动式端点不可用: {e2}")
+        print("⚠️  LLM互动功能将不可用，但核心功能正常")
 
 # 确保所需导入存在
 try:
