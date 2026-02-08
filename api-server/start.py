@@ -381,30 +381,37 @@ except ImportError:
     print("测试结果端点不可用")
 
 # 导入并注册互动式认知测试端点（新增 LLM 集成）
-try:
-    # 使用绝对路径导入
-    import sys
-    import os
-    
-    # 获取当前文件的目录
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    
-    # 添加当前目录和endpoints目录到Python路径
-    endpoints_path = os.path.join(current_dir, 'endpoints')
-    if endpoints_path not in sys.path:
-        sys.path.insert(0, endpoints_path)
-    
-    # 添加当前目录到路径
-    if current_dir not in sys.path:
-        sys.path.insert(0, current_dir)
-    
-    # 现在尝试导入
-    import endpoints.interactive
-    from endpoints.interactive import router as interactive_router
-    app.include_router(interactive_router)
-    print("✓ LLM互动式端点已注册")
-except ImportError as e:
-    print(f"✗ LLM互动式端点不可用: {e}")
+# 使用动态导入方法以确保在部署环境中正常工作
+import sys
+import os
+import importlib.util
+
+# 获取当前文件的目录
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# 构建endpoints.interactive模块的完整路径
+interactive_path = os.path.join(current_dir, 'endpoints', 'interactive.py')
+
+if os.path.exists(interactive_path):
+    try:
+        # 动态加载模块
+        spec = importlib.util.spec_from_file_location("interactive", interactive_path)
+        interactive_module = importlib.util.module_from_spec(spec)
+        sys.modules["interactive"] = interactive_module  # 注册到sys.modules
+        spec.loader.exec_module(interactive_module)
+        
+        # 获取并注册路由
+        if hasattr(interactive_module, 'router'):
+            interactive_router = interactive_module.router
+            app.include_router(interactive_router)
+            print("✓ LLM互动式端点已注册")
+        else:
+            print("✗ LLM互动式端点不可用: 模块中没有找到router")
+    except Exception as e:
+        print(f"✗ LLM互动式端点不可用: {e}")
+        print("⚠️  LLM互动功能将不可用，但核心功能正常")
+else:
+    print("✗ LLM互动式端点不可用: 文件不存在", interactive_path)
     print("⚠️  LLM互动功能将不可用，但核心功能正常")
 
 # 确保所需导入存在
