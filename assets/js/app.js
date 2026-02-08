@@ -14004,3 +14004,103 @@ class HistoricalCasesPage {
   }
 }
 
+
+
+
+        // 修复投资信息处理场景的交互元素
+        function enhanceInvestmentInteraction() {
+            // 添加更醒目的选择按钮
+            const options = document.querySelectorAll('.investment-option, .decision-option, .choice-btn');
+            options.forEach(option => {
+                option.style.border = '2px solid #2563eb';
+                option.style.borderRadius = '8px';
+                option.style.padding = '12px';
+                option.style.margin = '8px 0';
+                option.style.backgroundColor = '#f0f9ff';
+                option.style.cursor = 'pointer';
+                option.style.transition = 'all 0.3s ease';
+                
+                option.addEventListener('mouseover', () => {
+                    option.style.backgroundColor = '#dbeafe';
+                    option.style.transform = 'translateY(-2px)';
+                });
+                
+                option.addEventListener('mouseout', () => {
+                    option.style.backgroundColor = '#f0f9ff';
+                    option.style.transform = 'translateY(0)';
+                });
+            });
+        }
+        
+
+
+    // 生成个性化反馈的函数
+    function generatePersonalizedFeedback(decisionHistory, scenarioId, finalState) {
+        // 基于用户的具体决策历史生成个性化反馈
+        const feedback = {
+            summary: "基于您的决策过程的个性化分析",
+            decisions: [],
+            insights: [],
+            recommendations: []
+        };
+        
+        if (decisionHistory && decisionHistory.length > 0) {
+            feedback.summary = `您在${scenarioId}场景中做出了${decisionHistory.length}个决策`;
+            
+            // 分析决策模式
+            const decisionPatterns = analyzeDecisionPatterns(decisionHistory);
+            feedback.insights = decisionPatterns.insights || [];
+            
+            // 提供个性化建议
+            feedback.recommendations = decisionPatterns.recommendations || [];
+        } else {
+            feedback.summary = "未检测到决策历史，无法生成个性化反馈";
+        }
+        
+        return feedback;
+    }
+    
+    // 分析决策模式的函数
+    function analyzeDecisionPatterns(decisionHistory) {
+        const patterns = {
+            insights: [],
+            recommendations: []
+        };
+        
+        if (!decisionHistory || decisionHistory.length === 0) {
+            return patterns;
+        }
+        
+        // 分析决策一致性
+        const consistentChoices = decisionHistory.filter(d => 
+            d.choice && d.choice === decisionHistory[0].choice
+        ).length;
+        
+        if (consistentChoices === decisionHistory.length) {
+            patterns.insights.push("您在决策中表现出高度的一致性");
+            patterns.recommendations.push("尝试在未来的决策中考虑更多样化的选项");
+        }
+        
+        // 分析风险偏好
+        let riskyChoices = 0;
+        let conservativeChoices = 0;
+        
+        decisionHistory.forEach(decision => {
+            if (decision.choice && (decision.choice.includes('激进') || decision.choice.includes('高风险'))) {
+                riskyChoices++;
+            } else if (decision.choice && (decision.choice.includes('保守') || decision.choice.includes('低风险'))) {
+                conservativeChoices++;
+            }
+        });
+        
+        if (riskyChoices > decisionHistory.length * 0.7) {
+            patterns.insights.push("您倾向于高风险决策");
+            patterns.recommendations.push("考虑在高风险决策前进行更全面的影响评估");
+        } else if (conservativeChoices > decisionHistory.length * 0.7) {
+            patterns.insights.push("您倾向于保守决策");
+            patterns.recommendations.push("在适当时候可以考虑承担一些合理风险");
+        }
+        
+        return patterns;
+    }
+    
