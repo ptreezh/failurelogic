@@ -382,18 +382,25 @@ except ImportError:
 
 # 导入并注册互动式认知测试端点（新增 LLM 集成）
 try:
-    # 使用相对导入方式
+    # 使用绝对路径导入
     import sys
     import os
     
-    # 确保当前目录在Python路径中
+    # 获取当前文件的目录
     current_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    # 添加当前目录和endpoints目录到Python路径
+    endpoints_path = os.path.join(current_dir, 'endpoints')
+    if endpoints_path not in sys.path:
+        sys.path.insert(0, endpoints_path)
+    
+    # 添加当前目录到路径
     if current_dir not in sys.path:
         sys.path.insert(0, current_dir)
     
-    # 直接从endpoints目录导入
-    sys.path.insert(0, os.path.join(current_dir, 'endpoints'))
-    from interactive import router as interactive_router
+    # 现在尝试导入
+    import endpoints.interactive
+    from endpoints.interactive import router as interactive_router
     app.include_router(interactive_router)
     print("✓ LLM互动式端点已注册")
 except ImportError as e:
