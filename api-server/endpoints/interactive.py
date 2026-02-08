@@ -7,6 +7,8 @@ from fastapi import APIRouter, HTTPException, Query
 from typing import Dict, Any, List, Optional
 import json
 import logging
+import os
+import aiohttp
 from pydantic import BaseModel
 
 # 创建路由器
@@ -38,55 +40,25 @@ async def interactive_chat(request: InteractiveRequest):
     基于用户输入提供认知偏差分析和建议
     """
     try:
-        user_input = request.user_input.lower()
+        user_input = request.user_input
         context = request.context or {}
         test_type = request.test_type
 
-        # 基于用户输入生成响应
-        response_text = ""
-        analysis_data = {}
-        suggestions_list = []
+        # 使用LLM进行更深入的分析
+        llm_response = await call_llm_service(user_input, context, test_type)
         
-        # 根据测试类型提供不同反馈
-        if test_type == "exponential":
-            response_text = f"您提到了关于指数增长的问题。指数增长的一个关键特征是初期增长缓慢，但后期会出现爆发式增长。例如2^200这样的数字远超宇宙中原子的数量。"
-            suggestions_list = [
-                "尝试使用对数尺度来理解指数增长",
-                "考虑指数增长在技术发展中的应用",
-                "注意指数增长在病毒传播等现象中的体现"
-            ]
-            analysis_data = {
-                "growth_pattern": "exponential",
-                "common_mistake": "underestimating_late_stage_growth",
-                "tip": "指数增长在前期容易被忽视，但后期会产生巨大影响"
-            }
-        elif test_type == "compound":
-            response_text = f"您询问了关于复利的问题。复利的核心在于'利滚利'，即利息再投资产生更多利息。长期来看，复利效应非常显著。"
-            suggestions_list = [
-                "尽早开始投资以充分利用复利效应",
-                "理解复利公式：A = P(1 + r/n)^(nt)",
-                "注意复利在债务中的负面影响"
-            ]
-            analysis_data = {
-                "concept": "compound_interest",
-                "key_principle": "interest_on_interest",
-                "long_term_impact": "significant_growth_over_time"
-            }
-        elif test_type == "cognitive_bias":
-            response_text = f"认知偏差是系统性偏离理性判断的倾向。常见的包括确认偏误、锚定效应、可得性启发等。"
-            suggestions_list = [
-                "意识到自身可能存在认知偏差",
-                "寻求相反观点来验证判断",
-                "使用数据和事实来支撑决策"
-            ]
-            analysis_data = {
-                "definition": "systematic deviation from rationality",
-                "common_types": ["confirmation_bias", "anchoring", "availability_heuristic"],
-                "mitigation_strategy": "awareness_and_fact_checking"
-            }
+        if llm_response:
+            # 使用LLM响应
+            response_text = llm_response.get("response", f"感谢您的输入：'{user_input}'。认知陷阱平台旨在帮助您识别和克服各种认知偏差。")
+            analysis_data = llm_response.get("analysis", {})
+            suggestions_list = llm_response.get("suggestions", [
+                "尝试指数增长测试来理解非线性思维",
+                "进行复利计算练习来掌握长期思维",
+                "研究历史案例来学习他人经验教训"
+            ])
         else:
-            # 通用响应
-            response_text = f"感谢您的输入：'{request.user_input}'。认知陷阱平台旨在帮助您识别和克服各种认知偏差。您可以尝试探索指数增长、复利思维或历史案例等模块。"
+            # 如果LLM服务不可用，使用本地逻辑
+            response_text = f"感谢您的输入：'{user_input}'。认知陷阱平台旨在帮助您识别和克服各种认知偏差。您可以尝试探索指数增长、复利思维或历史案例等模块。"
             suggestions_list = [
                 "尝试指数增长测试来理解非线性思维",
                 "进行复利计算练习来掌握长期思维",
@@ -103,14 +75,108 @@ async def interactive_chat(request: InteractiveRequest):
             suggestions=suggestions_list,
             confidence=0.85
         )
-        
+
         logger.info(f"Interactive chat processed for input: {user_input[:50]}...")
-        
+
         return response
-        
+
     except Exception as e:
         logger.error(f"Error in interactive chat: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"处理互动请求时出错: {str(e)}")
+        # 发生错误时，使用本地逻辑提供响应
+        response_text = f"感谢您的输入：'{request.user_input}'。认知陷阱平台旨在帮助您识别和克服各种认知偏差。您可以尝试探索指数增长、复利思维或历史案例等模块。"
+        suggestions_list = [
+            "尝试指数增长测试来理解非线性思维",
+            "进行复利计算练习来掌握长期思维",
+            "研究历史案例来学习他人经验教训"
+        ]
+        analysis_data = {
+            "platform_purpose": "identify_and_overcome_cognitive_biases",
+            "recommended_actions": ["take_tests", "review_feedback", "practice_decision_making"],
+            "fallback": "使用本地逻辑响应"
+        }
+        
+        return InteractiveResponse(
+            response=response_text,
+            analysis=analysis_data,
+            suggestions=suggestions_list,
+            confidence=0.7
+        )
+
+
+async def call_llm_service(user_input: str, context: Dict[str, Any], test_type: str):
+    """
+    调用LLM服务进行认知偏差分析
+    """
+    try:
+        # 从环境变量获取API密钥
+        api_key = os.getenv("OPENROUTER_API_KEY")
+        if not api_key:
+            logger.warning("OpenRouter API密钥未设置，使用本地逻辑")
+            return None
+
+        # 构建提示词
+        prompt = f"""
+        你是一个认知科学和决策心理学专家，专门帮助用户识别和理解认知偏差。
+        用户输入: "{user_input}"
+        测试类型: {test_type}
+        上下文: {json.dumps(context, ensure_ascii=False)}
+        
+        请分析用户输入中可能涉及的认知偏差，并提供以下内容：
+        1. 对用户输入的分析和理解
+        2. 可能涉及的认知偏差类型
+        3. 针对性的建议和改进方法
+        4. 相关的认知陷阱和思维模式
+        
+        请以JSON格式返回，包含以下字段：
+        - response: 对用户输入的回复
+        - analysis: 详细分析
+        - suggestions: 建议列表
+        """
+
+        # 调用OpenRouter API
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
+        
+        payload = {
+            "model": "openchat/openchat-7b",  # 或其他可用模型
+            "messages": [
+                {"role": "system", "content": "你是认知陷阱平台的AI助手，专门帮助用户识别和理解认知偏差，提供决策建议。"},
+                {"role": "user", "content": prompt}
+            ],
+            "temperature": 0.7
+        }
+
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers=headers,
+                json=payload,
+                timeout=aiohttp.ClientTimeout(total=30)
+            ) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    content = data['choices'][0]['message']['content']
+                    
+                    # 尝试解析LLM返回的JSON
+                    try:
+                        llm_result = json.loads(content)
+                        return llm_result
+                    except json.JSONDecodeError:
+                        # 如果不是JSON格式，创建结构化响应
+                        return {
+                            "response": content,
+                            "analysis": {"raw_response": content},
+                            "suggestions": ["根据您的输入，建议进一步探索相关认知陷阱场景"]
+                        }
+                else:
+                    logger.error(f"LLM API调用失败: {response.status}, {await response.text()}")
+                    return None
+
+    except Exception as e:
+        logger.error(f"调用LLM服务时出错: {str(e)}")
+        return None
 
 
 @router.post("/interactive/analyze-decision", response_model=InteractiveResponse)
