@@ -382,11 +382,29 @@ except ImportError:
 
 # 导入并注册互动式认知测试端点（新增 LLM 集成）
 try:
+    import sys
+    import os
+    # 确保当前目录在Python路径中
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    endpoints_dir = os.path.join(current_dir, 'endpoints')
+    if endpoints_dir not in sys.path:
+        sys.path.insert(0, endpoints_dir)
+    
     from endpoints.interactive import router as interactive_router
     app.include_router(interactive_router)
     print("✓ LLM互动式端点已注册")
-except ImportError:
-    print("✗ LLM互动式端点不可用: No module named 'endpoints.interactive'")
+except ImportError as e:
+    print(f"✗ LLM互动式端点不可用: {e}")
+    # 尝试备用导入方式
+    try:
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'endpoints'))
+        import endpoints.interactive
+        from endpoints.interactive import router as interactive_router
+        app.include_router(interactive_router)
+        print("✓ LLM互动式端点已通过备用方式注册")
+    except ImportError as e2:
+        print(f"✗ LLM互动式端点备用方式也失败: {e2}")
+        print("✗ LLM互动式端点不可用: No module named 'endpoints.interactive'")
 
 # 确保所需导入存在
 try:
