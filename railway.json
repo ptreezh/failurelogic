@@ -17,7 +17,7 @@ phases = {
   },
   start = {
     cmd = [
-      "cd api-server && python -c \"from start import app; import uvicorn; import os; port = int(os.environ.get('PORT', 8080)); print(f'🚀 Starting server on port {port}'); uvicorn.run(app, host='0.0.0.0', port=port, log_level='info')\""
+      "cd api-server && python minimal_api_test.py"
     ]
   }
 }
