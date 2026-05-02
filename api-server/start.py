@@ -18,10 +18,6 @@ from pydantic import BaseModel
 from collections import defaultdict
 
 # 导入错误处理模块
-import sys
-import os
-# 添加当前目录到Python路径，以便正确导入utils模块
-sys.path.append(os.path.join(os.path.dirname(__file__)))
 from utils.error_handlers import global_exception_handler, CustomException
 
 # ===== 增强系统：决策模式追踪器 =====
@@ -371,6 +367,15 @@ try:
     app.include_router(cognitive_tests_router)
 except ImportError:
     print("认知测试端点不可用")
+
+# 导入并注册场景端点
+try:
+    from endpoints.scenarios import router as scenarios_router
+
+    app.include_router(scenarios_router)
+    print("✓ 场景端点已注册")
+except ImportError as e:
+    print(f"场景端点不可用: {e}")
 
 # 导入并注册测试结果端点
 try:
@@ -1748,7 +1753,7 @@ async def serve_not_found(full_path: str):
 if __name__ == "__main__":
     # 优先使用环境变量 PORT（Railway、Render 等云平台）
     # 然后尝试命令行参数，最后使用默认端口 8081
-    port = int(os.getenv("PORT", sys.argv[1] if len(sys.argv) > 1 else 8081))
+    port = int(os.getenv("PORT", sys.argv[1] if len(sys.argv) > 1 else 8082))
     print(f"🚀 启动认知陷阱平台API服务器 (端口: {port})")
     print(f"📊 API文档: http://localhost:{port}/docs")
     uvicorn.run(app, host="0.0.0.0", port=port)

@@ -106,3 +106,15 @@ typings/
 .Trashes
 ehthumbs.db
 Thumbs.db
+# Test artifacts
+tests/test-results.json
+tests/test-results.xml
+tests/test-results/
+
+# Dev process docs
+.qwen/
+
+# Backup files
+*.backup
+*.py.*
+*_backup.py

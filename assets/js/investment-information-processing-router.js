@@ -1,10 +1,14 @@
 /**
  * Investment Information Processing Scenario - Enhanced Version
- * Implements the investment information processing scenario with improved interactivity
+ * Extends BasePageRouter for shared render/saveState/loadState
  */
 
-class InvestmentInformationProcessingPageRouter {
+class InvestmentInformationProcessingPageRouter extends BasePageRouter {
   constructor(gameState = null) {
+    super('InvestmentInfo', 'investmentInfoProcessingState');
+    this.tempDecisions = [];
+    this.tempSources = [];
+    this.currentTurn = 1;
     // Initialize game state with enhanced properties
     this.gameState = gameState || {
       portfolio: 10000,
@@ -856,35 +860,30 @@ class InvestmentInformationProcessingPageRouter {
       .join(', ');
   }
 
-  // ========== State Persistence ==========
+  // ========== State Persistence (extends base with extra fields) ==========
 
   saveState() {
-    const state = {
+    super.saveState();
+    sessionStorage.setItem(this.storageKey, JSON.stringify({
+      ...JSON.parse(sessionStorage.getItem(this.storageKey) || '{}'),
       tempDecisions: this.tempDecisions,
       tempSources: this.tempSources,
-      currentTurn: this.currentTurn,
-      currentPage: this.currentPage,
-      gameState: this.gameState
-    };
-    sessionStorage.setItem('investmentInfoProcessingState', JSON.stringify(state));
+      currentTurn: this.currentTurn
+    }));
   }
 
   loadState() {
-    const saved = sessionStorage.getItem('investmentInfoProcessingState');
+    super.loadState();
+    const saved = sessionStorage.getItem(this.storageKey);
     if (saved) {
-      const state = JSON.parse(saved);
-      this.tempDecisions = state.tempDecisions;
-      this.tempSources = state.tempSources;
-      this.currentTurn = state.currentTurn;
-      this.currentPage = state.currentPage;
-      this.gameState = state.gameState;
-    }
-  }
-
-  render() {
-    const container = document.getElementById('game-container');
-    if (container) {
-      container.innerHTML = this.renderPage();
+      try {
+        const state = JSON.parse(saved);
+        this.tempDecisions = state.tempDecisions || [];
+        this.tempSources = state.tempSources || [];
+        this.currentTurn = state.currentTurn || 1;
+      } catch {
+        // ignore
+      }
     }
   }
 }
@@ -892,6 +891,6 @@ class InvestmentInformationProcessingPageRouter {
 // Make available globally for browser
 if (typeof window !== 'undefined') {
   window.InvestmentInformationProcessingPageRouter = InvestmentInformationProcessingPageRouter;
+  
+  Log.debug('Investment Information Processing Page Router loaded');
 }
-
-console.log('Investment Information Processing Page Router loaded');
