@@ -243,3 +243,9 @@ universal_*.py
 
 # Claude Code local settings (machine-specific)
 .claude/settings.local.json
+
+# Playwright test outputs
+tests/playwright-report/index.html
+tests/unit/run-relationship-tests.js
+tests/playwright-report/index.html
+tests/unit/run-relationship-tests.js
