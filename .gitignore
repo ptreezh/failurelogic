@@ -208,3 +208,35 @@ tests/scene-ux-audit.js
 tests/playwright-report/data/
 tests/diagnose-api-connection.py
 tests/test-illustration.js
+
+# Root-level ad-hoc Python scripts (212 files - development artifacts)
+*.py
+
+# Ad-hoc test/diagnostic scripts (not pytest, not run by CI)
+analyze_*.py
+api_*.py
+automate_*.py
+automated_*.py
+batch_*.py
+browser_*.py
+calculate_*.py
+check_*.py
+complete_*.py
+comprehensive_*.py
+concurrent_*.py
+console_*.py
+corrected_*.py
+debug_*.py
+deploy_*.py
+detailed_*.py
+diagnose_*.py
+direct_*.py
+fix_*.py
+validate_*.py
+verify_*.py
+visual_*.py
+*_fix.py
+*_fix_*.py
+*_final.py
+*_final_v*.py
+universal_*.py
