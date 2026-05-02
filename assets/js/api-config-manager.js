@@ -165,11 +165,19 @@ class APIConfigManager {
 
         if (response.ok) {
           this.currentSourceIndex = i;
-          console.log(`✅ Switched to healthy API source: ${source}`);
+          if (typeof Logger !== 'undefined') {
+            Logger.info(`Switched to healthy API source: ${source}`);
+          } else {
+            console.log(`✅ Switched to healthy API source: ${source}`);
+          }
           break;
         }
       } catch (error) {
-        console.warn(`❌ API source ${this.apiSources[i]} health check failed:`, error.message);
+        if (typeof Logger !== 'undefined') {
+          Logger.warn(`API source ${this.apiSources[i]} health check failed:`, error.message);
+        } else {
+          console.warn(`❌ API source ${this.apiSources[i]} health check failed:`, error.message);
+        }
       }
     }
 
@@ -180,7 +188,11 @@ class APIConfigManager {
     const nextIndex = (this.currentSourceIndex + 1) % this.apiSources.length;
     if (nextIndex !== this.currentSourceIndex) {
       this.currentSourceIndex = nextIndex;
-      console.log(`🔄 Switching to API source ${nextIndex}: ${this.getBaseUrl()}`);
+      if (typeof Logger !== 'undefined') {
+        Logger.info(`Switching to API source ${nextIndex}: ${this.getBaseUrl()}`);
+      } else {
+        console.log(`🔄 Switching to API source ${nextIndex}: ${this.getBaseUrl()}`);
+      }
     }
   }
 

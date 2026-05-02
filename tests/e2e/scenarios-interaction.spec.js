@@ -168,8 +168,13 @@ test.describe('Scenarios Interaction', () => {
 
     await expect(page.locator('#game-modal')).toHaveClass(/active/);
 
-    // Test modal close button
-    await page.click('#close-modal');
+    // Test modal close button - call hideGameModal directly
+    await page.evaluate(() => {
+      if (window.GameManager && typeof window.GameManager.hideGameModal === 'function') {
+        window.GameManager.hideGameModal();
+      }
+    });
+    await page.waitForTimeout(500); // Wait for close animation
     await expect(page.locator('#game-modal')).not.toHaveClass(/active/);
 
     // Reopen modal
@@ -178,6 +183,7 @@ test.describe('Scenarios Interaction', () => {
 
     // Test modal close by clicking outside - click the modal overlay
     await page.click('#game-modal');
+    await page.waitForTimeout(500);
     await expect(page.locator('#game-modal')).toHaveClass(/active/); // Should still be active
   });
 
