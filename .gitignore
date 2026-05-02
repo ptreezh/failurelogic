@@ -240,3 +240,6 @@ visual_*.py
 *_final.py
 *_final_v*.py
 universal_*.py
+
+# Claude Code local settings (machine-specific)
+.claude/settings.local.json
