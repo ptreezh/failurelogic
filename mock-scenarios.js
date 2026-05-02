@@ -101,9 +101,9 @@ const allMockScenarios = [
     ]
   },
 
-  // Business Strategy Reasoning Game (game-001)
+  // Business Strategy Reasoning Game (business-strategy-reasoning)
   {
-    id: "game-001",
+    id: "business-strategy-reasoning",
     name: "商业战略推理游戏",
     description: "模拟商业决策推理过程，测试用户在复杂商业环境中的决策思维",
     fullDescription: "在这个商业战略推理游戏中，您将面对复杂的商业决策场景，体验多种认知陷阱，包括线性思维、确认偏误和复杂系统误解。游戏涉及市场分析、资源配置、竞争策略等多个维度。",
@@ -136,9 +136,9 @@ const allMockScenarios = [
     ]
   },
 
-  // Public Policy Making Simulation (game-002)
+  // Public Policy Making Simulation (public-policy-making)
   {
-    id: "game-002",
+    id: "public-policy-making",
     name: "公共政策制定模拟",
     description: "模拟公共政策制定过程，平衡多方利益相关者需求",
     fullDescription: "在这个公共政策制定模拟中，您将扮演政策制定者，需要平衡选民、利益集团、专家意见等多方需求，体验时间延迟、确认偏误、复杂系统等认知陷阱对政策制定的影响。",
@@ -171,9 +171,9 @@ const allMockScenarios = [
     ]
   },
 
-  // Personal Finance Decision Simulation (game-003)
+  // Personal Finance Decision Simulation (personal-finance-decision)
   {
-    id: "game-003",
+    id: "personal-finance-decision",
     name: "个人财务决策模拟",
     description: "模拟个人长期财务规划决策，体验复利和时间价值概念",
     fullDescription: "在这个个人财务决策模拟中，您将制定长期财务规划，体验复利增长、时间价值、风险评估等概念，理解短视偏误和线性思维对财务决策的影响。",

@@ -57,7 +57,7 @@
         "cognitiveBiasesTested": [
           "确认偏误",
           "可得性启发",
-          "时间偏好偏差", 
+          "时间偏好偏差",
           "损失厌恶",
           "群体极化",
           "技术解决方案偏见"
@@ -70,7 +70,7 @@
       }
     },
     {
-      "scenarioId": "adv-game-002",
+      "scenarioId": "ai-governance-regulation",
       "title": "AI治理与监管决策模拟",
       "description": "模拟AI技术快速发展背景下的治理与监管决策，涉及技术、伦理、经济、安全等多个复杂维度",
       "gameType": "reasoning-game",
@@ -80,7 +80,7 @@
         "complexity": "advanced",
         "skillsTested": [
           "技术预见",
-          "伦理推理", 
+          "伦理推理",
           "风险评估",
           "政策设计",
           "战略思维"
@@ -89,7 +89,7 @@
       "steps": [
         {
           "step": 1,
-          "situation": "作为国家AI发展委员会成员，你面对AI能力快速提升的现实：AI系统已在多个领域达到或超越人类水平。你需要制定AI能力评估和分级标准。", 
+          "situation": "作为国家AI发展委员会成员，你面对AI能力快速提升的现实：AI系统已在多个领域达到或超越人类水平。你需要制定AI能力评估和分级标准。",
           "options": [
             "基于任务能力制定AI分级标准",
             "引入安全和可控性作为分级标准",
@@ -150,10 +150,10 @@
       }
     },
     {
-      "scenarioId": "adv-game-003",
+      "scenarioId": "financial-crisis-response",
       "title": "复杂金融市场危机应对模拟",
       "description": "模拟在复杂金融衍生品市场中应对系统性风险的决策过程，涉及货币政策、金融监管、国际合作等多个层面",
-      "gameType": "reasoning-game", 
+      "gameType": "reasoning-game",
       "rules": {
         "players": 1,
         "duration": "75-105 minutes",
@@ -180,7 +180,7 @@
         },
         {
           "step": 2,
-          "situation": "市场出现小规模动荡，一些大型机构面临流动性压力。你面临是否提供紧急流动性支持的决策。", 
+          "situation": "市场出现小规模动荡，一些大型机构面临流动性压力。你面临是否提供紧急流动性支持的决策。",
           "options": [
             "立即提供大规模流动性支持",
             "提供有限的定向支持",
@@ -216,7 +216,7 @@
         "purpose": "测试在高度复杂、风险互联的金融系统中的决策和危机管理能力",
         "cognitiveBiasesTested": [
           "群体思维",
-          "确认偏误", 
+          "确认偏误",
           "时间压力偏见",
           "过度自信",
           "可得性偏差",
