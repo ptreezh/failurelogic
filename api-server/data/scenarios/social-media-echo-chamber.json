@@ -1,0 +1,121 @@
+{
+  "id": "social-media-echo-chamber",
+  "name": "社交媒体信息茧房",
+  "description": "体验算法推荐如何创建信息茧房，强化确认偏误",
+  "fullDescription": "在这个场景中，您将体验社交媒体算法如何通过个性化推荐创建信息茧房。您将扮演一个社交媒体平台的内容审核员，面对算法推荐导致的确认偏误、群体极化和信息茧房效应。体验算法如何在不知不觉中限制您的信息视野，强化既有信念，并影响决策质量。",
+  "difficulty": "intermediate",
+  "estimatedDuration": 25,
+  "targetPatterns": [
+    "echo_chamber",
+    "confirmation_bias",
+    "algorithmic_bias"
+  ],
+  "decisionPattern": "信息茧房效应",
+  "duration": "25-35分钟",
+  "category": "数字社会",
+  "thumbnail": "/assets/images/social-media-echo-chamber.jpg",
+  "cognitiveBiasMapping": {
+    "primaryBiases": ["confirmation_bias", "availability_heuristic", "group_polarization"],
+    "secondaryBiases": ["anchoring_bias", "selection_bias", "algorithmic_bias"],
+    "diagnosisWeights": {
+      "confirmation_bias": 0.9,
+      "availability_heuristic": 0.7,
+      "group_polarization": 0.8,
+      "algorithmic_bias": 0.6
+    },
+    "awakeningTriggers": [
+      {
+        "condition": "filter_bubble_reveal",
+        "description": "揭示算法如何过滤不同观点"
+      },
+      {
+        "condition": "echo_chamber_effect",
+        "description": "展示信息茧房如何强化既有信念"
+      },
+      {
+        "condition": "polarization_demonstration",
+        "description": "演示群体极化过程"
+      }
+    ]
+  },
+  "advancedChallenges": [
+    {
+      "title": "算法透明度困境",
+      "description": "平衡个性化推荐与信息多样性的复杂关系",
+      "difficulty": "advanced",
+      "decisionPatterns": [
+        "algorithmic_transparency",
+        "diversity_vs_relevance"
+      ]
+    },
+    {
+      "title": "跨平台信息验证",
+      "description": "在多个信息源之间验证信息真实性",
+      "difficulty": "expert",
+      "decisionPatterns": [
+        "cross_platform_verification",
+        "source_diversity"
+      ]
+    }
+  ],
+  "gameConfig": {
+    "totalTurns": 6,
+    "initialState": {
+      "informationDiversity": 50,
+      "confirmationBiasLevel": 30,
+      "algorithmicFiltering": 40,
+      "userAwareness": 25,
+      "polarizationLevel": 20
+    },
+    "decisionOptions": [
+      {
+        "id": "diverse_sources",
+        "name": "多元化信息源",
+        "description": "主动寻找不同观点的信息源",
+        "effects": {
+          "informationDiversity": 15,
+          "confirmationBiasLevel": -10,
+          "userAwareness": 10
+        },
+        "linearExpectation": "+15信息多样性",
+        "actualResult": "初期效果不明显，但长期累积效应显著"
+      },
+      {
+        "id": "algorithm_adjust",
+        "name": "调整算法推荐",
+        "description": "手动调整算法推荐参数",
+        "effects": {
+          "algorithmicFiltering": -15,
+          "informationDiversity": 10,
+          "userAwareness": 5
+        },
+        "linearExpectation": "-15算法过滤",
+        "actualResult": "算法有惯性，需要多次调整才能显著改变"
+      },
+      {
+        "id": "echo_chamber_reinforce",
+        "name": "强化信息茧房",
+        "description": "只关注符合既有观点的内容",
+        "effects": {
+          "confirmationBiasLevel": 20,
+          "polarizationLevel": 15,
+          "informationDiversity": -20
+        },
+        "linearExpectation": "+20确认偏误",
+        "actualResult": "短期内感觉舒适，长期导致极端化"
+      },
+      {
+        "id": "critical_thinking",
+        "name": "批判性思维训练",
+        "description": "学习识别和质疑信息偏见",
+        "effects": {
+          "userAwareness": 20,
+          "confirmationBiasLevel": -15,
+          "algorithmicFiltering": -5
+        },
+        "linearExpectation": "+20用户意识",
+        "actualResult": "意识提升需要时间，但效果持久"
+      }
+    ]
+  }
+}
