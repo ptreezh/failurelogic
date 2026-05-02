@@ -2257,7 +2257,7 @@ class CrossDomainChallengeGenerator {
       if (typeof Logger !== 'undefined') {
         Logger.warn('Decision path tracking not enabled for this scenario');
       } else {
-        console.warn('Decision path tracking not enabled for this scenario');
+        Log.warn('Decision path tracking not enabled for this scenario');
       }
       return replayableScenario;
     }

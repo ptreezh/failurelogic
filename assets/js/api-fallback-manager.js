@@ -32,7 +32,7 @@ class APIFallbackManager {
         if (typeof Logger !== 'undefined') {
             Logger.debug(`Using API endpoint: ${this.currentEndpoint}`);
         } else {
-            console.log(`Using API endpoint: ${this.currentEndpoint}`);
+            Log.debug(`Using API endpoint: ${this.currentEndpoint}`);
         }
     }
     
@@ -48,7 +48,7 @@ class APIFallbackManager {
             if (typeof Logger !== 'undefined') {
                 Logger.warn(`Endpoint not available: ${endpoint}`, error);
             } else {
-                console.warn(`Endpoint not available: ${endpoint}`, error);
+                Log.warn(`Endpoint not available: ${endpoint}`, error);
             }
             return false;
         }
@@ -75,7 +75,7 @@ class APIFallbackManager {
             if (typeof Logger !== 'undefined') {
                 Logger.warn(`Request failed to ${this.currentEndpoint}:`, error);
             } else {
-                console.warn(`Request failed to ${this.currentEndpoint}:`, error);
+                Log.warn(`Request failed to ${this.currentEndpoint}:`, error);
             }
 
             // Try fallback endpoints
@@ -85,7 +85,7 @@ class APIFallbackManager {
                         if (typeof Logger !== 'undefined') {
                             Logger.debug(`Trying fallback endpoint: ${endpoint}`);
                         } else {
-                            console.log(`Trying fallback endpoint: ${endpoint}`);
+                            Log.debug(`Trying fallback endpoint: ${endpoint}`);
                         }
                         const response = await fetch(`${endpoint}${path}`, {
                             ...options,
@@ -101,7 +101,7 @@ class APIFallbackManager {
                             if (typeof Logger !== 'undefined') {
                                 Logger.info(`Switched to endpoint: ${endpoint}`);
                             } else {
-                                console.log(`Switched to endpoint: ${endpoint}`);
+                                Log.debug(`Switched to endpoint: ${endpoint}`);
                             }
                             return response;
                         }
@@ -109,7 +109,7 @@ class APIFallbackManager {
                         if (typeof Logger !== 'undefined') {
                             Logger.warn(`Fallback endpoint failed: ${endpoint}`, fallbackError);
                         } else {
-                            console.warn(`Fallback endpoint failed: ${endpoint}`, fallbackError);
+                            Log.warn(`Fallback endpoint failed: ${endpoint}`, fallbackError);
                         }
                     }
                 }
@@ -119,7 +119,7 @@ class APIFallbackManager {
             if (typeof Logger !== 'undefined') {
                 Logger.warn('All API endpoints failed, returning mock data');
             } else {
-                console.warn('All API endpoints failed, returning mock data');
+                Log.warn('All API endpoints failed, returning mock data');
             }
             return this.getMockResponse(path, options);
         }
