@@ -1,10 +1,13 @@
 /**
  * Personal Finance Decision Simulation - Page Router
- * Implements the same pattern as other scenarios
+ * Extends BasePageRouter for shared render/saveState/loadState
  */
-class PersonalFinancePageRouter {
+class PersonalFinancePageRouter extends BasePageRouter {
   constructor(gameState = null) {
-    // Initialize game state
+    super('PersonalFinance', 'personalFinanceGameState');
+    this.tempDecisions = [];
+    this.tempOptions = [];
+    this.currentTurn = 1;
     this.gameState = gameState || {
       satisfaction: 50,
       resources: 150000,  // Total savings/investments
@@ -538,35 +541,30 @@ class PersonalFinancePageRouter {
     return labels[decisionId] || decisionId;
   }
   
-  // ========== State Persistence ==========
-  
+  // ========== State Persistence (extends base with extra fields) ==========
+
   saveState() {
-    const state = {
+    super.saveState();
+    sessionStorage.setItem(this.storageKey, JSON.stringify({
+      ...JSON.parse(sessionStorage.getItem(this.storageKey) || '{}'),
       tempDecisions: this.tempDecisions,
       tempOptions: this.tempOptions,
-      currentTurn: this.currentTurn,
-      currentPage: this.currentPage,
-      gameState: this.gameState
-    };
-    sessionStorage.setItem('personalFinanceGameState', JSON.stringify(state));
+      currentTurn: this.currentTurn
+    }));
   }
-  
+
   loadState() {
-    const saved = sessionStorage.getItem('personalFinanceGameState');
+    super.loadState();
+    const saved = sessionStorage.getItem(this.storageKey);
     if (saved) {
-      const state = JSON.parse(saved);
-      this.tempDecisions = state.tempDecisions;
-      this.tempOptions = state.tempOptions;
-      this.currentTurn = state.currentTurn;
-      this.currentPage = state.currentPage;
-      this.gameState = state.gameState;
-    }
-  }
-  
-  render() {
-    const container = document.getElementById('game-container');
-    if (container) {
-      container.innerHTML = this.renderPage();
+      try {
+        const state = JSON.parse(saved);
+        this.tempDecisions = state.tempDecisions || [];
+        this.tempOptions = state.tempOptions || [];
+        this.currentTurn = state.currentTurn || 1;
+      } catch {
+        // ignore
+      }
     }
   }
 }

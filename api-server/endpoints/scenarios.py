@@ -14,7 +14,7 @@ if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
 from data.scenarios import SCENARIOS
-from models.scenario import Scenario, GameSession, GameState
+from models.scenario import GameSession, GameState
 from logic.real_logic import execute_real_logic, generate_real_feedback
 
 # Set up logging

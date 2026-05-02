@@ -1,10 +1,13 @@
 /**
  * Business Strategy Reasoning Game - Page Router
- * Implements the same pattern as CoffeeShopPageRouter and other scenarios
+ * Extends BasePageRouter for shared render/saveState/loadState
  */
-class BusinessStrategyPageRouter {
+class BusinessStrategyPageRouter extends BasePageRouter {
   constructor(gameState = null) {
-    // Initialize game state
+    super('BusinessStrategy', 'businessStrategyGameState');
+    this.tempDecisions = [];
+    this.tempOptions = [];
+    this.currentTurn = 1;
     this.gameState = gameState || {
       satisfaction: 50,
       resources: 10000,  // Funding for the tech company
@@ -514,35 +517,34 @@ class BusinessStrategyPageRouter {
     return labels[decisionId] || decisionId;
   }
   
-  // ========== State Persistence ==========
-  
+  // ========== State Persistence (extends base with extra fields) ==========
+
   saveState() {
-    const state = {
+    super.saveState();
+    sessionStorage.setItem(this.storageKey, JSON.stringify({
+      ...JSON.parse(sessionStorage.getItem(this.storageKey) || '{}'),
       tempDecisions: this.tempDecisions,
       tempOptions: this.tempOptions,
-      currentTurn: this.currentTurn,
-      currentPage: this.currentPage,
-      gameState: this.gameState
-    };
-    sessionStorage.setItem('businessStrategyGameState', JSON.stringify(state));
+      currentTurn: this.currentTurn
+    }));
   }
-  
+
   loadState() {
-    const saved = sessionStorage.getItem('businessStrategyGameState');
+    super.loadState();
+    const saved = sessionStorage.getItem(this.storageKey);
     if (saved) {
-      const state = JSON.parse(saved);
-      this.tempDecisions = state.tempDecisions;
-      this.tempOptions = state.tempOptions;
-      this.currentTurn = state.currentTurn;
-      this.currentPage = state.currentPage;
-      this.gameState = state.gameState;
+      try {
+        const state = JSON.parse(saved);
+        this.tempDecisions = state.tempDecisions || [];
+        this.tempOptions = state.tempOptions || [];
+        this.currentTurn = state.currentTurn || 1;
+      } catch {
+        // ignore
+      }
     }
   }
-  
-  render() {
-    const container = document.getElementById('game-container');
-    if (container) {
-      container.innerHTML = this.renderPage();
+}
+      }
     }
   }
 }

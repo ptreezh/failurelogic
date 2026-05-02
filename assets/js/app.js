@@ -603,7 +603,7 @@ class NavigationManager {
     const container = document.getElementById('scenarios-grid');
     if (container && Array.isArray(AppState.scenarios)) {
       console.log('🎨 Rendering scenarios into grid:', AppState.scenarios.length);
-      this.renderScenarios(AppState.scenarios, container);
+      await this.renderScenarios(AppState.scenarios, container);
 
       // Hide loading state
       if (loadingEl) {
@@ -677,7 +677,7 @@ class NavigationManager {
     }
   }
 
-  static createScenarioCard(scenario) {
+  static async createScenarioCard(scenario) {
     // Get the current difficulty preference
     const currentDifficulty = AppState.userPreferences.difficulty;
 
@@ -724,8 +724,26 @@ class NavigationManager {
       `;
     }
 
+    // Get illustration SVG (sync from template, async from AI if available)
+    let illustrationHtml = '';
+    try {
+      const svg = ScenarioIllustrations?.generate(
+        scenario.id,
+        scenario.decisionPattern || scenario.decisionPattern || null,
+        'light'
+      );
+      if (svg) {
+        illustrationHtml = `<div class="scenario-illustration">${svg}</div>`;
+      }
+    } catch (e) {
+      // Fallback: no illustration
+      illustrationHtml = '';
+    }
+
     return `
       <div class="card scenario-card" onclick="GameManager.startScenario('${scenario.id}')" style="cursor: pointer;">
+        ${illustrationHtml}
+        <div class="scenario-card-content">
         ${cardContent}
         <button class="btn btn-primary" onclick="event.stopPropagation(); GameManager.startScenario('${scenario.id}')">
           开始挑战 (${currentDifficulty}难度)
@@ -740,15 +758,17 @@ class NavigationManager {
             </ul>
           </div>
         ` : ''}
+        </div>
       </div>
     `;
   }
 
-  static renderScenarios(scenarios, container) {
+  static async renderScenarios(scenarios, container) {
     if (!container) return;
 
-    // Clear container and add updated content
-    container.innerHTML = scenarios.map(scenario => this.createScenarioCard(scenario)).join('');
+    // Clear container and add updated content (await async createScenarioCard)
+    const cards = await Promise.all(scenarios.map(scenario => this.createScenarioCard(scenario)));
+    container.innerHTML = cards.join('');
   }
 
   static bindPageEvents(page) {
@@ -1555,9 +1575,23 @@ class CoffeeShopPageRouter {
     const decisionLabel = this.getDecisionLabel(feedback.decision);
     const unit = this.getDecisionUnit(feedback.decision);
 
+    // Get illustration for feedback page
+    let illustrationHtml = '';
+    try {
+      const scenarioId = this.currentScenario?.id || 'default';
+      const svg = ScenarioIllustrations?.generate(scenarioId, 'feedback', 'light');
+      if (svg) {
+        illustrationHtml = `<div class="feedback-illustration">${svg}</div>`;
+      }
+    } catch (e) {
+      illustrationHtml = '';
+    }
+
     return `
       <div class="game-page feedback-page">
         <h2>✅ 决策已确认</h2>
+
+        ${illustrationHtml}
 
         <div class="feedback-content">
           <p><strong>你的选择：</strong>${decisionLabel} = ${feedback.value}${unit}</p>
@@ -9151,9 +9185,12 @@ class GameManager {
     feedbackDisplay.innerHTML = `
       <div class="feedback-content error game-feedback">
         <h4>错误</h4>
-        <p>${message}</p>
       </div>
     `;
+    feedbackDisplay.querySelector('p')?.remove();
+    const p = document.createElement('p');
+    p.textContent = message;
+    feedbackDisplay.querySelector('h4')?.after(p);
     feedbackDisplay.className = 'feedback-section feedback game-feedback error';
     feedbackDisplay.style.display = 'block';
   }
@@ -12992,15 +13029,30 @@ class ToastManager {
   static createToast(message, type, title) {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
-    
-    toast.innerHTML = `
-      <div class="toast-content">
-        ${title ? `<div class="toast-title">${title}</div>` : ''}
-        <div class="toast-message">${message}</div>
-      </div>
-      <button class="toast-close" onclick="this.parentElement.parentElement.remove()">&times;</button>
-    `;
-    
+
+    const content = document.createElement('div');
+    content.className = 'toast-content';
+
+    if (title) {
+      const titleDiv = document.createElement('div');
+      titleDiv.className = 'toast-title';
+      titleDiv.textContent = title;
+      content.appendChild(titleDiv);
+    }
+
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'toast-message';
+    messageDiv.textContent = message;
+    content.appendChild(messageDiv);
+
+    toast.appendChild(content);
+
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'toast-close';
+    closeBtn.textContent = '×';
+    closeBtn.onclick = function() { this.parentElement.remove(); };
+    toast.appendChild(closeBtn);
+
     return toast;
   }
 }
@@ -13660,11 +13712,17 @@ class HistoricalCasesPage {
     const container = document.getElementById('historical-cases-container') || document.body;
     container.innerHTML = `
       <div class="error-message">
-        <h3>❌ 错误</h3>
-        <p>${message}</p>
-        <button class="btn btn-primary" onclick="window.historicalCasesPage.initialize()">重新加载</button>
+        <h3>错误</h3>
       </div>
     `;
+    const p = document.createElement('p');
+    p.textContent = message;
+    container.querySelector('h3').after(p);
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-primary';
+    btn.textContent = '重新加载';
+    btn.onclick = function() { window.historicalCasesPage.initialize(); };
+    container.querySelector('p').after(btn);
   }
 
   // Decision Tree Visualization Methods
