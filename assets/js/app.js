@@ -556,7 +556,7 @@ class NavigationManager {
 
     // Try to load from API first with timeout, fallback to mock data
     try {
-      console.log('Attempting to load scenarios from API...');
+      Log.log('Attempting to load scenarios from API...');
       
       // Direct fetch to bypass potential service issues
       const response = await fetch(`${APP_CONFIG.apiBaseUrl}/scenarios/`, {
@@ -571,18 +571,18 @@ class NavigationManager {
         if (data && Array.isArray(data.scenarios)) {
           // Update global state with API data
           AppState.scenarios = data.scenarios;
-          console.log('✅ Loaded scenarios from API:', data.scenarios.length);
+          Log.log('✅ Loaded scenarios from API:', data.scenarios.length);
         } else {
           // Fallback to mock data
           AppState.scenarios = this.getMockScenarios();
-          console.log('⚠️  API returned unexpected format, using mock scenarios:', AppState.scenarios.length);
+          Log.log('⚠️  API returned unexpected format, using mock scenarios:', AppState.scenarios.length);
         }
       } else {
-        console.warn('⚠️  API request failed, status:', response.status);
+        Log.warn('⚠️  API request failed, status:', response.status);
         AppState.scenarios = this.getMockScenarios();
       }
     } catch (error) {
-      console.warn('⚠️  Failed to load scenarios from API, using fallback:', error.message);
+      Log.warn('⚠️  Failed to load scenarios from API, using fallback:', error.message);
       try {
         // Try local file as secondary fallback
         const localResp = await fetch('assets/data/scenarios.json');
@@ -593,7 +593,7 @@ class NavigationManager {
           AppState.scenarios = this.getMockScenarios();
         }
       } catch (fetchError) {
-        console.warn('⚠️  Local fallback failed, using built-in mock scenarios:', fetchError.message);
+        Log.warn('⚠️  Local fallback failed, using built-in mock scenarios:', fetchError.message);
         AppState.scenarios = this.getMockScenarios();
       }
     }
@@ -602,7 +602,7 @@ class NavigationManager {
     // Render scenarios into the static HTML scenarios-grid element
     const container = document.getElementById('scenarios-grid');
     if (container && Array.isArray(AppState.scenarios)) {
-      console.log('🎨 Rendering scenarios into grid:', AppState.scenarios.length);
+      Log.log('🎨 Rendering scenarios into grid:', AppState.scenarios.length);
       await this.renderScenarios(AppState.scenarios, container);
 
       // Hide loading state
@@ -620,7 +620,7 @@ class NavigationManager {
       container.style.display = 'grid';
       container.style.visibility = 'visible';
     } else {
-      console.error('❌ scenarios-grid element not found or no scenarios to render');
+      Log.error('❌ scenarios-grid element not found or no scenarios to render');
       // Ensure loading is hidden even on error
       if (loadingEl) {
         loadingEl.style.display = 'none';
@@ -2858,7 +2858,7 @@ class RelationshipTimeDelayPageRouter {
 class DecisionEngine {
   // Calculate effects of user decisions for each scenario
   static calculateDecisionEffects(scenarioId, decisions, currentState) {
-    console.log('Calculating effects for scenario:', scenarioId, 'decisions:', decisions, 'current state:', currentState);
+    Log.log('Calculating effects for scenario:', scenarioId, 'decisions:', decisions, 'current state:', currentState);
 
     let effects = {
       satisfaction: 0,
@@ -2918,7 +2918,7 @@ class DecisionEngine {
         if (effect.trust) effectsToApply.trust += effect.trust;
         if (effect.portfolio) effectsToApply.portfolio += effect.portfolio;
         if (effect.knowledge) effectsToApply.knowledge += effect.knowledge;
-        console.log(`Applying delayed effect: ${effect.description || effect.type}`);
+        Log.log(`Applying delayed effect: ${effect.description || effect.type}`);
       } else {
         // Decrement turn delay and keep for future
         effect.turn_delay -= 1;
@@ -3280,7 +3280,7 @@ class DecisionEngine {
         { name: '附近新店开业', reputation: -5 }
       ];
       const event = events[Math.floor(Math.random() * events.length)];
-      console.log('Random event:', event);
+      Log.log('Random event:', event);
       if (event.cost) effects.resources -= event.cost;
       if (event.resources) effects.resources += event.resources;
       if (event.satisfaction) effects.satisfaction += event.satisfaction;
@@ -8122,7 +8122,7 @@ class GameManager {
   }
 
   static async startScenario(scenarioId) {
-    console.log('Starting scenario:', scenarioId);
+    Log.log('Starting scenario:', scenarioId);
 
     // ✅ Keep special handling for scenarios with custom UI/game logic
     // But use API for data when possible
@@ -8169,7 +8169,7 @@ class GameManager {
       // Hide any existing modal before showing new one
       const modal = document.getElementById('game-modal');
       if (modal && modal.classList.contains('active')) {
-        console.warn('Modal already active, hiding first');
+        Log.warn('Modal already active, hiding first');
         this.hideGameModal();
         // Wait for modal to close before opening new one
         await new Promise(resolve => setTimeout(resolve, 400));
@@ -8207,11 +8207,11 @@ class GameManager {
           };
         }
 
-        console.log('Created game session via API:', sessionData);
-        console.log('Merged gameSession:', AppState.gameSession);
+        Log.log('Created game session via API:', sessionData);
+        Log.log('Merged gameSession:', AppState.gameSession);
       } catch (apiError) {
         // Fallback to static content if API fails
-        console.warn('API call failed, using static content:', apiError);
+        Log.warn('API call failed, using static content:', apiError);
 
         // ✅ Set correct initial state based on scenario
         const initialState = this.getInitialStateForScenario(scenarioId);
@@ -8242,7 +8242,7 @@ class GameManager {
         this.startAutoSaveTimer();
       }
     } catch (error) {
-      console.error('Failed to start scenario:', error);
+      Log.error('Failed to start scenario:', error);
       ToastManager.show('启动挑战失败', 'error', '游戏错误');
 
       // Ensure gameSession exists even on error
@@ -8291,13 +8291,13 @@ class GameManager {
         const initialState = this.getInitialStateForScenario(scenarioId);
         this.updateGameState(initialState);
         this.updateGameStateUI(initialState);
-        console.log('Static mode: Initial state set:', initialState);
+        Log.log('Static mode: Initial state set:', initialState);
       } else {
-        console.warn('Scenario not found in mock data, using generic fallback:', scenarioId);
+        Log.warn('Scenario not found in mock data, using generic fallback:', scenarioId);
         gameContainer.innerHTML = this.getMockGameContent(scenarioId);
       }
     } catch (error) {
-      console.error('Failed to load static game content:', error);
+      Log.error('Failed to load static game content:', error);
       gameContainer.innerHTML = '<div class="error">场景内容加载失败</div>';
     }
   }
@@ -8315,10 +8315,10 @@ class GameManager {
       // ✅ FIXED: Update UI with initial game state from API
       if (AppState.gameSession && AppState.gameSession.gameState) {
         this.updateGameStateUI(AppState.gameSession.gameState);
-        console.log('Initial game state UI updated:', AppState.gameSession.gameState);
+        Log.log('Initial game state UI updated:', AppState.gameSession.gameState);
       }
     } catch (error) {
-      console.warn('API调用失败，使用基于scenarioId的mock内容:', error);
+      Log.warn('API调用失败，使用基于scenarioId的mock内容:', error);
       gameContainer.innerHTML = this.getMockGameContent(scenarioId);
     }
   }
@@ -8647,16 +8647,16 @@ class GameManager {
   }
 
   static async submitDecision(scenarioId) {
-    console.log('Submitting decision for scenario:', scenarioId);
+    Log.log('Submitting decision for scenario:', scenarioId);
 
     // Check if game session exists
     if (!AppState.gameSession) {
-      console.error('No active game session');
+      Log.error('No active game session');
       this.displayError('游戏会话未创建，请重新开始场景');
       return;
     }
 
-    console.log('Game session:', AppState.gameSession);
+    Log.log('Game session:', AppState.gameSession);
 
     // Read decision values based on scenario type
     let decision = {};
@@ -8710,7 +8710,7 @@ class GameManager {
       }
     }
 
-    console.log('Decision data:', decision);
+    Log.log('Decision data:', decision);
 
     // Show loading state
     const submitBtn = document.getElementById('submit-decision');
@@ -8735,15 +8735,15 @@ class GameManager {
         throw new Error('Game session not initialized properly');
       }
 
-      console.log('Current game state:', currentState);
+      Log.log('Current game state:', currentState);
 
       // ✅ Apply delayed effects from previous turns first
       const existingDelayedEffects = AppState.gameSession?.delayed_effects || [];
       const { effectsToApply: delayedEffectsToApply, remainingEffects } =
         DecisionEngine.applyDelayedEffects(existingDelayedEffects, currentState.turn_number);
 
-      console.log('Delayed effects to apply:', delayedEffectsToApply);
-      console.log('Remaining delayed effects:', remainingEffects);
+      Log.log('Delayed effects to apply:', delayedEffectsToApply);
+      Log.log('Remaining delayed effects:', remainingEffects);
 
       // Use Decision Engine to calculate real consequences
       const { effects, linearExpectation, actualResult, delayedEffects: newDelayedEffects } =
@@ -8753,10 +8753,10 @@ class GameManager {
           currentState
         );
 
-      console.log('Decision effects calculated:', effects);
-      console.log('Linear expectation:', linearExpectation);
-      console.log('Actual result:', actualResult);
-      console.log('New delayed effects:', newDelayedEffects);
+      Log.log('Decision effects calculated:', effects);
+      Log.log('Linear expectation:', linearExpectation);
+      Log.log('Actual result:', actualResult);
+      Log.log('New delayed effects:', newDelayedEffects);
 
       // Generate cognitive bias feedback
       const cognitiveFeedback = DecisionEngine.generateCognitiveFeedback(
@@ -8765,7 +8765,7 @@ class GameManager {
         actualResult
       );
 
-      console.log('Cognitive feedback:', cognitiveFeedback);
+      Log.log('Cognitive feedback:', cognitiveFeedback);
 
       // ✅ Merge current effects with delayed effects from previous turns
       const mergedEffects = {
@@ -8777,7 +8777,7 @@ class GameManager {
         knowledge: (effects.knowledge || 0) + (delayedEffectsToApply.knowledge || 0)
       };
 
-      console.log('Merged effects (current + delayed):', mergedEffects);
+      Log.log('Merged effects (current + delayed):', mergedEffects);
 
       // Calculate new game state with merged effects
       // Only update fields that exist in current state to avoid NaN
@@ -8817,7 +8817,7 @@ class GameManager {
         }
       });
 
-      console.log('New game state:', newGameState);
+      Log.log('New game state:', newGameState);
 
       // ✅ Check if game should end
       const gameOverCheck = DecisionEngine.checkGameOver(
@@ -8826,7 +8826,7 @@ class GameManager {
         AppState.gameSession?.decision_history || []
       );
 
-      console.log('Game over check:', gameOverCheck);
+      Log.log('Game over check:', gameOverCheck);
 
       // Update session state
       if (AppState.gameSession) {
@@ -8850,14 +8850,14 @@ class GameManager {
         }
 
         AppState.gameSession.decision_history.push(decisionRecord);
-        console.log('Decision recorded in history:', decisionRecord);
+        Log.log('Decision recorded in history:', decisionRecord);
 
         // ✅ Update delayed effects queue
         AppState.gameSession.delayed_effects = [
           ...remainingEffects,
           ...(newDelayedEffects || [])
         ];
-        console.log('Updated delayed effects queue:', AppState.gameSession.delayed_effects);
+        Log.log('Updated delayed effects queue:', AppState.gameSession.delayed_effects);
 
         AppState.gameSession.gameState = newGameState;
       }
@@ -8884,7 +8884,7 @@ class GameManager {
 
       // If game is over, update UI to show final state
       if (gameOverCheck.is_over) {
-        console.log('Game over:', gameOverCheck);
+        Log.log('Game over:', gameOverCheck);
         this.handleGameOver(gameOverCheck);
         return;
       }
@@ -8927,10 +8927,10 @@ class GameManager {
         }
       }
 
-      console.log('Decision submitted successfully with real calculations');
+      Log.log('Decision submitted successfully with real calculations');
 
     } catch (error) {
-      console.error('Failed to submit decision:', error);
+      Log.error('Failed to submit decision:', error);
 
       // Show error feedback
       this.displayError('决策处理失败: ' + error.message);
@@ -9062,7 +9062,7 @@ class GameManager {
   static displayFeedback(result) {
     const feedbackDisplay = document.getElementById('feedback-display');
     if (!feedbackDisplay) {
-      console.warn('Feedback display element not found');
+      Log.warn('Feedback display element not found');
       return;
     }
 
@@ -9175,7 +9175,7 @@ class GameManager {
     feedbackDisplay.style.display = 'block';
     feedbackDisplay.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-    console.log('Feedback displayed with cognitive analysis and personalized feedback');
+    Log.log('Feedback displayed with cognitive analysis and personalized feedback');
   }
 
   static displayError(message) {
@@ -9382,13 +9382,13 @@ class GameManager {
   static showGameModal() {
     const modal = document.getElementById('game-modal');
     if (!modal) {
-      console.error('Game modal element not found');
+      Log.error('Game modal element not found');
       return;
     }
     
     // Check if modal is already active or in transition
     if (modal.classList.contains('active')) {
-      console.warn('Game modal is already active, skipping show');
+      Log.warn('Game modal is already active, skipping show');
       return;
     }
     
@@ -9398,7 +9398,7 @@ class GameManager {
     // Add modal-open class to prevent body scroll
     document.body.classList.add('modal-open');
     
-    console.log('Game modal shown');
+    Log.log('Game modal shown');
   }
 
   static hideGameModal() {
@@ -9424,7 +9424,7 @@ class GameManager {
             gameContainer.innerHTML = '';
           }
           
-          console.log('Game modal hidden and cleaned up');
+          Log.log('Game modal hidden and cleaned up');
         }
       }, 300); // Wait for transition to complete
     }
@@ -9451,14 +9451,14 @@ class GameManager {
 
       return result;
     } catch (error) {
-      console.error('Game turn execution failed:', error);
+      Log.error('Game turn execution failed:', error);
       ToastManager.show('决策执行失败', 'error', '游戏错误');
       throw error;
     }
   }
 
   static updateGameState(newState) {
-    console.log('Updating game state:', newState);
+    Log.log('Updating game state:', newState);
 
     // Update state with new game state
     if (AppState.currentGame) {
@@ -9978,7 +9978,7 @@ class GameManager {
 
   static saveCheckpoint(checkpointName = null) {
     if (!AppState.gameSession) {
-      console.error('No active game session');
+      Log.error('No active game session');
       return;
     }
 
@@ -10003,7 +10003,7 @@ class GameManager {
 
   static loadCheckpoint(checkpointName = null) {
     if (!AppState.gameSession) {
-      console.error('No active game session');
+      Log.error('No active game session');
       return;
     }
 
@@ -10083,18 +10083,18 @@ class GameManager {
         const turn = AppState.gameSession.gameState.turn_number || AppState.gameSession.currentTurn || 1;
         this.saveCheckpoint(`autosave_t${turn}`);
         AppState.gameSession.last_saved = Date.now();
-        console.log(`Auto-saved checkpoint at turn ${turn}`);
+        Log.log(`Auto-saved checkpoint at turn ${turn}`);
       }
     }, 120000); // Every 2 minutes
 
-    console.log('Auto-save timer started for extended scenario');
+    Log.log('Auto-save timer started for extended scenario');
   }
 
   static stopAutoSaveTimer() {
     if (AppState.gameSession && AppState.gameSession.autosaveInterval) {
       clearInterval(AppState.gameSession.autosaveInterval);
       AppState.gameSession.autosaveInterval = null;
-      console.log('Auto-save timer stopped');
+      Log.log('Auto-save timer stopped');
     }
   }
 
@@ -10631,7 +10631,7 @@ class GameManager {
       });
     }
 
-    console.log(`Submitting decision for turn ${turn}:`, decisions);
+    Log.log(`Submitting decision for turn ${turn}:`, decisions);
 
     // Calculate results using DecisionEngine
     const result = DecisionEngine.calculateCoffeeShopTurn(
@@ -10642,7 +10642,7 @@ class GameManager {
       AppState.gameSession.delayed_effects || []
     );
 
-    console.log('Turn result:', result);
+    Log.log('Turn result:', result);
 
     // Add new delayed effects to queue
     if (result.newDelayedEffects && result.newDelayedEffects.length > 0) {
@@ -11006,7 +11006,7 @@ class GameManager {
   }
 
   static startAIGovernanceGame() {
-    console.log('🤖 Starting AI Governance game...');
+    Log.log('🤖 Starting AI Governance game...');
 
     // Initialize game state for AI governance scenario
     const initialState = {
@@ -11050,11 +11050,11 @@ class GameManager {
       container.innerHTML = router.renderPage();
     }
 
-    console.log('✅ AI Governance game initialized');
+    Log.log('✅ AI Governance game initialized');
   }
 
   static startFinancialCrisisGame() {
-    console.log('🏦 Starting Financial Crisis game...');
+    Log.log('🏦 Starting Financial Crisis game...');
 
     // Initialize game state for financial crisis scenario
     const initialState = {
@@ -11097,11 +11097,11 @@ class GameManager {
       container.innerHTML = router.renderPage();
     }
 
-    console.log('✅ Financial Crisis game initialized');
+    Log.log('✅ Financial Crisis game initialized');
   }
 
   static startClimateChangeGame() {
-    console.log('🌍 Starting Climate Change game...');
+    Log.log('🌍 Starting Climate Change game...');
 
     // Initialize game state for climate change scenario
     const initialState = {
@@ -11144,11 +11144,11 @@ class GameManager {
       container.innerHTML = router.renderPage();
     }
 
-    console.log('✅ Climate Change game initialized');
+    Log.log('✅ Climate Change game initialized');
   }
 
   static startPersonalFinanceGame() {
-    console.log('💰 Starting Personal Finance game...');
+    Log.log('💰 Starting Personal Finance game...');
 
     // Initialize game state for personal finance scenario
     const initialState = {
@@ -11190,11 +11190,11 @@ class GameManager {
       container.innerHTML = router.renderPage();
     }
 
-    console.log('✅ Personal Finance game initialized');
+    Log.log('✅ Personal Finance game initialized');
   }
 
   static startPublicPolicyGame() {
-    console.log('🏛️ Starting Public Policy game...');
+    Log.log('🏛️ Starting Public Policy game...');
 
     // Initialize game state for public policy scenario
     const initialState = {
@@ -11236,11 +11236,11 @@ class GameManager {
       container.innerHTML = router.renderPage();
     }
 
-    console.log('✅ Public Policy game initialized');
+    Log.log('✅ Public Policy game initialized');
   }
 
   static startBusinessStrategyGame() {
-    console.log('🚀 Starting Business Strategy game...');
+    Log.log('🚀 Starting Business Strategy game...');
 
     // Initialize game state for business strategy scenario
     const initialState = {
@@ -11282,11 +11282,11 @@ class GameManager {
       container.innerHTML = router.renderPage();
     }
 
-    console.log('✅ Business Strategy game initialized');
+    Log.log('✅ Business Strategy game initialized');
   }
 
   static startRelationshipTimeDelayGame() {
-    console.log('🚀 Starting Relationship Time Delay game...');
+    Log.log('🚀 Starting Relationship Time Delay game...');
 
     // Initialize game state for relationship scenario
     const initialState = {
@@ -11327,11 +11327,11 @@ class GameManager {
       container.innerHTML = router.renderPage();
     }
 
-    console.log('✅ Relationship Time Delay game initialized');
+    Log.log('✅ Relationship Time Delay game initialized');
   }
 
   static startInvestmentConfirmationBiasGame() {
-    console.log('🚀 Starting Investment Confirmation Bias game...');
+    Log.log('🚀 Starting Investment Confirmation Bias game...');
 
     // Initialize game state for investment confirmation bias scenario
     const initialState = {
@@ -11373,11 +11373,11 @@ class GameManager {
       container.innerHTML = router.renderPage();
     }
 
-    console.log('✅ Investment Confirmation Bias game initialized');
+    Log.log('✅ Investment Confirmation Bias game initialized');
   }
 
   static startInvestmentInformationProcessingGame() {
-    console.log('🚀 Starting Investment Information Processing game...');
+    Log.log('🚀 Starting Investment Information Processing game...');
 
     // Initialize game state for investment information processing scenario
     const initialState = {
@@ -11422,7 +11422,7 @@ class GameManager {
       container.innerHTML = router.renderPage();
     }
 
-    console.log('✅ Investment Information Processing game initialized');
+    Log.log('✅ Investment Information Processing game initialized');
   }
 
   static generatePersonalizedRecommendations(isFailure = false) {
@@ -11513,7 +11513,7 @@ class GameManager {
   }
 
   static startExtendedMultiPhaseGame() {
-    console.log('🚀 Starting Extended Multi-Phase game...');
+    Log.log('🚀 Starting Extended Multi-Phase game...');
 
     // Initialize game state for extended multi-phase scenario
     const initialState = {
@@ -11564,7 +11564,7 @@ class GameManager {
     // Start auto-save timer for extended scenario
     this.startAutoSaveTimer();
 
-    console.log('✅ Extended Multi-Phase game initialized');
+    Log.log('✅ Extended Multi-Phase game initialized');
   }
 
   static getMockGameContent(scenarioId) {
@@ -13059,18 +13059,18 @@ class ToastManager {
 
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('App Initializing...');
+  Log.log('App Initializing...');
 
   // Initialize Personalized Learning Engine
   window.PersonalizedLearningEngine = new PersonalizedLearningEngine();
-  console.log('Personalized Learning Engine initialized');
+  Log.log('Personalized Learning Engine initialized');
 
   // Expose debugging interfaces to window object
   window.AppState = AppState;
   window.GameManager = GameManager;
   window.NavigationManager = NavigationManager;
   window.ApiService = ApiService;
-  console.log('Debug interfaces exposed to window');
+  Log.log('Debug interfaces exposed to window');
 
     // Hide loading screen with enhanced method to prevent pointer event interception
   const loadingScreen = document.getElementById('loading-screen');
@@ -13112,7 +13112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(cssOverride);
 
-    console.log('Enhanced loading screen hidden with multiple methods');
+    Log.log('Enhanced loading screen hidden with multiple methods');
   }
 
   // Bind navigation button click handlers
@@ -13120,7 +13120,7 @@ document.addEventListener('DOMContentLoaded', () => {
   navButtons.forEach(button => {
     button.addEventListener('click', (e) => {
       const targetPage = button.dataset.page;
-      console.log('Nav button clicked:', targetPage);
+      Log.log('Nav button clicked:', targetPage);
       if (targetPage) {
         NavigationManager.navigateTo(targetPage);
       }
@@ -13164,12 +13164,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeModalBtn = document.getElementById('close-modal');
   if (closeModalBtn) {
     closeModalBtn.addEventListener('click', () => {
-      console.log('Close modal button clicked');
+      Log.log('Close modal button clicked');
       GameManager.hideGameModal();
     });
-    console.log('Close modal button bound successfully');
+    Log.log('Close modal button bound successfully');
   } else {
-    console.warn('Close modal button not found');
+    Log.warn('Close modal button not found');
   }
 
   // Add click outside to close modal
@@ -13177,11 +13177,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (gameModal) {
     gameModal.addEventListener('click', (e) => {
       if (e.target === gameModal) {
-        console.log('Clicked outside modal, closing');
+        Log.log('Clicked outside modal, closing');
         GameManager.hideGameModal();
       }
     });
-    console.log('Modal outside click handler bound');
+    Log.log('Modal outside click handler bound');
   }
 
   // Add ESC key to close modal
@@ -13189,12 +13189,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape') {
       const modal = document.getElementById('game-modal');
       if (modal && modal.classList.contains('active')) {
-        console.log('ESC pressed, closing modal');
+        Log.log('ESC pressed, closing modal');
         GameManager.hideGameModal();
       }
     }
   });
-  console.log('ESC key handler bound for modal');
+  Log.log('ESC key handler bound for modal');
 
   // Add mouse wheel support for modal scrolling
   if (gameModal) {
@@ -13203,12 +13203,12 @@ document.addEventListener('DOMContentLoaded', () => {
       // Prevent page scroll when mouse is over modal
       modalContent.addEventListener('mouseenter', () => {
         document.body.style.overflow = 'hidden';
-        console.log('Modal mouseenter: prevented page scroll');
+        Log.log('Modal mouseenter: prevented page scroll');
       });
       
       modalContent.addEventListener('mouseleave', () => {
         document.body.style.overflow = '';
-        console.log('Modal mouseleave: restored page scroll');
+        Log.log('Modal mouseleave: restored page scroll');
       });
       
       // Ensure modal content is scrollable
@@ -13221,11 +13221,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Prevent page scroll when modal can be scrolled
         if ((!isAtTop && isScrollingUp) || (!isAtBottom && isScrollingDown)) {
           e.stopPropagation();
-          console.log('Modal wheel: scrolling content');
+          Log.log('Modal wheel: scrolling content');
         }
       }, { passive: false });
       
-      console.log('Modal wheel scroll handler bound');
+      Log.log('Modal wheel scroll handler bound');
     }
   }
 
@@ -13235,7 +13235,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const modal = document.getElementById('invitation-modal');
       if (modal) {
         modal.style.display = 'none';
-        console.log('Invitation modal closed');
+        Log.log('Invitation modal closed');
       }
     });
   }
@@ -13246,7 +13246,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const modal = document.getElementById('share-success-modal');
       if (modal) {
         modal.style.display = 'none';
-        console.log('Share success modal closed');
+        Log.log('Share success modal closed');
       }
     });
   }
@@ -13259,18 +13259,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  console.log('App Initialized Successfully!');
+  Log.log('App Initialized Successfully!');
 });
 
 // Performance Monitoring
 window.addEventListener('load', () => {
   const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
-  console.log(`Page loaded in ${loadTime}ms`);
+  Log.log(`Page loaded in ${loadTime}ms`);
   
   // Log performance metrics
   if (performance.getEntriesByType('navigation').length > 0) {
     const perfData = performance.getEntriesByType('navigation')[0];
-    console.log('Performance:', {
+    Log.log('Performance:', {
       dns: perfData.domainLookupEnd - perfData.domainLookupStart,
       tcp: perfData.connectEnd - perfData.connectStart,
       request: perfData.responseEnd - perfData.requestStart,
@@ -13298,7 +13298,7 @@ function removeLoadingScreen() {
           loadingScreen.parentNode.removeChild(loadingScreen);
         }
       } catch (e) {
-        console.warn('Could not remove loading screen from DOM:', e);
+        Log.warn('Could not remove loading screen from DOM:', e);
       }
     }, 50);
     
@@ -13327,7 +13327,7 @@ function removeLoadingScreen() {
     `;
     document.head.appendChild(cssOverride);
 
-    console.log('Global loading screen removal function applied');
+    Log.log('Global loading screen removal function applied');
   }
   
   // 确保主应用容器可见且可交互
@@ -13381,7 +13381,7 @@ class HistoricalCasesPage {
       await this.loadHistoricalCases();
       this.render();
     } catch (error) {
-      console.error('Error initializing historical cases:', error);
+      Log.error('Error initializing historical cases:', error);
       this.showError('加载历史案例时出错');
     } finally {
       this.isLoading = false;
@@ -13406,7 +13406,7 @@ class HistoricalCasesPage {
         this.cases = this.getDefaultHistoricalCases();
       }
     } catch (error) {
-      console.warn('Failed to load historical cases from API:', error);
+      Log.warn('Failed to load historical cases from API:', error);
       // Use default cases as fallback
       this.cases = this.getDefaultHistoricalCases();
     }
@@ -13928,7 +13928,7 @@ class HistoricalCasesPage {
       this.selectedBiases = this.selectedBiases.filter(b => b !== biasName);
     }
     
-    console.log('Selected biases:', this.selectedBiases);
+    Log.log('Selected biases:', this.selectedBiases);
   }
 
   onModernContextChange(context) {
@@ -13968,7 +13968,7 @@ class HistoricalCasesPage {
       alert('反思已保存！这些思考将帮助您更好地应用历史教训。');
       
       // In a real implementation, we would save to a backend or localStorage
-      console.log('Saved reflections:', reflections);
+      Log.log('Saved reflections:', reflections);
     } else {
       alert('请填写至少一个反思问题。');
     }

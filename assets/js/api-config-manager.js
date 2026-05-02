@@ -168,7 +168,7 @@ class APIConfigManager {
           if (typeof Logger !== 'undefined') {
             Logger.info(`Switched to healthy API source: ${source}`);
           } else {
-            console.log(`✅ Switched to healthy API source: ${source}`);
+            Log.info(`✅ Switched to healthy API source: ${source}`);
           }
           break;
         }
@@ -176,7 +176,7 @@ class APIConfigManager {
         if (typeof Logger !== 'undefined') {
           Logger.warn(`API source ${this.apiSources[i]} health check failed:`, error.message);
         } else {
-          console.warn(`❌ API source ${this.apiSources[i]} health check failed:`, error.message);
+          Log.warn(`❌ API source ${this.apiSources[i]} health check failed:`, error.message);
         }
       }
     }
@@ -191,7 +191,7 @@ class APIConfigManager {
       if (typeof Logger !== 'undefined') {
         Logger.info(`Switching to API source ${nextIndex}: ${this.getBaseUrl()}`);
       } else {
-        console.log(`🔄 Switching to API source ${nextIndex}: ${this.getBaseUrl()}`);
+        Log.info(`🔄 Switching to API source ${nextIndex}: ${this.getBaseUrl()}`);
       }
     }
   }
