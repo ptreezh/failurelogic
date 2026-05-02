@@ -1,0 +1,485 @@
+{
+  "id": "investment-confirmation-bias",
+  "name": "投资确认偏误实验",
+  "description": "体验确认偏误如何影响投资决策",
+  "fullDescription": "在这个投资决策模拟中，您将体验确认偏误如何扭曲我们的判断。当您对某项投资形成初步观点后，系统会向您提供各种信息。您需要识别自己是否在无意识中筛选信息——只接受支持自己观点的证据，而忽视反面证据。这是行为金融学中最常见、最危险的认知偏差之一。",
+  "difficulty": "intermediate",
+  "estimatedDuration": 25,
+  "targetPatterns": [
+    "confirmation_bias",
+    "selective_information",
+    "overconfidence"
+  ],
+  "decisionPattern": "确认偏误",
+  "duration": "25-35分钟",
+  "category": "金融决策",
+  "thumbnail": "/assets/images/confirmation-bias.jpg",
+  "instructions": {
+    "intro": "您是一位投资者，正在考虑是否投资于一家名为'未来科技'的公司。您已经听到了一些关于这家公司的正面消息，现在需要做出投资决策。请仔细分析所有信息，做出您的判断。",
+    "warning": "注意：您可能会发现自己有一种倾向——只关注支持自己初始观点的信息。这正是我们要探讨的认知陷阱。"
+  },
+  "phases": [
+    {
+      "id": "phase-1-initial",
+      "name": "初步印象",
+      "description": "形成初始投资观点",
+      "rounds": [
+        {
+          "round": 1,
+          "title": "公司概况",
+          "context": "未来科技是一家成立于3年前的科技公司，专注于人工智能芯片研发。最近有媒体报道该公司即将发布革命性的AI芯片产品。",
+          "information": [
+            {
+              "type": "news",
+              "content": "《科技日报》：未来科技即将发布新一代AI芯片，性能据称比竞品高出50%",
+              "source": "主流媒体",
+              "bias": "positive"
+            },
+            {
+              "type": "analyst",
+              "content": "分析师张明：AI芯片市场将在未来5年增长300%，未来科技处于有利位置",
+              "source": "券商研报",
+              "bias": "positive"
+            }
+          ],
+          "decision": {
+            "question": "基于以上信息，您对投资未来科技股票的初步看法是？",
+            "options": [
+              {
+                "id": "very_bullish",
+                "text": "非常看好，准备重仓买入",
+                "biasScore": 3
+              },
+              {
+                "id": "bullish",
+                "text": "看好，考虑适当买入",
+                "biasScore": 2
+              },
+              {
+                "id": "neutral",
+                "text": "保持中立，需要更多信息",
+                "biasScore": 0
+              },
+              {
+                "id": "cautious",
+                "text": "谨慎，有疑虑",
+                "biasScore": -1
+              }
+            ]
+          },
+          "tracking": {
+            "initialBias": "记录用户的初始倾向"
+          }
+        }
+      ]
+    },
+    {
+      "id": "phase-2-information",
+      "name": "信息收集",
+      "description": "收集和分析更多投资信息",
+      "rounds": [
+        {
+          "round": 2,
+          "title": "深入研究",
+          "context": "您决定深入了解这家公司。系统将向您展示6条信息，您可以选择每条信息查看的详细程度。",
+          "information": [
+            {
+              "id": "info-1",
+              "type": "financial",
+              "headline": "财务报告：营收增长200%",
+              "content": "未来科技Q3财报显示，公司营收同比增长200%，主要来自AI芯片预售订单。",
+              "bias": "positive",
+              "source": "公司财报",
+              "attentionTest": true,
+              "hiddenDetail": "但净利润为负，研发支出占营收的80%"
+            },
+            {
+              "id": "info-2",
+              "type": "market",
+              "headline": "市场份额分析",
+              "content": "未来科技在AI芯片细分市场占有率达15%，位居第三。",
+              "bias": "neutral",
+              "source": "市场研究报告",
+              "attentionTest": true,
+              "hiddenDetail": "前两名NVIDIA和AMD合计占有75%市场份额"
+            },
+            {
+              "id": "info-3",
+              "type": "risk",
+              "headline": "技术风险提示",
+              "content": "业内人士质疑该芯片的实际性能能否达到宣传水平，可能存在技术瓶颈。",
+              "bias": "negative",
+              "source": "行业专家访谈",
+              "attentionTest": true,
+              "hiddenDetail": "类似的技术突破在过去3年中有70%最终未能实现"
+            },
+            {
+              "id": "info-4",
+              "type": "management",
+              "headline": "管理层访谈",
+              "content": "CEO表示对未来充满信心，公司已获得多家知名投资机构支持。",
+              "bias": "positive",
+              "source": "财经媒体采访",
+              "attentionTest": true,
+              "hiddenDetail": "但原始投资人中有2家已开始减持套现"
+            },
+            {
+              "id": "info-5",
+              "type": "competition",
+              "headline": "竞争动态",
+              "content": "竞争对手NVIDIA计划下季度推出类似产品，价格可能低30%。",
+              "bias": "negative",
+              "source": "行业新闻",
+              "attentionTest": true,
+              "hiddenDetail": "NVIDIA拥有成熟的供应链和客户基础"
+            },
+            {
+              "id": "info-6",
+              "type": "regulation",
+              "headline": "监管环境",
+              "content": "政府出台支持芯片产业的新政策，未来科技可能获得税收优惠。",
+              "bias": "positive",
+              "source": "政策公告",
+              "attentionTest": true,
+              "hiddenDetail": "但政策要求企业必须达到一定技术门槛，未来科技尚未达标"
+            }
+          ],
+          "decision": {
+            "question": "请选择您最关注的信息（选择3条）：",
+            "type": "multi_select",
+            "maxSelections": 3,
+            "tracking": {
+              "biasIndicator": "记录用户是否偏向正面信息"
+            }
+          },
+          "confirmationBiasScore": {
+            "calculation": "positive_selections / total_selections",
+            "interpretation": "得分越高表示确认偏误越强"
+          }
+        },
+        {
+          "round": 3,
+          "title": "信息解读",
+          "context": "现在您需要解读这些信息的含义。",
+          "information": [
+            {
+              "type": "scenario",
+              "content": "您的朋友小李告诉你他也买了这只股票，已经赚了30%。他说：'这公司绝对有前途，别听那些唱衰的声音。'"
+            },
+            {
+              "type": "scenario",
+              "content": "您的投资顾问发来一份风险提示报告，列举了该公司的5项潜在风险，建议您谨慎。"
+            }
+          ],
+          "decision": {
+            "question": "您更倾向于相信哪个信息来源？",
+            "options": [
+              {
+                "id": "friend",
+                "text": "朋友小李的成功经验更有说服力",
+                "biasScore": 2,
+                "biasType": "confirmation_bias_social"
+              },
+              {
+                "id": "advisor",
+                "text": "投资顾问的专业风险分析值得重视",
+                "biasScore": -1,
+                "biasType": "balanced_analysis"
+              },
+              {
+                "id": "both",
+                "text": "两者都有参考价值，需要进一步核实",
+                "biasScore": 0,
+                "biasType": "neutral"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "phase-3-decision",
+      "name": "投资决策",
+      "description": "做出最终投资决策",
+      "rounds": [
+        {
+          "round": 4,
+          "title": "最终决策",
+          "context": "经过信息收集和分析，您需要做出最终投资决策。",
+          "decision": {
+            "question": "基于您的分析，您决定：",
+            "options": [
+              {
+                "id": "heavy_invest",
+                "text": "重仓买入（投入50%以上资金）",
+                "biasScore": 3,
+                "risk": "high"
+              },
+              {
+                "id": "moderate_invest",
+                "text": "适度买入（投入20-30%资金）",
+                "biasScore": 2,
+                "risk": "medium"
+              },
+              {
+                "id": "small_invest",
+                "text": "小额试水（投入5-10%资金）",
+                "biasScore": 1,
+                "risk": "low"
+              },
+              {
+                "id": "wait",
+                "text": "暂不投资，继续观察",
+                "biasScore": 0,
+                "risk": "none"
+              },
+              {
+                "id": "avoid",
+                "text": "放弃投资，风险太大",
+                "biasScore": -1,
+                "risk": "none"
+              }
+            ]
+          }
+        },
+        {
+          "round": 5,
+          "title": "结果揭晓",
+          "context": "三个月后...",
+          "outcome": {
+            "scenarios": [
+              {
+                "condition": "heavy_invest OR moderate_invest",
+                "result": {
+                  "headline": "股价暴跌40%",
+                  "details": [
+                    "公司发布的AI芯片性能未达预期，比竞品低30%",
+                    "NVIDIA提前发布竞争产品，价格更低性能更强",
+                    "早期投资人大量套现，股价承压",
+                    "监管审查发现公司技术声明存在夸大"
+                  ],
+                  "financial_impact": {
+                    "heavy_invest": "您的投资亏损40%",
+                    "moderate_invest": "您的投资亏损40%",
+                    "small_invest": "您的投资亏损40%"
+                  }
+                }
+              },
+              {
+                "condition": "wait OR avoid",
+                "result": {
+                  "headline": "您避免了重大损失",
+                  "details": [
+                    "公司发布的AI芯片性能未达预期",
+                    "NVIDIA提前发布竞争产品",
+                    "早期投资人大量套现",
+                    "股价下跌40%"
+                  ],
+                  "insight": "您的谨慎帮助您避免了损失。回顾您的决策过程，您是否识别出了那些被忽视的风险信号？"
+                }
+              }
+            ]
+          },
+          "awakening": {
+            "trigger": "investment_loss",
+            "message": "觉醒时刻",
+            "analysis": {
+              "confirmation_bias_detected": "您倾向于关注支持投资的信息，而忽视了风险信号",
+              "evidence": [
+                "正面信息的选择率",
+                "风险信息的忽视程度",
+                "社交认同的影响"
+              ],
+              "learning_point": "确认偏误会导致我们系统性地忽视反面证据，做出错误决策"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "phase-4-reflection",
+      "name": "反思与学习",
+      "description": "分析决策过程中的认知偏差",
+      "rounds": [
+        {
+          "round": 6,
+          "title": "认知偏差分析",
+          "context": "让我们回顾您的决策过程，分析其中的认知偏差。",
+          "analysis": {
+            "confirmationBiasIndicators": [
+              {
+                "name": "信息选择偏好",
+                "description": "您选择了多少正面信息 vs 负面信息？",
+                "userResult": "根据您的选择计算",
+                "typicalPattern": "大多数人会选择性关注支持自己初始观点的信息"
+              },
+              {
+                "name": "信息解读偏差",
+                "description": "您如何解读模棱两可的信息？",
+                "userResult": "倾向于往支持初始观点的方向解读",
+                "typicalPattern": "确认偏误会影响信息解读方向"
+              },
+              {
+                "name": "来源可信度评估",
+                "description": "您对不同信息来源的可信度判断",
+                "userResult": "朋友的成功故事 vs 专业分析",
+                "typicalPattern": "社交认同往往比专业分析更有说服力"
+              }
+            ],
+            "otherBiases": [
+              {
+                "name": "锚定效应",
+                "description": "初始印象对后续决策的影响"
+              },
+              {
+                "name": "过度自信",
+                "description": "高估自己的分析能力"
+              },
+              {
+                "name": "羊群效应",
+                "description": "受他人行为影响"
+              }
+            ]
+          },
+          "reflection": {
+            "question": "回顾您的决策过程，您认为自己是否存在确认偏误？",
+            "options": [
+              {
+                "id": "yes_obvious",
+                "text": "是的，很明显我忽视了一些风险信号"
+              },
+              {
+                "id": "yes_somewhat",
+                "text": "有一定程度的确认偏误"
+              },
+              {
+                "id": "not_sure",
+                "text": "不太确定"
+              },
+              {
+                "id": "no",
+                "text": "不认为有明显偏差"
+              }
+            ]
+          }
+        },
+        {
+          "round": 7,
+          "title": "克服策略",
+          "context": "学习如何在未来决策中克服确认偏误",
+          "strategies": [
+            {
+              "name": "反向思考",
+              "description": "主动寻找反对自己观点的证据",
+              "example": "问自己：'如果我的判断是错的，最可能的原因是什么？'"
+            },
+            {
+              "name": "魔鬼代言人",
+              "description": "设想有人强烈反对你的观点，尝试构建他们的论点",
+              "example": "列出至少3个反对投资的理由"
+            },
+            {
+              "name": "预设验尸",
+              "description": "假设决策失败，分析可能的原因",
+              "example": "想象一年后这笔投资亏损了50%，最可能的原因是什么？"
+            },
+            {
+              "name": "信息来源多样化",
+              "description": "确保信息来源的多元化",
+              "example": "不要只看自己认同的媒体，也要阅读不同观点的分析"
+            }
+          ],
+          "exercise": {
+            "question": "如果让您重新做决策，您会如何改变信息收集方式？",
+            "type": "open_reflection"
+          }
+        }
+      ]
+    }
+  ],
+  "mathematicalModel": {
+    "name": "Confirmation Bias Score (CBS)",
+    "formula": "CBS = (P_pos - P_neg) / (P_pos + P_neg + P_neu)",
+    "variables": {
+      "P_pos": "正面信息的选择权重",
+      "P_neg": "负面信息的选择权重",
+      "P_neu": "中性信息的选择权重"
+    },
+    "interpretation": {
+      "CBS > 0.3": "强确认偏误",
+      "0.1 < CBS <= 0.3": "中等确认偏误",
+      "-0.1 <= CBS <= 0.1": "相对平衡",
+      "CBS < -0.1": "逆向偏误（过度谨慎）"
+    },
+    "calculation": {
+      "step1": "统计用户选择的信息类型",
+      "step2": "计算各类信息的权重和",
+      "step3": "应用公式计算CBS",
+      "step4": "与决策结果对比分析"
+    }
+  },
+  "awakeningMoments": [
+    {
+      "trigger": "unexpected_loss",
+      "condition": "user_invested AND actual_result != expected_result",
+      "message": "意外的亏损揭示了被忽视的风险",
+      "intensity": "high"
+    },
+    {
+      "trigger": "information_gap_revealed",
+      "condition": "user_missed_critical_risk_info",
+      "message": "回顾信息选择，发现关键风险被遗漏",
+      "intensity": "medium"
+    },
+    {
+      "trigger": "pattern_recognition",
+      "condition": "user_recognizes_own_bias",
+      "message": "识别出自己在信息处理中的选择偏好",
+      "intensity": "high"
+    }
+  ],
+  "analytics": {
+    "trackMetrics": [
+      "information_selection_bias",
+      "source_credibility_weighting",
+      "decision_confidence",
+      "reflection_depth",
+      "learning_transfer"
+    ],
+    "benchmarkComparison": {
+      "averageCBS": 0.25,
+      "optimalCBS": -0.1,
+      "description": "大多数投资者存在中等程度的确认偏误"
+    }
+  },
+  "advancedChallenges": [
+    {
+      "title": "复杂投资组合",
+      "description": "管理包含多只股票的投资组合，体验确认偏误在多元化投资中的表现",
+      "difficulty": "advanced",
+      "decisionPatterns": [
+        "portfolio_confirmation_bias",
+        "selective_attention"
+      ]
+    },
+    {
+      "title": "市场泡沫识别",
+      "description": "识别市场泡沫中的群体性确认偏误",
+      "difficulty": "advanced",
+      "decisionPatterns": [
+        "herd_behavior",
+        "bubble_psychology"
+      ]
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "created": "2026-03-13",
+    "author": "Soul Auto-Evolution System",
+    "references": [
+      "Investopedia: Confirmation Bias",
+      "Behavioral Finance Research",
+      "Cognitive Psychology Studies"
+    ]
+  }
+}
