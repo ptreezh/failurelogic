@@ -543,6 +543,176 @@ class NavigationManager {
             cognitiveBiases: ["policy_transmission_misunderstanding", "complex_system_misunderstanding"]
           }
         ]
+      },
+      // Social Media Echo Chamber Scenario
+      {
+        id: "social-media-echo-chamber",
+        name: "社交媒体信息茧房",
+        description: "体验算法推荐如何创建信息茧房，强化确认偏误",
+        fullDescription: "在这个场景中，您将扮演社交媒体平台的内容审核员，面对算法推荐导致的认知陷阱。体验信息多样性、确认偏误、算法过滤、用户意识和群体极化等指标如何受到您的决策影响。",
+        difficulty: "intermediate",
+        estimatedDuration: 25,
+        targetPatterns: ["confirmation_bias", "echo_chamber", "algorithmic_filtering"],
+        decisionPattern: "信息茧房效应",
+        duration: "25-35分钟",
+        category: "认知偏差",
+        thumbnail: "/assets/images/social-media.jpg",
+        initialState: {
+          informationDiversity: 50,
+          confirmationBiasLevel: 30,
+          algorithmicFiltering: 40,
+          userAwareness: 25,
+          polarizationLevel: 20
+        },
+        advancedChallenges: [
+          {
+            title: "算法伦理决策",
+            description: "在商业利益和用户福祉之间做出权衡",
+            difficulty: "intermediate",
+            cognitiveBiases: ["algorithmic_bias", "engagement_over_wellbeing"]
+          },
+          {
+            title: "信息生态治理",
+            description: "设计健康的信息生态系统",
+            difficulty: "advanced",
+            cognitiveBiases: ["systemic_filter_blindness", "complex_system_misunderstanding"]
+          }
+        ]
+      },
+      // Historical Cases Scenarios
+      {
+        id: "hist-001",
+        name: "挑战者号航天飞机灾难",
+        description: "1986年挑战者号航天飞机发射决策过程分析",
+        fullDescription: "分析1986年挑战者号航天飞机发射前的决策过程，理解选择性信息处理、群体思维和时间压力如何导致了灾难性结果。",
+        difficulty: "intermediate",
+        estimatedDuration: 20,
+        targetPatterns: ["groupthink", "confirmation_bias", "time_pressure"],
+        decisionPattern: "组织决策失败",
+        duration: "20-30分钟",
+        category: "历史案例",
+        thumbnail: "/assets/images/challenger.jpg",
+        initialState: {
+          satisfaction: 50,
+          resources: 1000,
+          reputation: 50,
+          turn: 1
+        }
+      },
+      {
+        id: "hist-002",
+        name: "泰坦尼克号航线决策",
+        description: "1912年泰坦尼克号航行路线选择的过程分析",
+        fullDescription: "分析泰坦尼克号沉没前的决策过程，理解过度自信、商业压力和风险低估如何导致了这场灾难。",
+        difficulty: "beginner",
+        estimatedDuration: 15,
+        targetPatterns: ["overconfidence", "risk_underestimation", "commercial_pressure"],
+        decisionPattern: "风险决策失败",
+        duration: "15-25分钟",
+        category: "历史案例",
+        thumbnail: "/assets/images/titanic.jpg",
+        initialState: {
+          satisfaction: 50,
+          resources: 1000,
+          reputation: 50,
+          turn: 1
+        }
+      },
+      {
+        id: "hist-003",
+        name: "美国入侵猪湾事件",
+        description: "1961年美国支持的古巴入侵行动决策过程",
+        fullDescription: "分析猪湾入侵事件的决策过程，理解群体思维、选择性信息处理和政治考量如何导致了军事行动的失败。",
+        difficulty: "intermediate",
+        estimatedDuration: 20,
+        targetPatterns: ["groupthink", "selective_processing", "political_influence"],
+        decisionPattern: "政治军事决策失败",
+        duration: "20-30分钟",
+        category: "历史案例",
+        thumbnail: "/assets/images/bay-of-pigs.jpg",
+        initialState: {
+          satisfaction: 50,
+          resources: 1000,
+          reputation: 50,
+          turn: 1
+        }
+      },
+      {
+        id: "hist-004",
+        name: "Enron 公司财务欺诈案",
+        description: "2001年Enron公司通过特殊目的实体隐藏债务的会计欺诈事件",
+        fullDescription: "分析Enron财务欺诈案例，理解利益冲突、审计独立性缺失和公司文化如何导致了大规模的财务造假。",
+        difficulty: "advanced",
+        estimatedDuration: 25,
+        targetPatterns: ["conflict_of_interest", "ethical_fading", "governance_failure"],
+        decisionPattern: "企业治理失败",
+        duration: "25-35分钟",
+        category: "历史案例",
+        thumbnail: "/assets/images/enron.jpg",
+        initialState: {
+          satisfaction: 50,
+          resources: 1000,
+          reputation: 50,
+          turn: 1
+        }
+      },
+      // Love Relationship Scenarios
+      {
+        id: "love-relationship-001",
+        name: "恋爱关系认知训练 - 初识阶段",
+        description: "模拟恋爱关系初识阶段的决策过程，测试用户在情感决策中的思维模式",
+        fullDescription: "在这个场景中，您将面对恋爱关系初识阶段的各种情境挑战，测试并了解自己在情感决策中的认知模式。",
+        difficulty: "beginner",
+        estimatedDuration: 15,
+        targetPatterns: ["idealization_tendency", "confirmation_bias", "sunk_cost_effect"],
+        decisionPattern: "情感决策模式",
+        duration: "15-25分钟",
+        category: "恋爱关系",
+        thumbnail: "/assets/images/love-relationship.jpg",
+        initialState: {
+          satisfaction: 50,
+          resources: 1000,
+          reputation: 50,
+          turn: 1
+        }
+      },
+      {
+        id: "love-relationship-002",
+        name: "恋爱关系认知训练 - 长期关系维护",
+        description: "模拟长期恋爱关系中的挑战与决策，测试用户在维持关系中的认知能力",
+        fullDescription: "在这个场景中，您将面对长期恋爱关系中的各种挑战，学习如何在冲突中沟通、如何在压力下维护关系。",
+        difficulty: "intermediate",
+        estimatedDuration: 20,
+        targetPatterns: ["commitment_escalation", "social_expectation", "loss_aversion"],
+        decisionPattern: "长期关系维护",
+        duration: "20-30分钟",
+        category: "恋爱关系",
+        thumbnail: "/assets/images/love-relationship.jpg",
+        initialState: {
+          satisfaction: 50,
+          resources: 1000,
+          reputation: 50,
+          turn: 1
+        }
+      },
+      {
+        id: "love-relationship-003",
+        name: "恋爱关系认知训练 - 沟通与理解",
+        description: "专注于恋爱关系中的沟通技巧和相互理解，测试用户的情感智商",
+        fullDescription: "在这个场景中，您将专注于恋爱关系中的沟通和相互理解，学习如何更好地表达自己、理解伴侣。",
+        difficulty: "intermediate",
+        estimatedDuration: 15,
+        targetPatterns: ["personalization_tendency", "mind_reading", "emotional_reasoning"],
+        decisionPattern: "情感沟通模式",
+        duration: "15-25分钟",
+        category: "恋爱关系",
+        thumbnail: "/assets/images/love-relationship.jpg",
+        initialState: {
+          satisfaction: 50,
+          resources: 1000,
+          reputation: 50,
+          turn: 1
+        }
       }
     ];
   }
@@ -8138,6 +8308,15 @@ class GameManager {
     } else if (scenarioId === 'investment-information-processing') {
       this.startInvestmentInformationProcessingGame();
       return;
+    } else if (scenarioId === 'social-media-echo-chamber') {
+      this.startSocialMediaEchoChamberGame();
+      return;
+    } else if (scenarioId.startsWith('hist-')) {
+      this.startHistoricalCaseGame(scenarioId);
+      return;
+    } else if (scenarioId.startsWith('love-relationship-')) {
+      this.startLoveRelationshipGame(scenarioId);
+      return;
     }
 
     // Get the selected difficulty from user preferences
@@ -8275,6 +8454,15 @@ class GameManager {
       return;
     } else if (scenarioId === 'investment-confirmation-bias') {
       GameManager.startInvestmentConfirmationBiasGame();
+      return;
+    } else if (scenarioId === 'social-media-echo-chamber') {
+      GameManager.startSocialMediaEchoChamberGame();
+      return;
+    } else if (scenarioId.startsWith('hist-')) {
+      GameManager.startHistoricalCaseGame(scenarioId);
+      return;
+    } else if (scenarioId.startsWith('love-relationship-')) {
+      GameManager.startLoveRelationshipGame(scenarioId);
       return;
     }
 
@@ -11423,6 +11611,98 @@ class GameManager {
     }
 
     Log.log('✅ Investment Information Processing game initialized');
+  }
+
+  static startSocialMediaEchoChamberGame() {
+    Log.log('📱 Starting Social Media Echo Chamber game...');
+
+    this.showGameModal();
+
+    const container = document.getElementById('game-container');
+    if (container && typeof initSocialMediaEchoChamber === 'function') {
+      initSocialMediaEchoChamber('game-container');
+    } else {
+      container.innerHTML = '<div class="error">社交媒体信息茧房场景加载失败</div>';
+    }
+
+    Log.log('✅ Social Media Echo Chamber game initialized');
+  }
+
+  static startHistoricalCaseGame(scenarioId) {
+    Log.log('📚 Starting Historical Case game:', scenarioId);
+
+    const initialState = {
+      satisfaction: 50,
+      resources: 1000,
+      reputation: 50,
+      turn_number: 1,
+      max_turns: 10,
+      decisions: [],
+      current_step: 0
+    };
+
+    AppState.gameSession = {
+      gameId: 'historical-' + Date.now(),
+      scenarioId: scenarioId,
+      difficulty: AppState.userPreferences.difficulty,
+      status: 'active',
+      gameState: initialState,
+      currentTurn: 1,
+      decision_history: [],
+      patterns: []
+    };
+
+    this.showGameModal();
+
+    const container = document.getElementById('game-container');
+    if (container && typeof initHistoricalCases === 'function') {
+      const router = initHistoricalCases('game-container', ApiService.configManager);
+      if (router) {
+        router.initialize(scenarioId);
+      }
+    } else {
+      container.innerHTML = '<div class="error">历史案例场景加载失败</div>';
+    }
+
+    Log.log('✅ Historical Case game initialized:', scenarioId);
+  }
+
+  static startLoveRelationshipGame(scenarioId) {
+    Log.log('💕 Starting Love Relationship game:', scenarioId);
+
+    const initialState = {
+      satisfaction: 50,
+      trust: 50,
+      turn_number: 1,
+      max_turns: 5,
+      decisions: [],
+      current_step: 0
+    };
+
+    AppState.gameSession = {
+      gameId: 'love-relationship-' + Date.now(),
+      scenarioId: scenarioId,
+      difficulty: AppState.userPreferences.difficulty,
+      status: 'active',
+      gameState: initialState,
+      currentTurn: 1,
+      decision_history: [],
+      patterns: []
+    };
+
+    this.showGameModal();
+
+    const container = document.getElementById('game-container');
+    if (container && typeof initLoveRelationship === 'function') {
+      const router = initLoveRelationship('game-container', ApiService.configManager);
+      if (router) {
+        router.initialize(scenarioId);
+      }
+    } else {
+      container.innerHTML = '<div class="error">恋爱关系场景加载失败</div>';
+    }
+
+    Log.log('✅ Love Relationship game initialized:', scenarioId);
   }
 
   static generatePersonalizedRecommendations(isFailure = false) {
