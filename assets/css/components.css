@@ -155,16 +155,23 @@
 
 /* Cards */
 .card {
-  background: var(--bg-primary);
+  background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
   border: 1px solid var(--border-light);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-2xl);
   overflow: hidden;
   transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
 }
 
 .card:hover {
-  box-shadow: var(--shadow-lg);
-  border-color: var(--primary-200);
+  box-shadow: var(--shadow-xl), 0 0 0 1px var(--primary-200);
+  border-color: var(--primary-300);
+  transform: translateY(-4px);
+}
+
+.card:active {
+  transform: translateY(-2px) scale(0.995);
+  transition: all 0.1s ease;
 }
 
 .card-header {
@@ -202,7 +209,9 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--bg-overlay);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -229,19 +238,34 @@ body.modal-open {
 
 .modal-content {
   background: var(--bg-primary);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-2xl);
   max-width: 95vw;
   max-height: 95vh;
-  width: 800px;  /* ✅ Increased width for better content display */
-  box-shadow: var(--shadow-xl);
+  width: 800px;
+  box-shadow: var(--shadow-xl), 0 0 0 1px rgba(0, 0, 0, 0.05);
   overflow-y: auto;
   overflow-x: hidden;
-  transform: scale(0.9);
-  transition: transform var(--transition-normal);
+  transform: scale(0.92) translateY(20px);
+  opacity: 0;
+  transition: all var(--transition-normal);
+  scroll-behavior: smooth;
+  will-change: transform, opacity;
+}
 
-  /* Custom scrollbar for better visibility */
-  scrollbar-width: thin;
-  scrollbar-color: var(--border-light) transparent;
+.modal.active .modal-content {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+.modal.closing .modal-content {
+  transform: scale(0.92) translateY(20px);
+  opacity: 0;
+}
+
+.modal.closing {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .modal-content::-webkit-scrollbar {
@@ -260,6 +284,67 @@ body.modal-open {
 
 .modal-content::-webkit-scrollbar-thumb:hover {
   background: var(--text-secondary);
+}
+
+.modal-header {
+  position: sticky;
+  top: 0;
+  background: var(--bg-primary);
+  z-index: 10;
+  padding: var(--space-lg) var(--space-xl);
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-lg);
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.modal-close:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  transform: rotate(90deg);
+}
+
+.modal-close:focus {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+}
+
+.modal-body {
+  padding: var(--space-xl);
+}
+
+/* Focus trap for accessibility */
+.modal-content:focus {
+  outline: none;
+}
+
+.modal-content *:focus {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
 }
 
 .modal.active .modal-content {
@@ -628,4 +713,67 @@ body.modal-open {
     color: #3498db;
     font-weight: bold;
     margin: 0;
+}
+
+/* Performance Optimizations */
+.scenario-card,
+.modal-content,
+.nav-item,
+.btn {
+  will-change: transform, opacity;
+}
+
+.scenario-card {
+  contain: layout style paint;
+}
+
+.scenarios-grid {
+  contain: layout;
+}
+
+/* Accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.modal[aria-hidden="true"] {
+  display: none;
+}
+
+.modal[aria-hidden="false"] {
+  display: flex;
+}
+
+/* Focus trap */
+.focus-trap {
+  outline: none;
+}
+
+.focus-trap *:focus {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary-600);
+  color: white;
+  padding: var(--space-sm) var(--space-md);
+  z-index: 10000;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
 }

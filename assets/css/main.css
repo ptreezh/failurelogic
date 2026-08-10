@@ -252,6 +252,21 @@ img {
   font-weight: 500;
   cursor: pointer;
   transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 60%;
+  height: 3px;
+  background: var(--primary-500);
+  border-radius: var(--radius-full);
+  transition: transform var(--transition-fast);
 }
 
 .nav-item:hover {
@@ -259,9 +274,17 @@ img {
   color: var(--text-primary);
 }
 
+.nav-item:hover::after {
+  transform: translateX(-50%) scaleX(0.5);
+}
+
 .nav-item.active {
   background: var(--primary-50);
   color: var(--primary-600);
+}
+
+.nav-item.active::after {
+  transform: translateX(-50%) scaleX(1);
 }
 
 .nav-actions {
@@ -307,10 +330,22 @@ img {
 .page {
   display: none;
   min-height: calc(100vh - 64px);
+  animation: pageEnter 0.4s ease forwards;
 }
 
 .page.active {
   display: block;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .page-container {
@@ -991,7 +1026,9 @@ img {
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--bg-overlay);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1015,13 +1052,28 @@ img {
   width: 90%;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: var(--shadow-xl);
-  transform: scale(0.9);
-  transition: transform var(--transition-normal);
+  box-shadow: var(--shadow-xl), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  transform: scale(0.92) translateY(20px);
+  opacity: 0;
+  transition: all var(--transition-normal);
+  scroll-behavior: smooth;
+  will-change: transform, opacity;
 }
 
 .modal.active .modal-content {
-  transform: scale(1);
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+.modal.closing .modal-content {
+  transform: scale(0.92) translateY(20px);
+  opacity: 0;
+}
+
+.modal.closing {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .modal-header {
@@ -3393,5 +3445,85 @@ img {
   
   .immersive-stats {
     grid-template-columns: 1fr;
+  }
+}
+
+/* 全局响应式优化 */
+@media (max-width: 768px) {
+  .scenarios-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+  
+  .scenario-card {
+    border-radius: var(--radius-xl);
+  }
+  
+  .scenario-card:hover {
+    transform: none;
+  }
+  
+  .scenario-card:active {
+    transform: scale(0.98);
+  }
+  
+  .modal-content {
+    width: 95vw;
+    max-height: 90vh;
+    border-radius: var(--radius-xl);
+  }
+  
+  .modal-header {
+    padding: var(--space-md);
+  }
+  
+  .modal-body {
+    padding: var(--space-md);
+  }
+  
+  .nav-container {
+    padding: var(--space-sm);
+  }
+  
+  .nav-item span {
+    display: none;
+  }
+  
+  .nav-item {
+    padding: var(--space-sm);
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .hero-section {
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+  
+  .page-container {
+    padding: var(--space-md) var(--space-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .scenarios-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+  
+  .modal-content {
+    width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .feature-card {
+    padding: var(--space-md);
   }
 }
