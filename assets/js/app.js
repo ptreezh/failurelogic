@@ -207,8 +207,8 @@ class NavigationManager {
     return [
       {
         id: "coffee-shop-linear-thinking",
-        name: "咖啡店非线性效应",
-        description: "非线性效应体验场景",
+        name: "咖啡店线性思维",
+        description: "线性思维陷阱场景",
         fullDescription: "在这个场景中，您将管理一家咖啡店，体验非线性效应在复杂商业环境中的影响。在复杂的系统中，原因和结果之间往往不是简单的线性关系，而是存在非线性效应，这需要我们采用更复杂的思维模式来理解和应对。",
         difficulty: "beginner",
         estimatedDuration: 15,
@@ -272,8 +272,8 @@ class NavigationManager {
       },
       {
         id: "investment-confirmation-bias",
-        name: "投资信息处理",
-        description: "信息处理模式场景",
+        name: "投资确认偏误",
+        description: "确认偏误场景",
         fullDescription: "在投资决策中体验如何处理不同类型的信息，以及信息处理方式如何影响我们的风险判断。在复杂决策中，我们需要学会平衡不同来源的信息，避免只关注支持我们预设观点的信息。",
         difficulty: "advanced",
         estimatedDuration: 25,
@@ -948,6 +948,10 @@ class NavigationManager {
       const diffSelector = document.getElementById('difficulty-level');
       if (diffSelector) {
         diffSelector.value = AppState.userPreferences.difficulty;
+      }
+    } else if (page === 'exponential') {
+      if (window.ExponentialPageRouter && typeof window.ExponentialPageRouter.initialize === 'function') {
+        window.ExponentialPageRouter.initialize();
       }
     }
   }
@@ -8311,11 +8315,29 @@ class GameManager {
     } else if (scenarioId === 'social-media-echo-chamber') {
       this.startSocialMediaEchoChamberGame();
       return;
-    } else if (scenarioId.startsWith('hist-')) {
+    } else if (scenarioId.startsWith('hist-') || scenarioId.startsWith('adv-hist-')) {
       this.startHistoricalCaseGame(scenarioId);
       return;
     } else if (scenarioId.startsWith('love-relationship-')) {
       this.startLoveRelationshipGame(scenarioId);
+      return;
+    } else if (scenarioId === 'business-strategy-reasoning') {
+      this.startBusinessStrategyGame();
+      return;
+    } else if (scenarioId === 'public-policy-making') {
+      this.startPublicPolicyGame();
+      return;
+    } else if (scenarioId === 'personal-finance-decision') {
+      this.startPersonalFinanceGame();
+      return;
+    } else if (scenarioId === 'climate-change-policy') {
+      this.startClimateChangeGame();
+      return;
+    } else if (scenarioId === 'ai-governance-regulation') {
+      this.startAIGovernanceGame();
+      return;
+    } else if (scenarioId === 'financial-crisis-response') {
+      this.startFinancialCrisisGame();
       return;
     }
 
@@ -8458,11 +8480,32 @@ class GameManager {
     } else if (scenarioId === 'social-media-echo-chamber') {
       GameManager.startSocialMediaEchoChamberGame();
       return;
-    } else if (scenarioId.startsWith('hist-')) {
+    } else if (scenarioId.startsWith('hist-') || scenarioId.startsWith('adv-hist-')) {
       GameManager.startHistoricalCaseGame(scenarioId);
       return;
     } else if (scenarioId.startsWith('love-relationship-')) {
       GameManager.startLoveRelationshipGame(scenarioId);
+      return;
+    } else if (scenarioId === 'investment-information-processing') {
+      GameManager.startInvestmentInformationProcessingGame();
+      return;
+    } else if (scenarioId === 'business-strategy-reasoning') {
+      GameManager.startBusinessStrategyGame();
+      return;
+    } else if (scenarioId === 'public-policy-making') {
+      GameManager.startPublicPolicyGame();
+      return;
+    } else if (scenarioId === 'personal-finance-decision') {
+      GameManager.startPersonalFinanceGame();
+      return;
+    } else if (scenarioId === 'climate-change-policy') {
+      GameManager.startClimateChangeGame();
+      return;
+    } else if (scenarioId === 'ai-governance-regulation') {
+      GameManager.startAIGovernanceGame();
+      return;
+    } else if (scenarioId === 'financial-crisis-response') {
+      GameManager.startFinancialCrisisGame();
       return;
     }
 
@@ -8519,7 +8562,7 @@ class GameManager {
       return this.generateInvestmentUI(scenario);
     } else if (scenarioId === 'relationship-time-delay') {
       return this.generateRelationshipUI(scenario);
-    } else if (scenarioId.startsWith('game-')) {
+    } else if (scenarioId.startsWith('game-') || scenarioId.startsWith('adv-game-')) {
       return this.generateGameScenarioUI(scenarioId, scenario);
     } else {
       return this.generateGenericScenarioUI(scenario);

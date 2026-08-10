@@ -8,10 +8,10 @@ app.use(express.static(path.join(__dirname)));
 
 // Route to serve index.html for all routes (for SPA)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'minimal-complete-index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
-  console.log(`Serving minimal-complete-index.html as the main page`);
+  console.log(`Serving index.html as the main page`);
 });
