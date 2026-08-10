@@ -211,38 +211,40 @@ class ClimateChangePageRouter extends BasePageRouter {
   
   renderStartPage() {
     return `
-      <div class="game-page start-page">
+      <div class="game-page start-page compact-start-page">
         <h2>🌍 全球气候变化政策制定博弈</h2>
         <div class="scenario-intro">
           <p>作为联合国气候变化框架公约的政策顾问，你掌握科学数据表明全球气温可能在未来30年内上升2.5°C。你面临制定国际减排协议的挑战。各国经济发展水平、碳排放量和减排能力差异巨大。</p>
-          <div class="stats-grid">
-            <div class="stat-item">
-              <span class="stat-label">💰 气候基金</span>
-              <span class="stat-value">¥${this.gameState.resources.toLocaleString()}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">🌐 国际声望</span>
-              <span class="stat-value">${this.gameState.reputation}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">📉 减排进度</span>
-              <span class="stat-value">${this.gameState.emission_reduction}%</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">🤝 国际合作</span>
-              <span class="stat-value">${this.gameState.international_cooperation}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">🔬 技术进步</span>
-              <span class="stat-value">${this.gameState.technological_advancement}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">⚠️ 气候风险</span>
-              <span class="stat-value">${this.gameState.climate_risk}</span>
-            </div>
+        </div>
+        <div class="compact-stats-grid">
+          <div class="stat-item">
+            <span class="stat-label">💰 气候基金</span>
+            <span class="stat-value">¥${this.gameState.resources.toLocaleString()}</span>
           </div>
-          <div class="cognitive-bias-hint">
-            <p><strong>💭 可能的思维陷阱：</strong></p>
+          <div class="stat-item">
+            <span class="stat-label">🌐 国际声望</span>
+            <span class="stat-value">${this.gameState.reputation}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">📉 减排进度</span>
+            <span class="stat-value">${this.gameState.emission_reduction}%</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">🤝 国际合作</span>
+            <span class="stat-value">${this.gameState.international_cooperation}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">🔬 技术进步</span>
+            <span class="stat-value">${this.gameState.technological_advancement}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">⚠️ 气候风险</span>
+            <span class="stat-value">${this.gameState.climate_risk}</span>
+          </div>
+        </div>
+        <div class="collapsible-header" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">💭 可能的思维陷阱</div>
+        <div class="collapsible-content">
+          <div class="compact-bias-hint">
             <ul>
               <li>"确认偏误" - 只关注支持自己观点的数据</li>
               <li>"可得性启发" - 过度重视近期事件</li>
@@ -251,9 +253,11 @@ class ClimateChangePageRouter extends BasePageRouter {
               <li>"公平原则偏见" - 对公平有不同的理解和期望</li>
             </ul>
           </div>
-          <p class="game-goal"><strong>🎯 目标：</strong>在多国博弈中制定有效的减排协议，平衡公平与效率</p>
         </div>
-        <div class="actions">
+        <div class="compact-game-goal">
+          <strong>🎯 目标：</strong>在多国博弈中制定有效的减排协议，平衡公平与效率
+        </div>
+        <div class="compact-actions">
           <button class="btn btn-primary" onclick="window.climateChangeRouter.startGame(); window.climateChangeRouter.render();">开始政策制定</button>
         </div>
       </div>
@@ -384,42 +388,39 @@ class ClimateChangePageRouter extends BasePageRouter {
 
     return `
       <div class="game-page turn-${turn}-page">
-        <div class="page-header">
+        <div class="compact-page-header">
           <h2>📊 第${turn}轮气候政策决策</h2>
           <div class="progress">第 ${this.currentTurn} 轮</div>
         </div>
         
-        <div class="state-display">
-          <h3>📈 当前全球气候状况</h3>
-          <div class="state-grid">
-            <div class="state-item">
-              <span class="stat-label">💰 气候基金</span>
-              <span class="state-value">¥${Math.round(this.gameState.resources).toLocaleString()}</span>
-            </div>
-            <div class="state-item">
-              <span class="stat-label">🌐 国际声望</span>
-              <span class="state-value">${Math.round(this.gameState.reputation)}</span>
-            </div>
-            <div class="state-item">
-              <span class="stat-label">📉 减排进度</span>
-              <span class="state-value">${Math.round(this.gameState.emission_reduction)}%</span>
-            </div>
-            <div class="state-item">
-              <span class="stat-label">🤝 国际合作</span>
-              <span class="state-value">${Math.round(this.gameState.international_cooperation)}</span>
-            </div>
-            <div class="state-item">
-              <span class="stat-label">🔬 技术进步</span>
-              <span class="state-value">${Math.round(this.gameState.technological_advancement)}</span>
-            </div>
-            <div class="state-item">
-              <span class="stat-label">⚠️ 气候风险</span>
-              <span class="state-value">${Math.round(this.gameState.climate_risk)}</span>
-            </div>
+        <div class="state-display-panel compact">
+          <div class="state-item">
+            <span class="state-label">💰 气候基金</span>
+            <span class="state-value">¥${Math.round(this.gameState.resources).toLocaleString()}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">🌐 国际声望</span>
+            <span class="state-value">${Math.round(this.gameState.reputation)}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">📉 减排进度</span>
+            <span class="state-value">${Math.round(this.gameState.emission_reduction)}%</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">🤝 国际合作</span>
+            <span class="state-value">${Math.round(this.gameState.international_cooperation)}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">🔬 技术进步</span>
+            <span class="state-value">${Math.round(this.gameState.technological_advancement)}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">⚠️ 气候风险</span>
+            <span class="state-value">${Math.round(this.gameState.climate_risk)}</span>
           </div>
         </div>
         
-        <div class="situation-context">
+        <div class="compact-situation">
           <h3>📝 情况描述</h3>
           <p>${
             turn === 1 
@@ -432,23 +433,26 @@ class ClimateChangePageRouter extends BasePageRouter {
         
         <div class="decision-options">
           <h3>🤔 可供选择的政策</h3>
-          <div class="options-grid">
+          <div class="compact-options-grid">
             ${options.map((option, index) => `
-              <div class="option-card" onclick="window.climateChangeRouter.selectOption(${index});">
+              <div class="compact-option-card" onclick="window.climateChangeRouter.selectOption(${index});">
                 <h4>${option.label}</h4>
                 <p>${option.description}</p>
                 ${option.thinking ? `<div class="thinking-pattern">💡 你的想法: ${option.thinking}</div>` : ''}
                 ${option.expected_equity !== undefined ? `
                 <div class="expected-outcome">
-                  <div>预期公平度: <span class="value">${option.expected_equity}%</span></div>
+                  <span>预期公平度</span>
+                  <span class="value">${option.expected_equity}%</span>
                 </div>` : ''}
                 ${option.expected_compliance !== undefined ? `
                 <div class="expected-outcome">
-                  <div>预期履约率: <span class="value">${option.expected_compliance}%</span></div>
+                  <span>预期履约率</span>
+                  <span class="value">${option.expected_compliance}%</span>
                 </div>` : ''}
                 ${option.expected_efficiency !== undefined ? `
                 <div class="expected-outcome">
-                  <div>预期效率: <span class="value">${option.expected_efficiency}%</span></div>
+                  <span>预期效率</span>
+                  <span class="value">${option.expected_efficiency}%</span>
                 </div>` : ''}
                 <button class="choice-btn" onclick="window.climateChangeRouter.makeDecision('climate_choice_${turn}', '${option.id}'); window.climateChangeRouter.render();">
                   选择此政策
@@ -458,7 +462,7 @@ class ClimateChangePageRouter extends BasePageRouter {
           </div>
         </div>
         
-        <div class="actions">
+        <div class="compact-actions">
           <button class="btn btn-secondary" onclick="NavigationManager.navigateTo('scenarios')">返回场景列表</button>
         </div>
       </div>

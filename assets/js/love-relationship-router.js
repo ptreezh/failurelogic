@@ -177,14 +177,14 @@
       if (!this.currentCase) return;
 
       const html = `
-        <div class="scenario-intro relationship-intro">
+        <div class="scenario-intro relationship-intro compact-start-page">
           <h1>${this.currentCase.title}</h1>
           <p class="description">${this.currentCase.description}</p>
-          <div class="case-meta">
+          <div class="case-meta compact-stats-grid">
             <span class="case-type">💕 恋爱关系训练</span>
             <span class="case-steps">📋 ${this.currentCase.steps.length} 个情境</span>
           </div>
-          <div class="instructions">
+          <div class="instructions compact-situation">
             <h3>场景说明</h3>
             <p>您将面对恋爱关系中的真实情境挑战。每个选择都反映了特定的认知模式，请根据您的真实想法做出选择。</p>
             <p class="warning">没有"正确"答案，但每个选择都有其心理含义。完成后的分析将帮助您更好地了解自己的情感决策模式。</p>
@@ -214,16 +214,18 @@
 
       const step = this.currentCase.steps[this.currentStep];
       const html = `
-        <div class="scenario-round relationship-round">
-          <div class="round-header">
+        <div class="scenario-round relationship-round compact-page-header">
+          <div class="round-header compact-stats-grid">
             <span class="step-indicator">情境 ${this.currentStep + 1} / ${this.currentCase.steps.length}</span>
+          </div>
+          <div class="round-context compact-situation">
             <h2>${step.situation}</h2>
           </div>
-          <div class="decision-panel">
+          <div class="decision-panel compact-actions">
             <h3>您的选择：</h3>
-            <div class="options-list">
+            <div class="options-list compact-options-grid">
               ${step.options.map((opt, idx) => `
-                <button class="option-btn relationship-option" 
+                <button class="option-btn relationship-option compact-option-card" 
                         onclick="window.loveRelationshipRouter.makeDecision(${idx})">
                   ${opt}
                 </button>
@@ -254,10 +256,10 @@
       if (!this.currentCase) return;
 
       const html = `
-        <div class="scenario-conclusion relationship-conclusion">
+        <div class="scenario-conclusion relationship-conclusion compact-start-page">
           <h1>情境分析：${this.currentCase.title}</h1>
           
-          <div class="decisions-review-section">
+          <div class="decisions-review-section compact-situation">
             <h2>🎯 您的决策路径</h2>
             <div class="decisions-list">
               ${this.decisions.map(d => `
@@ -270,7 +272,7 @@
             </div>
           </div>
 
-          <div class="analysis-section">
+          <div class="analysis-section compact-situation">
             <h2>📊 认知模式分析</h2>
             <p><strong>测试目的：</strong>${this.currentCase.analysis.purpose}</p>
             <div class="patterns-tested">
@@ -283,14 +285,14 @@
             </div>
           </div>
 
-          <div class="learning-section">
+          <div class="learning-section compact-situation">
             <h2>📚 学习要点</h2>
             <ul>
               ${this.currentCase.analysis.learningObjectives.map(obj => `<li>${obj}</li>`).join('')}
             </ul>
           </div>
 
-          <div class="action-buttons">
+          <div class="action-buttons compact-actions">
             <button onclick="window.loveRelationshipRouter.restart()">重新体验</button>
             <button onclick="window.loveRelationshipRouter.loadNextCase()">下一个情境</button>
             <button onclick="NavigationManager.navigateTo('scenarios')">返回场景列表</button>

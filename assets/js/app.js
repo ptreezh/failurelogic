@@ -1598,38 +1598,38 @@ class CoffeeShopPageRouter {
 
   renderStartPage() {
     return `
-      <div class="game-page start-page">
+      <div class="game-page start-page compact-start-page">
         <h2>☕ 咖啡店经营挑战</h2>
         <div class="scenario-intro">
           <p>你刚刚接手一家位于繁华商业区的咖啡店。</p>
-          <div class="stats-grid">
-            <div class="stat-item">
-              <span class="stat-label">💰 初始资金</span>
-              <span class="stat-value">¥${this.gameState.resources}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">☕ 当前提供</span>
-              <span class="stat-value">3种基础咖啡</span>
-            </div>
+        </div>
+        <div class="compact-stats-grid">
+          <div class="stat-item">
+            <span class="stat-label">💰 初始资金</span>
+            <span class="stat-value">¥${this.gameState.resources}</span>
           </div>
-          <div class="customer-feedback">
-            <p><strong>👥 顾客反馈：</strong></p>
-            <p class="feedback-quote">"咖啡品质不错，但选择太少。"</p>
+          <div class="stat-item">
+            <span class="stat-label">☕ 当前提供</span>
+            <span class="stat-value">3种基础咖啡</span>
           </div>
-          <div class="friend-advice">
-            <p><strong>👨‍💼 朋友建议：</strong></p>
-            <p class="advice-quote">"多进几种咖啡豆，多准备几种选择。"</p>
-          </div>
-          <div class="linear-thinking-hint">
-            <p><strong>💭 你的直觉想法：</strong></p>
+        </div>
+        <div class="compact-situation">
+          <p><strong>👥 顾客反馈：</strong>"咖啡品质不错，但选择太少。"</p>
+          <p><strong>👨‍💼 朋友建议：</strong>"多进几种咖啡豆，多准备几种选择。"</p>
+        </div>
+        <div class="collapsible-header" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">💭 你的直觉想法</div>
+        <div class="collapsible-content">
+          <div class="compact-bias-hint">
             <ul>
               <li>"每多1种咖啡，应该能多吸引10个顾客"</li>
               <li>"选择越多，收入越高"</li>
             </ul>
           </div>
-          <p class="game-goal"><strong>🎯 目标：</strong>经营5个月，让咖啡店存活并盈利</p>
         </div>
-        <div class="actions">
+        <div class="compact-game-goal">
+          <strong>🎯 目标：</strong>经营5个月，让咖啡店存活并盈利
+        </div>
+        <div class="compact-actions">
           <button class="btn btn-primary" onclick="window.coffeeShopRouter.startGame(); window.coffeeShopRouter.render();">开始经营</button>
         </div>
       </div>
@@ -2627,15 +2627,15 @@ class RelationshipTimeDelayPageRouter {
 
   renderStartPage() {
     return `
-      <div class="game-page start-page">
+      <div class="game-page start-page compact-start-page">
         <h1>💕 恋爱关系时间延迟</h1>
-        <div class="intro">
+        <div class="scenario-intro">
           <p>你刚刚开始和小林交往，这是一段充满期待的关系。</p>
           <p>但是，在恋爱关系中，你的投入和反馈之间存在<strong>时间延迟</strong>。</p>
           <p>你现在的付出，可能要几周后才会看到效果。</p>
           <p class="warning">⚠️ 非线性效应：你以为"每天发消息=立即增加好感"，但现实是...</p>
         </div>
-        <div class="actions">
+        <div class="compact-actions">
           <button class="btn btn-primary" onclick="window.relationshipTimeDelayRouter.startGame(); window.relationshipTimeDelayRouter.render();">
             开始交往
           </button>
@@ -7641,30 +7641,34 @@ class InvestmentConfirmationBiasPageRouter {
   
   renderStartPage() {
     return `
-      <div class="game-page start-page">
+      <div class="game-page start-page compact-start-page">
         <h2>📈 投资决策挑战</h2>
         <div class="scenario-intro">
           <p>你刚获得一笔投资资金，准备进入股票市场。</p>
-          <div class="stats-grid">
-            <div class="stat-item">
-              <span class="stat-label">💰 初始资金</span>
-              <span class="stat-value">¥${this.gameState.portfolio}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">📚 初始知识</span>
-              <span class="stat-value">0</span>
-            </div>
+        </div>
+        <div class="compact-stats-grid">
+          <div class="stat-item">
+            <span class="stat-label">💰 初始资金</span>
+            <span class="stat-value">¥${this.gameState.portfolio}</span>
           </div>
-          <div class="confirmation-bias-hint">
-            <p><strong>💭 你的直觉想法：</strong></p>
+          <div class="stat-item">
+            <span class="stat-label">📚 初始知识</span>
+            <span class="stat-value">0</span>
+          </div>
+        </div>
+        <div class="collapsible-header" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">💭 你的直觉想法</div>
+        <div class="collapsible-content">
+          <div class="compact-bias-hint">
             <ul>
               <li>"看好科技股，就多找支持科技股的分析"</li>
               <li>"坚持自己的判断，忽略不同观点"</li>
             </ul>
           </div>
-          <p class="game-goal"><strong>🎯 目标：</strong>投资8个季度，实现资金增值并学习多元化投资</p>
         </div>
-        <div class="actions">
+        <div class="compact-game-goal">
+          <strong>🎯 目标：</strong>投资8个季度，实现资金增值并学习多元化投资
+        </div>
+        <div class="compact-actions">
           <button class="btn btn-enhanced btn-enhanced-primary btn-enhanced-large" onclick="window.investmentRouter.startGame(); window.investmentRouter.render();">开始投资</button>
         </div>
       </div>
@@ -12306,29 +12310,29 @@ class ExtendedMultiPhasePageRouter {
 
   renderStartPage() {
     return `
-      <div class="game-page start-page">
+      <div class="game-page start-page compact-start-page">
         <h2>🚀 扩展多阶段决策挑战</h2>
         <div class="scenario-intro">
           <p>欢迎来到扩展版多阶段决策挑战！</p>
           <p>在这个挑战中，您将经历长达${this.gameState.max_turns}回合的复杂决策过程，每个回合都考验着您的战略思维和长远规划能力。</p>
-          
-          <div class="stats-grid">
-            <div class="stat-item">
-              <span class="stat-label">📊 总回合数</span>
-              <span class="stat-value">${this.gameState.max_turns}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">🎯 总阶段数</span>
-              <span class="stat-value">4</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">💪 挑战难度</span>
-              <span class="stat-value advanced">高级</span>
-            </div>
+        </div>
+        <div class="compact-stats-grid">
+          <div class="stat-item">
+            <span class="stat-label">📊 总回合数</span>
+            <span class="stat-value">${this.gameState.max_turns}</span>
           </div>
-          
-          <div class="scenario-goals">
-            <h3>🎯 挑战目标</h3>
+          <div class="stat-item">
+            <span class="stat-label">🎯 总阶段数</span>
+            <span class="stat-value">4</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">💪 挑战难度</span>
+            <span class="stat-value advanced">高级</span>
+          </div>
+        </div>
+        <div class="collapsible-header" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">🎯 挑战目标</div>
+        <div class="collapsible-content">
+          <div class="compact-bias-hint">
             <ul>
               <li>平衡资源、满意度和声誉三个关键指标</li>
               <li>在长期内实现可持续增长</li>
@@ -12337,8 +12341,7 @@ class ExtendedMultiPhasePageRouter {
             </ul>
           </div>
         </div>
-        
-        <div class="actions">
+        <div class="compact-actions">
           <button class="btn btn-primary" onclick="window.extendedMultiPhaseRouter.startGame(); window.extendedMultiPhaseRouter.render();">
             开始挑战
           </button>

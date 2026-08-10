@@ -494,35 +494,39 @@ class InvestmentInformationProcessingPageRouter extends BasePageRouter {
 
   renderStartPage() {
     return `
-      <div class="game-page start-page investment-information-processing">
+      <div class="game-page start-page investment-information-processing compact-start-page">
         <h2>🔍 投资信息处理挑战</h2>
         <div class="scenario-intro">
           <p>你是一位投资者，面对海量信息需要做出投资决策。关键是如何筛选和整合信息源，避免确认偏误。</p>
-          <div class="stats-grid state-display-panel">
-            <div class="state-item">
-              <span class="state-label">💰 初始资金</span>
-              <span class="state-value">¥${this.gameState.portfolio.toLocaleString()}</span>
-            </div>
-            <div class="state-item">
-              <span class="state-label">📚 初始知识</span>
-              <span class="state-value">${this.gameState.knowledge}</span>
-            </div>
-            <div class="state-item">
-              <span class="state-label">⚖️ 信心水平</span>
-              <span class="state-value">${this.gameState.confidence_level}%</span>
-            </div>
+        </div>
+        <div class="compact-stats-grid">
+          <div class="stat-item">
+            <span class="stat-label">💰 初始资金</span>
+            <span class="stat-value">¥${this.gameState.portfolio.toLocaleString()}</span>
           </div>
-          <div class="cognitive-bias-hint">
-            <p><strong>💭 认知陷阱提示：</strong></p>
+          <div class="stat-item">
+            <span class="stat-label">📚 初始知识</span>
+            <span class="stat-value">${this.gameState.knowledge}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">⚖️ 信心水平</span>
+            <span class="stat-value">${this.gameState.confidence_level}%</span>
+          </div>
+        </div>
+        <div class="collapsible-header" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">💭 认知陷阱提示</div>
+        <div class="collapsible-content">
+          <div class="compact-bias-hint">
             <ul>
               <li>确认偏误：倾向于寻找支持既有观点的信息</li>
               <li>信息茧房：局限于相似信息源形成的封闭环境</li>
               <li>过度自信：高估自己信息处理能力</li>
             </ul>
           </div>
-          <p class="game-goal"><strong>🎯 目标：</strong>通过4轮投资决策，学会有效处理和整合多元信息源</p>
         </div>
-        <div class="actions">
+        <div class="compact-game-goal">
+          <strong>🎯 目标：</strong>通过4轮投资决策，学会有效处理和整合多元信息源
+        </div>
+        <div class="compact-actions">
           <button class="btn btn-enhanced btn-enhanced-primary btn-enhanced-large" 
                   onclick="window.investmentInfoRouter.startGame(); window.investmentInfoRouter.render();">
             开始信息处理挑战
@@ -535,12 +539,12 @@ class InvestmentInformationProcessingPageRouter extends BasePageRouter {
   renderInformationSelectionPage() {
     return `
       <div class="game-page information-selection-page">
-        <div class="page-header">
+        <div class="compact-page-header">
           <h2>📋 第${this.currentTurn}轮 - 信息源选择</h2>
           <div class="progress">轮次 ${this.currentTurn}/4</div>
         </div>
 
-        <div class="state-display state-display-panel">
+        <div class="state-display-panel compact">
           <div class="state-item">
             <span class="state-label">💰 资金</span>
             <span class="state-value">¥${Math.round(this.gameState.portfolio).toLocaleString()}</span>
@@ -559,28 +563,30 @@ class InvestmentInformationProcessingPageRouter extends BasePageRouter {
           </div>
         </div>
 
-        <div class="information-sources">
+        <div class="compact-situation">
           <h3>🔍 选择信息来源 (建议选择2-4个)</h3>
           <p class="hint">多样化的信息源有助于避免确认偏误</p>
-          <div class="information-source-grid">
-            ${this.informationSources.map(source => `
-              <div class="source-card ${this.tempSources[source.id] ? 'selected' : ''}"
-                   onclick="window.investmentInfoRouter.toggleSource('${source.id}'); window.investmentInfoRouter.render();"
-                   tabindex="0"
-                   role="button"
-                   aria-pressed="${!!this.tempSources[source.id]}"
-                   aria-label="${source.name} - ${source.description}">
-                <div class="source-icon">${source.icon}</div>
-                <div class="source-name">${source.name}</div>
-                <div class="source-reliability">可靠性: ${(source.reliability * 100).toFixed(0)}%</div>
-                <div class="source-bias">偏误: ${(source.bias * 100).toFixed(0)}%</div>
-                <div class="source-description">${source.description}</div>
+        </div>
+        
+        <div class="compact-options-grid">
+          ${this.informationSources.map(source => `
+            <div class="compact-option-card" onclick="window.investmentInfoRouter.toggleSource('${source.id}'); window.investmentInfoRouter.render();"
+                 tabindex="0" role="button" aria-pressed="${!!this.tempSources[source.id]}" aria-label="${source.name} - ${source.description}">
+              <h4>${source.icon} ${source.name}</h4>
+              <p>${source.description}</p>
+              <div class="expected-outcome">
+                <span>可靠性</span>
+                <span class="value">${(source.reliability * 100).toFixed(0)}%</span>
               </div>
-            `).join('')}
-          </div>
+              <div class="expected-outcome">
+                <span>偏误</span>
+                <span class="value">${(source.bias * 100).toFixed(0)}%</span>
+              </div>
+            </div>
+          `).join('')}
         </div>
 
-        <div class="actions">
+        <div class="compact-actions">
           <button class="btn btn-enhanced btn-enhanced-primary ${Object.keys(this.tempSources).length === 0 ? 'disabled' : ''}"
                   onclick="window.investmentInfoRouter.makeDecision('information_sources', window.investmentInfoRouter.tempSources); window.investmentInfoRouter.render();">
             确认选择 (${Object.keys(this.tempSources).length}个信息源)

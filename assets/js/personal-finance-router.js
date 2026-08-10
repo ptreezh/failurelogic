@@ -193,30 +193,32 @@ class PersonalFinancePageRouter extends BasePageRouter {
   
   renderStartPage() {
     return `
-      <div class="game-page start-page">
+      <div class="game-page start-page compact-start-page">
         <h2>💰 个人理财决策模拟</h2>
         <div class="scenario-intro">
           <p>你刚毕业，获得一份年薪10万的工作，有5万积蓄，需要决定如何理财。这个场景将帮助你理解复利的力量、风险与回报的平衡，以及常见理财思维陷阱。</p>
-          <div class="stats-grid">
-            <div class="stat-item">
-              <span class="stat-label">💰 总资产</span>
-              <span class="stat-value">¥${this.gameState.resources.toLocaleString()}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">💼 年收入</span>
-              <span class="stat-value">¥${this.gameState.income.toLocaleString()}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">📊 理财知识</span>
-              <span class="stat-value">${this.gameState.financial_knowledge}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">⚖️ 风险承受</span>
-              <span class="stat-value">${this.gameState.risk_tolerance}</span>
-            </div>
+        </div>
+        <div class="compact-stats-grid">
+          <div class="stat-item">
+            <span class="stat-label">💰 总资产</span>
+            <span class="stat-value">¥${this.gameState.resources.toLocaleString()}</span>
           </div>
-          <div class="cognitive-bias-hint">
-            <p><strong>💭 可能的思维陷阱：</strong></p>
+          <div class="stat-item">
+            <span class="stat-label">💼 年收入</span>
+            <span class="stat-value">¥${this.gameState.income.toLocaleString()}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">📊 理财知识</span>
+            <span class="stat-value">${this.gameState.financial_knowledge}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">⚖️ 风险承受</span>
+            <span class="stat-value">${this.gameState.risk_tolerance}</span>
+          </div>
+        </div>
+        <div class="collapsible-header" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">💭 可能的思维陷阱</div>
+        <div class="collapsible-content">
+          <div class="compact-bias-hint">
             <ul>
               <li>"立即满足偏好" - 优先当前消费而非长期投资</li>
               <li>"线性增长偏见" - 低估复利效应</li>
@@ -224,9 +226,11 @@ class PersonalFinancePageRouter extends BasePageRouter {
               <li>"损失厌恶" - 过度规避风险而错失机会</li>
             </ul>
           </div>
-          <p class="game-goal"><strong>🎯 目标：</strong>在人生早期建立良好的理财习惯，理解复利和风险评估</p>
         </div>
-        <div class="actions">
+        <div class="compact-game-goal">
+          <strong>🎯 目标：</strong>在人生早期建立良好的理财习惯，理解复利和风险评估
+        </div>
+        <div class="compact-actions">
           <button class="btn btn-primary" onclick="window.personalFinanceRouter.startGame(); window.personalFinanceRouter.render();">开始理财规划</button>
         </div>
       </div>
@@ -319,10 +323,69 @@ class PersonalFinancePageRouter extends BasePageRouter {
 
     return `
       <div class="game-page turn-${turn}-page">
-        <div class="page-header">
+        <div class="compact-page-header">
           <h2>📊 第${turn}年财务决策</h2>
           <div class="progress">第 ${this.currentTurn} 年</div>
         </div>
+        
+        <div class="state-display-panel compact">
+          <div class="state-item">
+            <span class="state-label">💰 资产总额</span>
+            <span class="state-value">¥${Math.round(this.gameState.resources).toLocaleString()}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">💼 年收入</span>
+            <span class="state-value">¥${Math.round(this.gameState.income).toLocaleString()}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">📊 理财知识</span>
+            <span class="state-value">${Math.round(this.gameState.financial_knowledge)}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">⚖️ 风险承受</span>
+            <span class="state-value">${Math.round(this.gameState.risk_tolerance)}</span>
+          </div>
+        </div>
+        
+        <div class="compact-situation">
+          <h3>📝 情况描述</h3>
+          <p>${
+            turn === 1 
+              ? "你刚毕业，获得一份年薪10万的工作，有5万积蓄，需要决定如何理财。" 
+              : "经过一年的理财实践，你的财务状况有所变化，现在需要考虑调整投资策略。"
+          }</p>
+        </div>
+        
+        <div class="decision-options">
+          <h3>🤔 可供选择的理财策略</h3>
+          <div class="compact-options-grid">
+            ${options.map((option, index) => `
+              <div class="compact-option-card" onclick="window.personalFinanceRouter.selectOption(${index});">
+                <h4>${option.label}</h4>
+                <p>${option.description}</p>
+                ${option.thinking ? `<div class="thinking-pattern">💡 你的想法: ${option.thinking}</div>` : ''}
+                ${option.expected_return !== undefined ? `
+                <div class="expected-outcome">
+                  <span>预期年化收益率</span>
+                  <span class="value">${(option.expected_return * 100).toFixed(1)}%</span>
+                </div>` : ''}
+                ${option.expected_cost > 0 ? `
+                <div class="expected-outcome">
+                  <span>预计支出</span>
+                  <span class="value negative">¥${option.expected_cost.toLocaleString()}</span>
+                </div>` : ''}
+                <button class="choice-btn" onclick="window.personalFinanceRouter.makeDecision('finance_choice_${turn}', '${option.id}'); window.personalFinanceRouter.render();">
+                  选择此策略
+                </button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div class="compact-actions">
+          <button class="btn btn-secondary" onclick="NavigationManager.navigateTo('scenarios')">返回场景列表</button>
+        </div>
+      </div>
         
         <div class="state-display">
           <h3>📈 当前财务状况</h3>

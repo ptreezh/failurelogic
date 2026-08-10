@@ -225,42 +225,44 @@ class FinancialCrisisPageRouter extends BasePageRouter {
   
   renderStartPage() {
     return `
-      <div class="game-page start-page">
+      <div class="game-page start-page compact-start-page">
         <h2>🏦 复杂金融市场危机应对模拟</h2>
         <div class="scenario-intro">
           <p>作为央行副行长，你发现复杂的金融衍生品市场中存在隐性关联和风险集中现象，但市场参与者信心仍然很高。你面临是否采取预防性措施的决策。这个场景将帮助你理解复杂金融系统中的风险识别、政策工具运用，以及常见危机管理思维陷阱。</p>
-          <div class="stats-grid">
-            <div class="stat-item">
-              <span class="stat-label">💰 央行储备</span>
-              <span class="stat-value">¥${this.gameState.resources.toLocaleString()}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">🌐 市场信心</span>
-              <span class="stat-value">${this.gameState.reputation}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">⚠️ 系统风险</span>
-              <span class="stat-value">${this.gameState.systemic_risk_level}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">⚖️ 市场稳定</span>
-              <span class="stat-value">${this.gameState.market_stability}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">💧 流动性</span>
-              <span class="stat-value">${this.gameState.liquidity_index}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">📋 监管合规</span>
-              <span class="stat-value">${this.gameState.regulatory_compliance}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">🤝 国际协调</span>
-              <span class="stat-value">${this.gameState.international_coordination}</span>
-            </div>
+        </div>
+        <div class="compact-stats-grid">
+          <div class="stat-item">
+            <span class="stat-label">💰 央行储备</span>
+            <span class="stat-value">¥${this.gameState.resources.toLocaleString()}</span>
           </div>
-          <div class="cognitive-bias-hint">
-            <p><strong>💭 可能的思维陷阱：</strong></p>
+          <div class="stat-item">
+            <span class="stat-label">🌐 市场信心</span>
+            <span class="stat-value">${this.gameState.reputation}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">⚠️ 系统风险</span>
+            <span class="stat-value">${this.gameState.systemic_risk_level}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">⚖️ 市场稳定</span>
+            <span class="stat-value">${this.gameState.market_stability}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">💧 流动性</span>
+            <span class="stat-value">${this.gameState.liquidity_index}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">📋 监管合规</span>
+            <span class="stat-value">${this.gameState.regulatory_compliance}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">🤝 国际协调</span>
+            <span class="stat-value">${this.gameState.international_coordination}</span>
+          </div>
+        </div>
+        <div class="collapsible-header" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">💭 可能的思维陷阱</div>
+        <div class="collapsible-content">
+          <div class="compact-bias-hint">
             <ul>
               <li>"群体思维" - 随大流而不独立思考</li>
               <li>"确认偏误" - 只选择支持自己观点的信息</li>
@@ -270,9 +272,11 @@ class FinancialCrisisPageRouter extends BasePageRouter {
               <li>"损失厌恶" - 过度规避风险而错失机会</li>
             </ul>
           </div>
-          <p class="game-goal"><strong>🎯 目标：</strong>在复杂金融系统中识别系统性风险，平衡稳定与创新</p>
         </div>
-        <div class="actions">
+        <div class="compact-game-goal">
+          <strong>🎯 目标：</strong>在复杂金融系统中识别系统性风险，平衡稳定与创新
+        </div>
+        <div class="compact-actions">
           <button class="btn btn-primary" onclick="window.financialCrisisRouter.startGame(); window.financialCrisisRouter.render();">开始危机管理</button>
         </div>
       </div>
@@ -442,10 +446,86 @@ class FinancialCrisisPageRouter extends BasePageRouter {
 
     return `
       <div class="game-page turn-${turn}-page">
-        <div class="page-header">
+        <div class="compact-page-header">
           <h2>📊 第${turn}轮金融危机应对</h2>
           <div class="progress">第 ${this.currentTurn} 轮</div>
         </div>
+        
+        <div class="state-display-panel compact">
+          <div class="state-item">
+            <span class="state-label">💰 央行储备</span>
+            <span class="state-value">¥${Math.round(this.gameState.resources).toLocaleString()}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">🌐 市场信心</span>
+            <span class="state-value">${Math.round(this.gameState.reputation)}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">⚠️ 系统风险</span>
+            <span class="state-value">${Math.round(this.gameState.systemic_risk_level)}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">⚖️ 市场稳定</span>
+            <span class="state-value">${Math.round(this.gameState.market_stability)}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">💧 流动性</span>
+            <span class="state-value">${Math.round(this.gameState.liquidity_index)}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">📋 监管合规</span>
+            <span class="state-value">${Math.round(this.gameState.regulatory_compliance)}</span>
+          </div>
+        </div>
+        
+        <div class="compact-situation">
+          <h3>📝 情况描述</h3>
+          <p>${
+            turn === 1 
+              ? "作为央行副行长，你发现复杂的金融衍生品市场中存在隐性关联和风险集中现象，但市场参与者信心仍然很高。你面临是否采取预防性措施的决策。" 
+              : turn === 2
+                ? "市场出现小规模动荡，一些大型机构面临流动性压力。你面临是否提供紧急流动性支持的决策。"
+                : turn === 3
+                  ? "危机开始蔓延，多个市场出现连锁反应。你面临是否改变货币政策立场的决策。"
+                  : "危机影响到国际金融市场，需要与其他国家协调应对。你面临如何参与国际合作的决策。"
+          }</p>
+        </div>
+        
+        <div class="decision-options">
+          <h3>🤔 可供选择的应对策略</h3>
+          <div class="compact-options-grid">
+            ${options.map((option, index) => `
+              <div class="compact-option-card" onclick="window.financialCrisisRouter.selectOption(${index});">
+                <h4>${option.label}</h4>
+                <p>${option.description}</p>
+                ${option.thinking ? `<div class="thinking-pattern">💡 你的想法: ${option.thinking}</div>` : ''}
+                ${option.expected_risk_reduction !== undefined ? `
+                <div class="expected-outcome">
+                  <span>预期风险降低</span>
+                  <span class="value">-${option.expected_risk_reduction}</span>
+                </div>` : ''}
+                ${option.expected_stability !== undefined ? `
+                <div class="expected-outcome">
+                  <span>预期稳定提升</span>
+                  <span class="value">+${option.expected_stability}</span>
+                </div>` : ''}
+                ${option.expected_confidence !== undefined ? `
+                <div class="expected-outcome">
+                  <span>预期信心提升</span>
+                  <span class="value">+${option.expected_confidence}</span>
+                </div>` : ''}
+                <button class="choice-btn" onclick="window.financialCrisisRouter.makeDecision('crisis_choice_${turn}', '${option.id}'); window.financialCrisisRouter.render();">
+                  选择此策略
+                </button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div class="compact-actions">
+          <button class="btn btn-secondary" onclick="NavigationManager.navigateTo('scenarios')">返回场景列表</button>
+        </div>
+      </div>
         
         <div class="state-display">
           <h3>📈 当前金融系统状况</h3>
