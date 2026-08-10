@@ -80,15 +80,13 @@ export default defineConfig({
   ],
 
   // Development server configuration
-  webServer: [
-    {
-      // Serve repo root so the static frontend is available if tests target it
-      command: 'node ..\\static-server.js',
-      port: 3000,
-      reuseExistingServer: true,
-      timeout: 30000, // 30 seconds to start
-    }
-  ],
+  webServer: {
+    // Serve repo root so the static frontend is available if tests target it
+    command: 'npm start',
+    port: 3000,
+    reuseExistingServer: true,
+    timeout: 30000, // 30 seconds to start
+  },
 
   // Global setup and teardown
   globalSetup: require.resolve('./global-setup.js'),

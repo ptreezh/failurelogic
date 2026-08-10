@@ -144,6 +144,11 @@ class NavigationManager {
     AppState.currentPage = page;
     window.history.pushState({ page }, '', `/${page}`);
     this.renderPage(page);
+    
+    // Hide game modal when navigating away
+    if (typeof GameManager !== 'undefined' && typeof GameManager.hideGameModal === 'function') {
+      GameManager.hideGameModal();
+    }
   }
 
   static async renderPage(page) {
