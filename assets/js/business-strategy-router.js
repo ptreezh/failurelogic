@@ -544,10 +544,6 @@ class BusinessStrategyPageRouter extends BasePageRouter {
     }
   }
 }
-      }
-    }
-  }
-}
 
 // Make available globally for browser
 if (typeof window !== 'undefined') {
