@@ -720,10 +720,6 @@ class FinancialCrisisPageRouter extends BasePageRouter {
     }
   }
 }
-      }
-    }
-  }
-}
 
 // Make available globally for browser
 if (typeof window !== 'undefined') {

@@ -329,7 +329,7 @@ class ClimateChangePageRouter extends BasePageRouter {
           expected_compliance: 75,
           expected_transparency: 90,
           risk: "medium",
-          thinking: '"监督是确保执行的关键'"
+          thinking: "监督是确保执行的关键"
         },
         {
           id: "green_fund",
@@ -647,10 +647,6 @@ class ClimateChangePageRouter extends BasePageRouter {
         this.currentTurn = state.currentTurn || 1;
       } catch {
         // ignore
-      }
-    }
-  }
-}
       }
     }
   }
