@@ -63,18 +63,18 @@ export default defineConfig({
   projects: [
     {
       name: 'msedge',
-      use: { 
+      use: {
         ...devices['Desktop Edge'],
-        headless: false,  // Explicitly disable headless mode per constitution
+        headless: process.env.HEADLESS !== 'false',
       },
     },
 
     // Test against mobile viewports
     {
       name: 'Mobile Chrome',
-      use: { 
+      use: {
         ...devices['Pixel 5'],
-        headless: false,  // Explicitly disable headless mode per constitution
+        headless: process.env.HEADLESS !== 'false',
       },
     },
   ],
@@ -82,17 +82,10 @@ export default defineConfig({
   // Development server configuration
   webServer: [
     {
-      // Run backend from repo root (Playwright runs this command from the tests/ folder)
-      command: 'python ..\\api-server\\start.py 8000',
-      port: 8000,
-      reuseExistingServer: !process.env.CI,
-      timeout: 120000, // 2 minutes to start
-    },
-    {
       // Serve repo root so the static frontend is available if tests target it
-      command: 'npx serve -l 3000 ..',
+      command: 'node ..\\static-server.js',
       port: 3000,
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: true,
       timeout: 30000, // 30 seconds to start
     }
   ],
