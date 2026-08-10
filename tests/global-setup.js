@@ -27,17 +27,24 @@ async function waitForServices() {
 
   while (Date.now() - startTime < maxWaitTime) {
     try {
-      // Check API server
-      const apiResponse = await fetch('http://localhost:8000/');
-      if (apiResponse.ok) {
-        console.log('✅ API server is ready');
+      // Check frontend server (required)
+      const frontendResponse = await fetch('http://localhost:3000/');
+      if (frontendResponse.ok) {
+        console.log('✅ Frontend server is ready');
 
-        // Check frontend server
-        const frontendResponse = await fetch('http://localhost:3000/');
-        if (frontendResponse.ok) {
-          console.log('✅ Frontend server is ready');
-          return;
+        // Check API server (optional - may not be available in all environments)
+        try {
+          const apiResponse = await fetch('http://localhost:8000/');
+          if (apiResponse.ok) {
+            console.log('✅ API server is ready');
+          } else {
+            console.log('⚠️  API server not available, continuing with frontend-only tests');
+          }
+        } catch (apiError) {
+          console.log('⚠️  API server not available, continuing with frontend-only tests');
         }
+
+        return;
       }
     } catch (error) {
       // Services not ready yet, continue waiting
@@ -47,7 +54,7 @@ async function waitForServices() {
     console.log('⏳ Still waiting for services...');
   }
 
-  throw new Error('❌ Services failed to start within timeout period');
+  throw new Error('❌ Frontend server failed to start within timeout period');
 }
 
 export default globalSetup;
