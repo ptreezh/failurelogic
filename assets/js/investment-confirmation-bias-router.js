@@ -206,10 +206,14 @@
 
         renderIntro() {
             const html = `
-                <div class="scenario-intro">
+                <div class="scenario-intro compact-start-page">
                     <h1>${SCENARIO_NAME}</h1>
                     <p class="description">${this.scenarioData.fullDescription || '体验确认偏误如何影响投资决策'}</p>
-                    <div class="instructions">
+                    <div class="compact-game-goal">
+                        <h3>场景目标</h3>
+                        <p>在信息选择和决策过程中，观察自己的确认偏误倾向</p>
+                    </div>
+                    <div class="instructions compact-situation">
                         <h3>场景说明</h3>
                         <p>${this.scenarioData.instructions?.intro || ''}</p>
                         <p class="warning">${this.scenarioData.instructions?.warning || ''}</p>
@@ -249,22 +253,22 @@
 
         renderRound(round) {
             let html = `
-                <div class="scenario-round">
-                    <div class="round-header">
+                <div class="scenario-round compact-page-header">
+                    <div class="round-header compact-stats-grid">
                         <span class="phase-name">${this.scenarioData.phases[state.currentPhase].name}</span>
-                        <h2>${round.title}</h2>
                     </div>
-                    <div class="round-context">
+                    <div class="round-context compact-situation">
+                        <h2>${round.title}</h2>
                         <p>${round.context}</p>
                     </div>
             `;
 
             // 渲染信息
             if (round.information) {
-                html += '<div class="information-panel">';
+                html += '<div class="information-panel compact-stats-grid">';
                 round.information.forEach((info, index) => {
                     html += `
-                        <div class="info-item ${info.bias}" data-info-id="${info.id || index}">
+                        <div class="info-item ${info.bias} compact-bias-hint" data-info-id="${info.id || index}">
                             <span class="info-type">${this.getInfoTypeLabel(info.type)}</span>
                             <p>${info.content}</p>
                             ${info.source ? `<span class="info-source">来源: ${info.source}</span>` : ''}
@@ -285,15 +289,15 @@
 
         renderDecision(decision, roundId) {
             let html = `
-                <div class="decision-panel">
+                <div class="decision-panel compact-actions">
                     <h3>${decision.question}</h3>
             `;
 
             if (decision.type === 'multi_select') {
-                html += '<div class="multi-select-options">';
+                html += '<div class="multi-select-options compact-options-grid">';
                 decision.options.forEach((option, index) => {
                     html += `
-                        <label class="option-item">
+                        <label class="option-item compact-option-card">
                             <input type="checkbox" name="decision-${roundId}" value="${option.id}" 
                                    onchange="window.investmentConfirmationBiasRouter.trackSelection('${option.bias}', this.checked)">
                             <span>${option.text}</span>
@@ -307,10 +311,10 @@
                     </button>
                 `;
             } else {
-                html += '<div class="single-select-options">';
+                html += '<div class="single-select-options compact-options-grid">';
                 decision.options.forEach((option) => {
                     html += `
-                        <button class="option-btn" 
+                        <button class="option-btn compact-option-card" 
                                 onclick="window.investmentConfirmationBiasRouter.makeDecision(${roundId}, '${option.id}', ${option.biasScore || 0})">
                             ${option.text}
                         </button>
@@ -386,10 +390,10 @@
             });
 
             const html = `
-                <div class="scenario-conclusion">
+                <div class="scenario-conclusion compact-start-page">
                     <h1>场景结束</h1>
                     
-                    <div class="analysis-section">
+                    <div class="analysis-section compact-situation">
                         <h2>您的确认偏误分析</h2>
                         <div class="cbs-result" style="color: ${interpretation.color}">
                             <span class="cbs-value">${state.confirmationBiasScore.toFixed(2)}</span>
@@ -403,7 +407,7 @@
                     </div>
 
                     ${awakenings.length > 0 ? `
-                        <div class="awakening-section">
+                        <div class="awakening-section compact-bias-hint">
                             <h2>觉醒时刻</h2>
                             ${awakenings.map(a => `
                                 <div class="awakening-item intensity-${a.intensity}">
@@ -413,7 +417,7 @@
                         </div>
                     ` : ''}
 
-                    <div class="learning-section">
+                    <div class="learning-section compact-situation">
                         <h2>学习要点</h2>
                         <ul>
                             <li>确认偏误使我们倾向于寻找支持自己观点的证据</li>
@@ -422,7 +426,7 @@
                         </ul>
                     </div>
 
-                    <div class="action-buttons">
+                    <div class="action-buttons compact-actions">
                         <button onclick="window.investmentConfirmationBiasRouter.restart()">重新开始</button>
                         <button onclick="window.location.href='/scenarios.html'">返回场景列表</button>
                     </div>
@@ -465,12 +469,12 @@
         }
 
         showError(message) {
-            HTMLSanitizer?.setInnerHTML(this.container, `)
+            HTMLSanitizer?.setInnerHTML(this.container, `
                 <div class="error-message">
                     <p>${message}</p>
                     <button onclick="window.location.reload()">刷新页面</button>
                 </div>
-            `;
+            `);
         }
     }
 

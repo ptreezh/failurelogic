@@ -756,14 +756,14 @@
       if (!this.currentCase) return;
 
       const html = `
-        <div class="scenario-intro historical-intro">
+        <div class="scenario-intro historical-intro compact-start-page">
           <h1>${this.currentCase.title}</h1>
           <p class="description">${this.currentCase.description}</p>
-          <div class="case-meta">
+          <div class="case-meta compact-stats-grid">
             <span class="case-type">📚 历史案例分析</span>
             <span class="case-steps">📋 ${this.currentCase.decisionPoints.length} 个决策点</span>
           </div>
-          <div class="instructions">
+          <div class="instructions compact-situation">
             <h3>场景说明</h3>
             <p>您将扮演当时的决策者，面临与历史真实情况相同的选择。您的决策将揭示认知偏差如何影响重大决策。</p>
             <p class="warning">请注意：这不是一个简单的"选对答案"游戏。每个选择都有其合理性，重要的是理解决策背后的认知模式。</p>
@@ -797,16 +797,18 @@
 
       const step = this.currentCase.decisionPoints[this.currentStep];
       const html = `
-        <div class="scenario-round historical-round">
-          <div class="round-header">
+        <div class="scenario-round historical-round compact-page-header">
+          <div class="round-header compact-stats-grid">
             <span class="step-indicator">决策点 ${this.currentStep + 1} / ${this.currentCase.decisionPoints.length}</span>
+          </div>
+          <div class="round-context compact-situation">
             <h2>${step.situation}</h2>
           </div>
-          <div class="decision-panel">
+          <div class="decision-panel compact-actions">
             <h3>您的决策：</h3>
-            <div class="options-list">
+            <div class="options-list compact-options-grid">
               ${step.options.map((opt, idx) => `
-                <button class="option-btn historical-option" 
+                <button class="option-btn historical-option compact-option-card" 
                         onclick="window.historicalCasesRouter.makeDecision(${idx})">
                   ${opt}
                 </button>
@@ -840,10 +842,10 @@
       if (!this.currentCase) return;
 
       const html = `
-        <div class="scenario-conclusion historical-conclusion">
+        <div class="scenario-conclusion historical-conclusion compact-start-page">
           <h1>案例分析：${this.currentCase.title}</h1>
           
-          <div class="actual-outcome-section">
+          <div class="actual-outcome-section compact-situation">
             <h2>📜 历史真实结果</h2>
             <div class="outcome-timeline">
               ${this.currentCase.actualOutcomes.map(outcome => `
@@ -855,7 +857,7 @@
             </div>
           </div>
 
-          <div class="your-decisions-section">
+          <div class="your-decisions-section compact-situation">
             <h2>🎯 您的决策路径</h2>
             <div class="decisions-list">
               ${this.decisions.map(d => `
@@ -867,21 +869,21 @@
             </div>
           </div>
 
-          <div class="alternative-section">
+          <div class="alternative-section compact-situation">
             <h2>💡 更优选择</h2>
             <ul>
               ${this.currentCase.alternativeOptions.map(opt => `<li>${opt}</li>`).join('')}
             </ul>
           </div>
 
-          <div class="lessons-section">
+          <div class="lessons-section compact-situation">
             <h2>📚 经验教训</h2>
             <ul>
               ${this.currentCase.lessons.map(lesson => `<li>${lesson}</li>`).join('')}
             </ul>
           </div>
 
-          <div class="pyramid-analysis-section">
+          <div class="pyramid-analysis-section compact-bias-hint">
             <h2>🏛️ 金字塔分析</h2>
             <div class="pyramid-content">
               <div class="pyramid-conclusion">
@@ -909,7 +911,7 @@
             </div>
           </div>
 
-          <div class="action-buttons">
+          <div class="action-buttons compact-actions">
             <button onclick="window.historicalCasesRouter.restart()">重新分析</button>
             <button onclick="window.historicalCasesRouter.loadNextCase()">下一个案例</button>
             <button onclick="NavigationManager.navigateTo('scenarios')">返回场景列表</button>

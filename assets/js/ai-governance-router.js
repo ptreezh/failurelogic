@@ -225,42 +225,44 @@ class AIGovernancePageRouter extends BasePageRouter {
   
   renderStartPage() {
     return `
-      <div class="game-page start-page">
+      <div class="game-page start-page compact-start-page">
         <h2>🤖 AI治理与监管决策模拟</h2>
         <div class="scenario-intro">
           <p>作为国家AI发展委员会成员，你面对AI能力快速提升的现实：AI系统已在多个领域达到或超越人类水平。你需要制定AI能力评估和分级标准。这个场景将帮助你理解AI治理的复杂性、创新与安全的平衡，以及常见治理思维陷阱。</p>
-          <div class="stats-grid">
-            <div class="stat-item">
-              <span class="stat-label">💰 监管预算</span>
-              <span class="stat-value">¥${this.gameState.resources.toLocaleString()}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">🌐 公众信任</span>
-              <span class="stat-value">${this.gameState.reputation}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">🤖 AI能力评估</span>
-              <span class="stat-value">${this.gameState.ai_capability_assessment}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">🛡️ 安全合规</span>
-              <span class="stat-value">${this.gameState.safety_compliance}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">⚖️ 伦理遵守</span>
-              <span class="stat-value">${this.gameState.ethical_adherence}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">⚡ 创新平衡</span>
-              <span class="stat-value">${this.gameState.innovation_balance}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">🤝 利益压力</span>
-              <span class="stat-value">${this.gameState.stakeholder_pressure}</span>
-            </div>
+        </div>
+        <div class="compact-stats-grid">
+          <div class="stat-item">
+            <span class="stat-label">💰 监管预算</span>
+            <span class="stat-value">¥${this.gameState.resources.toLocaleString()}</span>
           </div>
-          <div class="cognitive-bias-hint">
-            <p><strong>💭 可能的思维陷阱：</strong></p>
+          <div class="stat-item">
+            <span class="stat-label">🌐 公众信任</span>
+            <span class="stat-value">${this.gameState.reputation}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">🤖 AI能力评估</span>
+            <span class="stat-value">${this.gameState.ai_capability_assessment}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">🛡️ 安全合规</span>
+            <span class="stat-value">${this.gameState.safety_compliance}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">⚖️ 伦理遵守</span>
+            <span class="stat-value">${this.gameState.ethical_adherence}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">⚡ 创新平衡</span>
+            <span class="stat-value">${this.gameState.innovation_balance}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">🤝 利益压力</span>
+            <span class="stat-value">${this.gameState.stakeholder_pressure}</span>
+          </div>
+        </div>
+        <div class="collapsible-header" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">💭 可能的思维陷阱</div>
+        <div class="collapsible-content">
+          <div class="compact-bias-hint">
             <ul>
               <li>"技术解决方案偏见" - 过度相信技术能解决治理问题</li>
               <li>"风险忽视偏见" - 低估AI系统的潜在风险</li>
@@ -270,9 +272,11 @@ class AIGovernancePageRouter extends BasePageRouter {
               <li>"专家权威偏见" - 盲目相信专家意见</li>
             </ul>
           </div>
-          <p class="game-goal"><strong>🎯 目标：</strong>在AI快速发展背景下制定有效的治理框架，平衡创新与安全</p>
         </div>
-        <div class="actions">
+        <div class="compact-game-goal">
+          <strong>🎯 目标：</strong>在AI快速发展背景下制定有效的治理框架，平衡创新与安全
+        </div>
+        <div class="compact-actions">
           <button class="btn btn-primary" onclick="window.aiGovernanceRouter.startGame(); window.aiGovernanceRouter.render();">开始AI治理</button>
         </div>
       </div>
@@ -442,10 +446,86 @@ class AIGovernancePageRouter extends BasePageRouter {
 
     return `
       <div class="game-page turn-${turn}-page">
-        <div class="page-header">
+        <div class="compact-page-header">
           <h2>📊 第${turn}轮AI治理决策</h2>
           <div class="progress">第 ${this.currentTurn} 轮</div>
         </div>
+        
+        <div class="state-display-panel compact">
+          <div class="state-item">
+            <span class="state-label">💰 监管预算</span>
+            <span class="state-value">¥${Math.round(this.gameState.resources).toLocaleString()}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">🌐 公众信任</span>
+            <span class="state-value">${Math.round(this.gameState.reputation)}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">🤖 AI能力评估</span>
+            <span class="state-value">${Math.round(this.gameState.ai_capability_assessment)}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">🛡️ 安全合规</span>
+            <span class="state-value">${Math.round(this.gameState.safety_compliance)}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">⚖️ 伦理遵守</span>
+            <span class="state-value">${Math.round(this.gameState.ethical_adherence)}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">⚡ 创新平衡</span>
+            <span class="state-value">${Math.round(this.gameState.innovation_balance)}</span>
+          </div>
+        </div>
+        
+        <div class="compact-situation">
+          <h3>📝 情况描述</h3>
+          <p>${
+            turn === 1 
+              ? "作为国家AI发展委员会成员，你面对AI能力快速提升的现实：AI系统已在多个领域达到或超越人类水平。你需要制定AI能力评估和分级标准。" 
+              : turn === 2
+                ? "一项高级AI系统在测试中表现出了自我改进的能力，引发了关于'AI安全'的担忧。你面临是否限制AI自我改进能力的决策。"
+                : turn === 3
+                  ? "国际上关于AI治理出现了分裂：一些国家主张严格监管，另一些国家则主张自由发展。你面临如何制定国际协调策略的决策。"
+                  : "一个AI系统在医疗诊断领域表现优于人类专家，但无法解释其诊断逻辑。你面临是否批准其在临床使用的决策。"
+          }</p>
+        </div>
+        
+        <div class="decision-options">
+          <h3>🤔 可供选择的治理策略</h3>
+          <div class="compact-options-grid">
+            ${options.map((option, index) => `
+              <div class="compact-option-card" onclick="window.aiGovernanceRouter.selectOption(${index});">
+                <h4>${option.label}</h4>
+                <p>${option.description}</p>
+                ${option.thinking ? `<div class="thinking-pattern">💡 你的想法: ${option.thinking}</div>` : ''}
+                ${option.expected_assessment !== undefined ? `
+                <div class="expected-outcome">
+                  <span>预期评估提升</span>
+                  <span class="value">+${option.expected_assessment}</span>
+                </div>` : ''}
+                ${option.expected_safety !== undefined ? `
+                <div class="expected-outcome">
+                  <span>预期安全提升</span>
+                  <span class="value">+${option.expected_safety}</span>
+                </div>` : ''}
+                ${option.expected_ethics !== undefined ? `
+                <div class="expected-outcome">
+                  <span>预期伦理提升</span>
+                  <span class="value">+${option.expected_ethics}</span>
+                </div>` : ''}
+                <button class="choice-btn" onclick="window.aiGovernanceRouter.makeDecision('ai_gov_choice_${turn}', '${option.id}'); window.aiGovernanceRouter.render();">
+                  选择此策略
+                </button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div class="compact-actions">
+          <button class="btn btn-secondary" onclick="NavigationManager.navigateTo('scenarios')">返回场景列表</button>
+        </div>
+      </div>
         
         <div class="state-display">
           <h3>📈 当前AI治理状况</h3>

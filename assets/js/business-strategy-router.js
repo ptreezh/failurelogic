@@ -197,35 +197,39 @@ class BusinessStrategyPageRouter extends BasePageRouter {
   
   renderStartPage() {
     return `
-      <div class="game-page start-page">
+      <div class="game-page start-page compact-start-page">
         <h2>🏢 商业战略推理游戏</h2>
         <div class="scenario-intro">
           <p>你是一家科技公司的CEO，刚刚开发出一款新型智能手机。市场研究表明消费者对此类产品有很大需求，但同时有几家大型竞争对手也在开发同类产品。</p>
-          <div class="stats-grid">
-            <div class="stat-item">
-              <span class="stat-label">💰 公司资金</span>
-              <span class="stat-value">¥${this.gameState.resources}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">⭐ 声誉评分</span>
-              <span class="stat-value">${this.gameState.reputation}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">📊 市场地位</span>
-              <span class="stat-value">${this.gameState.market_position}</span>
-            </div>
+        </div>
+        <div class="compact-stats-grid">
+          <div class="stat-item">
+            <span class="stat-label">💰 公司资金</span>
+            <span class="stat-value">¥${this.gameState.resources}</span>
           </div>
-          <div class="cognitive-bias-hint">
-            <p><strong>💭 可能的思维陷阱：</strong></p>
+          <div class="stat-item">
+            <span class="stat-label">⭐ 声誉评分</span>
+            <span class="stat-value">${this.gameState.reputation}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">📊 市场地位</span>
+            <span class="stat-value">${this.gameState.market_position}</span>
+          </div>
+        </div>
+        <div class="collapsible-header" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">💭 可能的思维陷阱</div>
+        <div class="collapsible-content">
+          <div class="compact-bias-hint">
             <ul>
               <li>"立即行动总是最好的" (速度偏误)</li>
               <li>"更多功能意味着更好产品" (功能偏误)</li>
               <li>"我可以预测市场反应" (过度自信)</li>
             </ul>
           </div>
-          <p class="game-goal"><strong>🎯 目标：</strong>在竞争激烈的市场中取得领先地位，避免常见的商业决策陷阱</p>
         </div>
-        <div class="actions">
+        <div class="compact-game-goal">
+          <strong>🎯 目标：</strong>在竞争激烈的市场中取得领先地位，避免常见的商业决策陷阱
+        </div>
+        <div class="compact-actions">
           <button class="btn btn-enhanced btn-enhanced-primary btn-enhanced-large" onclick="window.businessStrategyRouter.startGame(); window.businessStrategyRouter.render();">开始决策</button>
         </div>
       </div>
@@ -309,10 +313,60 @@ class BusinessStrategyPageRouter extends BasePageRouter {
 
     return `
       <div class="game-page turn-${turn}-page">
-        <div class="page-header">
+        <div class="compact-page-header">
           <h2>📊 第${turn}回合决策</h2>
           <div class="progress">回合 ${this.currentTurn}/3</div>
         </div>
+        
+        <div class="state-display-panel compact">
+          <div class="state-item">
+            <span class="state-label">💰 资金</span>
+            <span class="state-value">¥${Math.round(this.gameState.resources)}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">⭐ 声誉</span>
+            <span class="state-value">${Math.round(this.gameState.reputation)}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">📊 市场地位</span>
+            <span class="state-value">${Math.round(this.gameState.market_position)}</span>
+          </div>
+        </div>
+        
+        <div class="compact-situation">
+          <h3>📝 情况描述</h3>
+          <p>${
+            turn === 1 
+              ? "你的科技公司刚刚开发出一款新型智能手机，市场研究表明消费者对此类产品有很大需求，但同时有几家大型竞争对手也在开发同类产品。" 
+              : "产品上市后，销量超出预期，但同时出现了少量质量问题的报告。此时，竞争对手开始大规模广告宣传。"
+          }</p>
+        </div>
+        
+        <div class="decision-options">
+          <h3>🤔 可供选择的策略</h3>
+          <div class="compact-options-grid">
+            ${options.map((option, index) => `
+              <div class="compact-option-card" onclick="window.businessStrategyRouter.selectOption(${index});">
+                <h4>${option.label}</h4>
+                <p>${option.description}</p>
+                ${option.thinking ? `<div class="thinking-pattern">💡 你的想法: ${option.thinking}</div>` : ''}
+                ${option.expected_profit !== undefined ? `
+                <div class="expected-outcome">
+                  <span>预期收益</span>
+                  <span class="value ${option.expected_profit >= 0 ? 'positive' : 'negative'}">${option.expected_profit >= 0 ? '+' : ''}¥${option.expected_profit}</span>
+                </div>` : ''}
+                <button class="btn btn-enhanced btn-enhanced-primary choice-btn" onclick="window.businessStrategyRouter.makeDecision('strategy_choice_${turn}', '${option.id}'); window.businessStrategyRouter.render();">
+                  选择此策略
+                </button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div class="compact-actions">
+          <button class="btn btn-secondary" onclick="NavigationManager.navigateTo('scenarios')">返回场景列表</button>
+        </div>
+      </div>
         
         <div class="state-display">
           <h3>📈 当前状态</h3>

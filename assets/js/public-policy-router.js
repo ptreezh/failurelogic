@@ -197,30 +197,32 @@ class PublicPolicyPageRouter extends BasePageRouter {
   
   renderStartPage() {
     return `
-      <div class="game-page start-page">
+      <div class="game-page start-page compact-start-page">
         <h2>🏛️ 公共政策制定模拟</h2>
         <div class="scenario-intro">
           <p>作为城市规划者，你负责改善城市的交通拥堵问题。预算有限，但市民抱怨严重。有四个方案可供选择。</p>
-          <div class="stats-grid">
-            <div class="stat-item">
-              <span class="stat-label">💰 预算</span>
-              <span class="stat-value">¥${this.gameState.resources}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">⭐ 公众信任</span>
-              <span class="stat-value">${this.gameState.reputation}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">📊 政策效果</span>
-              <span class="stat-value">${this.gameState.policy_effectiveness}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">👥 民众支持</span>
-              <span class="stat-value">${this.gameState.public_support}</span>
-            </div>
+        </div>
+        <div class="compact-stats-grid">
+          <div class="stat-item">
+            <span class="stat-label">💰 预算</span>
+            <span class="stat-value">¥${this.gameState.resources}</span>
           </div>
-          <div class="cognitive-bias-hint">
-            <p><strong>💭 可能的思维陷阱：</strong></p>
+          <div class="stat-item">
+            <span class="stat-label">⭐ 公众信任</span>
+            <span class="stat-value">${this.gameState.reputation}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">📊 政策效果</span>
+            <span class="stat-value">${this.gameState.policy_effectiveness}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">👥 民众支持</span>
+            <span class="stat-value">${this.gameState.public_support}</span>
+          </div>
+        </div>
+        <div class="collapsible-header" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">💭 可能的思维陷阱</div>
+        <div class="collapsible-content">
+          <div class="compact-bias-hint">
             <ul>
               <li>"复杂问题有简单解决方案" (过度简化)</li>
               <li>"我能准确预测公众反应" (过度自信)</li>
@@ -228,9 +230,11 @@ class PublicPolicyPageRouter extends BasePageRouter {
               <li>"维持现状是最好的" (现状偏见)</li>
             </ul>
           </div>
-          <p class="game-goal"><strong>🎯 目标：</strong>在预算约束和多重利益冲突下制定有效的交通政策</p>
         </div>
-        <div class="actions">
+        <div class="compact-game-goal">
+          <strong>🎯 目标：</strong>在预算约束和多重利益冲突下制定有效的交通政策
+        </div>
+        <div class="compact-actions">
           <button class="btn btn-primary" onclick="window.publicPolicyRouter.startGame(); window.publicPolicyRouter.render();">开始决策</button>
         </div>
       </div>
@@ -322,10 +326,68 @@ class PublicPolicyPageRouter extends BasePageRouter {
 
     return `
       <div class="game-page turn-${turn}-page">
-        <div class="page-header">
+        <div class="compact-page-header">
           <h2>📊 第${turn}回合决策</h2>
           <div class="progress">回合 ${this.currentTurn}/3</div>
         </div>
+        
+        <div class="state-display-panel compact">
+          <div class="state-item">
+            <span class="state-label">💰 预算</span>
+            <span class="state-value">¥${Math.round(this.gameState.resources)}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">⭐ 信任</span>
+            <span class="state-value">${Math.round(this.gameState.reputation)}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">📊 政策效果</span>
+            <span class="state-value">${Math.round(this.gameState.policy_effectiveness)}</span>
+          </div>
+          <div class="state-item">
+            <span class="state-label">👥 民众支持</span>
+            <span class="state-value">${Math.round(this.gameState.public_support)}</span>
+          </div>
+        </div>
+        
+        <div class="compact-situation">
+          <h3>📝 情况描述</h3>
+          <p>${
+            turn === 1 
+              ? "作为城市规划者，你负责改善城市的交通拥堵问题。预算有限，但市民抱怨严重。有四个方案可供选择。" 
+              : "方案实施后，收到了来自各方的不同反馈，部分居民抱怨成本增加，环保组织批评方案不够绿色，企业抱怨商业活动受到影响。"
+          }</p>
+        </div>
+        
+        <div class="decision-options">
+          <h3>🤔 可供选择的政策</h3>
+          <div class="compact-options-grid">
+            ${options.map((option, index) => `
+              <div class="compact-option-card" onclick="window.publicPolicyRouter.selectOption(${index});">
+                <h4>${option.label}</h4>
+                <p>${option.description}</p>
+                ${option.thinking ? `<div class="thinking-pattern">💡 你的想法: ${option.thinking}</div>` : ''}
+                ${option.expected_cost !== undefined ? `
+                <div class="expected-outcome">
+                  <span>预估成本</span>
+                  <span class="value negative">¥${option.expected_cost}</span>
+                </div>
+                <div class="expected-outcome">
+                  <span>预估收益</span>
+                  <span class="value positive">+${option.expected_benefit} 效果</span>
+                </div>` : ''}
+                <button class="choice-btn" onclick="window.publicPolicyRouter.makeDecision('policy_choice_${turn}', '${option.id}'); window.publicPolicyRouter.render();">
+                  选择此政策
+                </button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div class="compact-actions">
+          <button class="btn btn-secondary" onclick="NavigationManager.navigateTo('scenarios')">返回场景列表</button>
+        </div>
+      </div>
         
         <div class="state-display">
           <h3>📈 当前状态</h3>

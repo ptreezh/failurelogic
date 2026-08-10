@@ -291,7 +291,7 @@ body.modal-open {
   top: 0;
   background: var(--bg-primary);
   z-index: 10;
-  padding: var(--space-lg) var(--space-xl);
+  padding: var(--space-sm) var(--space-md);
   border-bottom: 1px solid var(--border-light);
   display: flex;
   justify-content: space-between;
@@ -301,7 +301,7 @@ body.modal-open {
 }
 
 .modal-title {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-primary);
   margin: 0;
@@ -334,7 +334,7 @@ body.modal-open {
 }
 
 .modal-body {
-  padding: var(--space-xl);
+  padding: var(--space-xs) var(--space-sm);
 }
 
 /* Focus trap for accessibility */
@@ -386,7 +386,8 @@ body.modal-open {
 }
 
 .modal-body {
-  padding: var(--space-md);  /* ✅ Reduced from lg to md for more compact layout */
+  padding: var(--space-xs) var(--space-sm);
+}
   /* Remove overflow-y to prevent nested scroll containers */
   /* overflow-y: auto; */
 }

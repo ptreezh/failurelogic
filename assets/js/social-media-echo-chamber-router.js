@@ -456,23 +456,77 @@
 
     _renderStartPage() {
       return `
-        <div class="game-page start-page">
+        <div class="game-page start-page compact-start-page">
           <h2>📱 社交媒体信息茧房</h2>
           <div class="scenario-intro">
             <p>体验算法推荐如何创建信息茧房，强化确认偏误。您将扮演社交媒体平台的内容审核员，面对算法推荐导致的认知陷阱。</p>
-            <div class="stats-grid">
-              <div class="stat-item">
-                <span class="stat-label">📊 总回合数</span>
-                <span class="stat-value">${this.gameState.totalTurns}</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-label">💪 难度</span>
-                <span class="stat-value intermediate">中级</span>
-              </div>
+          </div>
+          <div class="compact-stats-grid">
+            <div class="stat-item">
+              <span class="stat-label">📊 总回合数</span>
+              <span class="stat-value">${this.gameState.totalTurns}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">💪 难度</span>
+              <span class="stat-value intermediate">中级</span>
             </div>
           </div>
-          <div class="actions">
+          <div class="compact-actions">
             <button class="btn btn-primary" data-action="socialMediaStart">开始体验</button>
+          </div>
+        </div>
+      `;
+    }
+
+    _renderTurnIntro() {
+      const turn = this.gameState.turn;
+      const state = this.gameState;
+      const turnData = state.decisionOptions[turn - 1];
+
+      return `
+        <div class="game-page turn-page">
+          <div class="compact-page-header">
+            <h3>🔄 第${turn}回合：${turnData.title}</h3>
+          </div>
+          
+          <div class="state-display-panel compact">
+            <div class="state-item">
+              <span class="state-label">📚 信息多样性</span>
+              <span class="state-value">${state.informationDiversity.toFixed(0)}%</span>
+            </div>
+            <div class="state-item">
+              <span class="state-label">🎯 确认偏误</span>
+              <span class="state-value">${state.confirmationBiasLevel.toFixed(0)}%</span>
+            </div>
+            <div class="state-item">
+              <span class="state-label">🤖 算法过滤</span>
+              <span class="state-value">${state.algorithmicFiltering.toFixed(0)}%</span>
+            </div>
+            <div class="state-item">
+              <span class="state-label">💡 用户意识</span>
+              <span class="state-value">${state.userAwareness.toFixed(0)}%</span>
+            </div>
+            <div class="state-item">
+              <span class="state-label">⚡ 极化程度</span>
+              <span class="state-value">${state.polarizationLevel.toFixed(0)}%</span>
+            </div>
+          </div>
+          
+          <div class="compact-situation">
+            <p><strong>情境：</strong>${turnData.situation}</p>
+            <p><em>${turnData.context}</em></p>
+          </div>
+          
+          <div class="decision-options">
+            <h4>请做出您的决策：</h4>
+            <div class="compact-options-grid">
+              ${turnData.options.map((opt, idx) => `
+                <div class="compact-option-card" data-action="socialMediaMakeDecision" data-param-optionIndex="${idx}">
+                  <h5>${opt.text}</h5>
+                  <p class="option-desc">${opt.description}</p>
+                </div>
+              `).join('')}
+            </div>
           </div>
         </div>
       `;
