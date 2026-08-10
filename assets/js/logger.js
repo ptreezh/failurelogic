@@ -113,10 +113,10 @@
                     console.info(formattedMessage, ...args);
                     break;
                 case 'warn':
-                    Logger?.warn(formattedMessage, ...args);
+                    console.warn(formattedMessage, ...args);
                     break;
                 case 'error':
-                    Logger?.error(formattedMessage, ...args);
+                    console.error(formattedMessage, ...args);
                     break;
             }
         }

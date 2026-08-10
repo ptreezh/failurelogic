@@ -38,22 +38,6 @@
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style">
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loading-screen" class="loading-screen" style="display: none; visibility: hidden; pointer-events: none; z-index: -9999; opacity: 0;">
-        <div class="loading-content">
-            <div class="loading-logo">
-                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                    <circle cx="24" cy="24" r="20" stroke="#2563eb" stroke-width="2"/>
-                    <path d="M16 24 L22 30 L32 18" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-            <p class="loading-text">正在加载认知世界...</p>
-            <div class="loading-progress">
-                <div class="progress-bar"></div>
-            </div>
-        </div>
-    </div>
-
     <!-- Main App Container -->
     <div id="app" class="app-container">
         <!-- Navigation Header -->
@@ -1189,11 +1173,6 @@
                 });
         });
     }
-
-    // 加载交互修复脚本
-    const script = document.createElement('script');
-    script.src = 'complete-fix-interactions.js';
-    document.head.appendChild(script);
     </script>
 </body>
 </html>

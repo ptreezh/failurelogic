@@ -143,25 +143,25 @@
         
         debug(...args) {
             if (this._enabled && this._level === 'debug') {
-                Logger?.debug('[DEBUG]', ...args);
+                console.debug('[DEBUG]', ...args);
             }
         },
         
         info(...args) {
             if (this._enabled) {
-                Logger?.debug('[INFO]', ...args);
+                console.info('[INFO]', ...args);
             }
         },
         
         warn(...args) {
             if (this._enabled) {
-                Logger?.warn('[WARN]', ...args);
+                console.warn('[WARN]', ...args);
             }
         },
         
         error(...args) {
             if (this._enabled) {
-                Logger?.error('[ERROR]', ...args);
+                console.error('[ERROR]', ...args);
             }
         }
     };
@@ -180,13 +180,9 @@
         sanitize(html) {
             if (!html) return '';
             
-            // 创建临时DOM
             const temp = document.createElement('div');
-            HTMLSanitizer?.setInnerHTML(temp, html);
-            
-            // 递归清理
+            temp.innerHTML = html;
             this._cleanElement(temp);
-            
             return temp.innerHTML;
         },
         
@@ -221,7 +217,7 @@
          */
         setInnerHTML(element, html) {
             if (!element) return;
-            HTMLSanitizer?.setInnerHTML(element, this.sanitize(html));
+            element.innerHTML = this.sanitize(html);
         }
     };
 
