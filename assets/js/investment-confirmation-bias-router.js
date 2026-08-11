@@ -1,501 +1,783 @@
 ﻿/**
- * 投资确认偏误场景路由器
- * Investment Confirmation Bias Scenario Router
+ * Investment Confirmation Bias Router - Deep Redesign
+ * 投资确认偏误实验 - 深度重构版
  * 
- * 来源：Soul Auto-Evolution 循环9
- * 创建时间：2026-03-13
+ * Core failure logic: Information cascade + Confirmation spiral + Anchoring effect
  */
 
 (function(global) {
-    'use strict';
+  'use strict';
 
-    // 场景配置
-    const SCENARIO_ID = 'investment-confirmation-bias';
-    const SCENARIO_NAME = '投资确认偏误实验';
+  const NonlinearEngine = global.NonlinearEffectsEngine;
+  const AwakeningSystem = global.AwakeningMomentSystem;
+  const BiasDetector = global.CognitiveBiasDetector;
 
-    // 状态管理
-    const state = {
-        currentPhase: 0,
-        currentRound: 0,
-        decisions: [],
-        informationSelections: [],
-        confirmationBiasScore: 0,
-        startTime: null,
-        metrics: {
-            positiveSelections: 0,
-            negativeSelections: 0,
-            neutralSelections: 0
-        }
-    };
-
-    // 确认偏误评分计算
-    const CBSCalculator = {
-        /**
-         * 计算确认偏误评分
-         * CBS = (P_pos - P_neg) / (P_pos + P_neg + P_neu)
-         */
-        calculate: function(metrics) {
-            const { positiveSelections, negativeSelections, neutralSelections } = metrics;
-            const total = positiveSelections + negativeSelections + neutralSelections;
-            
-            if (total === 0) return 0;
-            
-            const cbs = (positiveSelections - negativeSelections) / total;
-            return Math.round(cbs * 100) / 100; // 保留两位小数
-        },
-
-        interpret: function(cbs) {
-            if (cbs > 0.3) return { level: 'strong', label: '强确认偏误', color: '#e74c3c' };
-            if (cbs > 0.1) return { level: 'moderate', label: '中等确认偏误', color: '#f39c12' };
-            if (cbs >= -0.1) return { level: 'balanced', label: '相对平衡', color: '#27ae60' };
-            return { level: 'reverse', label: '逆向偏误', color: '#3498db' };
-        }
-    };
-
-    // 决策记录
-    const DecisionTracker = {
-        record: function(roundId, decision, context) {
-            state.decisions.push({
-                round: roundId,
-                decision: decision,
-                timestamp: Date.now(),
-                context: context
-            });
-        },
-
-        analyze: function() {
-            return {
-                totalDecisions: state.decisions.length,
-                biasScore: state.confirmationBiasScore,
-                patterns: this.identifyPatterns()
-            };
-        },
-
-        identifyPatterns: function() {
-            const patterns = [];
-            
-            // 检查是否偏向正面信息
-            if (state.metrics.positiveSelections > state.metrics.negativeSelections * 2) {
-                patterns.push({
-                    type: 'positive_bias',
-                    description: '倾向于选择正面信息'
-                });
-            }
-            
-            // 检查社交认同影响
-            const socialDecision = state.decisions.find(d => d.round === 'round-3');
-            if (socialDecision && socialDecision.decision === 'friend') {
-                patterns.push({
-                    type: 'social_influence',
-                    description: '受社交认同影响较大'
-                });
-            }
-            
-            return patterns;
-        }
-    };
-
-    // 觉醒时刻触发器
-    const AwakeningTrigger = {
-        triggers: {
-            unexpected_loss: {
-                check: function(decision, outcome) {
-                    return decision.risk !== 'none' && outcome.loss > 0.3;
-                },
-                message: '意外的亏损揭示了被忽视的风险',
-                intensity: 'high'
-            },
-            information_gap_revealed: {
-                check: function(selections, missedInfo) {
-                    return missedInfo.filter(i => i.bias === 'negative').length > 2;
-                },
-                message: '回顾信息选择，发现关键风险被遗漏',
-                intensity: 'medium'
-            },
-            pattern_recognition: {
-                check: function(cbs) {
-                    return cbs > 0.2;
-                },
-                message: '识别出自己在信息处理中的选择偏好',
-                intensity: 'high'
-            }
-        },
-
-        evaluate: function(context) {
-            const triggered = [];
-            
-            for (const [key, trigger] of Object.entries(this.triggers)) {
-                if (trigger.check(context)) {
-                    triggered.push({
-                        type: key,
-                        message: trigger.message,
-                        intensity: trigger.intensity
-                    });
-                }
-            }
-            
-            return triggered;
-        }
-    };
-
-    // 场景路由器主类
-    class InvestmentConfirmationBiasRouter {
-        constructor(container, apiClient) {
-            this.container = container;
-            this.apiClient = apiClient;
-            this.scenarioData = null;
-            this.state = state;
-        }
-
-        async initialize() {
-            try {
-                // 加载场景数据
-                this.scenarioData = await this.loadScenarioData();
-                state.startTime = Date.now();
-                
-                // 渲染初始界面
-                this.renderIntro();
-                
-                Logger?.debug('投资确认偏误场景初始化完成');
-            } catch (error) {
-                Logger?.error('场景初始化失败:', error);
-                this.showError('场景加载失败，请刷新页面重试');
-            }
-        }
-
-        async loadScenarioData() {
-            // 尝试从API加载
-            if (this.apiClient) {
-                try {
-                    const data = await this.apiClient.getScenario(SCENARIO_ID);
-                    if (data) return data;
-                } catch (e) {
-                    if (typeof Logger !== 'undefined') {
-                        Logger.warn('InvestmentRouter', 'API加载失败，使用本地数据');
-                    }
-                }
-            }
-            
-            // 返回默认场景数据
-            return this.getDefaultScenarioData();
-        }
-
-        getDefaultScenarioData() {
-            return {
-                id: SCENARIO_ID,
-                name: SCENARIO_NAME,
-                phases: [
-                    {
-                        id: 'phase-1-initial',
-                        name: '初步印象',
-                        rounds: [
-                            {
-                                round: 1,
-                                title: '公司概况',
-                                context: '未来科技是一家成立于3年前的科技公司...',
-                                information: [
-                                    { type: 'news', content: '正面消息1', bias: 'positive' },
-                                    { type: 'analyst', content: '正面消息2', bias: 'positive' }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            };
-        }
-
-        renderIntro() {
-            const html = `
-                <div class="scenario-intro compact-start-page">
-                    <h1>${SCENARIO_NAME}</h1>
-                    <p class="description">${this.scenarioData.fullDescription || '体验确认偏误如何影响投资决策'}</p>
-                    <div class="compact-game-goal">
-                        <h3>场景目标</h3>
-                        <p>在信息选择和决策过程中，观察自己的确认偏误倾向</p>
-                    </div>
-                    <div class="instructions compact-situation">
-                        <h3>场景说明</h3>
-                        <p>${this.scenarioData.instructions?.intro || ''}</p>
-                        <p class="warning">${this.scenarioData.instructions?.warning || ''}</p>
-                    </div>
-                    <button class="start-btn" onclick="window.investmentConfirmationBiasRouter.startScenario()">
-                        开始场景
-                    </button>
-                </div>
-            `;
-            
-            HTMLSanitizer?.setInnerHTML(this.container, html);
-        }
-
-        startScenario() {
-            state.currentPhase = 0;
-            state.currentRound = 0;
-            this.renderCurrentRound();
-        }
-
-        renderCurrentRound() {
-            const phase = this.scenarioData.phases[state.currentPhase];
-            if (!phase) {
-                this.renderConclusion();
-                return;
-            }
-
-            const round = phase.rounds[state.currentRound];
-            if (!round) {
-                state.currentPhase++;
-                state.currentRound = 0;
-                this.renderCurrentRound();
-                return;
-            }
-
-            this.renderRound(round);
-        }
-
-        renderRound(round) {
-            let html = `
-                <div class="scenario-round compact-page-header">
-                    <div class="round-header compact-stats-grid">
-                        <span class="phase-name">${this.scenarioData.phases[state.currentPhase].name}</span>
-                    </div>
-                    <div class="round-context compact-situation">
-                        <h2>${round.title}</h2>
-                        <p>${round.context}</p>
-                    </div>
-            `;
-
-            // 渲染信息
-            if (round.information) {
-                html += '<div class="information-panel compact-stats-grid">';
-                round.information.forEach((info, index) => {
-                    html += `
-                        <div class="info-item ${info.bias} compact-bias-hint" data-info-id="${info.id || index}">
-                            <span class="info-type">${this.getInfoTypeLabel(info.type)}</span>
-                            <p>${info.content}</p>
-                            ${info.source ? `<span class="info-source">来源: ${info.source}</span>` : ''}
-                        </div>
-                    `;
-                });
-                html += '</div>';
-            }
-
-            // 渲染决策
-            if (round.decision) {
-                html += this.renderDecision(round.decision, round.round);
-            }
-
-            html += '</div>';
-            HTMLSanitizer?.setInnerHTML(this.container, html);
-        }
-
-        renderDecision(decision, roundId) {
-            let html = `
-                <div class="decision-panel compact-actions">
-                    <h3>${decision.question}</h3>
-            `;
-
-            if (decision.type === 'multi_select') {
-                html += '<div class="multi-select-options compact-options-grid">';
-                decision.options.forEach((option, index) => {
-                    html += `
-                        <label class="option-item compact-option-card">
-                            <input type="checkbox" name="decision-${roundId}" value="${option.id}" 
-                                   onchange="window.investmentConfirmationBiasRouter.trackSelection('${option.bias}', this.checked)">
-                            <span>${option.text}</span>
-                        </label>
-                    `;
-                });
-                html += `
-                    </div>
-                    <button onclick="window.investmentConfirmationBiasRouter.submitMultiSelect(${roundId})">
-                        确认选择 (已选: <span id="selection-count">0</span>/${decision.maxSelections || 3})
-                    </button>
-                `;
-            } else {
-                html += '<div class="single-select-options compact-options-grid">';
-                decision.options.forEach((option) => {
-                    html += `
-                        <button class="option-btn compact-option-card" 
-                                onclick="window.investmentConfirmationBiasRouter.makeDecision(${roundId}, '${option.id}', ${option.biasScore || 0})">
-                            ${option.text}
-                        </button>
-                    `;
-                });
-                html += '</div>';
-            }
-
-            html += '</div>';
-            return html;
-        }
-
-        trackSelection(bias, isSelected) {
-            if (isSelected) {
-                state.informationSelections.push(bias);
-                if (bias === 'positive') state.metrics.positiveSelections++;
-                else if (bias === 'negative') state.metrics.negativeSelections++;
-                else state.metrics.neutralSelections++;
-            } else {
-                const index = state.informationSelections.indexOf(bias);
-                if (index > -1) {
-                    state.informationSelections.splice(index, 1);
-                    if (bias === 'positive') state.metrics.positiveSelections--;
-                    else if (bias === 'negative') state.metrics.negativeSelections--;
-                    else state.metrics.neutralSelections--;
-                }
-            }
-            
-            // 更新选择计数
-            const countEl = document.getElementById('selection-count');
-            if (countEl) {
-                countEl.textContent = state.informationSelections.length;
-            }
-
-            // 实时计算CBS
-            state.confirmationBiasScore = CBSCalculator.calculate(state.metrics);
-            Logger?.debug('当前CBS:', state.confirmationBiasScore);
-        }
-
-        makeDecision(roundId, optionId, biasScore) {
-            DecisionTracker.record(`round-${roundId}`, optionId, { biasScore });
-            
-            // 根据决策更新指标
-            if (biasScore > 0) {
-                state.metrics.positiveSelections += biasScore;
-            } else if (biasScore < 0) {
-                state.metrics.negativeSelections += Math.abs(biasScore);
-            }
-
-            state.confirmationBiasScore = CBSCalculator.calculate(state.metrics);
-
-            // 前进到下一轮
-            state.currentRound++;
-            this.renderCurrentRound();
-        }
-
-        submitMultiSelect(roundId) {
-            DecisionTracker.record(`round-${roundId}`, state.informationSelections.slice(), state.metrics);
-            state.informationSelections = [];
-            state.currentRound++;
-            this.renderCurrentRound();
-        }
-
-        renderConclusion() {
-            // 计算最终CBS
-            state.confirmationBiasScore = CBSCalculator.calculate(state.metrics);
-            const interpretation = CBSCalculator.interpret(state.confirmationBiasScore);
-
-            // 评估觉醒时刻
-            const awakenings = AwakeningTrigger.evaluate({
-                ...state,
-                loss: 0.4 // 模拟亏损
-            });
-
-            const html = `
-                <div class="scenario-conclusion compact-start-page">
-                    <h1>场景结束</h1>
-                    
-                    <div class="analysis-section compact-situation">
-                        <h2>您的确认偏误分析</h2>
-                        <div class="cbs-result" style="color: ${interpretation.color}">
-                            <span class="cbs-value">${state.confirmationBiasScore.toFixed(2)}</span>
-                            <span class="cbs-label">${interpretation.label}</span>
-                        </div>
-                        <div class="metrics-breakdown">
-                            <p>正面信息选择: ${state.metrics.positiveSelections}</p>
-                            <p>负面信息选择: ${state.metrics.negativeSelections}</p>
-                            <p>中性信息选择: ${state.metrics.neutralSelections}</p>
-                        </div>
-                    </div>
-
-                    ${awakenings.length > 0 ? `
-                        <div class="awakening-section compact-bias-hint">
-                            <h2>觉醒时刻</h2>
-                            ${awakenings.map(a => `
-                                <div class="awakening-item intensity-${a.intensity}">
-                                    <p>${a.message}</p>
-                                </div>
-                            `).join('')}
-                        </div>
-                    ` : ''}
-
-                    <div class="learning-section compact-situation">
-                        <h2>学习要点</h2>
-                        <ul>
-                            <li>确认偏误使我们倾向于寻找支持自己观点的证据</li>
-                            <li>忽视反面信息可能导致错误的投资决策</li>
-                            <li>主动寻找反面观点是克服确认偏误的关键</li>
-                        </ul>
-                    </div>
-
-                    <div class="action-buttons compact-actions">
-                        <button onclick="window.investmentConfirmationBiasRouter.restart()">重新开始</button>
-                        <button onclick="window.location.href='/scenarios.html'">返回场景列表</button>
-                    </div>
-                </div>
-            `;
-
-            HTMLSanitizer?.setInnerHTML(this.container, html);
-        }
-
-        restart() {
-            // 重置状态
-            state.currentPhase = 0;
-            state.currentRound = 0;
-            state.decisions = [];
-            state.informationSelections = [];
-            state.confirmationBiasScore = 0;
-            state.metrics = {
-                positiveSelections: 0,
-                negativeSelections: 0,
-                neutralSelections: 0
-            };
-            state.startTime = Date.now();
-
-            this.renderIntro();
-        }
-
-        getInfoTypeLabel(type) {
-            const labels = {
-                news: '新闻',
-                analyst: '分析师',
-                financial: '财务',
-                market: '市场',
-                risk: '风险',
-                management: '管理层',
-                competition: '竞争',
-                regulation: '监管',
-                scenario: '场景'
-            };
-            return labels[type] || type;
-        }
-
-        showError(message) {
-            HTMLSanitizer?.setInnerHTML(this.container, `
-                <div class="error-message">
-                    <p>${message}</p>
-                    <button onclick="window.location.reload()">刷新页面</button>
-                </div>
-            `);
-        }
+  class InvestmentConfirmationBiasRouter {
+    constructor(container) {
+      this.container = container;
+      
+      this.state = {
+        portfolio: 10000,
+        knowledge: 0,
+        turn: 1,
+        max_turns: 6,
+        phase: 'information', // information | decision | feedback | awakening | ending
+        
+        // 确认偏误指标
+        bias_risk: 0,
+        source_diversity: 1.0,
+        confirmation_bias_score: 0,
+        information_history: [],
+        
+        // 投资决策历史
+        decision_history: [],
+        selected_sources: [],
+        
+        // 觉醒
+        awakening_triggered: false,
+        
+        // 市场状态
+        market_trend: 'neutral', // bullish | bearish | neutral
+        actual_price: 100,
+        predicted_price: 100
+      };
+      
+      this.tempDecisions = {};
+      this.availableSources = this.initializeSources();
+      this.awakening = null;
     }
 
-    // 导出
-    global.InvestmentConfirmationBiasRouter = InvestmentConfirmationBiasRouter;
-
-    // 全局访问点
-    global.investmentConfirmationBiasRouter = null;
-
-    // 初始化函数
-    global.initInvestmentConfirmationBias = function(containerId, apiClient) {
-        const container = document.getElementById(containerId);
-        if (!container) {
-            Logger?.error('Container not found:', containerId);
-            return null;
+    initializeSources() {
+      return {
+        bullish_analyst: {
+          id: 'bullish_analyst',
+          name: '看涨分析师',
+          bias: 'positive',
+          reliability: 0.6,
+          social_proof: 85,
+          content: [
+            '目标价：¥200（当前¥100）',
+            '未来三年复合增长35%',
+            '行业前景广阔，政策利好',
+            '机构持仓持续增加'
+          ]
+        },
+        bearish_analyst: {
+          id: 'bearish_analyst',
+          name: '看跌分析师',
+          bias: 'negative',
+          reliability: 0.8,
+          social_proof: 12,
+          content: [
+            '估值严重高估，PE是行业平均的3倍',
+            '主营业务增长率连续3季度下滑',
+            '大股东质押率超过60%',
+            '应收账款占营收比例高达80%'
+          ]
+        },
+        insider_info: {
+          id: 'insider_info',
+          name: '内部消息',
+          bias: 'positive',
+          reliability: 0.3,
+          social_proof: 45,
+          content: [
+            '小道消息：即将发布重大利好',
+            '据说有大基金在建仓',
+            '管理层信心十足'
+          ]
+        },
+        contrarian_report: {
+          id: 'contrarian_report',
+          name: '逆向研究',
+          bias: 'negative',
+          reliability: 0.85,
+          social_proof: 5,
+          content: [
+            '财务数据异常，现金流为负',
+            '实际盈利能力仅为账面利润的30%',
+            '核心技术专利存在侵权风险'
+          ]
+        },
+        social_media: {
+          id: 'social_media',
+          name: '社交媒体讨论',
+          bias: 'positive',
+          reliability: 0.2,
+          social_proof: 90,
+          content: [
+            '85%的散户看好这只股票',
+            '相关话题热度持续上升',
+            'KOL推荐，目标价¥250'
+          ]
+        },
+        regulatory_filing: {
+          id: 'regulatory_filing',
+          name: '监管公告',
+          bias: 'neutral',
+          reliability: 0.95,
+          social_proof: 50,
+          content: [
+            '公司收到监管问询函',
+            '要求说明业务合规性问题',
+            '可能面临行政处罚'
+          ]
         }
+      };
+    }
 
-        global.investmentConfirmationBiasRouter = new InvestmentConfirmationBiasRouter(container, apiClient);
-        global.investmentConfirmationBiasRouter.initialize();
-        
-        return global.investmentConfirmationBiasRouter;
-    };
+    initialize() {
+      this.renderStartPage();
+    }
+
+    renderStartPage() {
+      const html = `
+        <div class="game-page start-page compact-start-page">
+          <h2>📈 投资确认偏误实验</h2>
+          
+          <div class="scenario-intro compact-situation">
+            <p>你是一名业余投资者，拥有¥10,000初始资金。你关注了一只热门股票"未来科技"(FutureTech)，当前价格¥100。</p>
+            <p>你的目标是：在6个回合内，通过选择信息源、做出投资决策，实现最大化的投资回报。</p>
+            <p><strong>但记住：在信息爆炸的时代，"知道更多"不等于"决策更好"。确认偏误会让你只看到你想看的。</strong></p>
+          </div>
+          
+          <div class="compact-stats-grid">
+            <div class="stat-item">
+              <span class="stat-label">💰 投资组合</span>
+              <span class="stat-value">¥${this.state.portfolio.toLocaleString()}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">📊 知识水平</span>
+              <span class="stat-value">${this.state.knowledge}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">⚠️ 偏误风险</span>
+              <span class="stat-value">${this.state.bias_risk}%</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">📰 信息多样性</span>
+              <span class="stat-value">${Math.round(this.state.source_diversity * 100)}%</span>
+            </div>
+          </div>
+          
+          <div class="collapsible-header" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">
+            💭 可能的思维陷阱
+          </div>
+          <div class="collapsible-content">
+            <div class="compact-bias-hint">
+              <ul>
+                <li>"确认偏误" - 只关注支持自己观点的信息</li>
+                <li>"可得性启发" - 过度依赖容易获得的信息</li>
+                <li>"锚定效应" - 过度依赖初始信息</li>
+                <li>"社会证明" - 跟随大众选择</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="compact-game-goal">
+            <strong>🎯 目标：</strong>6回合内实现投资回报最大化，同时保持信息选择的多样性
+          </div>
+          
+          <div class="compact-actions">
+            <button class="btn btn-primary" onclick="window.investmentRouter.startGame(); window.investmentRouter.render();">
+              开始投资
+            </button>
+          </div>
+        </div>
+      `;
+      
+      this.container.innerHTML = html;
+    }
+
+    renderInformationPage() {
+      const turn = this.state.turn;
+      const sources = this.getAvailableSources(turn);
+      
+      const html = `
+        <div class="game-page info-page compact-page-header">
+          <div class="round-header compact-stats-grid">
+            <span class="step-indicator">回合 ${turn} / ${this.state.max_turns} - 信息收集</span>
+          </div>
+          
+          <div class="situation-box compact-situation">
+            <h3>第${turn}回合 - ${this.getMarketScenario(turn)}</h3>
+            <p>市场状态：${this.getMarketDescription()}</p>
+            <p>请选择你要查看的信息源（可多选）。</p>
+          </div>
+          
+          <div class="live-metrics compact-stats-grid">
+            <div class="metric-item">
+              <span class="metric-label">💰 投资组合</span>
+              <span class="metric-value">¥${this.state.portfolio.toLocaleString()}</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">⚠️ 偏误风险</span>
+              <span class="metric-value">${this.state.bias_risk}%</span>
+              <div class="metric-bar">
+                <div class="metric-fill ${this.state.bias_risk > 60 ? 'danger' : ''}" style="width: ${this.state.bias_risk}%"></div>
+              </div>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">📰 信息多样性</span>
+              <span class="metric-value">${Math.round(this.state.source_diversity * 100)}%</span>
+            </div>
+          </div>
+          
+          <div class="sources-grid compact-options-grid">
+            ${sources.map(source => `
+              <div class="source-card compact-option-card" onclick="window.investmentRouter.toggleSource('${source.id}')">
+                <div class="source-header">
+                  <strong>${source.name}</strong>
+                  <span class="source-bias bias-${source.bias}">${source.bias === 'positive' ? '看涨' : source.bias === 'negative' ? '看跌' : '中立'}</span>
+                </div>
+                <div class="source-meta">
+                  <span>可信度: ${Math.round(source.reliability * 100)}%</span>
+                  <span>社交证明: ${source.social_proof}%</span>
+                </div>
+                <div class="source-content">
+                  ${source.content.map(c => `<p>${c}</p>`).join('')}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          
+          <div class="compact-actions">
+            <button class="btn btn-primary" onclick="window.investmentRouter.submitInformationSelection();">
+              确认选择 (已选: <span id="source-count">0</span>)
+            </button>
+          </div>
+        </div>
+      `;
+      
+      this.container.innerHTML = html;
+      this.updateSourceCount();
+    }
+
+    renderDecisionPage() {
+      const turn = this.state.turn;
+      
+      const html = `
+        <div class="game-page decision-page compact-page-header">
+          <div class="round-header compact-stats-grid">
+            <span class="step-indicator">回合 ${turn} / ${this.state.max_turns} - 投资决策</span>
+          </div>
+          
+          <div class="situation-box compact-situation">
+            <h3>基于你收集的信息，做出投资决策</h3>
+            <p>当前股价: ¥${this.state.actual_price} | 你的资金: ¥${this.state.portfolio.toLocaleString()}</p>
+          </div>
+          
+          <div class="live-metrics compact-stats-grid">
+            <div class="metric-item">
+              <span class="metric-label">💰 投资组合</span>
+              <span class="metric-value">¥${this.state.portfolio.toLocaleString()}</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">⚠️ 偏误风险</span>
+              <span class="metric-value">${this.state.bias_risk}%</span>
+            </div>
+          </div>
+          
+          <div class="decision-panel compact-actions">
+            <h3>选择你的投资策略：</h3>
+            <div class="options-list compact-options-grid">
+              <button class="option-btn compact-option-card" onclick="window.investmentRouter.makeInvestmentDecision('buy')">
+                <strong>买入 ¥5,000</strong>
+                <span class="option-desc">预期上涨，投入资金</span>
+              </button>
+              <button class="option-btn compact-option-card" onclick="window.investmentRouter.makeInvestmentDecision('hold')">
+                <strong>持有观望</strong>
+                <span class="option-desc">信息不足，继续观察</span>
+              </button>
+              <button class="option-btn compact-option-card" onclick="window.investmentRouter.makeInvestmentDecision('sell')">
+                <strong>卖出 ¥5,000</strong>
+                <span class="option-desc">预期下跌，减仓避险</span>
+              </button>
+              <button class="option-btn compact-option-card" onclick="window.investmentRouter.makeInvestmentDecision('diversify')">
+                <strong>分散投资</strong>
+                <span class="option-desc">投入¥2,000到多只股票</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      this.container.innerHTML = html;
+    }
+
+    renderFeedbackPage() {
+      const turn = this.state.turn;
+      const lastDecision = this.state.decision_history[this.state.decision_history.length - 1];
+      
+      // 检测觉醒时刻
+      this.awakening = AwakeningSystem.checkAwakening(
+        'investment', 
+        turn, 
+        this.state, 
+        this.state.decision_history
+      );
+      
+      const html = `
+        <div class="game-page feedback-page compact-start-page">
+          <h2>📊 第${turn}回合反馈</h2>
+          
+          <div class="immediate-feedback compact-situation">
+            <h3>投资结果</h3>
+            <div class="changes-list">
+              ${this.generateInvestmentChanges(lastDecision)}
+            </div>
+          </div>
+          
+          <div class="live-metrics compact-stats-grid">
+            <div class="metric-item">
+              <span class="metric-label">💰 投资组合</span>
+              <span class="metric-value">¥${this.state.portfolio.toLocaleString()}</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">⚠️ 偏误风险</span>
+              <span class="metric-value">${this.state.bias_risk}%</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">📰 信息多样性</span>
+              <span class="metric-value">${Math.round(this.state.source_diversity * 100)}%</span>
+            </div>
+          </div>
+          
+          ${this.awakening ? `
+            <div class="awakening-moment">
+              <h2>${this.awakening.title}</h2>
+              <p>${this.awakening.message}</p>
+              <p><strong>💡 ${this.awakening.learningPoint}</strong></p>
+            </div>
+          ` : ''}
+          
+          <div class="compact-actions">
+            <button class="btn btn-primary" onclick="window.investmentRouter.nextTurn(); window.investmentRouter.render();">
+              ${turn < this.state.max_turns ? '下一回合' : '查看结果'}
+            </button>
+          </div>
+        </div>
+      `;
+      
+      this.container.innerHTML = html;
+    }
+
+    renderEndingPage() {
+      const biases = BiasDetector.analyzeAll(this.state.decision_history, this.state.information_history);
+      const performance = this.evaluatePerformance();
+      
+      const html = `
+        <div class="game-page ending-page compact-start-page">
+          <h2>📊 投资实验结束</h2>
+          
+          <div class="final-stats compact-stats-grid">
+            <div class="stat-item">
+              <span class="stat-label">💰 最终资产</span>
+              <span class="stat-value">¥${this.state.portfolio.toLocaleString()}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">📈 总收益率</span>
+              <span class="stat-value">${((this.state.portfolio - 10000) / 10000 * 100).toFixed(1)}%</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">⚠️ 最终偏误风险</span>
+              <span class="stat-value">${this.state.bias_risk}%</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">📰 信息多样性</span>
+              <span class="stat-value">${Math.round(this.state.source_diversity * 100)}%</span>
+            </div>
+          </div>
+          
+          <div class="performance-message compact-situation">
+            <h3>${performance.message}</h3>
+          </div>
+          
+          ${biases.length > 0 ? `
+            <div class="bias-analysis compact-bias-hint">
+              <h3>🔍 检测到的认知偏差</h3>
+              ${biases.map(bias => `
+                <div class="bias-item">
+                  <strong>${bias.bias}</strong>
+                  <p>${bias.evidence}</p>
+                  <p><em>${bias.suggestion}</em></p>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+          
+          <div class="cbs-score compact-stats-grid">
+            <div class="stat-item">
+              <span class="stat-label">📊 确认偏误分数 (CBS)</span>
+              <span class="stat-value">${this.state.confirmation_bias_score.toFixed(2)}</span>
+            </div>
+          </div>
+          
+          <div class="action-buttons compact-actions">
+            <button class="btn btn-primary" onclick="window.investmentRouter.restart();">
+              重新挑战
+            </button>
+          </div>
+        </div>
+      `;
+      
+      this.container.innerHTML = html;
+    }
+
+    // ========== 游戏逻辑 ==========
+    
+    startGame() {
+      this.state.phase = 'information';
+      this.state.turn = 1;
+      this.state.decision_history = [];
+      this.state.information_history = [];
+      this.state.selected_sources = [];
+      this.state.delayed_effects = [];
+      this.state.awakening_triggered = false;
+      this.state.bias_risk = 0;
+      this.state.source_diversity = 1.0;
+      this.state.confirmation_bias_score = 0;
+      this.state.portfolio = 10000;
+      this.state.knowledge = 0;
+      this.availableSources = this.initializeSources();
+    }
+
+    toggleSource(sourceId) {
+      const index = this.state.selected_sources.indexOf(sourceId);
+      if (index === -1) {
+        this.state.selected_sources.push(sourceId);
+      } else {
+        this.state.selected_sources.splice(index, 1);
+      }
+      this.updateSourceCount();
+    }
+
+    updateSourceCount() {
+      const countEl = document.getElementById('source-count');
+      if (countEl) {
+        countEl.textContent = this.state.selected_sources.length;
+      }
+    }
+
+    submitInformationSelection() {
+      if (this.state.selected_sources.length === 0) {
+        alert('请至少选择一个信息源');
+        return;
+      }
+      
+      // 记录信息选择
+      const selections = this.state.selected_sources.map(id => {
+        const source = this.availableSources[id];
+        return {
+          source_id: id,
+          bias: source.bias,
+          reliability: source.reliability,
+          turn: this.state.turn
+        };
+      });
+      
+      this.state.information_history.push(...selections);
+      
+      // 更新信息多样性
+      this.updateSourceDiversity();
+      
+      // 更新偏误风险
+      this.updateBiasRisk();
+      
+      // 计算确认偏误分数
+      this.calculateCBS();
+      
+      // 进入决策阶段
+      this.state.phase = 'decision';
+      this.render();
+    }
+
+    makeInvestmentDecision(type) {
+      // 记录决策
+      const decision = {
+        turn: this.state.turn,
+        type: type,
+        selected_sources: [...this.state.selected_sources],
+        market_trend: this.state.market_trend
+      };
+      
+      this.state.decision_history.push(decision);
+      
+      // 计算投资效果
+      this.calculateInvestmentEffect(type);
+      
+      // 检测偏差
+      const biases = BiasDetector.analyzeAll(this.state.decision_history, this.state.information_history);
+      this.state.detected_biases.push(...biases);
+      
+      // 进入反馈阶段
+      this.state.phase = 'feedback';
+      this.render();
+    }
+
+    calculateInvestmentEffect(type) {
+      const portfolio = this.state.portfolio;
+      const biasRisk = this.state.bias_risk / 100;
+      const marketTrend = this.state.market_trend;
+      
+      let returnRate = 0;
+      
+      switch (type) {
+        case 'buy':
+          // 看涨决策
+          if (marketTrend === 'bullish') {
+            returnRate = 0.15; // +15%
+          } else if (marketTrend === 'bearish') {
+            returnRate = -0.20; // -20%
+          } else {
+            returnRate = 0.05; // +5%
+          }
+          // 偏误惩罚
+          returnRate -= biasRisk * 0.3;
+          break;
+          
+        case 'sell':
+          // 看跌决策
+          if (marketTrend === 'bearish') {
+            returnRate = 0.10; // +10%
+          } else if (marketTrend === 'bullish') {
+            returnRate = -0.15; // -15%
+          } else {
+            returnRate = -0.03; // -3%
+          }
+          break;
+          
+        case 'hold':
+          returnRate = 0.02; // +2% 无风险收益
+          break;
+          
+        case 'diversify':
+          returnRate = 0.08; // +8% 分散收益
+          break;
+      }
+      
+      // 更新投资组合
+      this.state.portfolio = Math.round(portfolio * (1 + returnRate));
+      
+      // 更新知识水平
+      this.state.knowledge += 5;
+      
+      // 市场趋势随机变化
+      this.updateMarketTrend();
+    }
+
+    updateMarketTrend() {
+      const rand = Math.random();
+      if (rand < 0.3) {
+        this.state.market_trend = 'bullish';
+      } else if (rand < 0.6) {
+        this.state.market_trend = 'bearish';
+      } else {
+        this.state.market_trend = 'neutral';
+      }
+      
+      // 更新实际价格
+      const change = (Math.random() - 0.5) * 0.2;
+      this.state.actual_price = Math.round(this.state.actual_price * (1 + change));
+    }
+
+    updateSourceDiversity() {
+      const sources = this.state.information_history;
+      if (sources.length === 0) return;
+      
+      const uniqueSources = new Set(sources.map(s => s.source_id));
+      const positiveCount = sources.filter(s => s.bias === 'positive').length;
+      const negativeCount = sources.filter(s => s.bias === 'negative').length;
+      
+      // 多样性 = 唯一源数 / 总源数 × 正负平衡
+      const diversity = (uniqueSources.size / sources.length) * 
+                       (1 - Math.abs(positiveCount - negativeCount) / sources.length);
+      
+      this.state.source_diversity = Math.max(0, Math.min(1, diversity));
+    }
+
+    updateBiasRisk() {
+      const sources = this.state.information_history;
+      if (sources.length === 0) return;
+      
+      const positiveCount = sources.filter(s => s.bias === 'positive').length;
+      const ratio = positiveCount / sources.length;
+      
+      // 偏误风险 = 正面信息占比 > 70% 或 < 30%
+      if (ratio > 0.7) {
+        this.state.bias_risk = Math.min(100, this.state.bias_risk + 15);
+      } else if (ratio < 0.3) {
+        this.state.bias_risk = Math.min(100, this.state.bias_risk + 10);
+      } else {
+        this.state.bias_risk = Math.max(0, this.state.bias_risk - 5);
+      }
+    }
+
+    calculateCBS() {
+      const sources = this.state.information_history;
+      if (sources.length === 0) return;
+      
+      const positive = sources.filter(s => s.bias === 'positive').length;
+      const negative = sources.filter(s => s.bias === 'negative').length;
+      const neutral = sources.filter(s => s.bias === 'neutral').length;
+      
+      const total = positive + negative + neutral;
+      if (total === 0) return;
+      
+      // CBS = (P_pos - P_neg) / (P_pos + P_neg + P_neu)
+      this.state.confirmation_bias_score = (positive - negative) / total;
+    }
+
+    nextTurn() {
+      this.state.turn++;
+      this.state.selected_sources = [];
+      this.tempDecisions = {};
+      
+      if (this.state.turn > this.state.max_turns) {
+        this.state.phase = 'ending';
+      } else {
+        this.state.phase = 'information';
+      }
+      
+      this.render();
+    }
+
+    restart() {
+      this.state = {
+        portfolio: 10000,
+        knowledge: 0,
+        turn: 1,
+        max_turns: 6,
+        phase: 'information',
+        bias_risk: 0,
+        source_diversity: 1.0,
+        confirmation_bias_score: 0,
+        information_history: [],
+        decision_history: [],
+        selected_sources: [],
+        delayed_effects: [],
+        awakening_triggered: false,
+        market_trend: 'neutral',
+        actual_price: 100,
+        predicted_price: 100
+      };
+      this.availableSources = this.initializeSources();
+      this.render();
+    }
+
+    render() {
+      switch (this.state.phase) {
+        case 'information':
+          this.renderInformationPage();
+          break;
+        case 'decision':
+          this.renderDecisionPage();
+          break;
+        case 'feedback':
+          this.renderFeedbackPage();
+          break;
+        case 'ending':
+          this.renderEndingPage();
+          break;
+        default:
+          this.renderStartPage();
+      }
+    }
+
+    // ========== 辅助方法 ==========
+    
+    getAvailableSources(turn) {
+      // 根据回合数解锁更多信息源
+      const allSources = Object.values(this.availableSources);
+      const available = allSources.slice(0, Math.min(3 + turn, allSources.length));
+      return available;
+    }
+
+    getMarketScenario(turn) {
+      const scenarios = {
+        1: '初识股票',
+        2: '市场波动',
+        3: '信息爆炸',
+        4: '谣言四起',
+        5: '关键时刻',
+        6: '最终决策'
+      };
+      return scenarios[turn] || '市场观察';
+    }
+
+    getMarketDescription() {
+      const descriptions = {
+        bullish: '市场看涨情绪浓厚，多数分析师推荐买入',
+        bearish: '市场看跌情绪蔓延，风险信号增多',
+        neutral: '市场方向不明，信息相互矛盾'
+      };
+      return descriptions[this.state.market_trend] || '市场平稳';
+    }
+
+    generateInvestmentChanges(decision) {
+      if (!decision) return '<p>本回合无投资操作</p>';
+      
+      const changes = [];
+      const prevPortfolio = decision.state_before?.portfolio || this.state.portfolio;
+      const currentPortfolio = this.state.portfolio;
+      const diff = currentPortfolio - prevPortfolio;
+      
+      changes.push(`<span class="change ${diff >= 0 ? 'positive' : 'negative'}">
+        投资组合: ${diff >= 0 ? '+' : ''}${diff}
+      </span>`);
+      
+      return changes.join('');
+    }
+
+    evaluatePerformance() {
+      const { portfolio, bias_risk, source_diversity } = this.state;
+      const returnRate = (portfolio - 10000) / 10000;
+      
+      let score = 0;
+      let message = '';
+      
+      // 收益率评分
+      if (returnRate >= 0.3) score += 3;
+      else if (returnRate >= 0.1) score += 2;
+      else if (returnRate >= 0) score += 1;
+      
+      // 偏误控制评分
+      if (bias_risk < 30) score += 2;
+      else if (bias_risk < 50) score += 1;
+      
+      // 信息多样性评分
+      if (source_diversity > 0.7) score += 2;
+      else if (source_diversity > 0.5) score += 1;
+      
+      if (score >= 6) {
+        message = '优秀！你保持了信息多样性，做出了理性的投资决策。';
+        return { grade: 'A', score, message };
+      } else if (score >= 4) {
+        message = '良好，但仍有改进空间。注意避免确认偏误。';
+        return { grade: 'B', score, message };
+      } else if (score >= 2) {
+        message = '一般。你似乎陷入了确认偏误的陷阱。';
+        return { grade: 'C', score, message };
+      } else {
+        message = '较差。强烈的确认偏误导致投资失误。';
+        return { grade: 'F', score, message };
+      }
+    }
+  }
+
+  // 导出
+  global.InvestmentConfirmationBiasRouter = InvestmentConfirmationBiasRouter;
+  global.investmentRouter = null;
+
+  global.initInvestmentConfirmationBias = function(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) {
+      console.error('Container not found:', containerId);
+      return null;
+    }
+    global.investmentRouter = new InvestmentConfirmationBiasRouter(container);
+    global.investmentRouter.initialize();
+    return global.investmentRouter;
+  };
 
 })(typeof window !== 'undefined' ? window : global);
