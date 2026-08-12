@@ -916,22 +916,19 @@
         daily_customers: this.state.daily_customers
       };
       
-      // 更新隐藏系统
-      this.updateHiddenSystem(decision);
+      // 更新隐藏系统并获取计算结果
+      const hiddenChanges = this.updateHiddenSystem(decision);
+      
+      // 应用隐藏系统的计算结果到状态
+      this.applyHiddenSystemChanges(hiddenChanges);
       
       // 计算表面效果（用户看到的）
       const visibleChanges = this.calculateVisibleChanges(decision);
       
       // 计算隐藏效果（记录在尸检中）
-      const hiddenChanges = this.calculateHiddenChanges(decision);
+      const hiddenEffectsForAutopsy = this.calculateHiddenChanges(decision);
       
-      // 应用表面变化
-      this.state.satisfaction = Math.max(0, Math.min(100, this.state.satisfaction + visibleChanges.satisfaction));
-      this.state.resources += visibleChanges.resources;
-      this.state.reputation = Math.max(0, Math.min(100, this.state.reputation + visibleChanges.reputation));
-      this.state.daily_customers = Math.max(0, this.state.daily_customers + (visibleChanges.customers || 0));
-      
-      // 运行竞争回合
+      // 运行竞争回合（在状态更新之后，记录在历史之前）
       if (this.competitionEnabled && this.competitionSystem) {
         this.updateUserStateForCompetition();
         const competitionResult = this.competitionSystem.runCompetitionTurn(decision);
@@ -954,7 +951,7 @@
           reputation: this.state.reputation,
           daily_customers: this.state.daily_customers
         },
-        causal_chain: this.generateCausalChain(decision, hiddenChanges)
+        causal_chain: this.generateCausalChain(decision, hiddenEffectsForAutopsy)
       });
       
       // 检查觉醒条件
@@ -1058,30 +1055,29 @@
       const marketing_boost = (decision.marketing_investment || 0) / 1000;
       
       // 计算满意度（使用隐藏的 quality_index）
-      this.state.satisfaction = this.hiddenSystem.calculateSatisfaction(
+      const new_satisfaction = this.hiddenSystem.calculateSatisfaction(
         this.hiddenSystem.quality_index,
         marketing_boost
       );
       
       // 计算客户终身价值
-      this.hiddenSystem.customer_lifetime_value = this.hiddenSystem.calculateCustomerLifetimeValue(this.state.satisfaction);
+      this.hiddenSystem.customer_lifetime_value = this.hiddenSystem.calculateCustomerLifetimeValue(new_satisfaction);
       
       // 计算口碑变化
-      const reputation_change = this.hiddenSystem.calculateReputationChange(this.state.satisfaction, this.state.reputation);
-      this.state.reputation = Math.max(0, Math.min(100, this.state.reputation + reputation_change));
+      const reputation_change = this.hiddenSystem.calculateReputationChange(new_satisfaction, this.state.reputation);
+      const new_reputation = Math.max(0, Math.min(100, this.state.reputation + reputation_change));
       
       // 计算客户流失
-      const churn_rate = this.hiddenSystem.calculateChurnRate(this.state.satisfaction);
+      const churn_rate = this.hiddenSystem.calculateChurnRate(new_satisfaction);
       const churned_customers = Math.round(this.state.daily_customers * churn_rate);
-      this.state.daily_customers = Math.max(0, this.state.daily_customers - churned_customers);
+      const new_daily_customers = Math.max(0, this.state.daily_customers - churned_customers);
       
       // 计算收入
-      const base_revenue = this.state.daily_customers * this.hiddenSystem.base_revenue_per_customer;
+      const base_revenue = new_daily_customers * this.hiddenSystem.base_revenue_per_customer;
       const staff_cost = this.hiddenSystem.staff_count * 100;
       const marketing_cost = decision.marketing_investment || 0;
-      
       const net_revenue = base_revenue - staff_cost - marketing_cost;
-      this.state.resources += net_revenue;
+      const new_resources = this.state.resources + net_revenue;
       
       // 营销延迟效果
       if (decision.marketing_investment > 0) {
@@ -1107,6 +1103,21 @@
           description: `员工增加导致协调问题开始显现`
         });
       }
+      
+      // 返回计算后的状态（不直接修改 this.state）
+      return {
+        satisfaction: new_satisfaction,
+        reputation: new_reputation,
+        daily_customers: new_daily_customers,
+        resources: new_resources
+      };
+    }
+
+    applyHiddenSystemChanges(changes) {
+      this.state.satisfaction = Math.max(0, Math.min(100, changes.satisfaction));
+      this.state.reputation = Math.max(0, Math.min(100, changes.reputation));
+      this.state.daily_customers = Math.max(0, changes.daily_customers);
+      this.state.resources = changes.resources;
     }
 
     calculateVisibleChanges(decision) {
