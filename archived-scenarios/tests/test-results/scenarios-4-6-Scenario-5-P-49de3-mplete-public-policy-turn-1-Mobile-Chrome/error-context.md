@@ -1,0 +1,372 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e5]:
+        - img [ref=e6]
+        - generic [ref=e9]: Failure Logic
+      - generic [ref=e10]:
+        - button [ref=e11] [cursor=pointer]:
+          - img [ref=e12]
+        - button [ref=e14] [cursor=pointer]:
+          - img [ref=e15]
+        - button [ref=e17] [cursor=pointer]:
+          - img [ref=e18]
+        - button [ref=e22] [cursor=pointer]:
+          - img [ref=e23]
+        - button [ref=e25] [cursor=pointer]:
+          - img [ref=e26]
+        - button [ref=e29] [cursor=pointer]:
+          - img [ref=e30]
+      - button "同步数据" [ref=e33] [cursor=pointer]:
+        - img [ref=e34]
+  - main [ref=e36]:
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - heading "认知场景" [level=1] [ref=e40]
+        - paragraph [ref=e41]: 选择一个场景开始您的认知训练
+      - generic [ref=e42]:
+        - generic [ref=e43]: "挑战难度:"
+        - combobox "挑战难度:" [ref=e44]:
+          - option "初级 (Beginner)" [selected]
+          - option "中级 (Intermediate)"
+          - option "高级 (Advanced)"
+        - generic [ref=e45]: "当前: 初级"
+      - generic [ref=e46]:
+        - generic [ref=e47] [cursor=pointer]:
+          - img [ref=e49]:
+            - generic [ref=e64]: 非线性!
+            - generic [ref=e65]: 非线性效应 · 指数增长
+          - generic [ref=e66]:
+            - heading "咖啡店线性思维" [level=3] [ref=e67]
+            - paragraph [ref=e68]: 线性思维陷阱场景
+            - generic [ref=e69]:
+              - generic [ref=e70]: beginner
+              - generic [ref=e71]: ⏱ 15分钟
+            - paragraph [ref=e72]: 在这个场景中，您将管理一家咖啡店，体验非线性效应在复杂商业环境中的影响。在复杂的系统中，原因和结果之间往往不是简单的线性关系，而是存在非线性效应，这需要我们采用更复杂的思维模式来理解和应对。
+            - button "开始挑战 (beginner难度)" [ref=e73]
+            - generic [ref=e74]:
+              - text: "高级挑战:"
+              - list [ref=e75]:
+                - listitem [ref=e76]: 供应链指数增长 (intermediate)
+                - listitem [ref=e77]: 复杂系统管理 (advanced)
+        - generic [ref=e78] [cursor=pointer]:
+          - img [ref=e80]:
+            - generic [ref=e89]:
+              - generic [ref=e93]: "12"
+              - generic [ref=e94]: "3"
+              - generic [ref=e95]: "6"
+              - generic [ref=e96]: "9"
+              - generic [ref=e98]: 延迟!
+            - generic [ref=e99]: 时间延迟 · 决策效果滞后显现
+          - generic [ref=e100]:
+            - heading "恋爱关系时间延迟" [level=3] [ref=e101]
+            - paragraph [ref=e102]: 时间延迟偏差场景
+            - generic [ref=e103]:
+              - generic [ref=e104]: intermediate
+              - generic [ref=e105]: ⏱ 20分钟
+            - paragraph [ref=e106]: 在恋爱关系中体验时间延迟对决策的影响。每个决策的效果会在几回合后显现。时间延迟偏差是指我们倾向于期望立即看到行动的结果，而忽视了在复杂系统中结果往往需要时间才能显现。
+            - button "开始挑战 (beginner难度)" [ref=e107]
+            - generic [ref=e108]:
+              - text: "高级挑战:"
+              - list [ref=e109]:
+                - listitem [ref=e110]: 长期关系复利效应 (intermediate)
+                - listitem [ref=e111]: 复杂关系网络 (advanced)
+        - generic [ref=e112] [cursor=pointer]:
+          - img [ref=e114]:
+            - generic [ref=e127]: ✓
+            - generic [ref=e128]: 确认偏误 · 选择性过滤信息
+          - generic [ref=e129]:
+            - heading "投资确认偏误" [level=3] [ref=e130]
+            - paragraph [ref=e131]: 确认偏误场景
+            - generic [ref=e132]:
+              - generic [ref=e133]: advanced
+              - generic [ref=e134]: ⏱ 25分钟
+            - paragraph [ref=e135]: 在投资决策中体验如何处理不同类型的信息，以及信息处理方式如何影响我们的风险判断。在复杂决策中，我们需要学会平衡不同来源的信息，避免只关注支持我们预设观点的信息。
+            - button "开始挑战 (beginner难度)" [ref=e136]
+            - generic [ref=e137]:
+              - text: "高级挑战:"
+              - list [ref=e138]:
+                - listitem [ref=e139]: 通胀调整投资 (intermediate)
+                - listitem [ref=e140]: 复杂金融系统 (advanced)
+        - generic [ref=e141] [cursor=pointer]:
+          - img [ref=e143]:
+            - generic [ref=e156]: ✓
+            - generic [ref=e157]: 确认偏误 · 选择性过滤信息
+          - generic [ref=e158]:
+            - heading "投资信息处理" [level=3] [ref=e159]
+            - paragraph [ref=e160]: 学习如何处理和整合多元投资信息源，避免确认偏误
+            - generic [ref=e161]:
+              - generic [ref=e162]: intermediate
+              - generic [ref=e163]: ⏱ 30分钟
+            - paragraph [ref=e164]: 在投资决策中体验如何筛选、整合和评估不同来源的信息，学习避免确认偏误和信息茧房效应。通过多轮投资决策，掌握多元化信息处理策略，提高决策质量。
+            - button "开始挑战 (beginner难度)" [ref=e165]
+            - generic [ref=e166]:
+              - text: "高级挑战:"
+              - list [ref=e167]:
+                - listitem [ref=e168]: 信息源质量评估 (intermediate)
+                - listitem [ref=e169]: 信息过载管理 (advanced)
+        - generic [ref=e170] [cursor=pointer]:
+          - img [ref=e172]:
+            - generic [ref=e189]:
+              - generic [ref=e192]: "!"
+              - generic [ref=e195]: 扩张
+              - generic [ref=e196]: 收缩
+            - generic [ref=e197]: 商业战略 · 系统性决策思维
+          - generic [ref=e198]:
+            - heading "商业战略推理游戏" [level=3] [ref=e199]
+            - paragraph [ref=e200]: 模拟商业决策推理过程，测试用户在复杂商业环境中的决策思维
+            - generic [ref=e201]:
+              - generic [ref=e202]: intermediate
+              - generic [ref=e203]: ⏱ 30分钟
+            - paragraph [ref=e204]: 在这个商业战略推理游戏中，您将面对复杂的商业决策场景，体验多种决策挑战，包括线性效应、信息处理和复杂系统理解。游戏涉及市场分析、资源配置、竞争策略等多个维度。
+            - button "开始挑战 (beginner难度)" [ref=e205]
+            - generic [ref=e206]:
+              - text: "高级挑战:"
+              - list [ref=e207]:
+                - listitem [ref=e208]: 市场动态响应 (intermediate)
+                - listitem [ref=e209]: 复杂商业生态系统 (advanced)
+        - generic [ref=e210] [cursor=pointer]:
+          - img [ref=e212]:
+            - generic [ref=e221]:
+              - generic [ref=e225]: 成本
+              - generic [ref=e226]: 收益
+            - generic [ref=e227]: 公共政策 · 利益平衡与长远规划
+          - generic [ref=e228]:
+            - heading "公共政策制定模拟" [level=3] [ref=e229]
+            - paragraph [ref=e230]: 模拟公共政策制定过程，平衡多方利益相关者需求
+            - generic [ref=e231]:
+              - generic [ref=e232]: intermediate
+              - generic [ref=e233]: ⏱ 35分钟
+            - paragraph [ref=e234]: 在这个公共政策制定模拟中，您将扮演政策制定者，需要平衡选民、利益集团、专家意见等多方需求，体验时间延迟、确认偏误、复杂系统等认知陷阱对政策制定的影响。
+            - button "开始挑战 (beginner难度)" [ref=e235]
+            - generic [ref=e236]:
+              - text: "高级挑战:"
+              - list [ref=e237]:
+                - listitem [ref=e238]: 多方利益平衡 (intermediate)
+                - listitem [ref=e239]: 政策连锁反应 (advanced)
+        - generic [ref=e240] [cursor=pointer]:
+          - img [ref=e242]:
+            - generic [ref=e244]:
+              - generic [ref=e249]: $
+              - generic [ref=e251]: $
+            - generic [ref=e261]: 个人理财 · 复利思维与长期规划
+          - generic [ref=e262]:
+            - heading "个人财务决策模拟" [level=3] [ref=e263]
+            - paragraph [ref=e264]: 模拟个人长期财务规划决策，体验复利和时间价值概念
+            - generic [ref=e265]:
+              - generic [ref=e266]: beginner
+              - generic [ref=e267]: ⏱ 25分钟
+            - paragraph [ref=e268]: 在这个个人财务决策模拟中，您将制定长期财务规划，体验复利增长、时间价值、风险评估等概念，理解短视偏误和线性思维对财务决策的影响。
+            - button "开始挑战 (beginner难度)" [ref=e269]
+            - generic [ref=e270]:
+              - text: "高级挑战:"
+              - list [ref=e271]:
+                - listitem [ref=e272]: 复合增长效应 (intermediate)
+                - listitem [ref=e273]: 风险管理 (advanced)
+        - generic [ref=e274] [cursor=pointer]:
+          - img [ref=e276]:
+            - generic [ref=e285]:
+              - generic [ref=e289]: 成本
+              - generic [ref=e290]: 收益
+            - generic [ref=e291]: 公共政策 · 利益平衡与长远规划
+          - generic [ref=e292]:
+            - heading "全球气候变化政策制定博弈" [level=3] [ref=e293]
+            - paragraph [ref=e294]: 模拟多国在气候变化政策制定中的博弈与权衡
+            - generic [ref=e295]:
+              - generic [ref=e296]: advanced
+              - generic [ref=e297]: ⏱ 60分钟
+            - paragraph [ref=e298]: 在这个高级政策制定博弈中，您将代表一个国家参与国际气候谈判，平衡经济发展、环境保护、国际合作等多重目标，体验复杂系统思维、长期规划、跨文化沟通等挑战。
+            - button "开始挑战 (beginner难度)" [ref=e299]
+            - generic [ref=e300]:
+              - text: "高级挑战:"
+              - list [ref=e301]:
+                - listitem [ref=e302]: 国际合作博弈 (intermediate)
+                - listitem [ref=e303]: 复杂环境系统 (advanced)
+        - generic [ref=e304] [cursor=pointer]:
+          - img [ref=e306]:
+            - generic [ref=e317]:
+              - generic [ref=e319]: 效率↑
+              - generic [ref=e321]: 安全↑
+            - generic [ref=e323]: AI治理 · 效率与安全的平衡艺术
+          - generic [ref=e324]:
+            - heading "AI治理与监管决策模拟" [level=3] [ref=e325]
+            - paragraph [ref=e326]: 模拟AI治理政策制定，平衡创新、安全、伦理等多方面考量
+            - generic [ref=e327]:
+              - generic [ref=e328]: advanced
+              - generic [ref=e329]: ⏱ 70分钟
+            - paragraph [ref=e330]: 在这个AI治理决策模拟中，您将面对新兴技术治理的复杂挑战，平衡技术创新、安全保障、伦理标准、国际合作等多重目标，体验技术政策制定中的认知陷阱。
+            - button "开始挑战 (beginner难度)" [ref=e331]
+            - generic [ref=e332]:
+              - text: "高级挑战:"
+              - list [ref=e333]:
+                - listitem [ref=e334]: 创新安全平衡 (intermediate)
+                - listitem [ref=e335]: 技术复杂性 (advanced)
+        - generic [ref=e336] [cursor=pointer]:
+          - img [ref=e338]:
+            - generic [ref=e355]: "!"
+            - generic [ref=e356]: 金融危机 · 系统性风险与连锁反应
+          - generic [ref=e357]:
+            - heading "复杂金融市场危机应对模拟" [level=3] [ref=e358]
+            - paragraph [ref=e359]: 模拟金融危机应对决策，处理复杂金融系统风险
+            - generic [ref=e360]:
+              - generic [ref=e361]: advanced
+              - generic [ref=e362]: ⏱ 75分钟
+            - paragraph [ref=e363]: 在这个金融危机应对模拟中，您将作为决策者处理复杂的金融系统风险，平衡市场稳定、机构救助、道德风险等多重考量，体验系统性风险、连锁反应、政策传导等复杂概念。
+            - button "开始挑战 (beginner难度)" [ref=e364]
+            - generic [ref=e365]:
+              - text: "高级挑战:"
+              - list [ref=e366]:
+                - listitem [ref=e367]: 系统性风险识别 (intermediate)
+                - listitem [ref=e368]: 政策传导机制 (advanced)
+        - generic [ref=e369] [cursor=pointer]:
+          - img [ref=e371]:
+            - generic [ref=e379]: ♥
+            - generic [ref=e385]: "@"
+            - generic [ref=e388]: 社交媒体 · 回音壁效应与信息茧房
+          - generic [ref=e389]:
+            - heading "社交媒体信息茧房" [level=3] [ref=e390]
+            - paragraph [ref=e391]: 体验算法推荐如何创建信息茧房，强化确认偏误
+            - generic [ref=e392]:
+              - generic [ref=e393]: intermediate
+              - generic [ref=e394]: ⏱ 25分钟
+            - paragraph [ref=e395]: 在这个场景中，您将扮演社交媒体平台的内容审核员，面对算法推荐导致的认知陷阱。体验信息多样性、确认偏误、算法过滤、用户意识和群体极化等指标如何受到您的决策影响。
+            - button "开始挑战 (beginner难度)" [ref=e396]
+            - generic [ref=e397]:
+              - text: "高级挑战:"
+              - list [ref=e398]:
+                - listitem [ref=e399]: 算法伦理决策 (intermediate)
+                - listitem [ref=e400]: 信息生态治理 (advanced)
+        - generic [ref=e401] [cursor=pointer]:
+          - img [ref=e403]:
+            - generic [ref=e422]: 认知训练 · 认知偏误诊断与矫正
+          - generic [ref=e423]:
+            - heading "挑战者号航天飞机灾难" [level=3] [ref=e424]
+            - paragraph [ref=e425]: 1986年挑战者号航天飞机发射决策过程分析
+            - generic [ref=e426]:
+              - generic [ref=e427]: intermediate
+              - generic [ref=e428]: ⏱ 20分钟
+            - paragraph [ref=e429]: 分析1986年挑战者号航天飞机发射前的决策过程，理解选择性信息处理、群体思维和时间压力如何导致了灾难性结果。
+            - button "开始挑战 (beginner难度)" [ref=e430]
+        - generic [ref=e431] [cursor=pointer]:
+          - img [ref=e433]:
+            - generic [ref=e452]: 认知训练 · 认知偏误诊断与矫正
+          - generic [ref=e453]:
+            - heading "泰坦尼克号航线决策" [level=3] [ref=e454]
+            - paragraph [ref=e455]: 1912年泰坦尼克号航行路线选择的过程分析
+            - generic [ref=e456]:
+              - generic [ref=e457]: beginner
+              - generic [ref=e458]: ⏱ 15分钟
+            - paragraph [ref=e459]: 分析泰坦尼克号沉没前的决策过程，理解过度自信、商业压力和风险低估如何导致了这场灾难。
+            - button "开始挑战 (beginner难度)" [ref=e460]
+        - generic [ref=e461] [cursor=pointer]:
+          - img [ref=e463]:
+            - generic [ref=e482]: 认知训练 · 认知偏误诊断与矫正
+          - generic [ref=e483]:
+            - heading "美国入侵猪湾事件" [level=3] [ref=e484]
+            - paragraph [ref=e485]: 1961年美国支持的古巴入侵行动决策过程
+            - generic [ref=e486]:
+              - generic [ref=e487]: intermediate
+              - generic [ref=e488]: ⏱ 20分钟
+            - paragraph [ref=e489]: 分析猪湾入侵事件的决策过程，理解群体思维、选择性信息处理和政治考量如何导致了军事行动的失败。
+            - button "开始挑战 (beginner难度)" [ref=e490]
+        - generic [ref=e491] [cursor=pointer]:
+          - img [ref=e493]:
+            - generic [ref=e512]: 认知训练 · 认知偏误诊断与矫正
+          - generic [ref=e513]:
+            - heading "Enron 公司财务欺诈案" [level=3] [ref=e514]
+            - paragraph [ref=e515]: 2001年Enron公司通过特殊目的实体隐藏债务的会计欺诈事件
+            - generic [ref=e516]:
+              - generic [ref=e517]: advanced
+              - generic [ref=e518]: ⏱ 25分钟
+            - paragraph [ref=e519]: 分析Enron财务欺诈案例，理解利益冲突、审计独立性缺失和公司文化如何导致了大规模的财务造假。
+            - button "开始挑战 (beginner难度)" [ref=e520]
+        - generic [ref=e521] [cursor=pointer]:
+          - img [ref=e523]:
+            - generic [ref=e532]:
+              - generic [ref=e536]: "12"
+              - generic [ref=e537]: "3"
+              - generic [ref=e538]: "6"
+              - generic [ref=e539]: "9"
+              - generic [ref=e541]: 延迟!
+            - generic [ref=e542]: 时间延迟 · 决策效果滞后显现
+          - generic [ref=e543]:
+            - heading "恋爱关系认知训练 - 初识阶段" [level=3] [ref=e544]
+            - paragraph [ref=e545]: 模拟恋爱关系初识阶段的决策过程，测试用户在情感决策中的思维模式
+            - generic [ref=e546]:
+              - generic [ref=e547]: beginner
+              - generic [ref=e548]: ⏱ 15分钟
+            - paragraph [ref=e549]: 在这个场景中，您将面对恋爱关系初识阶段的各种情境挑战，测试并了解自己在情感决策中的认知模式。
+            - button "开始挑战 (beginner难度)" [ref=e550]
+        - generic [ref=e551] [cursor=pointer]:
+          - img [ref=e553]:
+            - generic [ref=e562]:
+              - generic [ref=e566]: "12"
+              - generic [ref=e567]: "3"
+              - generic [ref=e568]: "6"
+              - generic [ref=e569]: "9"
+              - generic [ref=e571]: 延迟!
+            - generic [ref=e572]: 时间延迟 · 决策效果滞后显现
+          - generic [ref=e573]:
+            - heading "恋爱关系认知训练 - 长期关系维护" [level=3] [ref=e574]
+            - paragraph [ref=e575]: 模拟长期恋爱关系中的挑战与决策，测试用户在维持关系中的认知能力
+            - generic [ref=e576]:
+              - generic [ref=e577]: intermediate
+              - generic [ref=e578]: ⏱ 20分钟
+            - paragraph [ref=e579]: 在这个场景中，您将面对长期恋爱关系中的各种挑战，学习如何在冲突中沟通、如何在压力下维护关系。
+            - button "开始挑战 (beginner难度)" [ref=e580]
+        - generic [ref=e581] [cursor=pointer]:
+          - img [ref=e583]:
+            - generic [ref=e592]:
+              - generic [ref=e596]: "12"
+              - generic [ref=e597]: "3"
+              - generic [ref=e598]: "6"
+              - generic [ref=e599]: "9"
+              - generic [ref=e601]: 延迟!
+            - generic [ref=e602]: 时间延迟 · 决策效果滞后显现
+          - generic [ref=e603]:
+            - heading "恋爱关系认知训练 - 沟通与理解" [level=3] [ref=e604]
+            - paragraph [ref=e605]: 专注于恋爱关系中的沟通技巧和相互理解，测试用户的情感智商
+            - generic [ref=e606]:
+              - generic [ref=e607]: intermediate
+              - generic [ref=e608]: ⏱ 15分钟
+            - paragraph [ref=e609]: 在这个场景中，您将专注于恋爱关系中的沟通和相互理解，学习如何更好地表达自己、理解伴侣。
+            - button "开始挑战 (beginner难度)" [ref=e610]
+    - text: • • • • • • • • • • • • • • • • • • • • ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ → → → → → → → → → → → →
+  - generic [ref=e612]:
+    - generic [ref=e613]:
+      - heading "认知训练" [level=2] [ref=e614]
+      - button [ref=e615] [cursor=pointer]:
+        - img [ref=e616]
+    - generic [ref=e619]:
+      - heading "🏛️ 公共政策制定模拟" [level=2] [ref=e620]
+      - generic [ref=e621]:
+        - paragraph [ref=e622]: 作为城市规划者，你负责改善城市的交通拥堵问题。预算有限，但市民抱怨严重。有四个方案可供选择。
+        - generic [ref=e623]:
+          - generic [ref=e624]:
+            - generic [ref=e625]: 💰 预算
+            - generic [ref=e626]: ¥10000
+          - generic [ref=e627]:
+            - generic [ref=e628]: ⭐ 公众信任
+            - generic [ref=e629]: "50"
+          - generic [ref=e630]:
+            - generic [ref=e631]: 📊 政策效果
+            - generic [ref=e632]: "30"
+          - generic [ref=e633]:
+            - generic [ref=e634]: 👥 民众支持
+            - generic [ref=e635]: "50"
+        - generic [ref=e636]:
+          - paragraph [ref=e637]:
+            - strong [ref=e638]: 💭 可能的思维陷阱：
+          - list [ref=e639]:
+            - listitem [ref=e640]: "\"复杂问题有简单解决方案\" (过度简化)"
+            - listitem [ref=e641]: "\"我能准确预测公众反应\" (过度自信)"
+            - listitem [ref=e642]: "\"选择最显眼的方案最有效\" (可用性偏误)"
+            - listitem [ref=e643]: "\"维持现状是最好的\" (现状偏见)"
+        - paragraph [ref=e644]:
+          - strong [ref=e645]: 🎯 目标：
+          - text: 在预算约束和多重利益冲突下制定有效的交通政策
+      - button "开始决策" [active] [ref=e647] [cursor=pointer]
+```

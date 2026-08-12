@@ -1,0 +1,2688 @@
+<testsuites id="" name="" tests="220" failures="36" skipped="0" errors="0" time="344.526652">
+<testsuite name="api-integration.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="msedge" tests="11" failures="2" skipped="0" time="176.585" errors="0">
+<testcase name="API Integration › should successfully connect to API endpoints" classname="api-integration.spec.js" time="14.987">
+<failure message="api-integration.spec.js:14:7 should successfully connect to API endpoints" type="FAILURE">
+<![CDATA[  [msedge] › api-integration.spec.js:14:7 › API Integration › should successfully connect to API endpoints 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+      30 |
+      31 |     // Verify API responses
+    > 32 |     expect(apiResponses.length).toBeGreaterThan(0);
+         |                                 ^
+      33 |
+      34 |     // Check that at least one API call was successful
+      35 |     const successfulCalls = apiResponses.filter(response => response.ok);
+        at D:\AIDevelop\failureLogic\tests\e2e\api-integration.spec.js:32:33
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-msedge\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-msedge\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-msedge\video.webm]]
+
+[[ATTACHMENT|test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-msedge\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="API Integration › should handle API response caching" classname="api-integration.spec.js" time="15.961">
+</testcase>
+<testcase name="API Integration › should implement API failover correctly" classname="api-integration.spec.js" time="16.276">
+</testcase>
+<testcase name="API Integration › should track API performance metrics" classname="api-integration.spec.js" time="14.884">
+</testcase>
+<testcase name="API Integration › should handle game session API calls" classname="api-integration.spec.js" time="16.645">
+</testcase>
+<testcase name="API Integration › should handle game decision API calls" classname="api-integration.spec.js" time="15.526">
+</testcase>
+<testcase name="API Integration › should handle API timeouts gracefully" classname="api-integration.spec.js" time="20.495">
+<failure message="api-integration.spec.js:170:7 should handle API timeouts gracefully" type="FAILURE">
+<![CDATA[  [msedge] › api-integration.spec.js:170:7 › API Integration › should handle API timeouts gracefully 
+
+    Error: expect(received).toBeTruthy()
+
+    Received: false
+
+      186 |                       await page.locator('text=加载失败').isVisible();
+      187 |
+    > 188 |     expect(hasContent).toBeTruthy();
+          |                        ^
+      189 |   });
+      190 |
+      191 |   test('should implement proper error handling', async ({ page }) => {
+        at D:\AIDevelop\failureLogic\tests\e2e\api-integration.spec.js:188:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-msedge\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-msedge\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-msedge\video.webm]]
+
+[[ATTACHMENT|test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-msedge\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="API Integration › should implement proper error handling" classname="api-integration.spec.js" time="16.238">
+</testcase>
+<testcase name="API Integration › should validate API response data structure" classname="api-integration.spec.js" time="15.26">
+</testcase>
+<testcase name="API Integration › should handle concurrent API requests" classname="api-integration.spec.js" time="15.522">
+</testcase>
+<testcase name="API Integration › should implement proper request retries" classname="api-integration.spec.js" time="14.791">
+</testcase>
+</testsuite>
+<testsuite name="app-load.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="msedge" tests="10" failures="0" skipped="0" time="124.443" errors="0">
+<testcase name="Application Loading › should load the main page successfully" classname="app-load.spec.js" time="14.154">
+</testcase>
+<testcase name="Application Loading › should hide loading screen after app loads" classname="app-load.spec.js" time="12.94">
+</testcase>
+<testcase name="Application Loading › should load navigation items correctly" classname="app-load.spec.js" time="13.086">
+</testcase>
+<testcase name="Application Loading › should handle responsive design correctly" classname="app-load.spec.js" time="16.355">
+</testcase>
+<testcase name="Application Loading › should initialize service worker correctly" classname="app-load.spec.js" time="12.473">
+</testcase>
+<testcase name="Application Loading › should handle API connectivity gracefully" classname="app-load.spec.js" time="14.034">
+</testcase>
+<testcase name="Application Loading › should load PWA manifest correctly" classname="app-load.spec.js" time="10.19">
+</testcase>
+<testcase name="Application Loading › should handle offline mode correctly" classname="app-load.spec.js" time="11.351">
+</testcase>
+<testcase name="Application Loading › should track performance metrics" classname="app-load.spec.js" time="9.943">
+</testcase>
+<testcase name="Application Loading › should handle accessibility requirements" classname="app-load.spec.js" time="9.917">
+</testcase>
+</testsuite>
+<testsuite name="bias-diagnosis.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="msedge" tests="3" failures="3" skipped="0" time="0.222" errors="0">
+<testcase name="Cognitive trap diagnosis (API) › flags exponential misconception" classname="bias-diagnosis.spec.js" time="0.094">
+<failure message="bias-diagnosis.spec.js:12:7 flags exponential misconception" type="FAILURE">
+<![CDATA[  [msedge] › bias-diagnosis.spec.js:12:7 › Cognitive trap diagnosis (API) › flags exponential misconception 
+
+    Error: expect(received).toBeTruthy()
+
+    Received: false
+
+      23 |
+      24 |     const res = await request.post(`${API_BASE_URL}/api/results/submit`, { data: payload });
+    > 25 |     expect(res.ok()).toBeTruthy();
+         |                      ^
+      26 |
+      27 |     const body = await res.json();
+      28 |     expect(body.success).toBeTruthy();
+        at D:\AIDevelop\failureLogic\tests\e2e\bias-diagnosis.spec.js:25:22
+]]>
+</failure>
+</testcase>
+<testcase name="Cognitive trap diagnosis (API) › flags compound interest misunderstanding (linear intuition)" classname="bias-diagnosis.spec.js" time="0.074">
+<failure message="bias-diagnosis.spec.js:34:7 flags compound interest misunderstanding (linear intuition)" type="FAILURE">
+<![CDATA[  [msedge] › bias-diagnosis.spec.js:34:7 › Cognitive trap diagnosis (API) › flags compound interest misunderstanding (linear intuition) 
+
+    Error: expect(received).toBeTruthy()
+
+    Received: false
+
+      47 |
+      48 |     const res = await request.post(`${API_BASE_URL}/api/results/submit`, { data: payload });
+    > 49 |     expect(res.ok()).toBeTruthy();
+         |                      ^
+      50 |
+      51 |     const body = await res.json();
+      52 |     expect(body.success).toBeTruthy();
+        at D:\AIDevelop\failureLogic\tests\e2e\bias-diagnosis.spec.js:49:22
+]]>
+</failure>
+</testcase>
+<testcase name="Cognitive trap diagnosis (API) › flags complex system underestimation as complex_system_misunderstanding" classname="bias-diagnosis.spec.js" time="0.054">
+<failure message="bias-diagnosis.spec.js:61:7 flags complex system underestimation as complex_system_misunderstanding" type="FAILURE">
+<![CDATA[  [msedge] › bias-diagnosis.spec.js:61:7 › Cognitive trap diagnosis (API) › flags complex system underestimation as complex_system_misunderstanding 
+
+    Error: expect(received).toBeTruthy()
+
+    Received: false
+
+      71 |
+      72 |     const res = await request.post(`${API_BASE_URL}/api/results/submit`, { data: payload });
+    > 73 |     expect(res.ok()).toBeTruthy();
+         |                      ^
+      74 |
+      75 |     const body = await res.json();
+      76 |     expect(body.success).toBeTruthy();
+        at D:\AIDevelop\failureLogic\tests\e2e\bias-diagnosis.spec.js:73:22
+]]>
+</failure>
+</testcase>
+</testsuite>
+<testsuite name="real-app-tests-fixed-v2.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="msedge" tests="17" failures="0" skipped="0" time="182.573" errors="0">
+<testcase name="Real Application Tests - Fixed v2 › should load home page" classname="real-app-tests-fixed-v2.spec.js" time="9.252">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should navigate to scenarios page" classname="real-app-tests-fixed-v2.spec.js" time="9.082">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should navigate to about page" classname="real-app-tests-fixed-v2.spec.js" time="9.416">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should navigate to book page" classname="real-app-tests-fixed-v2.spec.js" time="10.003">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should navigate to profile page" classname="real-app-tests-fixed-v2.spec.js" time="9.077">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should display navigation menu" classname="real-app-tests-fixed-v2.spec.js" time="9.052">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should display page title" classname="real-app-tests-fixed-v2.spec.js" time="10.614">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should display brand text" classname="real-app-tests-fixed-v2.spec.js" time="10.466">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should display hero section" classname="real-app-tests-fixed-v2.spec.js" time="10.972">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should display features section" classname="real-app-tests-fixed-v2.spec.js" time="14.029">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should display stats section" classname="real-app-tests-fixed-v2.spec.js" time="11.547">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should have loading screen" classname="real-app-tests-fixed-v2.spec.js" time="11.506">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should hide loading screen after page load" classname="real-app-tests-fixed-v2.spec.js" time="11.582">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should verify service worker registration" classname="real-app-tests-fixed-v2.spec.js" time="11.543">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should verify PWA manifest" classname="real-app-tests-fixed-v2.spec.js" time="11.482">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should display hero content" classname="real-app-tests-fixed-v2.spec.js" time="11.512">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should display feature cards" classname="real-app-tests-fixed-v2.spec.js" time="11.438">
+</testcase>
+</testsuite>
+<testsuite name="relationship-time-delay.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="msedge" tests="16" failures="0" skipped="0" time="306.611" errors="0">
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 场景初始化 › 应该正确加载恋爱关系时间延迟场景卡片" classname="relationship-time-delay.spec.js" time="12.188">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 场景初始化 › 应该正确打开恋爱关系场景游戏模态框" classname="relationship-time-delay.spec.js" time="13.083">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 场景初始化 › 应该显示场景开始页面" classname="relationship-time-delay.spec.js" time="17.471">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 时间延迟机制 › 应该显示时间延迟警告信息" classname="relationship-time-delay.spec.js" time="15.865">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 时间延迟机制 › 应该在选择决策后显示延迟反馈" classname="relationship-time-delay.spec.js" time="18.148">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 时间延迟机制 › 应该对高频联系显示风险警告" classname="relationship-time-delay.spec.js" time="17.776">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 多轮决策流程 › 应该完成第 1 月的两个决策" classname="relationship-time-delay.spec.js" time="19.278">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 多轮决策流程 › 应该完成完整的 5 轮（月）游戏流程" classname="relationship-time-delay.spec.js" time="25.168">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 多轮决策流程 › 应该显示觉醒时刻的教育内容" classname="relationship-time-delay.spec.js" time="25.275">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 多轮决策流程 › 应该显示最终结局和学习成果" classname="relationship-time-delay.spec.js" time="27.287">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 时间线可视化 › 应该显示延迟效果时间线" classname="relationship-time-delay.spec.js" time="19.431">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 聊天界面 › 应该显示小林的消息回复" classname="relationship-time-delay.spec.js" time="19.469">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 游戏重置功能 › 应该能够重新开始游戏" classname="relationship-time-delay.spec.js" time="18.705">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 教育目标验证 › 应该展示关系投资不会立即见效" classname="relationship-time-delay.spec.js" time="15.957">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 教育目标验证 › 应该揭示人们低估时间延迟的认知偏差" classname="relationship-time-delay.spec.js" time="17.485">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 教育目标验证 › 应该体验延迟满足的重要性" classname="relationship-time-delay.spec.js" time="24.025">
+</testcase>
+</testsuite>
+<testsuite name="scenarios-4-6.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="msedge" tests="15" failures="6" skipped="0" time="300.335" errors="0">
+<testcase name="Scenario 4: Business Strategy Reasoning Game › should load business strategy scenario card" classname="scenarios-4-6.spec.js" time="13.435">
+</testcase>
+<testcase name="Scenario 4: Business Strategy Reasoning Game › should start business strategy game successfully" classname="scenarios-4-6.spec.js" time="15.409">
+</testcase>
+<testcase name="Scenario 4: Business Strategy Reasoning Game › should complete business strategy turn 1" classname="scenarios-4-6.spec.js" time="24.568">
+<failure message="scenarios-4-6.spec.js:49:7 should complete business strategy turn 1" type="FAILURE">
+<![CDATA[  [msedge] › scenarios-4-6.spec.js:49:7 › Scenario 4: Business Strategy Reasoning Game › should complete business strategy turn 1 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('#game-container')
+    Timeout: 5000ms
+    - Expected substring  -   1
+    + Received string     + 102
+
+    - 第 1 回合决策
+    +
+    +       
+    +         
+    +           📊 第1回合决策
+    +           回合 1/5
+    +         
+    +
+    +         
+    +           📈 当前状态
+    +           
+    +             
+    +               💰 资金
+    +               ¥10000
+    +             
+    +             
+    +               ⭐ 声誉
+    +               50
+    +             
+    +             
+    +               📊 市场地位
+    +               30
+    +             
+    +           
+    +         
+    +
+    +         
+    +           📝 情况描述
+    +           你的科技公司刚刚开发出一款新型智能手机，市场研究表明消费者对此类产品有很大需求，但同时有几家大型竞争对手也在开发同类产品。
+    +         
+    +         
+    +         
+    +           🤔 可供选择的策略
+    +           
+    +             
+    +               
+    +                 立即投放市场，抢占先机
+    +                 快速上市，利用时间优势占领市场份额
+    +                 💡 你的想法: "如果我先上市，就能占据市场主导地位，即使产品不完美也没关系"
+    +                 
+    +                 
+    +                   预期收益: 
+    +                     +¥1500
+    +                   
+    +                 
+    +                 
+    +                   选择此策略
+    +                 
+    +               
+    +             
+    +               
+    +                 进行更多测试，完善产品后上市
+    +                 投入更多时间确保产品质量，打造完美产品
+    +                 💡 你的想法: "只有完美的产品才能赢得市场，质量第一"
+    +                 
+    +                 
+    +                   预期收益: 
+    +                     +¥800
+    +                   
+    +                 
+    +                 
+    +                   选择此策略
+    +                 
+    +               
+    +             
+    +               
+    +                 收购小型竞争对手以减少竞争压力
+    +                 通过收购消除竞争威胁，扩大市场份额
+    +                 💡 你的想法: "消除竞争对手是最好的策略，强者恒强"
+    +                 
+    +                 
+    +                   预期收益: 
+    +                     +¥1200
+    +                   
+    +                 
+    +                 
+    +                   选择此策略
+    +                 
+    +               
+    +             
+    +               
+    +                 与其他公司合作开发
+    +                 通过合作分担风险和技术挑战
+    +                 💡 你的想法: "合作可以实现双赢，资源整合优势"
+    +                 
+    +                 
+    +                   预期收益: 
+    +                     +¥1000
+    +                   
+    +                 
+    +                 
+    +                   选择此策略
+    +                 
+    +               
+    +             
+    +           
+    +         
+    +         
+    +         
+    +           返回场景列表
+    +         
+    +       
+    +     
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for locator('#game-container')
+        8 × locator resolved to <div class="modal-body" id="game-container">…</div>
+          - unexpected value "
+          
+            
+              📊 第1回合决策
+              回合 1/5
+            
+    
+            
+              📈 当前状态
+              
+                
+                  💰 资金
+                  ¥10000
+                
+                
+                  ⭐ 声誉
+                  50
+                
+                
+                  📊 市场地位
+                  30
+                
+              
+            
+    
+            
+              📝 情况描述
+              你的科技公司刚刚开发出一款新型智能手机，市场研究表明消费者对此类产品有很大需求，但同时有几家大型竞争对手也在开发同类产品。
+            
+            
+            
+              🤔 可供选择的策略
+              
+                
+                  
+                    立即投放市场，抢占先机
+                    快速上市，利用时间优势占领市场份额
+                    💡 你的想法: "如果我先上市，就能占据市场主导地位，即使产品不完美也没关系"
+                    
+                    
+                      预期收益: 
+                        +¥1500
+                      
+                    
+                    
+                      选择此策略
+                    
+                  
+                
+                  
+                    进行更多测试，完善产品后上市
+                    投入更多时间确保产品质量，打造完美产品
+                    💡 你的想法: "只有完美的产品才能赢得市场，质量第一"
+                    
+                    
+                      预期收益: 
+                        +¥800
+                      
+                    
+                    
+                      选择此策略
+                    
+                  
+                
+                  
+                    收购小型竞争对手以减少竞争压力
+                    通过收购消除竞争威胁，扩大市场份额
+                    💡 你的想法: "消除竞争对手是最好的策略，强者恒强"
+                    
+                    
+                      预期收益: 
+                        +¥1200
+                      
+                    
+                    
+                      选择此策略
+                    
+                  
+                
+                  
+                    与其他公司合作开发
+                    通过合作分担风险和技术挑战
+                    💡 你的想法: "合作可以实现双赢，资源整合优势"
+                    
+                    
+                      预期收益: 
+                        +¥1000
+                      
+                    
+                    
+                      选择此策略
+                    
+                  
+                
+              
+            
+            
+            
+              返回场景列表
+            
+          
+        "
+
+
+      66 |
+      67 |     // Verify turn 1 page loaded
+    > 68 |     await expect(page.locator('#game-container')).toContainText('第 1 回合决策');
+         |                                                   ^
+      69 |     
+      70 |     // Check for decision options
+      71 |     const optionCards = page.locator('#game-container .option-card');
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-4-6.spec.js:68:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-4-B-57c57-te-business-strategy-turn-1-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-4-B-57c57-te-business-strategy-turn-1-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-4-6-Scenario-4-B-57c57-te-business-strategy-turn-1-msedge\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-4-B-57c57-te-business-strategy-turn-1-msedge\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-4-B-57c57-te-business-strategy-turn-1-msedge\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-4-B-57c57-te-business-strategy-turn-1-msedge\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 4: Business Strategy Reasoning Game › should make decision and see feedback in business strategy" classname="scenarios-4-6.spec.js" time="20.736">
+</testcase>
+<testcase name="Scenario 4: Business Strategy Reasoning Game › should display game state metrics in business strategy" classname="scenarios-4-6.spec.js" time="18.999">
+</testcase>
+<testcase name="Scenario 5: Public Policy Making Simulation › should load public policy scenario card" classname="scenarios-4-6.spec.js" time="15.524">
+</testcase>
+<testcase name="Scenario 5: Public Policy Making Simulation › should start public policy game successfully" classname="scenarios-4-6.spec.js" time="15.826">
+</testcase>
+<testcase name="Scenario 5: Public Policy Making Simulation › should complete public policy turn 1" classname="scenarios-4-6.spec.js" time="24.547">
+<failure message="scenarios-4-6.spec.js:171:7 should complete public policy turn 1" type="FAILURE">
+<![CDATA[  [msedge] › scenarios-4-6.spec.js:171:7 › Scenario 5: Public Policy Making Simulation › should complete public policy turn 1 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('#game-container')
+    Timeout: 5000ms
+    - Expected substring  -   1
+    + Received string     + 102
+
+    - 第 1 回合决策
+    +
+    +       
+    +         
+    +           📊 第1回合决策
+    +           回合 1/5
+    +         
+    +
+    +         
+    +           📈 当前状态
+    +           
+    +             
+    +               💰 预算
+    +               ¥10000
+    +             
+    +             
+    +               ⭐ 信任
+    +               50
+    +             
+    +             
+    +               📊 政策效果
+    +               30
+    +             
+    +             
+    +               👥 民众支持
+    +               50
+    +             
+    +           
+    +         
+    +
+    +         
+    +           📝 情况描述
+    +           作为城市规划者，你负责改善城市的交通拥堵问题。预算有限，但市民抱怨严重。有四个方案可供选择。
+    +         
+    +         
+    +         
+    +           🤔 可供选择的政策
+    +           
+    +             
+    +               
+    +                 建设新的地铁线路
+    +                 大规模基础设施投资，长期效果显著
+    +                 💡 你的想法: "地铁是最现代化的解决方案，一次投资，永久受益"
+    +                 
+    +                 
+    +                   预估成本: ¥6000
+    +                   预估收益: +25 效果
+    +                 
+    +                 
+    +                   选择此政策
+    +                 
+    +               
+    +             
+    +               
+    +                 扩大公交网络
+    +                 灵活的公共交通扩展，成本相对较低
+    +                 💡 你的想法: "公交系统更容易实施，覆盖面广"
+    +                 
+    +                 
+    +                   预估成本: ¥3000
+    +                   预估收益: +15 效果
+    +                 
+    +                 
+    +                   选择此政策
+    +                 
+    +               
+    +             
+    +               
+    +                 征收拥堵费以抑制私家车使用
+    +                 经济手段调节交通，但可能引起民怨
+    +                 💡 你的想法: "经济激励是最有效的行为调节手段"
+    +                 
+    +                 
+    +                   预估成本: ¥500
+    +                   预估收益: +20 效果
+    +                 
+    +                 
+    +                   选择此政策
+    +                 
+    +               
+    +             
+    +               
+    +                 提供自行车道和共享自行车项目
+    +                 环保型交通方案，鼓励绿色出行
+    +                 💡 你的想法: "绿色出行是未来的趋势，应该优先发展"
+    +                 
+    +                 
+    +                   预估成本: ¥1500
+    +                   预估收益: +10 效果
+    +                 
+    +                 
+    +                   选择此政策
+    +                 
+    +               
+    +             
+    +           
+    +         
+    +         
+    +         
+    +           返回场景列表
+    +         
+    +       
+    +     
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for locator('#game-container')
+        8 × locator resolved to <div class="modal-body" id="game-container">…</div>
+          - unexpected value "
+          
+            
+              📊 第1回合决策
+              回合 1/5
+            
+    
+            
+              📈 当前状态
+              
+                
+                  💰 预算
+                  ¥10000
+                
+                
+                  ⭐ 信任
+                  50
+                
+                
+                  📊 政策效果
+                  30
+                
+                
+                  👥 民众支持
+                  50
+                
+              
+            
+    
+            
+              📝 情况描述
+              作为城市规划者，你负责改善城市的交通拥堵问题。预算有限，但市民抱怨严重。有四个方案可供选择。
+            
+            
+            
+              🤔 可供选择的政策
+              
+                
+                  
+                    建设新的地铁线路
+                    大规模基础设施投资，长期效果显著
+                    💡 你的想法: "地铁是最现代化的解决方案，一次投资，永久受益"
+                    
+                    
+                      预估成本: ¥6000
+                      预估收益: +25 效果
+                    
+                    
+                      选择此政策
+                    
+                  
+                
+                  
+                    扩大公交网络
+                    灵活的公共交通扩展，成本相对较低
+                    💡 你的想法: "公交系统更容易实施，覆盖面广"
+                    
+                    
+                      预估成本: ¥3000
+                      预估收益: +15 效果
+                    
+                    
+                      选择此政策
+                    
+                  
+                
+                  
+                    征收拥堵费以抑制私家车使用
+                    经济手段调节交通，但可能引起民怨
+                    💡 你的想法: "经济激励是最有效的行为调节手段"
+                    
+                    
+                      预估成本: ¥500
+                      预估收益: +20 效果
+                    
+                    
+                      选择此政策
+                    
+                  
+                
+                  
+                    提供自行车道和共享自行车项目
+                    环保型交通方案，鼓励绿色出行
+                    💡 你的想法: "绿色出行是未来的趋势，应该优先发展"
+                    
+                    
+                      预估成本: ¥1500
+                      预估收益: +10 效果
+                    
+                    
+                      选择此政策
+                    
+                  
+                
+              
+            
+            
+            
+              返回场景列表
+            
+          
+        "
+
+
+      188 |
+      189 |     // Verify turn 1 page loaded
+    > 190 |     await expect(page.locator('#game-container')).toContainText('第 1 回合决策');
+          |                                                   ^
+      191 |     
+      192 |     // Check for decision options
+      193 |     const optionCards = page.locator('#game-container .option-card');
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-4-6.spec.js:190:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-5-P-49de3-mplete-public-policy-turn-1-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-5-P-49de3-mplete-public-policy-turn-1-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-4-6-Scenario-5-P-49de3-mplete-public-policy-turn-1-msedge\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-5-P-49de3-mplete-public-policy-turn-1-msedge\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-5-P-49de3-mplete-public-policy-turn-1-msedge\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-5-P-49de3-mplete-public-policy-turn-1-msedge\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 5: Public Policy Making Simulation › should make decision and see feedback in public policy" classname="scenarios-4-6.spec.js" time="21.062">
+</testcase>
+<testcase name="Scenario 5: Public Policy Making Simulation › should display game state metrics in public policy" classname="scenarios-4-6.spec.js" time="18.457">
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision Simulation › should load personal finance scenario card" classname="scenarios-4-6.spec.js" time="15.388">
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision Simulation › should start personal finance game successfully" classname="scenarios-4-6.spec.js" time="20.718">
+<failure message="scenarios-4-6.spec.js:271:7 should start personal finance game successfully" type="FAILURE">
+<![CDATA[  [msedge] › scenarios-4-6.spec.js:271:7 › Scenario 6: Personal Finance Decision Simulation › should start personal finance game successfully 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('#game-container')
+    Timeout: 5000ms
+    - Expected substring  -  1
+    + Received string     + 24
+
+    - 个人理财决策模拟
+    +
+    +       
+    +         💰 个人财务决策模拟
+    +         
+    +           制定长期财务规划，体验复利增长和时间价值的力量。
+    +           
+    +             📊 总回合数undefined
+    +             💪 难度初级
+    +           
+    +           
+    +             🎯 挑战目标
+    +             
+    +               建立充足的退休储蓄
+    +               理解复利增长的指数效应
+    +               平衡当前消费与长期投资
+    +               管理债务风险
+    +             
+    +           
+    +         
+    +         
+    +           开始挑战
+    +         
+    +       
+    +     
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for locator('#game-container')
+        8 × locator resolved to <div class="modal-body" id="game-container">…</div>
+          - unexpected value "
+          
+            💰 个人财务决策模拟
+            
+              制定长期财务规划，体验复利增长和时间价值的力量。
+              
+                📊 总回合数undefined
+                💪 难度初级
+              
+              
+                🎯 挑战目标
+                
+                  建立充足的退休储蓄
+                  理解复利增长的指数效应
+                  平衡当前消费与长期投资
+                  管理债务风险
+                
+              
+            
+            
+              开始挑战
+            
+          
+        "
+
+
+      288 |
+      289 |     // Verify game start page
+    > 290 |     await expect(page.locator('#game-container')).toContainText('个人理财决策模拟');
+          |                                                   ^
+      291 |   });
+      292 |
+      293 |   test('should complete personal finance turn 1', async ({ page }) => {
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-4-6.spec.js:290:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-6-P-3f723-l-finance-game-successfully-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-6-P-3f723-l-finance-game-successfully-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-4-6-Scenario-6-P-3f723-l-finance-game-successfully-msedge\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-3f723-l-finance-game-successfully-msedge\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-3f723-l-finance-game-successfully-msedge\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-3f723-l-finance-game-successfully-msedge\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision Simulation › should complete personal finance turn 1" classname="scenarios-4-6.spec.js" time="22.422">
+<failure message="scenarios-4-6.spec.js:293:7 should complete personal finance turn 1" type="FAILURE">
+<![CDATA[  [msedge] › scenarios-4-6.spec.js:293:7 › Scenario 6: Personal Finance Decision Simulation › should complete personal finance turn 1 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#game-container button:has-text("开始理财规划")').first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('#game-container button:has-text("开始理财规划")').first()
+
+
+      304 |     // Click start button
+      305 |     const startButton = page.locator('#game-container button:has-text("开始理财规划")').first();
+    > 306 |     await expect(startButton).toBeVisible({ timeout: 5000 });
+          |                               ^
+      307 |     await startButton.click();
+      308 |
+      309 |     await page.waitForTimeout(1000);
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-4-6.spec.js:306:31
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-6-P-899a3-ete-personal-finance-turn-1-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-6-P-899a3-ete-personal-finance-turn-1-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-4-6-Scenario-6-P-899a3-ete-personal-finance-turn-1-msedge\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-899a3-ete-personal-finance-turn-1-msedge\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-899a3-ete-personal-finance-turn-1-msedge\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-899a3-ete-personal-finance-turn-1-msedge\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision Simulation › should make decision and see feedback in personal finance" classname="scenarios-4-6.spec.js" time="26.837">
+<failure message="scenarios-4-6.spec.js:323:7 should make decision and see feedback in personal finance" type="FAILURE">
+<![CDATA[  [msedge] › scenarios-4-6.spec.js:323:7 › Scenario 6: Personal Finance Decision Simulation › should make decision and see feedback in personal finance 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('#game-container button:has-text("开始理财规划")').first()
+
+
+      333 |
+      334 |     // Start game
+    > 335 |     await page.locator('#game-container button:has-text("开始理财规划")').first().click();
+          |                                                                             ^
+      336 |     await page.waitForTimeout(1000);
+      337 |
+      338 |     // Select first option
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-4-6.spec.js:335:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-6-P-fd327-eedback-in-personal-finance-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-6-P-fd327-eedback-in-personal-finance-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-4-6-Scenario-6-P-fd327-eedback-in-personal-finance-msedge\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-fd327-eedback-in-personal-finance-msedge\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-fd327-eedback-in-personal-finance-msedge\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-fd327-eedback-in-personal-finance-msedge\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision Simulation › should display game state metrics in personal finance" classname="scenarios-4-6.spec.js" time="26.407">
+<failure message="scenarios-4-6.spec.js:352:7 should display game state metrics in personal finance" type="FAILURE">
+<![CDATA[  [msedge] › scenarios-4-6.spec.js:352:7 › Scenario 6: Personal Finance Decision Simulation › should display game state metrics in personal finance 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('#game-container button:has-text("开始理财规划")').first()
+
+
+      362 |
+      363 |     // Start game
+    > 364 |     await page.locator('#game-container button:has-text("开始理财规划")').first().click();
+          |                                                                             ^
+      365 |     await page.waitForTimeout(1000);
+      366 |
+      367 |     // Check for state metrics display
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-4-6.spec.js:364:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-6-P-34a37-metrics-in-personal-finance-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-6-P-34a37-metrics-in-personal-finance-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-4-6-Scenario-6-P-34a37-metrics-in-personal-finance-msedge\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-34a37-metrics-in-personal-finance-msedge\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-34a37-metrics-in-personal-finance-msedge\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-34a37-metrics-in-personal-finance-msedge\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="scenarios-6-7.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="msedge" tests="10" failures="0" skipped="0" time="155.348" errors="0">
+<testcase name="Scenario 6: Personal Finance Decision › should load personal finance scenario" classname="scenarios-6-7.spec.js" time="14.207">
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision › should start personal finance game" classname="scenarios-6-7.spec.js" time="13.579">
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision › should display personal finance start page" classname="scenarios-6-7.spec.js" time="15.793">
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision › should complete personal finance game flow" classname="scenarios-6-7.spec.js" time="19.888">
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision › should complete multiple turns in personal finance game" classname="scenarios-6-7.spec.js" time="17.72">
+</testcase>
+<testcase name="Scenario 7: Climate Change Policy › should load climate change scenario" classname="scenarios-6-7.spec.js" time="11.866">
+</testcase>
+<testcase name="Scenario 7: Climate Change Policy › should start climate change game" classname="scenarios-6-7.spec.js" time="12.125">
+</testcase>
+<testcase name="Scenario 7: Climate Change Policy › should display climate change start page" classname="scenarios-6-7.spec.js" time="13.984">
+</testcase>
+<testcase name="Scenario 7: Climate Change Policy › should complete climate change game flow" classname="scenarios-6-7.spec.js" time="18.369">
+</testcase>
+<testcase name="Scenario 7: Climate Change Policy › should complete multiple turns in climate change game" classname="scenarios-6-7.spec.js" time="17.817">
+</testcase>
+</testsuite>
+<testsuite name="scenarios-8-9.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="msedge" tests="15" failures="7" skipped="0" time="278.661" errors="0">
+<testcase name="Scenario 8: AI Governance Regulation › should load AI governance scenario" classname="scenarios-8-9.spec.js" time="16.836">
+<failure message="scenarios-8-9.spec.js:15:7 should load AI governance scenario" type="FAILURE">
+<![CDATA[  [msedge] › scenarios-8-9.spec.js:15:7 › Scenario 8: AI Governance Regulation › should load AI governance scenario 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('h3:has-text("AI 治理")').first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('h3:has-text("AI 治理")').first()
+
+
+      16 |     // Find AI governance scenario card using heading - use partial text match
+      17 |     const aiHeading = page.locator('h3:has-text("AI 治理")').first();
+    > 18 |     await expect(aiHeading).toBeVisible();
+         |                             ^
+      19 |   });
+      20 |
+      21 |   test('should start AI governance game', async ({ page }) => {
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-8-9.spec.js:18:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-0f78b-load-AI-governance-scenario-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-0f78b-load-AI-governance-scenario-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-8-9-Scenario-8-A-0f78b-load-AI-governance-scenario-msedge\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-0f78b-load-AI-governance-scenario-msedge\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-0f78b-load-AI-governance-scenario-msedge\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-0f78b-load-AI-governance-scenario-msedge\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 8: AI Governance Regulation › should start AI governance game" classname="scenarios-8-9.spec.js" time="21.702">
+<failure message="scenarios-8-9.spec.js:21:7 should start AI governance game" type="FAILURE">
+<![CDATA[  [msedge] › scenarios-8-9.spec.js:21:7 › Scenario 8: AI Governance Regulation › should start AI governance game 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('h3:has-text("AI 治理")').first()
+
+
+      22 |     // Find the AI governance card container and click it
+      23 |     const aiCard = page.locator('h3:has-text("AI 治理")').first();
+    > 24 |     await aiCard.click();
+         |                  ^
+      25 |     
+      26 |     // Wait for game modal
+      27 |     await expect(page.locator('#game-modal')).toHaveClass(/active/);
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-8-9.spec.js:24:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-07c9c-ld-start-AI-governance-game-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-07c9c-ld-start-AI-governance-game-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-8-9-Scenario-8-A-07c9c-ld-start-AI-governance-game-msedge\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-07c9c-ld-start-AI-governance-game-msedge\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-07c9c-ld-start-AI-governance-game-msedge\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-07c9c-ld-start-AI-governance-game-msedge\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 8: AI Governance Regulation › should display AI governance start page" classname="scenarios-8-9.spec.js" time="22.256">
+<failure message="scenarios-8-9.spec.js:39:7 should display AI governance start page" type="FAILURE">
+<![CDATA[  [msedge] › scenarios-8-9.spec.js:39:7 › Scenario 8: AI Governance Regulation › should display AI governance start page 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('h3:has-text("AI 治理")').first()
+
+
+      40 |     // Click the AI governance card
+      41 |     const aiCard = page.locator('h3:has-text("AI 治理")').first();
+    > 42 |     await aiCard.click();
+         |                  ^
+      43 |
+      44 |     // Wait for game content
+      45 |     await page.waitForTimeout(2000);
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-8-9.spec.js:42:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-390cb-ay-AI-governance-start-page-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-390cb-ay-AI-governance-start-page-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-8-9-Scenario-8-A-390cb-ay-AI-governance-start-page-msedge\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-390cb-ay-AI-governance-start-page-msedge\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-390cb-ay-AI-governance-start-page-msedge\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-390cb-ay-AI-governance-start-page-msedge\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 8: AI Governance Regulation › should complete AI governance game flow" classname="scenarios-8-9.spec.js" time="23.734">
+<failure message="scenarios-8-9.spec.js:52:7 should complete AI governance game flow" type="FAILURE">
+<![CDATA[  [msedge] › scenarios-8-9.spec.js:52:7 › Scenario 8: AI Governance Regulation › should complete AI governance game flow 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('h3:has-text("AI 治理")').first()
+
+
+      53 |     // Click the AI governance card
+      54 |     const aiCard = page.locator('h3:has-text("AI 治理")').first();
+    > 55 |     await aiCard.click();
+         |                  ^
+      56 |
+      57 |     // Wait for game modal and content
+      58 |     await expect(page.locator('#game-modal')).toHaveClass(/active/);
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-8-9.spec.js:55:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-1410c-ete-AI-governance-game-flow-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-1410c-ete-AI-governance-game-flow-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-8-9-Scenario-8-A-1410c-ete-AI-governance-game-flow-msedge\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-1410c-ete-AI-governance-game-flow-msedge\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-1410c-ete-AI-governance-game-flow-msedge\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-1410c-ete-AI-governance-game-flow-msedge\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 8: AI Governance Regulation › should complete 3 turns in AI governance game" classname="scenarios-8-9.spec.js" time="21.046">
+<failure message="scenarios-8-9.spec.js:99:7 should complete 3 turns in AI governance game" type="FAILURE">
+<![CDATA[  [msedge] › scenarios-8-9.spec.js:99:7 › Scenario 8: AI Governance Regulation › should complete 3 turns in AI governance game 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('h3:has-text("AI 治理")').first()
+
+
+      100 |     // Click the AI governance card
+      101 |     const aiCard = page.locator('h3:has-text("AI 治理")').first();
+    > 102 |     await aiCard.click();
+          |                  ^
+      103 |
+      104 |     // Wait for game modal
+      105 |     await expect(page.locator('#game-modal')).toHaveClass(/active/);
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-8-9.spec.js:102:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-b4691-turns-in-AI-governance-game-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-b4691-turns-in-AI-governance-game-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-8-9-Scenario-8-A-b4691-turns-in-AI-governance-game-msedge\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-b4691-turns-in-AI-governance-game-msedge\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-b4691-turns-in-AI-governance-game-msedge\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-b4691-turns-in-AI-governance-game-msedge\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 8: AI Governance Regulation › should display AI governance game state correctly" classname="scenarios-8-9.spec.js" time="22.267">
+<failure message="scenarios-8-9.spec.js:154:7 should display AI governance game state correctly" type="FAILURE">
+<![CDATA[  [msedge] › scenarios-8-9.spec.js:154:7 › Scenario 8: AI Governance Regulation › should display AI governance game state correctly 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('h3:has-text("AI 治理")').first()
+
+
+      155 |     // Click the AI governance card
+      156 |     const aiCard = page.locator('h3:has-text("AI 治理")').first();
+    > 157 |     await aiCard.click();
+          |                  ^
+      158 |
+      159 |     // Wait for game content
+      160 |     await page.waitForTimeout(2000);
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-8-9.spec.js:157:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-43552-rnance-game-state-correctly-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-43552-rnance-game-state-correctly-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-8-9-Scenario-8-A-43552-rnance-game-state-correctly-msedge\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-43552-rnance-game-state-correctly-msedge\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-43552-rnance-game-state-correctly-msedge\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-43552-rnance-game-state-correctly-msedge\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 8: AI Governance Regulation › should show decision feedback with correct values" classname="scenarios-8-9.spec.js" time="23.762">
+<failure message="scenarios-8-9.spec.js:176:7 should show decision feedback with correct values" type="FAILURE">
+<![CDATA[  [msedge] › scenarios-8-9.spec.js:176:7 › Scenario 8: AI Governance Regulation › should show decision feedback with correct values 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('h3:has-text("AI 治理")').first()
+
+
+      177 |     // Click the AI governance card
+      178 |     const aiCard = page.locator('h3:has-text("AI 治理")').first();
+    > 179 |     await aiCard.click();
+          |                  ^
+      180 |
+      181 |     // Wait for game modal
+      182 |     await expect(page.locator('#game-modal')).toHaveClass(/active/);
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-8-9.spec.js:179:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-95c34-eedback-with-correct-values-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-95c34-eedback-with-correct-values-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-8-9-Scenario-8-A-95c34-eedback-with-correct-values-msedge\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-95c34-eedback-with-correct-values-msedge\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-95c34-eedback-with-correct-values-msedge\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-95c34-eedback-with-correct-values-msedge\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 9: Financial Crisis Response › should load financial crisis scenario" classname="scenarios-8-9.spec.js" time="13.138">
+</testcase>
+<testcase name="Scenario 9: Financial Crisis Response › should start financial crisis game" classname="scenarios-8-9.spec.js" time="13.471">
+</testcase>
+<testcase name="Scenario 9: Financial Crisis Response › should display financial crisis start page" classname="scenarios-8-9.spec.js" time="12.822">
+</testcase>
+<testcase name="Scenario 9: Financial Crisis Response › should complete financial crisis game flow" classname="scenarios-8-9.spec.js" time="17.09">
+</testcase>
+<testcase name="Scenario 9: Financial Crisis Response › should complete 3 turns in financial crisis game" classname="scenarios-8-9.spec.js" time="18.274">
+</testcase>
+<testcase name="Scenario 9: Financial Crisis Response › should display financial crisis game state correctly" classname="scenarios-8-9.spec.js" time="12.685">
+</testcase>
+<testcase name="Scenario 9: Financial Crisis Response › should show financial crisis decision feedback with correct values" classname="scenarios-8-9.spec.js" time="19.298">
+</testcase>
+<testcase name="Scenario 9: Financial Crisis Response › should handle financial crisis game end state" classname="scenarios-8-9.spec.js" time="20.28">
+</testcase>
+</testsuite>
+<testsuite name="scenarios-interaction.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="msedge" tests="13" failures="0" skipped="0" time="161.669" errors="0">
+<testcase name="Scenarios Interaction › should navigate to scenarios page" classname="scenarios-interaction.spec.js" time="8.44">
+</testcase>
+<testcase name="Scenarios Interaction › should load scenarios from API" classname="scenarios-interaction.spec.js" time="12.198">
+</testcase>
+<testcase name="Scenarios Interaction › should display scenario details correctly" classname="scenarios-interaction.spec.js" time="11.91">
+</testcase>
+<testcase name="Scenarios Interaction › should handle scenario selection" classname="scenarios-interaction.spec.js" time="12.755">
+</testcase>
+<testcase name="Scenarios Interaction › should start game session correctly" classname="scenarios-interaction.spec.js" time="12.548">
+</testcase>
+<testcase name="Scenarios Interaction › should display game controls for each scenario" classname="scenarios-interaction.spec.js" time="12.788">
+</testcase>
+<testcase name="Scenarios Interaction › should handle game decision submission" classname="scenarios-interaction.spec.js" time="14.274">
+</testcase>
+<testcase name="Scenarios Interaction › should handle game modal interactions" classname="scenarios-interaction.spec.js" time="13.113">
+</testcase>
+<testcase name="Scenarios Interaction › should display appropriate loading states" classname="scenarios-interaction.spec.js" time="11.123">
+</testcase>
+<testcase name="Scenarios Interaction › should handle API errors gracefully" classname="scenarios-interaction.spec.js" time="13.82">
+</testcase>
+<testcase name="Scenarios Interaction › should track game session state" classname="scenarios-interaction.spec.js" time="12.451">
+</testcase>
+<testcase name="Scenarios Interaction › should provide game feedback and analysis" classname="scenarios-interaction.spec.js" time="13.714">
+</testcase>
+<testcase name="Scenarios Interaction › should maintain responsive design during game" classname="scenarios-interaction.spec.js" time="12.535">
+</testcase>
+</testsuite>
+<testsuite name="api-integration.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="Mobile Chrome" tests="11" failures="2" skipped="0" time="138.123" errors="0">
+<testcase name="API Integration › should successfully connect to API endpoints" classname="api-integration.spec.js" time="10.677">
+<failure message="api-integration.spec.js:14:7 should successfully connect to API endpoints" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › api-integration.spec.js:14:7 › API Integration › should successfully connect to API endpoints 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+      30 |
+      31 |     // Verify API responses
+    > 32 |     expect(apiResponses.length).toBeGreaterThan(0);
+         |                                 ^
+      33 |
+      34 |     // Check that at least one API call was successful
+      35 |     const successfulCalls = apiResponses.filter(response => response.ok);
+        at D:\AIDevelop\failureLogic\tests\e2e\api-integration.spec.js:32:33
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-Mobile-Chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-Mobile-Chrome\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-Mobile-Chrome\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="API Integration › should handle API response caching" classname="api-integration.spec.js" time="13.421">
+</testcase>
+<testcase name="API Integration › should implement API failover correctly" classname="api-integration.spec.js" time="11.386">
+</testcase>
+<testcase name="API Integration › should track API performance metrics" classname="api-integration.spec.js" time="11.838">
+</testcase>
+<testcase name="API Integration › should handle game session API calls" classname="api-integration.spec.js" time="13.93">
+</testcase>
+<testcase name="API Integration › should handle game decision API calls" classname="api-integration.spec.js" time="12.198">
+</testcase>
+<testcase name="API Integration › should handle API timeouts gracefully" classname="api-integration.spec.js" time="17.531">
+<failure message="api-integration.spec.js:170:7 should handle API timeouts gracefully" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › api-integration.spec.js:170:7 › API Integration › should handle API timeouts gracefully 
+
+    Error: expect(received).toBeTruthy()
+
+    Received: false
+
+      186 |                       await page.locator('text=加载失败').isVisible();
+      187 |
+    > 188 |     expect(hasContent).toBeTruthy();
+          |                        ^
+      189 |   });
+      190 |
+      191 |   test('should implement proper error handling', async ({ page }) => {
+        at D:\AIDevelop\failureLogic\tests\e2e\api-integration.spec.js:188:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-Mobile-Chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-Mobile-Chrome\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-Mobile-Chrome\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="API Integration › should implement proper error handling" classname="api-integration.spec.js" time="11.808">
+</testcase>
+<testcase name="API Integration › should validate API response data structure" classname="api-integration.spec.js" time="12.016">
+</testcase>
+<testcase name="API Integration › should handle concurrent API requests" classname="api-integration.spec.js" time="11.858">
+</testcase>
+<testcase name="API Integration › should implement proper request retries" classname="api-integration.spec.js" time="11.46">
+</testcase>
+</testsuite>
+<testsuite name="app-load.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="Mobile Chrome" tests="10" failures="0" skipped="0" time="100.31" errors="0">
+<testcase name="Application Loading › should load the main page successfully" classname="app-load.spec.js" time="9.414">
+</testcase>
+<testcase name="Application Loading › should hide loading screen after app loads" classname="app-load.spec.js" time="9.208">
+</testcase>
+<testcase name="Application Loading › should load navigation items correctly" classname="app-load.spec.js" time="9.642">
+</testcase>
+<testcase name="Application Loading › should handle responsive design correctly" classname="app-load.spec.js" time="11.43">
+</testcase>
+<testcase name="Application Loading › should initialize service worker correctly" classname="app-load.spec.js" time="10.723">
+</testcase>
+<testcase name="Application Loading › should handle API connectivity gracefully" classname="app-load.spec.js" time="15.9">
+</testcase>
+<testcase name="Application Loading › should load PWA manifest correctly" classname="app-load.spec.js" time="7.418">
+</testcase>
+<testcase name="Application Loading › should handle offline mode correctly" classname="app-load.spec.js" time="10.845">
+</testcase>
+<testcase name="Application Loading › should track performance metrics" classname="app-load.spec.js" time="7.778">
+</testcase>
+<testcase name="Application Loading › should handle accessibility requirements" classname="app-load.spec.js" time="7.952">
+</testcase>
+</testsuite>
+<testsuite name="bias-diagnosis.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="Mobile Chrome" tests="3" failures="3" skipped="0" time="0.168" errors="0">
+<testcase name="Cognitive trap diagnosis (API) › flags exponential misconception" classname="bias-diagnosis.spec.js" time="0.048">
+<failure message="bias-diagnosis.spec.js:12:7 flags exponential misconception" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › bias-diagnosis.spec.js:12:7 › Cognitive trap diagnosis (API) › flags exponential misconception 
+
+    Error: expect(received).toBeTruthy()
+
+    Received: false
+
+      23 |
+      24 |     const res = await request.post(`${API_BASE_URL}/api/results/submit`, { data: payload });
+    > 25 |     expect(res.ok()).toBeTruthy();
+         |                      ^
+      26 |
+      27 |     const body = await res.json();
+      28 |     expect(body.success).toBeTruthy();
+        at D:\AIDevelop\failureLogic\tests\e2e\bias-diagnosis.spec.js:25:22
+]]>
+</failure>
+</testcase>
+<testcase name="Cognitive trap diagnosis (API) › flags compound interest misunderstanding (linear intuition)" classname="bias-diagnosis.spec.js" time="0.042">
+<failure message="bias-diagnosis.spec.js:34:7 flags compound interest misunderstanding (linear intuition)" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › bias-diagnosis.spec.js:34:7 › Cognitive trap diagnosis (API) › flags compound interest misunderstanding (linear intuition) 
+
+    Error: expect(received).toBeTruthy()
+
+    Received: false
+
+      47 |
+      48 |     const res = await request.post(`${API_BASE_URL}/api/results/submit`, { data: payload });
+    > 49 |     expect(res.ok()).toBeTruthy();
+         |                      ^
+      50 |
+      51 |     const body = await res.json();
+      52 |     expect(body.success).toBeTruthy();
+        at D:\AIDevelop\failureLogic\tests\e2e\bias-diagnosis.spec.js:49:22
+]]>
+</failure>
+</testcase>
+<testcase name="Cognitive trap diagnosis (API) › flags complex system underestimation as complex_system_misunderstanding" classname="bias-diagnosis.spec.js" time="0.078">
+<failure message="bias-diagnosis.spec.js:61:7 flags complex system underestimation as complex_system_misunderstanding" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › bias-diagnosis.spec.js:61:7 › Cognitive trap diagnosis (API) › flags complex system underestimation as complex_system_misunderstanding 
+
+    Error: expect(received).toBeTruthy()
+
+    Received: false
+
+      71 |
+      72 |     const res = await request.post(`${API_BASE_URL}/api/results/submit`, { data: payload });
+    > 73 |     expect(res.ok()).toBeTruthy();
+         |                      ^
+      74 |
+      75 |     const body = await res.json();
+      76 |     expect(body.success).toBeTruthy();
+        at D:\AIDevelop\failureLogic\tests\e2e\bias-diagnosis.spec.js:73:22
+]]>
+</failure>
+</testcase>
+</testsuite>
+<testsuite name="real-app-tests-fixed-v2.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="Mobile Chrome" tests="17" failures="0" skipped="0" time="173.724" errors="0">
+<testcase name="Real Application Tests - Fixed v2 › should load home page" classname="real-app-tests-fixed-v2.spec.js" time="11.864">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should navigate to scenarios page" classname="real-app-tests-fixed-v2.spec.js" time="10.753">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should navigate to about page" classname="real-app-tests-fixed-v2.spec.js" time="10.355">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should navigate to book page" classname="real-app-tests-fixed-v2.spec.js" time="10.285">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should navigate to profile page" classname="real-app-tests-fixed-v2.spec.js" time="10.117">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should display navigation menu" classname="real-app-tests-fixed-v2.spec.js" time="9.117">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should display page title" classname="real-app-tests-fixed-v2.spec.js" time="11.949">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should display brand text" classname="real-app-tests-fixed-v2.spec.js" time="8.51">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should display hero section" classname="real-app-tests-fixed-v2.spec.js" time="8.518">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should display features section" classname="real-app-tests-fixed-v2.spec.js" time="11.461">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should display stats section" classname="real-app-tests-fixed-v2.spec.js" time="10.943">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should have loading screen" classname="real-app-tests-fixed-v2.spec.js" time="10.582">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should hide loading screen after page load" classname="real-app-tests-fixed-v2.spec.js" time="9.1">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should verify service worker registration" classname="real-app-tests-fixed-v2.spec.js" time="10">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should verify PWA manifest" classname="real-app-tests-fixed-v2.spec.js" time="10.08">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should display hero content" classname="real-app-tests-fixed-v2.spec.js" time="10.051">
+</testcase>
+<testcase name="Real Application Tests - Fixed v2 › should display feature cards" classname="real-app-tests-fixed-v2.spec.js" time="10.039">
+</testcase>
+</testsuite>
+<testsuite name="relationship-time-delay.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="Mobile Chrome" tests="16" failures="0" skipped="0" time="275.52" errors="0">
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 场景初始化 › 应该正确加载恋爱关系时间延迟场景卡片" classname="relationship-time-delay.spec.js" time="11.722">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 场景初始化 › 应该正确打开恋爱关系场景游戏模态框" classname="relationship-time-delay.spec.js" time="12.329">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 场景初始化 › 应该显示场景开始页面" classname="relationship-time-delay.spec.js" time="12.425">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 时间延迟机制 › 应该显示时间延迟警告信息" classname="relationship-time-delay.spec.js" time="14.786">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 时间延迟机制 › 应该在选择决策后显示延迟反馈" classname="relationship-time-delay.spec.js" time="15.347">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 时间延迟机制 › 应该对高频联系显示风险警告" classname="relationship-time-delay.spec.js" time="15.225">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 多轮决策流程 › 应该完成第 1 月的两个决策" classname="relationship-time-delay.spec.js" time="16.912">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 多轮决策流程 › 应该完成完整的 5 轮（月）游戏流程" classname="relationship-time-delay.spec.js" time="22.521">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 多轮决策流程 › 应该显示觉醒时刻的教育内容" classname="relationship-time-delay.spec.js" time="22.458">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 多轮决策流程 › 应该显示最终结局和学习成果" classname="relationship-time-delay.spec.js" time="24.746">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 时间线可视化 › 应该显示延迟效果时间线" classname="relationship-time-delay.spec.js" time="17.401">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 聊天界面 › 应该显示小林的消息回复" classname="relationship-time-delay.spec.js" time="18.462">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 游戏重置功能 › 应该能够重新开始游戏" classname="relationship-time-delay.spec.js" time="17.995">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 教育目标验证 › 应该展示关系投资不会立即见效" classname="relationship-time-delay.spec.js" time="15.124">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 教育目标验证 › 应该揭示人们低估时间延迟的认知偏差" classname="relationship-time-delay.spec.js" time="17.006">
+</testcase>
+<testcase name="恋爱关系时间延迟场景 - E2E 测试 › 教育目标验证 › 应该体验延迟满足的重要性" classname="relationship-time-delay.spec.js" time="21.061">
+</testcase>
+</testsuite>
+<testsuite name="scenarios-4-6.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="Mobile Chrome" tests="15" failures="6" skipped="0" time="274.83" errors="0">
+<testcase name="Scenario 4: Business Strategy Reasoning Game › should load business strategy scenario card" classname="scenarios-4-6.spec.js" time="13.696">
+</testcase>
+<testcase name="Scenario 4: Business Strategy Reasoning Game › should start business strategy game successfully" classname="scenarios-4-6.spec.js" time="13.927">
+</testcase>
+<testcase name="Scenario 4: Business Strategy Reasoning Game › should complete business strategy turn 1" classname="scenarios-4-6.spec.js" time="22.824">
+<failure message="scenarios-4-6.spec.js:49:7 should complete business strategy turn 1" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › scenarios-4-6.spec.js:49:7 › Scenario 4: Business Strategy Reasoning Game › should complete business strategy turn 1 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('#game-container')
+    Timeout: 5000ms
+    - Expected substring  -   1
+    + Received string     + 102
+
+    - 第 1 回合决策
+    +
+    +       
+    +         
+    +           📊 第1回合决策
+    +           回合 1/5
+    +         
+    +
+    +         
+    +           📈 当前状态
+    +           
+    +             
+    +               💰 资金
+    +               ¥10000
+    +             
+    +             
+    +               ⭐ 声誉
+    +               50
+    +             
+    +             
+    +               📊 市场地位
+    +               30
+    +             
+    +           
+    +         
+    +
+    +         
+    +           📝 情况描述
+    +           你的科技公司刚刚开发出一款新型智能手机，市场研究表明消费者对此类产品有很大需求，但同时有几家大型竞争对手也在开发同类产品。
+    +         
+    +         
+    +         
+    +           🤔 可供选择的策略
+    +           
+    +             
+    +               
+    +                 立即投放市场，抢占先机
+    +                 快速上市，利用时间优势占领市场份额
+    +                 💡 你的想法: "如果我先上市，就能占据市场主导地位，即使产品不完美也没关系"
+    +                 
+    +                 
+    +                   预期收益: 
+    +                     +¥1500
+    +                   
+    +                 
+    +                 
+    +                   选择此策略
+    +                 
+    +               
+    +             
+    +               
+    +                 进行更多测试，完善产品后上市
+    +                 投入更多时间确保产品质量，打造完美产品
+    +                 💡 你的想法: "只有完美的产品才能赢得市场，质量第一"
+    +                 
+    +                 
+    +                   预期收益: 
+    +                     +¥800
+    +                   
+    +                 
+    +                 
+    +                   选择此策略
+    +                 
+    +               
+    +             
+    +               
+    +                 收购小型竞争对手以减少竞争压力
+    +                 通过收购消除竞争威胁，扩大市场份额
+    +                 💡 你的想法: "消除竞争对手是最好的策略，强者恒强"
+    +                 
+    +                 
+    +                   预期收益: 
+    +                     +¥1200
+    +                   
+    +                 
+    +                 
+    +                   选择此策略
+    +                 
+    +               
+    +             
+    +               
+    +                 与其他公司合作开发
+    +                 通过合作分担风险和技术挑战
+    +                 💡 你的想法: "合作可以实现双赢，资源整合优势"
+    +                 
+    +                 
+    +                   预期收益: 
+    +                     +¥1000
+    +                   
+    +                 
+    +                 
+    +                   选择此策略
+    +                 
+    +               
+    +             
+    +           
+    +         
+    +         
+    +         
+    +           返回场景列表
+    +         
+    +       
+    +     
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for locator('#game-container')
+        8 × locator resolved to <div class="modal-body" id="game-container">…</div>
+          - unexpected value "
+          
+            
+              📊 第1回合决策
+              回合 1/5
+            
+    
+            
+              📈 当前状态
+              
+                
+                  💰 资金
+                  ¥10000
+                
+                
+                  ⭐ 声誉
+                  50
+                
+                
+                  📊 市场地位
+                  30
+                
+              
+            
+    
+            
+              📝 情况描述
+              你的科技公司刚刚开发出一款新型智能手机，市场研究表明消费者对此类产品有很大需求，但同时有几家大型竞争对手也在开发同类产品。
+            
+            
+            
+              🤔 可供选择的策略
+              
+                
+                  
+                    立即投放市场，抢占先机
+                    快速上市，利用时间优势占领市场份额
+                    💡 你的想法: "如果我先上市，就能占据市场主导地位，即使产品不完美也没关系"
+                    
+                    
+                      预期收益: 
+                        +¥1500
+                      
+                    
+                    
+                      选择此策略
+                    
+                  
+                
+                  
+                    进行更多测试，完善产品后上市
+                    投入更多时间确保产品质量，打造完美产品
+                    💡 你的想法: "只有完美的产品才能赢得市场，质量第一"
+                    
+                    
+                      预期收益: 
+                        +¥800
+                      
+                    
+                    
+                      选择此策略
+                    
+                  
+                
+                  
+                    收购小型竞争对手以减少竞争压力
+                    通过收购消除竞争威胁，扩大市场份额
+                    💡 你的想法: "消除竞争对手是最好的策略，强者恒强"
+                    
+                    
+                      预期收益: 
+                        +¥1200
+                      
+                    
+                    
+                      选择此策略
+                    
+                  
+                
+                  
+                    与其他公司合作开发
+                    通过合作分担风险和技术挑战
+                    💡 你的想法: "合作可以实现双赢，资源整合优势"
+                    
+                    
+                      预期收益: 
+                        +¥1000
+                      
+                    
+                    
+                      选择此策略
+                    
+                  
+                
+              
+            
+            
+            
+              返回场景列表
+            
+          
+        "
+
+
+      66 |
+      67 |     // Verify turn 1 page loaded
+    > 68 |     await expect(page.locator('#game-container')).toContainText('第 1 回合决策');
+         |                                                   ^
+      69 |     
+      70 |     // Check for decision options
+      71 |     const optionCards = page.locator('#game-container .option-card');
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-4-6.spec.js:68:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-4-B-57c57-te-business-strategy-turn-1-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-4-B-57c57-te-business-strategy-turn-1-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-4-6-Scenario-4-B-57c57-te-business-strategy-turn-1-Mobile-Chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-4-B-57c57-te-business-strategy-turn-1-Mobile-Chrome\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-4-B-57c57-te-business-strategy-turn-1-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-4-B-57c57-te-business-strategy-turn-1-Mobile-Chrome\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 4: Business Strategy Reasoning Game › should make decision and see feedback in business strategy" classname="scenarios-4-6.spec.js" time="19.612">
+</testcase>
+<testcase name="Scenario 4: Business Strategy Reasoning Game › should display game state metrics in business strategy" classname="scenarios-4-6.spec.js" time="17.9">
+</testcase>
+<testcase name="Scenario 5: Public Policy Making Simulation › should load public policy scenario card" classname="scenarios-4-6.spec.js" time="12.064">
+</testcase>
+<testcase name="Scenario 5: Public Policy Making Simulation › should start public policy game successfully" classname="scenarios-4-6.spec.js" time="13.553">
+</testcase>
+<testcase name="Scenario 5: Public Policy Making Simulation › should complete public policy turn 1" classname="scenarios-4-6.spec.js" time="22.161">
+<failure message="scenarios-4-6.spec.js:171:7 should complete public policy turn 1" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › scenarios-4-6.spec.js:171:7 › Scenario 5: Public Policy Making Simulation › should complete public policy turn 1 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('#game-container')
+    Timeout: 5000ms
+    - Expected substring  -   1
+    + Received string     + 102
+
+    - 第 1 回合决策
+    +
+    +       
+    +         
+    +           📊 第1回合决策
+    +           回合 1/5
+    +         
+    +
+    +         
+    +           📈 当前状态
+    +           
+    +             
+    +               💰 预算
+    +               ¥10000
+    +             
+    +             
+    +               ⭐ 信任
+    +               50
+    +             
+    +             
+    +               📊 政策效果
+    +               30
+    +             
+    +             
+    +               👥 民众支持
+    +               50
+    +             
+    +           
+    +         
+    +
+    +         
+    +           📝 情况描述
+    +           作为城市规划者，你负责改善城市的交通拥堵问题。预算有限，但市民抱怨严重。有四个方案可供选择。
+    +         
+    +         
+    +         
+    +           🤔 可供选择的政策
+    +           
+    +             
+    +               
+    +                 建设新的地铁线路
+    +                 大规模基础设施投资，长期效果显著
+    +                 💡 你的想法: "地铁是最现代化的解决方案，一次投资，永久受益"
+    +                 
+    +                 
+    +                   预估成本: ¥6000
+    +                   预估收益: +25 效果
+    +                 
+    +                 
+    +                   选择此政策
+    +                 
+    +               
+    +             
+    +               
+    +                 扩大公交网络
+    +                 灵活的公共交通扩展，成本相对较低
+    +                 💡 你的想法: "公交系统更容易实施，覆盖面广"
+    +                 
+    +                 
+    +                   预估成本: ¥3000
+    +                   预估收益: +15 效果
+    +                 
+    +                 
+    +                   选择此政策
+    +                 
+    +               
+    +             
+    +               
+    +                 征收拥堵费以抑制私家车使用
+    +                 经济手段调节交通，但可能引起民怨
+    +                 💡 你的想法: "经济激励是最有效的行为调节手段"
+    +                 
+    +                 
+    +                   预估成本: ¥500
+    +                   预估收益: +20 效果
+    +                 
+    +                 
+    +                   选择此政策
+    +                 
+    +               
+    +             
+    +               
+    +                 提供自行车道和共享自行车项目
+    +                 环保型交通方案，鼓励绿色出行
+    +                 💡 你的想法: "绿色出行是未来的趋势，应该优先发展"
+    +                 
+    +                 
+    +                   预估成本: ¥1500
+    +                   预估收益: +10 效果
+    +                 
+    +                 
+    +                   选择此政策
+    +                 
+    +               
+    +             
+    +           
+    +         
+    +         
+    +         
+    +           返回场景列表
+    +         
+    +       
+    +     
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for locator('#game-container')
+        8 × locator resolved to <div class="modal-body" id="game-container">…</div>
+          - unexpected value "
+          
+            
+              📊 第1回合决策
+              回合 1/5
+            
+    
+            
+              📈 当前状态
+              
+                
+                  💰 预算
+                  ¥10000
+                
+                
+                  ⭐ 信任
+                  50
+                
+                
+                  📊 政策效果
+                  30
+                
+                
+                  👥 民众支持
+                  50
+                
+              
+            
+    
+            
+              📝 情况描述
+              作为城市规划者，你负责改善城市的交通拥堵问题。预算有限，但市民抱怨严重。有四个方案可供选择。
+            
+            
+            
+              🤔 可供选择的政策
+              
+                
+                  
+                    建设新的地铁线路
+                    大规模基础设施投资，长期效果显著
+                    💡 你的想法: "地铁是最现代化的解决方案，一次投资，永久受益"
+                    
+                    
+                      预估成本: ¥6000
+                      预估收益: +25 效果
+                    
+                    
+                      选择此政策
+                    
+                  
+                
+                  
+                    扩大公交网络
+                    灵活的公共交通扩展，成本相对较低
+                    💡 你的想法: "公交系统更容易实施，覆盖面广"
+                    
+                    
+                      预估成本: ¥3000
+                      预估收益: +15 效果
+                    
+                    
+                      选择此政策
+                    
+                  
+                
+                  
+                    征收拥堵费以抑制私家车使用
+                    经济手段调节交通，但可能引起民怨
+                    💡 你的想法: "经济激励是最有效的行为调节手段"
+                    
+                    
+                      预估成本: ¥500
+                      预估收益: +20 效果
+                    
+                    
+                      选择此政策
+                    
+                  
+                
+                  
+                    提供自行车道和共享自行车项目
+                    环保型交通方案，鼓励绿色出行
+                    💡 你的想法: "绿色出行是未来的趋势，应该优先发展"
+                    
+                    
+                      预估成本: ¥1500
+                      预估收益: +10 效果
+                    
+                    
+                      选择此政策
+                    
+                  
+                
+              
+            
+            
+            
+              返回场景列表
+            
+          
+        "
+
+
+      188 |
+      189 |     // Verify turn 1 page loaded
+    > 190 |     await expect(page.locator('#game-container')).toContainText('第 1 回合决策');
+          |                                                   ^
+      191 |     
+      192 |     // Check for decision options
+      193 |     const optionCards = page.locator('#game-container .option-card');
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-4-6.spec.js:190:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-5-P-49de3-mplete-public-policy-turn-1-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-5-P-49de3-mplete-public-policy-turn-1-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-4-6-Scenario-5-P-49de3-mplete-public-policy-turn-1-Mobile-Chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-5-P-49de3-mplete-public-policy-turn-1-Mobile-Chrome\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-5-P-49de3-mplete-public-policy-turn-1-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-5-P-49de3-mplete-public-policy-turn-1-Mobile-Chrome\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 5: Public Policy Making Simulation › should make decision and see feedback in public policy" classname="scenarios-4-6.spec.js" time="18.343">
+</testcase>
+<testcase name="Scenario 5: Public Policy Making Simulation › should display game state metrics in public policy" classname="scenarios-4-6.spec.js" time="16.378">
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision Simulation › should load personal finance scenario card" classname="scenarios-4-6.spec.js" time="13.079">
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision Simulation › should start personal finance game successfully" classname="scenarios-4-6.spec.js" time="18.787">
+<failure message="scenarios-4-6.spec.js:271:7 should start personal finance game successfully" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › scenarios-4-6.spec.js:271:7 › Scenario 6: Personal Finance Decision Simulation › should start personal finance game successfully 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('#game-container')
+    Timeout: 5000ms
+    - Expected substring  -  1
+    + Received string     + 24
+
+    - 个人理财决策模拟
+    +
+    +       
+    +         💰 个人财务决策模拟
+    +         
+    +           制定长期财务规划，体验复利增长和时间价值的力量。
+    +           
+    +             📊 总回合数undefined
+    +             💪 难度初级
+    +           
+    +           
+    +             🎯 挑战目标
+    +             
+    +               建立充足的退休储蓄
+    +               理解复利增长的指数效应
+    +               平衡当前消费与长期投资
+    +               管理债务风险
+    +             
+    +           
+    +         
+    +         
+    +           开始挑战
+    +         
+    +       
+    +     
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for locator('#game-container')
+        8 × locator resolved to <div class="modal-body" id="game-container">…</div>
+          - unexpected value "
+          
+            💰 个人财务决策模拟
+            
+              制定长期财务规划，体验复利增长和时间价值的力量。
+              
+                📊 总回合数undefined
+                💪 难度初级
+              
+              
+                🎯 挑战目标
+                
+                  建立充足的退休储蓄
+                  理解复利增长的指数效应
+                  平衡当前消费与长期投资
+                  管理债务风险
+                
+              
+            
+            
+              开始挑战
+            
+          
+        "
+
+
+      288 |
+      289 |     // Verify game start page
+    > 290 |     await expect(page.locator('#game-container')).toContainText('个人理财决策模拟');
+          |                                                   ^
+      291 |   });
+      292 |
+      293 |   test('should complete personal finance turn 1', async ({ page }) => {
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-4-6.spec.js:290:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-6-P-3f723-l-finance-game-successfully-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-6-P-3f723-l-finance-game-successfully-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-4-6-Scenario-6-P-3f723-l-finance-game-successfully-Mobile-Chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-3f723-l-finance-game-successfully-Mobile-Chrome\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-3f723-l-finance-game-successfully-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-3f723-l-finance-game-successfully-Mobile-Chrome\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision Simulation › should complete personal finance turn 1" classname="scenarios-4-6.spec.js" time="20.847">
+<failure message="scenarios-4-6.spec.js:293:7 should complete personal finance turn 1" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › scenarios-4-6.spec.js:293:7 › Scenario 6: Personal Finance Decision Simulation › should complete personal finance turn 1 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#game-container button:has-text("开始理财规划")').first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('#game-container button:has-text("开始理财规划")').first()
+
+
+      304 |     // Click start button
+      305 |     const startButton = page.locator('#game-container button:has-text("开始理财规划")').first();
+    > 306 |     await expect(startButton).toBeVisible({ timeout: 5000 });
+          |                               ^
+      307 |     await startButton.click();
+      308 |
+      309 |     await page.waitForTimeout(1000);
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-4-6.spec.js:306:31
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-6-P-899a3-ete-personal-finance-turn-1-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-6-P-899a3-ete-personal-finance-turn-1-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-4-6-Scenario-6-P-899a3-ete-personal-finance-turn-1-Mobile-Chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-899a3-ete-personal-finance-turn-1-Mobile-Chrome\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-899a3-ete-personal-finance-turn-1-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-899a3-ete-personal-finance-turn-1-Mobile-Chrome\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision Simulation › should make decision and see feedback in personal finance" classname="scenarios-4-6.spec.js" time="25.604">
+<failure message="scenarios-4-6.spec.js:323:7 should make decision and see feedback in personal finance" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › scenarios-4-6.spec.js:323:7 › Scenario 6: Personal Finance Decision Simulation › should make decision and see feedback in personal finance 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('#game-container button:has-text("开始理财规划")').first()
+
+
+      333 |
+      334 |     // Start game
+    > 335 |     await page.locator('#game-container button:has-text("开始理财规划")').first().click();
+          |                                                                             ^
+      336 |     await page.waitForTimeout(1000);
+      337 |
+      338 |     // Select first option
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-4-6.spec.js:335:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-6-P-fd327-eedback-in-personal-finance-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-6-P-fd327-eedback-in-personal-finance-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-4-6-Scenario-6-P-fd327-eedback-in-personal-finance-Mobile-Chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-fd327-eedback-in-personal-finance-Mobile-Chrome\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-fd327-eedback-in-personal-finance-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-fd327-eedback-in-personal-finance-Mobile-Chrome\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision Simulation › should display game state metrics in personal finance" classname="scenarios-4-6.spec.js" time="26.055">
+<failure message="scenarios-4-6.spec.js:352:7 should display game state metrics in personal finance" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › scenarios-4-6.spec.js:352:7 › Scenario 6: Personal Finance Decision Simulation › should display game state metrics in personal finance 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('#game-container button:has-text("开始理财规划")').first()
+
+
+      362 |
+      363 |     // Start game
+    > 364 |     await page.locator('#game-container button:has-text("开始理财规划")').first().click();
+          |                                                                             ^
+      365 |     await page.waitForTimeout(1000);
+      366 |
+      367 |     // Check for state metrics display
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-4-6.spec.js:364:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-6-P-34a37-metrics-in-personal-finance-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-4-6-Scenario-6-P-34a37-metrics-in-personal-finance-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-4-6-Scenario-6-P-34a37-metrics-in-personal-finance-Mobile-Chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-34a37-metrics-in-personal-finance-Mobile-Chrome\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-34a37-metrics-in-personal-finance-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-4-6-Scenario-6-P-34a37-metrics-in-personal-finance-Mobile-Chrome\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="scenarios-6-7.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="Mobile Chrome" tests="10" failures="0" skipped="0" time="140.623" errors="0">
+<testcase name="Scenario 6: Personal Finance Decision › should load personal finance scenario" classname="scenarios-6-7.spec.js" time="12.662">
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision › should start personal finance game" classname="scenarios-6-7.spec.js" time="12.444">
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision › should display personal finance start page" classname="scenarios-6-7.spec.js" time="14.265">
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision › should complete personal finance game flow" classname="scenarios-6-7.spec.js" time="17.835">
+</testcase>
+<testcase name="Scenario 6: Personal Finance Decision › should complete multiple turns in personal finance game" classname="scenarios-6-7.spec.js" time="17.811">
+</testcase>
+<testcase name="Scenario 7: Climate Change Policy › should load climate change scenario" classname="scenarios-6-7.spec.js" time="11.526">
+</testcase>
+<testcase name="Scenario 7: Climate Change Policy › should start climate change game" classname="scenarios-6-7.spec.js" time="12.059">
+</testcase>
+<testcase name="Scenario 7: Climate Change Policy › should display climate change start page" classname="scenarios-6-7.spec.js" time="11.729">
+</testcase>
+<testcase name="Scenario 7: Climate Change Policy › should complete climate change game flow" classname="scenarios-6-7.spec.js" time="15.767">
+</testcase>
+<testcase name="Scenario 7: Climate Change Policy › should complete multiple turns in climate change game" classname="scenarios-6-7.spec.js" time="14.525">
+</testcase>
+</testsuite>
+<testsuite name="scenarios-8-9.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="Mobile Chrome" tests="15" failures="7" skipped="0" time="275.809" errors="0">
+<testcase name="Scenario 8: AI Governance Regulation › should load AI governance scenario" classname="scenarios-8-9.spec.js" time="15.19">
+<failure message="scenarios-8-9.spec.js:15:7 should load AI governance scenario" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › scenarios-8-9.spec.js:15:7 › Scenario 8: AI Governance Regulation › should load AI governance scenario 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('h3:has-text("AI 治理")').first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('h3:has-text("AI 治理")').first()
+
+
+      16 |     // Find AI governance scenario card using heading - use partial text match
+      17 |     const aiHeading = page.locator('h3:has-text("AI 治理")').first();
+    > 18 |     await expect(aiHeading).toBeVisible();
+         |                             ^
+      19 |   });
+      20 |
+      21 |   test('should start AI governance game', async ({ page }) => {
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-8-9.spec.js:18:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-0f78b-load-AI-governance-scenario-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-0f78b-load-AI-governance-scenario-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-8-9-Scenario-8-A-0f78b-load-AI-governance-scenario-Mobile-Chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-0f78b-load-AI-governance-scenario-Mobile-Chrome\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-0f78b-load-AI-governance-scenario-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-0f78b-load-AI-governance-scenario-Mobile-Chrome\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 8: AI Governance Regulation › should start AI governance game" classname="scenarios-8-9.spec.js" time="22.172">
+<failure message="scenarios-8-9.spec.js:21:7 should start AI governance game" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › scenarios-8-9.spec.js:21:7 › Scenario 8: AI Governance Regulation › should start AI governance game 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('h3:has-text("AI 治理")').first()
+
+
+      22 |     // Find the AI governance card container and click it
+      23 |     const aiCard = page.locator('h3:has-text("AI 治理")').first();
+    > 24 |     await aiCard.click();
+         |                  ^
+      25 |     
+      26 |     // Wait for game modal
+      27 |     await expect(page.locator('#game-modal')).toHaveClass(/active/);
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-8-9.spec.js:24:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-07c9c-ld-start-AI-governance-game-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-07c9c-ld-start-AI-governance-game-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-8-9-Scenario-8-A-07c9c-ld-start-AI-governance-game-Mobile-Chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-07c9c-ld-start-AI-governance-game-Mobile-Chrome\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-07c9c-ld-start-AI-governance-game-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-07c9c-ld-start-AI-governance-game-Mobile-Chrome\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 8: AI Governance Regulation › should display AI governance start page" classname="scenarios-8-9.spec.js" time="21.368">
+<failure message="scenarios-8-9.spec.js:39:7 should display AI governance start page" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › scenarios-8-9.spec.js:39:7 › Scenario 8: AI Governance Regulation › should display AI governance start page 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('h3:has-text("AI 治理")').first()
+
+
+      40 |     // Click the AI governance card
+      41 |     const aiCard = page.locator('h3:has-text("AI 治理")').first();
+    > 42 |     await aiCard.click();
+         |                  ^
+      43 |
+      44 |     // Wait for game content
+      45 |     await page.waitForTimeout(2000);
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-8-9.spec.js:42:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-390cb-ay-AI-governance-start-page-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-390cb-ay-AI-governance-start-page-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-8-9-Scenario-8-A-390cb-ay-AI-governance-start-page-Mobile-Chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-390cb-ay-AI-governance-start-page-Mobile-Chrome\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-390cb-ay-AI-governance-start-page-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-390cb-ay-AI-governance-start-page-Mobile-Chrome\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 8: AI Governance Regulation › should complete AI governance game flow" classname="scenarios-8-9.spec.js" time="20.823">
+<failure message="scenarios-8-9.spec.js:52:7 should complete AI governance game flow" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › scenarios-8-9.spec.js:52:7 › Scenario 8: AI Governance Regulation › should complete AI governance game flow 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('h3:has-text("AI 治理")').first()
+
+
+      53 |     // Click the AI governance card
+      54 |     const aiCard = page.locator('h3:has-text("AI 治理")').first();
+    > 55 |     await aiCard.click();
+         |                  ^
+      56 |
+      57 |     // Wait for game modal and content
+      58 |     await expect(page.locator('#game-modal')).toHaveClass(/active/);
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-8-9.spec.js:55:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-1410c-ete-AI-governance-game-flow-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-1410c-ete-AI-governance-game-flow-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-8-9-Scenario-8-A-1410c-ete-AI-governance-game-flow-Mobile-Chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-1410c-ete-AI-governance-game-flow-Mobile-Chrome\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-1410c-ete-AI-governance-game-flow-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-1410c-ete-AI-governance-game-flow-Mobile-Chrome\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 8: AI Governance Regulation › should complete 3 turns in AI governance game" classname="scenarios-8-9.spec.js" time="20.783">
+<failure message="scenarios-8-9.spec.js:99:7 should complete 3 turns in AI governance game" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › scenarios-8-9.spec.js:99:7 › Scenario 8: AI Governance Regulation › should complete 3 turns in AI governance game 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('h3:has-text("AI 治理")').first()
+
+
+      100 |     // Click the AI governance card
+      101 |     const aiCard = page.locator('h3:has-text("AI 治理")').first();
+    > 102 |     await aiCard.click();
+          |                  ^
+      103 |
+      104 |     // Wait for game modal
+      105 |     await expect(page.locator('#game-modal')).toHaveClass(/active/);
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-8-9.spec.js:102:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-b4691-turns-in-AI-governance-game-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-b4691-turns-in-AI-governance-game-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-8-9-Scenario-8-A-b4691-turns-in-AI-governance-game-Mobile-Chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-b4691-turns-in-AI-governance-game-Mobile-Chrome\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-b4691-turns-in-AI-governance-game-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-b4691-turns-in-AI-governance-game-Mobile-Chrome\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 8: AI Governance Regulation › should display AI governance game state correctly" classname="scenarios-8-9.spec.js" time="21.665">
+<failure message="scenarios-8-9.spec.js:154:7 should display AI governance game state correctly" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › scenarios-8-9.spec.js:154:7 › Scenario 8: AI Governance Regulation › should display AI governance game state correctly 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('h3:has-text("AI 治理")').first()
+
+
+      155 |     // Click the AI governance card
+      156 |     const aiCard = page.locator('h3:has-text("AI 治理")').first();
+    > 157 |     await aiCard.click();
+          |                  ^
+      158 |
+      159 |     // Wait for game content
+      160 |     await page.waitForTimeout(2000);
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-8-9.spec.js:157:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-43552-rnance-game-state-correctly-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-43552-rnance-game-state-correctly-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-8-9-Scenario-8-A-43552-rnance-game-state-correctly-Mobile-Chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-43552-rnance-game-state-correctly-Mobile-Chrome\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-43552-rnance-game-state-correctly-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-43552-rnance-game-state-correctly-Mobile-Chrome\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 8: AI Governance Regulation › should show decision feedback with correct values" classname="scenarios-8-9.spec.js" time="19.469">
+<failure message="scenarios-8-9.spec.js:176:7 should show decision feedback with correct values" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › scenarios-8-9.spec.js:176:7 › Scenario 8: AI Governance Regulation › should show decision feedback with correct values 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('h3:has-text("AI 治理")').first()
+
+
+      177 |     // Click the AI governance card
+      178 |     const aiCard = page.locator('h3:has-text("AI 治理")').first();
+    > 179 |     await aiCard.click();
+          |                  ^
+      180 |
+      181 |     // Wait for game modal
+      182 |     await expect(page.locator('#game-modal')).toHaveClass(/active/);
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-8-9.spec.js:179:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-95c34-eedback-with-correct-values-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\scenarios-8-9-Scenario-8-A-95c34-eedback-with-correct-values-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\scenarios-8-9-Scenario-8-A-95c34-eedback-with-correct-values-Mobile-Chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-95c34-eedback-with-correct-values-Mobile-Chrome\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-95c34-eedback-with-correct-values-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\scenarios-8-9-Scenario-8-A-95c34-eedback-with-correct-values-Mobile-Chrome\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Scenario 9: Financial Crisis Response › should load financial crisis scenario" classname="scenarios-8-9.spec.js" time="9.122">
+</testcase>
+<testcase name="Scenario 9: Financial Crisis Response › should start financial crisis game" classname="scenarios-8-9.spec.js" time="9.473">
+</testcase>
+<testcase name="Scenario 9: Financial Crisis Response › should display financial crisis start page" classname="scenarios-8-9.spec.js" time="19.44">
+</testcase>
+<testcase name="Scenario 9: Financial Crisis Response › should complete financial crisis game flow" classname="scenarios-8-9.spec.js" time="24.273">
+</testcase>
+<testcase name="Scenario 9: Financial Crisis Response › should complete 3 turns in financial crisis game" classname="scenarios-8-9.spec.js" time="24.166">
+</testcase>
+<testcase name="Scenario 9: Financial Crisis Response › should display financial crisis game state correctly" classname="scenarios-8-9.spec.js" time="12.247">
+</testcase>
+<testcase name="Scenario 9: Financial Crisis Response › should show financial crisis decision feedback with correct values" classname="scenarios-8-9.spec.js" time="14.933">
+</testcase>
+<testcase name="Scenario 9: Financial Crisis Response › should handle financial crisis game end state" classname="scenarios-8-9.spec.js" time="20.685">
+</testcase>
+</testsuite>
+<testsuite name="scenarios-interaction.spec.js" timestamp="2026-03-04T13:09:41.532Z" hostname="Mobile Chrome" tests="13" failures="0" skipped="0" time="229.737" errors="0">
+<testcase name="Scenarios Interaction › should navigate to scenarios page" classname="scenarios-interaction.spec.js" time="10.092">
+</testcase>
+<testcase name="Scenarios Interaction › should load scenarios from API" classname="scenarios-interaction.spec.js" time="17.466">
+</testcase>
+<testcase name="Scenarios Interaction › should display scenario details correctly" classname="scenarios-interaction.spec.js" time="17.807">
+</testcase>
+<testcase name="Scenarios Interaction › should handle scenario selection" classname="scenarios-interaction.spec.js" time="13.167">
+</testcase>
+<testcase name="Scenarios Interaction › should start game session correctly" classname="scenarios-interaction.spec.js" time="12.005">
+</testcase>
+<testcase name="Scenarios Interaction › should display game controls for each scenario" classname="scenarios-interaction.spec.js" time="13.675">
+</testcase>
+<testcase name="Scenarios Interaction › should handle game decision submission" classname="scenarios-interaction.spec.js" time="27.312">
+</testcase>
+<testcase name="Scenarios Interaction › should handle game modal interactions" classname="scenarios-interaction.spec.js" time="10.606">
+</testcase>
+<testcase name="Scenarios Interaction › should display appropriate loading states" classname="scenarios-interaction.spec.js" time="26.543">
+</testcase>
+<testcase name="Scenarios Interaction › should handle API errors gracefully" classname="scenarios-interaction.spec.js" time="30.389">
+</testcase>
+<testcase name="Scenarios Interaction › should track game session state" classname="scenarios-interaction.spec.js" time="24.883">
+</testcase>
+<testcase name="Scenarios Interaction › should provide game feedback and analysis" classname="scenarios-interaction.spec.js" time="12.873">
+</testcase>
+<testcase name="Scenarios Interaction › should maintain responsive design during game" classname="scenarios-interaction.spec.js" time="12.919">
+</testcase>
+</testsuite>
+</testsuites>

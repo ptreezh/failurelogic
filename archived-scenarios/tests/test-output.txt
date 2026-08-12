@@ -1,0 +1,631 @@
+🚀 Setting up test environment...
+⏳ Waiting for services to start...
+✅ API server is ready
+✅ Frontend server is ready
+✅ Test environment ready (32ms)
+
+Running 8 tests using 8 workers
+
+[1A[2K[1/8] [msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+[1A[2K[2/8] [msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+[1A[2K[3/8] [msedge] › e2e\real-user-simulation.spec.js:218:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+[1A[2K[4/8] [msedge] › e2e\real-user-simulation.spec.js:239:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+[1A[2K[5/8] [Mobile Chrome] › e2e\real-user-simulation.spec.js:218:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+[1A[2K[6/8] [Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+[1A[2K[7/8] [Mobile Chrome] › e2e\real-user-simulation.spec.js:239:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+[1A[2K[8/8] [Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+🚀 开始真实用户模拟测试...
+
+[1A[2K📱 步骤1: 访问首页...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+🔍 开始全场景卡片浏览测试...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+🚀 开始真实用户模拟测试...
+
+[1A[2K📱 步骤1: 访问首页...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+🔍 开始全场景卡片浏览测试...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:218:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+🔄 开始多场景快速切换测试...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:239:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+📦 开始模态框交互测试...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:239:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+📦 开始模态框交互测试...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:218:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+🔄 开始多场景快速切换测试...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 首页加载成功
+
+[1A[2K📱 步骤2: 导航到场景页面...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:218:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+📱 切换到 scenarios (1/5)...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 首页加载成功
+
+[1A[2K📱 步骤2: 导航到场景页面...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:218:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+📱 切换到 scenarios (1/5)...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:218:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ scenarios 页面激活成功
+
+[1A[2K📱 切换到 home (2/5)...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+📊 找到 10 个场景卡片
+
+[1A[2K
+📱 查看场景 1/10...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:218:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ scenarios 页面激活成功
+
+[1A[2K📱 切换到 home (2/5)...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 场景页面加载成功
+
+[1A[2K📱 步骤3: 等待场景卡片加载...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+📊 找到 10 个场景卡片
+
+[1A[2K
+📱 查看场景 1/10...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 场景页面加载成功
+
+[1A[2K📱 步骤3: 等待场景卡片加载...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 咖啡店线性思维
+
+[1A[2K  难度: beginner
+
+[1A[2K  描述: 线性思维陷阱场景...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:239:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+📱 打开模态框...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:239:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+📱 打开模态框...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 找到 10 个场景卡片
+
+[1A[2K📱 步骤4: 浏览场景卡片...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:218:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ home 页面激活成功
+
+[1A[2K📱 切换到 about (3/5)...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:218:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ home 页面激活成功
+
+[1A[2K📱 切换到 about (3/5)...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 2/10...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 咖啡店线性思维
+
+[1A[2K  难度: beginner
+
+[1A[2K  描述: 线性思维陷阱场景...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 找到 10 个场景卡片
+
+[1A[2K📱 步骤4: 浏览场景卡片...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 2/10...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 恋爱关系时间延迟
+
+[1A[2K  难度: intermediate
+
+[1A[2K  描述: 时间延迟偏差场景...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:218:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ about 页面激活成功
+
+[1A[2K📱 切换到 scenarios (4/5)...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 3/10...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:239:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+✅ 模态框打开成功
+
+[1A[2K✅ 模态框内容可见
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 恋爱关系时间延迟
+
+[1A[2K  难度: intermediate
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:239:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+✅ 模态框打开成功
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  描述: 时间延迟偏差场景...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:239:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+✅ 模态框内容可见
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:218:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ about 页面激活成功
+
+[1A[2K📱 切换到 scenarios (4/5)...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+📱 步骤5: 选择第一个场景...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 3/10...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 投资信息处理
+
+[1A[2K  难度: advanced
+
+[1A[2K  描述: 信息处理模式场景...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+📱 步骤5: 选择第一个场景...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 投资信息处理
+
+[1A[2K  难度: advanced
+
+[1A[2K  描述: 信息处理模式场景...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:218:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ scenarios 页面激活成功
+
+[1A[2K📱 切换到 home (5/5)...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 4/10...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:218:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ scenarios 页面激活成功
+
+[1A[2K📱 切换到 home (5/5)...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 4/10...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:239:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+📱 关闭模态框...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:239:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+📱 关闭模态框...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 投资信息处理
+
+[1A[2K  难度: intermediate
+
+[1A[2K  描述: 学习如何处理和整合多元投资信息源，避免确认偏误...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 投资信息处理
+
+[1A[2K  难度: intermediate
+
+[1A[2K  描述: 学习如何处理和整合多元投资信息源，避免确认偏误...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:218:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ home 页面激活成功
+
+[1A[2K🎉 多场景快速切换测试完成！
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 5/10...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:218:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ home 页面激活成功
+
+[1A[2K🎉 多场景快速切换测试完成！
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 5/10...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 模态框打开成功
+
+[1A[2K📱 步骤6: 查看场景介绍...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 模态框打开成功
+
+[1A[2K📱 步骤6: 查看场景介绍...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 商业战略推理游戏
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 商业战略推理游戏
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  难度: intermediate
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  难度: intermediate
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  描述: 模拟商业决策推理过程，测试用户在复杂商业环境中的决策思维...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  描述: 模拟商业决策推理过程，测试用户在复杂商业环境中的决策思维...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 6/10...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 6/10...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 公共政策制定模拟
+
+[1A[2K  难度: intermediate
+
+[1A[2K  描述: 模拟公共政策制定过程，平衡多方利益相关者需求...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 公共政策制定模拟
+
+[1A[2K  难度: intermediate
+
+[1A[2K  描述: 模拟公共政策制定过程，平衡多方利益相关者需求...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+📱 步骤7: 开始游戏...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 7/10...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 7/10...
+
+[1A[2K  场景名称: 个人财务决策模拟
+
+[1A[2K  难度: beginner
+
+[1A[2K  描述: 模拟个人长期财务规划决策，体验复利和时间价值概念...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 个人财务决策模拟
+
+[1A[2K  难度: beginner
+
+[1A[2K  描述: 模拟个人长期财务规划决策，体验复利和时间价值概念...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+📱 步骤7: 开始游戏...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 8/10...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 8/10...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 游戏开始成功
+
+[1A[2K📱 步骤8: 阅读决策选项...
+
+[1A[2K  1) [msedge] › e2e\real-user-simulation.spec.js:239:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭 ───────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).not.[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator:  locator('#game-modal')
+    Expected: not visible
+    Received: visible
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "not toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('#game-modal')[22m
+    [2m    9 × locator resolved to <div id="game-modal" class="modal active">…</div>[22m
+    [2m      - unexpected value "visible"[22m
+
+
+      270 |     
+      271 |     // 验证模态框关闭
+    > 272 |     await expect(page.locator('#game-modal')).not.toBeVisible();
+          |                                                   ^
+      273 |     console.log('✅ 模态框关闭成功');
+      274 |     
+      275 |     console.log('🎉 模态框交互测试完成！');
+        at D:\AIDevelop\failureLogic\tests\e2e\real-user-simulation.spec.js:272:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\real-user-simulation-真实用户模拟---全场景自然交互走查-模态框交互：打开、操作、关闭-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\real-user-simulation-真实用户模拟---全场景自然交互走查-模态框交互：打开、操作、关闭-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\real-user-simulation-真实用户模拟---全场景自然交互走查-模态框交互：打开、操作、关闭-msedge\error-context.md
+
+
+[1A[2K  2) [Mobile Chrome] › e2e\real-user-simulation.spec.js:239:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).not.[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator:  locator('#game-modal')
+    Expected: not visible
+    Received: visible
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "not toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('#game-modal')[22m
+    [2m    9 × locator resolved to <div id="game-modal" class="modal active">…</div>[22m
+    [2m      - unexpected value "visible"[22m
+
+
+      270 |     
+      271 |     // 验证模态框关闭
+    > 272 |     await expect(page.locator('#game-modal')).not.toBeVisible();
+          |                                                   ^
+      273 |     console.log('✅ 模态框关闭成功');
+      274 |     
+      275 |     console.log('🎉 模态框交互测试完成！');
+        at D:\AIDevelop\failureLogic\tests\e2e\real-user-simulation.spec.js:272:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\real-user-simulation-真实用户模拟---全场景自然交互走查-模态框交互：打开、操作、关闭-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\real-user-simulation-真实用户模拟---全场景自然交互走查-模态框交互：打开、操作、关闭-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\real-user-simulation-真实用户模拟---全场景自然交互走查-模态框交互：打开、操作、关闭-Mobile-Chrome\error-context.md
+
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 全球气候变化政策制定博弈
+
+[1A[2K  难度: advanced
+
+[1A[2K  描述: 模拟多国在气候变化政策制定中的博弈与权衡...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 全球气候变化政策制定博弈
+
+[1A[2K  难度: advanced
+
+[1A[2K  描述: 模拟多国在气候变化政策制定中的博弈与权衡...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 9/10...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 9/10...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 游戏开始成功
+
+[1A[2K📱 步骤8: 阅读决策选项...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: AI治理与监管决策模拟
+
+[1A[2K  难度: advanced
+
+[1A[2K  描述: 模拟AI治理政策制定，平衡创新、安全、伦理等多方面考量...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: AI治理与监管决策模拟
+
+[1A[2K  难度: advanced
+
+[1A[2K  描述: 模拟AI治理政策制定，平衡创新、安全、伦理等多方面考量...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 10/10...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 10/10...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+📱 步骤9: 做出决策...
+
+[1A[2K📱 步骤10: 查看反馈...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 复杂金融市场危机应对模拟
+
+[1A[2K  难度: advanced
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 复杂金融市场危机应对模拟
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  描述: 模拟金融危机应对决策，处理复杂金融系统风险...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  难度: advanced
+
+[1A[2K  描述: 模拟金融危机应对决策，处理复杂金融系统风险...
+
+[1A[2K
+🎉 全场景卡片浏览测试完成！
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:165:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+🎉 全场景卡片浏览测试完成！
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+📱 步骤9: 做出决策...
+
+[1A[2K📱 步骤10: 查看反馈...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+📱 步骤11: 关闭模态框...
+
+[1A[2K📱 步骤12: 返回首页...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+📱 步骤11: 关闭模态框...
+
+[1A[2K📱 步骤12: 返回首页...
+
+[1A[2K  3) [msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-page="home"]').first()[22m
+    [2m    - locator resolved to <button class="nav-item" data-page="home" onclick="NavigationManager.navigateTo('home')">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <h2>☕ 开业第1月 - 决策1/2</h2> from <div id="game-modal" class="modal active">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <h2>☕ 开业第1月 - 决策1/2</h2> from <div id="game-modal" class="modal active">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    19 × waiting for element to be visible, enabled and stable[22m
+    [2m       - element is visible, enabled and stable[22m
+    [2m       - scrolling into view if needed[22m
+    [2m       - done scrolling[22m
+    [2m       - <h2>☕ 开业第1月 - 决策1/2</h2> from <div id="game-modal" class="modal active">…</div> subtree intercepts pointer events[22m
+    [2m     - retrying click action[22m
+    [2m       - waiting 500ms[22m
+
+
+      30 |   const element = page.locator(selector).first();
+      31 |   await expect(element).toBeVisible({ timeout: 10000 });
+    > 32 |   await element.click();
+         |                 ^
+      33 |   await userThink(page, 500, 1000);
+      34 | };
+      35 |
+        at userClick (D:\AIDevelop\failureLogic\tests\e2e\real-user-simulation.spec.js:32:17)
+        at D:\AIDevelop\failureLogic\tests\e2e\real-user-simulation.spec.js:155:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\real-user-simulation-真实用户模-6ca8c-交互走查-完整用户旅程：首页→场景列表→场景体验→返回-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\real-user-simulation-真实用户模-6ca8c-交互走查-完整用户旅程：首页→场景列表→场景体验→返回-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\real-user-simulation-真实用户模-6ca8c-交互走查-完整用户旅程：首页→场景列表→场景体验→返回-msedge\error-context.md
+
+
+[1A[2K  4) [Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-page="home"]').first()[22m
+    [2m    - locator resolved to <button class="nav-item" data-page="home" onclick="NavigationManager.navigateTo('home')">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <h2>☕ 开业第1月 - 决策1/2</h2> from <div id="game-modal" class="modal active">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <h2>☕ 开业第1月 - 决策1/2</h2> from <div id="game-modal" class="modal active">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    19 × waiting for element to be visible, enabled and stable[22m
+    [2m       - element is visible, enabled and stable[22m
+    [2m       - scrolling into view if needed[22m
+    [2m       - done scrolling[22m
+    [2m       - <h2>☕ 开业第1月 - 决策1/2</h2> from <div id="game-modal" class="modal active">…</div> subtree intercepts pointer events[22m
+    [2m     - retrying click action[22m
+    [2m       - waiting 500ms[22m
+
+
+      30 |   const element = page.locator(selector).first();
+      31 |   await expect(element).toBeVisible({ timeout: 10000 });
+    > 32 |   await element.click();
+         |                 ^
+      33 |   await userThink(page, 500, 1000);
+      34 | };
+      35 |
+        at userClick (D:\AIDevelop\failureLogic\tests\e2e\real-user-simulation.spec.js:32:17)
+        at D:\AIDevelop\failureLogic\tests\e2e\real-user-simulation.spec.js:155:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\real-user-simulation-真实用户模-6ca8c-交互走查-完整用户旅程：首页→场景列表→场景体验→返回-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\real-user-simulation-真实用户模-6ca8c-交互走查-完整用户旅程：首页→场景列表→场景体验→返回-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\real-user-simulation-真实用户模-6ca8c-交互走查-完整用户旅程：首页→场景列表→场景体验→返回-Mobile-Chrome\error-context.md
+
+
+🧹 Cleaning up test environment...
+✅ Test environment cleaned up
+📊 Test Summary: {
+  totalTests: 0,
+  passedTests: 0,
+  failedTests: 0,
+  testDuration: 0,
+  performanceMetrics: {}
+}
+[1A[2K  4 failed
+    [msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回 ─
+    [msedge] › e2e\real-user-simulation.spec.js:239:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭 ────────
+    [Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回 
+    [Mobile Chrome] › e2e\real-user-simulation.spec.js:239:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭 ─
+  4 passed (51.4s)
