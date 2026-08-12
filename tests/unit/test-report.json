@@ -1,0 +1,44 @@
+{
+  "startTime": 1786542916270,
+  "endTime": 1786542917306,
+  "suites": {
+    "phase1-environment": {
+      "passed": 7,
+      "failed": 0,
+      "total": 7
+    },
+    "phase2-unit": {
+      "passed": 145,
+      "failed": 0,
+      "total": 144
+    },
+    "phase3-integration": {
+      "passed": 3,
+      "failed": 0,
+      "total": 3
+    },
+    "phase4-stress": {
+      "passed": 4,
+      "failed": 0,
+      "total": 4
+    },
+    "phase5-regression": {
+      "passed": 3,
+      "failed": 0,
+      "total": 3
+    },
+    "phase6-e2e": {
+      "passed": 0,
+      "failed": 0,
+      "total": 0,
+      "skipped": true
+    }
+  },
+  "summary": {
+    "total": 161,
+    "passed": 162,
+    "failed": 0,
+    "skipped": 0,
+    "duration": 1036
+  }
+}
