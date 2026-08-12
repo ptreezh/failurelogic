@@ -50,6 +50,7 @@
                     shopName: competitor.shopName,
                     decision: turnResult.decision,
                     surface: turnResult.surface,
+                    hidden: turnResult.hidden,
                     isBankrupt: turnResult.isBankrupt
                 });
 
