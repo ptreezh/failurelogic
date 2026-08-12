@@ -1,0 +1,1194 @@
+🚀 Setting up test environment...
+⏳ Waiting for services to start...
+✅ API server is ready
+✅ Frontend server is ready
+✅ Test environment ready (46ms)
+
+Running 238 tests using 16 workers
+
+  ok  16 [msedge] › e2e\app-load.spec.js:59:7 › Application Loading › should load navigation items correctly (6.7s)
+  ok   6 [msedge] › e2e\api-integration.spec.js:140:7 › API Integration › should handle game decision API calls (8.2s)
+  ok  13 [msedge] › e2e\app-load.spec.js:77:7 › Application Loading › should handle responsive design correctly (8.2s)
+  ok   7 [msedge] › e2e\api-integration.spec.js:191:7 › API Integration › should implement proper error handling (10.2s)
+  ok   1 [msedge] › e2e\api-integration.spec.js:39:7 › API Integration › should handle API response caching (13.5s)
+  ok  14 [msedge] › e2e\app-load.spec.js:91:7 › Application Loading › should initialize service worker correctly (12.1s)
+  ok  12 [msedge] › e2e\app-load.spec.js:23:7 › Application Loading › should load the main page successfully (12.7s)
+  ok  21 [msedge] › e2e\bias-diagnosis.spec.js:12:7 › Cognitive trap diagnosis (API) › flags exponential misconception (364ms)
+  ok  24 [msedge] › e2e\bias-diagnosis.spec.js:61:7 › Cognitive trap diagnosis (API) › flags complex system underestimation as complex_system_misunderstanding (42ms)
+  ok  15 [msedge] › e2e\app-load.spec.js:46:7 › Application Loading › should hide loading screen after app loads (12.9s)
+  ok  23 [msedge] › e2e\bias-diagnosis.spec.js:34:7 › Cognitive trap diagnosis (API) › flags compound interest misunderstanding (linear intuition) (490ms)
+  ok   9 [msedge] › e2e\api-integration.spec.js:251:7 › API Integration › should handle concurrent API requests (15.8s)
+  ok  11 [msedge] › e2e\api-integration.spec.js:268:7 › API Integration › should implement proper request retries (16.9s)
+  ok  18 [msedge] › e2e\app-load.spec.js:128:7 › Application Loading › should load PWA manifest correctly (10.7s)
+  x   10 [msedge] › e2e\api-integration.spec.js:212:7 › API Integration › should validate API response data structure (13.8s)
+  ok   4 [msedge] › e2e\api-integration.spec.js:64:7 › API Integration › should implement API failover correctly (18.2s)
+  ok   5 [msedge] › e2e\api-integration.spec.js:110:7 › API Integration › should handle game session API calls (18.6s)
+  ok   3 [msedge] › e2e\api-integration.spec.js:90:7 › API Integration › should track API performance metrics (19.2s)
+  x    2 [msedge] › e2e\api-integration.spec.js:14:7 › API Integration › should successfully connect to API endpoints (13.1s)
+  ok  22 [msedge] › e2e\app-load.spec.js:194:7 › Application Loading › should handle accessibility requirements (7.9s)
+  ok  19 [msedge] › e2e\app-load.spec.js:146:7 › Application Loading › should handle offline mode correctly (13.7s)
+  ok  25 [msedge] › e2e\real-app-tests-fixed-v2.spec.js:35:7 › Real Application Tests - Fixed v2 › should navigate to scenarios page (7.7s)
+  ok  28 [msedge] › e2e\real-app-tests-fixed-v2.spec.js:60:7 › Real Application Tests - Fixed v2 › should navigate to book page (6.7s)
+  ok  27 [msedge] › e2e\real-app-tests-fixed-v2.spec.js:22:7 › Real Application Tests - Fixed v2 › should load home page (8.3s)
+  x    8 [msedge] › e2e\api-integration.spec.js:170:7 › API Integration › should handle API timeouts gracefully (17.6s)
+  ok  17 [msedge] › e2e\app-load.spec.js:109:7 › Application Loading › should handle API connectivity gracefully (17.2s)
+  ok  26 [msedge] › e2e\real-app-tests-fixed-v2.spec.js:48:7 › Real Application Tests - Fixed v2 › should navigate to about page (9.8s)
+  ok  29 [msedge] › e2e\real-app-tests-fixed-v2.spec.js:72:7 › Real Application Tests - Fixed v2 › should navigate to profile page (6.6s)
+  x   20 [msedge] › e2e\app-load.spec.js:172:7 › Application Loading › should track performance metrics (9.8s)
+🚀 开始真实用户模拟测试...
+📱 步骤1: 访问首页...
+🔄 开始多场景快速切换测试...
+🔍 开始全场景卡片浏览测试...
+  ok  32 [msedge] › e2e\real-app-tests-fixed-v2.spec.js:115:7 › Real Application Tests - Fixed v2 › should display hero section (6.8s)
+  ok  31 [msedge] › e2e\real-app-tests-fixed-v2.spec.js:106:7 › Real Application Tests - Fixed v2 › should display brand text (7.5s)
+  ok  33 [msedge] › e2e\real-app-tests-fixed-v2.spec.js:123:7 › Real Application Tests - Fixed v2 › should display features section (6.7s)
+  ok  34 [msedge] › e2e\real-app-tests-fixed-v2.spec.js:139:7 › Real Application Tests - Fixed v2 › should have loading screen (7.7s)
+  ok  30 [msedge] › e2e\real-app-tests-fixed-v2.spec.js:84:7 › Real Application Tests - Fixed v2 › should display navigation menu (11.5s)
+  ok  35 [msedge] › e2e\real-app-tests-fixed-v2.spec.js:152:7 › Real Application Tests - Fixed v2 › should hide loading screen after page load (8.4s)
+📱 切换到 scenarios (1/5)...
+  ok  36 [msedge] › e2e\real-app-tests-fixed-v2.spec.js:162:7 › Real Application Tests - Fixed v2 › should verify service worker registration (8.6s)
+✅ 首页加载成功
+📱 步骤2: 导航到场景页面...
+  ok  38 [msedge] › e2e\real-app-tests-fixed-v2.spec.js:182:7 › Real Application Tests - Fixed v2 › should display hero content (8.2s)
+  ok  37 [msedge] › e2e\real-app-tests-fixed-v2.spec.js:173:7 › Real Application Tests - Fixed v2 › should verify PWA manifest (8.8s)
+✅ scenarios 页面激活成功
+📱 切换到 home (2/5)...
+📊 找到 10 个场景卡片
+
+📱 查看场景 1/10...
+✅ 场景页面加载成功
+📱 步骤3: 等待场景卡片加载...
+  场景名称: 咖啡店线性思维
+✅ home 页面激活成功
+📱 切换到 about (3/5)...
+  难度: beginner
+  描述: 线性思维陷阱场景...
+  ok  42 [msedge] › e2e\relationship-time-delay.spec.js:26:9 › 恋爱关系时间延迟场景 - E2E 测试 › 场景初始化 › 应该正确加载恋爱关系时间延迟场景卡片 (8.6s)
+
+📱 查看场景 2/10...
+  ok  44 [msedge] › e2e\relationship-time-delay.spec.js:56:9 › 恋爱关系时间延迟场景 - E2E 测试 › 场景初始化 › 应该显示场景开始页面 (9.6s)
+  ok  43 [msedge] › e2e\relationship-time-delay.spec.js:40:9 › 恋爱关系时间延迟场景 - E2E 测试 › 场景初始化 › 应该正确打开恋爱关系场景游戏模态框 (10.0s)
+✅ 找到 10 个场景卡片
+📱 步骤4: 浏览场景卡片...
+✅ about 页面激活成功
+📱 切换到 scenarios (4/5)...
+  场景名称: 恋爱关系时间延迟
+  难度: intermediate
+  描述: 时间延迟偏差场景...
+
+📱 查看场景 3/10...
+  ok  46 [msedge] › e2e\relationship-time-delay.spec.js:84:9 › 恋爱关系时间延迟场景 - E2E 测试 › 时间延迟机制 › 应该显示时间延迟警告信息 (9.7s)
+✅ scenarios 页面激活成功
+📱 切换到 home (5/5)...
+  场景名称: 投资信息处理
+  难度: advanced
+  描述: 信息处理模式场景...
+📱 步骤5: 选择第一个场景...
+
+📱 查看场景 4/10...
+  ok  47 [msedge] › e2e\relationship-time-delay.spec.js:110:9 › 恋爱关系时间延迟场景 - E2E 测试 › 时间延迟机制 › 应该在选择决策后显示延迟反馈 (11.2s)
+  ok  45 [msedge] › e2e\real-app-tests-fixed-v2.spec.js:95:7 › Real Application Tests - Fixed v2 › should display page title (6.5s)
+  ok  48 [msedge] › e2e\relationship-time-delay.spec.js:149:9 › 恋爱关系时间延迟场景 - E2E 测试 › 时间延迟机制 › 应该对高频联系显示风险警告 (11.3s)
+✅ home 页面激活成功
+🎉 多场景快速切换测试完成！
+  场景名称: 投资信息处理
+  难度: intermediate
+  描述: 学习如何处理和整合多元投资信息源，避免确认偏误...
+
+📱 查看场景 5/10...
+📦 开始模态框交互测试...
+  ok  41 [msedge] › e2e\real-user-simulation.spec.js:220:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性 (19.7s)
+  ok  53 [msedge] › e2e\real-app-tests-fixed-v2.spec.js:190:7 › Real Application Tests - Fixed v2 › should display feature cards (8.3s)
+✅ 模态框打开成功
+📱 步骤6: 查看场景介绍...
+  场景名称: 商业战略推理游戏
+  难度: intermediate
+  描述: 模拟商业决策推理过程，测试用户在复杂商业环境中的决策思维...
+  ok  50 [msedge] › e2e\real-app-tests-fixed-v2.spec.js:131:7 › Real Application Tests - Fixed v2 › should display stats section (7.9s)
+  ok  49 [msedge] › e2e\relationship-time-delay.spec.js:189:9 › 恋爱关系时间延迟场景 - E2E 测试 › 多轮决策流程 › 应该完成第 1 月的两个决策 (14.6s)
+
+📱 查看场景 6/10...
+  场景名称: 公共政策制定模拟
+  难度: intermediate
+  描述: 模拟公共政策制定过程，平衡多方利益相关者需求...
+
+📱 查看场景 7/10...
+📱 步骤7: 开始游戏...
+📱 打开模态框...
+  场景名称: 个人财务决策模拟
+  ok  52 [msedge] › e2e\relationship-time-delay.spec.js:332:9 › 恋爱关系时间延迟场景 - E2E 测试 › 多轮决策流程 › 应该显示觉醒时刻的教育内容 (17.7s)
+  难度: beginner
+  描述: 模拟个人长期财务规划决策，体验复利和时间价值概念...
+  ok  59 [msedge] › e2e\relationship-time-delay.spec.js:664:9 › 恋爱关系时间延迟场景 - E2E 测试 › 教育目标验证 › 应该展示关系投资不会立即见效 (9.7s)
+
+📱 查看场景 8/10...
+  ok  56 [msedge] › e2e\relationship-time-delay.spec.js:537:9 › 恋爱关系时间延迟场景 - E2E 测试 › 时间线可视化 › 应该显示延迟效果时间线 (14.8s)
+  ok  51 [msedge] › e2e\relationship-time-delay.spec.js:243:9 › 恋爱关系时间延迟场景 - E2E 测试 › 多轮决策流程 › 应该完成完整的 5 轮（月）游戏流程 (19.5s)
+  ok  62 [msedge] › e2e\scenarios-4-6.spec.js:13:7 › Scenario 4: Business Strategy Reasoning Game › should load business strategy scenario card (7.6s)
+  ok  57 [msedge] › e2e\relationship-time-delay.spec.js:587:9 › 恋爱关系时间延迟场景 - E2E 测试 › 聊天界面 › 应该显示小林的消息回复 (14.9s)
+  场景名称: 全球气候变化政策制定博弈
+✅ 模态框打开成功
+  难度: advanced
+✅ 模态框内容可见
+  描述: 模拟多国在气候变化政策制定中的博弈与权衡...
+  ok  60 [msedge] › e2e\relationship-time-delay.spec.js:685:9 › 恋爱关系时间延迟场景 - E2E 测试 › 教育目标验证 › 应该揭示人们低估时间延迟的认知偏差 (11.0s)
+✅ 游戏开始成功
+📱 步骤8: 阅读决策选项...
+
+📱 查看场景 9/10...
+  ok  63 [msedge] › e2e\scenarios-4-6.spec.js:26:7 › Scenario 4: Business Strategy Reasoning Game › should start business strategy game successfully (9.1s)
+  场景名称: AI治理与监管决策模拟
+  难度: advanced
+  描述: 模拟AI治理政策制定，平衡创新、安全、伦理等多方面考量...
+
+📱 查看场景 10/10...
+  ok  55 [msedge] › e2e\relationship-time-delay.spec.js:422:9 › 恋爱关系时间延迟场景 - E2E 测试 › 多轮决策流程 › 应该显示最终结局和学习成果 (20.3s)
+📱 关闭模态框...
+📱 步骤9: 做出决策...
+📱 步骤10: 查看反馈...
+✅ 模态框关闭成功
+🎉 模态框交互测试完成！
+  场景名称: 复杂金融市场危机应对模拟
+  难度: advanced
+  描述: 模拟金融危机应对决策，处理复杂金融系统风险...
+  ok  64 [msedge] › e2e\scenarios-4-6.spec.js:49:7 › Scenario 4: Business Strategy Reasoning Game › should complete business strategy turn 1 (11.9s)
+  ok  54 [msedge] › e2e\real-user-simulation.spec.js:241:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭 (15.6s)
+
+🎉 全场景卡片浏览测试完成！
+  ok  65 [msedge] › e2e\scenarios-4-6.spec.js:79:7 › Scenario 4: Business Strategy Reasoning Game › should make decision and see feedback in business strategy (12.7s)
+  ok  68 [msedge] › e2e\scenarios-4-6.spec.js:148:7 › Scenario 5: Public Policy Making Simulation › should start public policy game successfully (7.0s)
+  ok  61 [msedge] › e2e\relationship-time-delay.spec.js:715:9 › 恋爱关系时间延迟场景 - E2E 测试 › 教育目标验证 › 应该体验延迟满足的重要性 (17.2s)
+  ok  40 [msedge] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情 (34.7s)
+  ok  67 [msedge] › e2e\scenarios-4-6.spec.js:135:7 › Scenario 5: Public Policy Making Simulation › should load public policy scenario card (7.8s)
+  ok  72 [msedge] › e2e\scenarios-4-6.spec.js:258:7 › Scenario 6: Personal Finance Decision Simulation › should load personal finance scenario card (7.0s)
+📱 步骤11: 关闭模态框...
+  ok  66 [msedge] › e2e\scenarios-4-6.spec.js:108:7 › Scenario 4: Business Strategy Reasoning Game › should display game state metrics in business strategy (9.8s)
+  ok  73 [msedge] › e2e\scenarios-4-6.spec.js:271:7 › Scenario 6: Personal Finance Decision Simulation › should start personal finance game successfully (6.8s)
+✅ 模态框关闭成功
+📱 步骤12: 返回首页...
+  ok  69 [msedge] › e2e\scenarios-4-6.spec.js:171:7 › Scenario 5: Public Policy Making Simulation › should complete public policy turn 1 (12.3s)
+  ok  71 [msedge] › e2e\scenarios-4-6.spec.js:230:7 › Scenario 5: Public Policy Making Simulation › should display game state metrics in public policy (12.3s)
+✅ 返回首页成功
+🎉 完整用户旅程测试完成！
+  ok  70 [msedge] › e2e\scenarios-4-6.spec.js:201:7 › Scenario 5: Public Policy Making Simulation › should make decision and see feedback in public policy (13.1s)
+  x   58 [msedge] › e2e\relationship-time-delay.spec.js:627:9 › 恋爱关系时间延迟场景 - E2E 测试 › 游戏重置功能 › 应该能够重新开始游戏 (24.9s)
+  ok  39 [msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回 (41.5s)
+  ok  77 [msedge] › e2e\scenarios-6-7.spec.js:15:7 › Scenario 6: Personal Finance Decision › should load personal finance scenario (7.4s)
+  ok  78 [msedge] › e2e\scenarios-6-7.spec.js:24:7 › Scenario 6: Personal Finance Decision › should start personal finance game (7.6s)
+  ok  74 [msedge] › e2e\scenarios-4-6.spec.js:293:7 › Scenario 6: Personal Finance Decision Simulation › should complete personal finance turn 1 (10.6s)
+  ok  82 [msedge] › e2e\scenarios-6-7.spec.js:170:7 › Scenario 7: Climate Change Policy › should load climate change scenario (7.4s)
+  ok  83 [msedge] › e2e\scenarios-6-7.spec.js:179:7 › Scenario 7: Climate Change Policy › should start climate change game (8.2s)
+  ok  79 [msedge] › e2e\scenarios-6-7.spec.js:42:7 › Scenario 6: Personal Finance Decision › should display personal finance start page (10.0s)
+  ok  76 [msedge] › e2e\scenarios-4-6.spec.js:370:7 › Scenario 6: Personal Finance Decision Simulation › should display game state metrics in personal finance (11.6s)
+  ok  84 [msedge] › e2e\scenarios-6-7.spec.js:197:7 › Scenario 7: Climate Change Policy › should display climate change start page (9.8s)
+  ok  75 [msedge] › e2e\scenarios-4-6.spec.js:329:7 › Scenario 6: Personal Finance Decision Simulation › should make decision and see feedback in personal finance (13.5s)
+  ok  87 [msedge] › e2e\scenarios-8-9.spec.js:15:7 › Scenario 8: AI Governance Regulation › should load AI governance scenario (6.4s)
+  ok  81 [msedge] › e2e\scenarios-6-7.spec.js:102:7 › Scenario 6: Personal Finance Decision › should complete multiple turns in personal finance game (13.0s)
+  ok  80 [msedge] › e2e\scenarios-6-7.spec.js:55:7 › Scenario 6: Personal Finance Decision › should complete personal finance game flow (13.8s)
+  ok  88 [msedge] › e2e\scenarios-8-9.spec.js:39:7 › Scenario 8: AI Governance Regulation › should display AI governance start page (9.2s)
+  ok  85 [msedge] › e2e\scenarios-6-7.spec.js:210:7 › Scenario 7: Climate Change Policy › should complete climate change game flow (11.1s)
+  ok  86 [msedge] › e2e\scenarios-6-7.spec.js:257:7 › Scenario 7: Climate Change Policy › should complete multiple turns in climate change game (11.0s)
+  ok  94 [msedge] › e2e\scenarios-8-9.spec.js:230:7 › Scenario 9: Financial Crisis Response › should load financial crisis scenario (7.1s)
+  ok  95 [msedge] › e2e\scenarios-8-9.spec.js:236:7 › Scenario 9: Financial Crisis Response › should start financial crisis game (7.0s)
+  ok  91 [msedge] › e2e\scenarios-8-9.spec.js:154:7 › Scenario 8: AI Governance Regulation › should display AI governance game state correctly (10.4s)
+  ok  96 [msedge] › e2e\scenarios-8-9.spec.js:254:7 › Scenario 9: Financial Crisis Response › should display financial crisis start page (8.8s)
+  ok  93 [msedge] › e2e\scenarios-8-9.spec.js:21:7 › Scenario 8: AI Governance Regulation › should start AI governance game (7.8s)
+  ok  89 [msedge] › e2e\scenarios-8-9.spec.js:52:7 › Scenario 8: AI Governance Regulation › should complete AI governance game flow (12.6s)
+  ok 102 [msedge] › e2e\scenarios-interaction.spec.js:14:7 › Scenarios Interaction › should navigate to scenarios page (3.6s)
+  ok  90 [msedge] › e2e\scenarios-8-9.spec.js:99:7 › Scenario 8: AI Governance Regulation › should complete 3 turns in AI governance game (13.0s)
+  ok  92 [msedge] › e2e\scenarios-8-9.spec.js:176:7 › Scenario 8: AI Governance Regulation › should show decision feedback with correct values (12.6s)
+  ok 103 [msedge] › e2e\scenarios-interaction.spec.js:23:7 › Scenarios Interaction › should load scenarios from API (7.1s)
+  ok 104 [msedge] › e2e\scenarios-interaction.spec.js:43:7 › Scenarios Interaction › should display scenario details correctly (6.9s)
+  ok  99 [msedge] › e2e\scenarios-8-9.spec.js:369:7 › Scenario 9: Financial Crisis Response › should display financial crisis game state correctly (10.7s)
+⚡ 开始并发场景加载测试...
+  ok 105 [msedge] › e2e\scenarios-interaction.spec.js:60:7 › Scenarios Interaction › should handle scenario selection (7.4s)
+  ok 106 [msedge] › e2e\scenarios-interaction.spec.js:75:7 › Scenarios Interaction › should start game session correctly (7.2s)
+⚡ 开始API并发请求测试...
+
+📊 API并发测试结果:
+  总请求数: 20
+  成功: 0
+  失败: 20
+  平均响应时间: 142ms
+  最慢响应: 161ms
+⚡ 开始快速连续导航测试...
+  ok  97 [msedge] › e2e\scenarios-8-9.spec.js:267:7 › Scenario 9: Financial Crisis Response › should complete financial crisis game flow (13.3s)
+📱 会话 1: 开始...
+  x  118 [msedge] › e2e\stress-performance.spec.js:132:7 › 压力性能并发测试 › API并发请求：验证API稳定性 (203ms)
+📱 导航 1/20: scenarios
+  ok 100 [msedge] › e2e\scenarios-8-9.spec.js:391:7 › Scenario 9: Financial Crisis Response › should show financial crisis decision feedback with correct values (12.7s)
+  ok 107 [msedge] › e2e\scenarios-interaction.spec.js:99:7 › Scenarios Interaction › should display game controls for each scenario (7.9s)
+📱 导航 2/20: home
+  ok 110 [msedge] › e2e\scenarios-interaction.spec.js:190:7 › Scenarios Interaction › should display appropriate loading states (6.9s)
+  ok  98 [msedge] › e2e\scenarios-8-9.spec.js:314:7 › Scenario 9: Financial Crisis Response › should complete 3 turns in financial crisis game (14.4s)
+  ok 101 [msedge] › e2e\scenarios-8-9.spec.js:437:7 › Scenario 9: Financial Crisis Response › should handle financial crisis game end state (12.7s)
+📱 导航 3/20: about
+⚡ 开始模态框并发测试...
+⚡ 开始长时间运行测试...
+📱 会话 2: 开始...
+📱 导航 4/20: scenarios
+  ok 108 [msedge] › e2e\scenarios-interaction.spec.js:122:7 › Scenarios Interaction › should handle game decision submission (8.7s)
+📱 导航 5/20: home
+📱 导航 6/20: about
+  ok 109 [msedge] › e2e\scenarios-interaction.spec.js:161:7 › Scenarios Interaction › should handle game modal interactions (8.9s)
+  ok 112 [msedge] › e2e\scenarios-interaction.spec.js:226:7 › Scenarios Interaction › should track game session state (8.1s)
+📊 初始内存使用: 3.40MB
+📱 导航 7/20: scenarios
+📱 会话 3: 开始...
+  完成 1/100 次切换...
+📱 导航 8/20: home
+📱 导航 9/20: about
+📱 会话 4: 开始...
+📱 导航 10/20: scenarios
+  ok 111 [msedge] › e2e\scenarios-interaction.spec.js:210:7 › Scenarios Interaction › should handle API errors gracefully (10.1s)
+  ok 113 [msedge] › e2e\scenarios-interaction.spec.js:249:7 › Scenarios Interaction › should provide game feedback and analysis (9.2s)
+📱 导航 11/20: home
+📱 导航 12/20: about
+📱 会话 5: 开始...
+📱 导航 13/20: scenarios
+📱 快速点击 5 个场景卡片...
+📱 导航 14/20: home
+  ok 114 [msedge] › e2e\scenarios-interaction.spec.js:273:7 › Scenarios Interaction › should maintain responsive design during game (7.6s)
+📱 导航 15/20: about
+📱 会话 6: 开始...
+📱 导航 16/20: scenarios
+✅ 会话 1: 加载 10 个场景，耗时 6498ms
+📱 导航 17/20: home
+📱 会话 7: 开始...
+📱 导航 18/20: about
+📱 导航 19/20: scenarios
+✅ 会话 2: 加载 10 个场景，耗时 5112ms
+📱 会话 8: 开始...
+📱 导航 20/20: home
+
+📊 快速导航结果:
+  总次数: 20
+  总耗时: 7236ms
+  平均每次: 362ms
+✅ 会话 3: 加载 10 个场景，耗时 4644ms
+  ok 116 [msedge] › e2e\stress-performance.spec.js:66:7 › 压力性能并发测试 › 快速连续导航：验证系统稳定性 (10.4s)
+✅ 会话 4: 加载 10 个场景，耗时 4101ms
+📱 会话 9: 开始...
+  完成 21/100 次切换...
+✅ 会话 5: 加载 10 个场景，耗时 4002ms
+📱 会话 10: 开始...
+✅ 会话 6: 加载 10 个场景，耗时 3803ms
+✅ 会话 7: 加载 10 个场景，耗时 4095ms
+✅ 会话 8: 加载 10 个场景，耗时 4061ms
+✅ 会话 9: 加载 10 个场景，耗时 4121ms
+✅ 会话 10: 加载 10 个场景，耗时 3922ms
+
+📊 并发测试结果:
+  平均加载时间: 4436ms
+  最快: 3803ms
+  最慢: 6498ms
+  成功会话: 10/10
+  ok 115 [msedge] › e2e\stress-performance.spec.js:10:7 › 压力性能并发测试 › 并发场景加载：10个并发会话 (15.9s)
+  x  120 [Mobile Chrome] › e2e\api-integration.spec.js:14:7 › API Integration › should successfully connect to API endpoints (5.6s)
+  ok 122 [Mobile Chrome] › e2e\api-integration.spec.js:64:7 › API Integration › should implement API failover correctly (5.6s)
+  完成 41/100 次切换...
+  ok 123 [Mobile Chrome] › e2e\api-integration.spec.js:90:7 › API Integration › should track API performance metrics (7.6s)
+  ok 133 [Mobile Chrome] › e2e\app-load.spec.js:91:7 › Application Loading › should initialize service worker correctly (3.0s)
+  ok 121 [Mobile Chrome] › e2e\api-integration.spec.js:39:7 › API Integration › should handle API response caching (8.5s)
+  ok 132 [Mobile Chrome] › e2e\app-load.spec.js:46:7 › Application Loading › should hide loading screen after app loads (3.5s)
+  ok 127 [Mobile Chrome] › e2e\api-integration.spec.js:191:7 › API Integration › should implement proper error handling (8.4s)
+  ok 130 [Mobile Chrome] › e2e\api-integration.spec.js:268:7 › API Integration › should implement proper request retries (5.6s)
+  ok 125 [Mobile Chrome] › e2e\api-integration.spec.js:140:7 › API Integration › should handle game decision API calls (8.7s)
+  ok 131 [Mobile Chrome] › e2e\app-load.spec.js:23:7 › Application Loading › should load the main page successfully (3.5s)
+  ok 129 [Mobile Chrome] › e2e\api-integration.spec.js:251:7 › API Integration › should handle concurrent API requests (6.7s)
+  ok 140 [Mobile Chrome] › e2e\bias-diagnosis.spec.js:12:7 › Cognitive trap diagnosis (API) › flags exponential misconception (71ms)
+  ok 141 [Mobile Chrome] › e2e\bias-diagnosis.spec.js:34:7 › Cognitive trap diagnosis (API) › flags compound interest misunderstanding (linear intuition) (80ms)
+  ok 142 [Mobile Chrome] › e2e\bias-diagnosis.spec.js:61:7 › Cognitive trap diagnosis (API) › flags complex system underestimation as complex_system_misunderstanding (89ms)
+  ok 124 [Mobile Chrome] › e2e\api-integration.spec.js:110:7 › API Integration › should handle game session API calls (9.8s)
+  x  128 [Mobile Chrome] › e2e\api-integration.spec.js:212:7 › API Integration › should validate API response data structure (7.0s)
+  ok 135 [Mobile Chrome] › e2e\app-load.spec.js:128:7 › Application Loading › should load PWA manifest correctly (3.8s)
+  ok 137 [Mobile Chrome] › e2e\app-load.spec.js:172:7 › Application Loading › should track performance metrics (3.7s)
+  ok 138 [Mobile Chrome] › e2e\app-load.spec.js:194:7 › Application Loading › should handle accessibility requirements (3.6s)
+  ok 143 [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:22:7 › Real Application Tests - Fixed v2 › should load home page (3.6s)
+  x  117 [msedge] › e2e\stress-performance.spec.js:95:7 › 压力性能并发测试 › 模态框并发：同时打开多个模态框 (19.5s)
+  ok 144 [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:35:7 › Real Application Tests - Fixed v2 › should navigate to scenarios page (4.0s)
+  完成 61/100 次切换...
+  ok 146 [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:60:7 › Real Application Tests - Fixed v2 › should navigate to book page (4.0s)
+  ok 145 [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:48:7 › Real Application Tests - Fixed v2 › should navigate to about page (4.1s)
+  ok 136 [Mobile Chrome] › e2e\app-load.spec.js:146:7 › Application Loading › should handle offline mode correctly (7.5s)
+  x  126 [Mobile Chrome] › e2e\api-integration.spec.js:170:7 › API Integration › should handle API timeouts gracefully (14.1s)
+  ok 149 [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:95:7 › Real Application Tests - Fixed v2 › should display page title (4.6s)
+  ok 134 [Mobile Chrome] › e2e\app-load.spec.js:109:7 › Application Loading › should handle API connectivity gracefully (8.7s)
+  ok 150 [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:106:7 › Real Application Tests - Fixed v2 › should display brand text (4.7s)
+  ok 151 [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:115:7 › Real Application Tests - Fixed v2 › should display hero section (4.4s)
+  ok 139 [Mobile Chrome] › e2e\app-load.spec.js:77:7 › Application Loading › should handle responsive design correctly (5.7s)
+  ok 152 [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:123:7 › Real Application Tests - Fixed v2 › should display features section (5.7s)
+  ok 153 [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:139:7 › Real Application Tests - Fixed v2 › should have loading screen (5.3s)
+  ok 155 [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:162:7 › Real Application Tests - Fixed v2 › should verify service worker registration (5.2s)
+🚀 开始真实用户模拟测试...
+📱 步骤1: 访问首页...
+🔄 开始多场景快速切换测试...
+📦 开始模态框交互测试...
+🔍 开始全场景卡片浏览测试...
+✅ 首页加载成功
+📱 步骤2: 导航到场景页面...
+  ok 148 [Mobile Chrome] › e2e\app-load.spec.js:59:7 › Application Loading › should load navigation items correctly (9.4s)
+📱 切换到 scenarios (1/5)...
+  完成 81/100 次切换...
+✅ 场景页面加载成功
+📱 步骤3: 等待场景卡片加载...
+✅ scenarios 页面激活成功
+📱 切换到 home (2/5)...
+  ok 157 [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:173:7 › Real Application Tests - Fixed v2 › should verify PWA manifest (9.9s)
+✅ 找到 10 个场景卡片
+📱 步骤4: 浏览场景卡片...
+📱 打开模态框...
+📊 找到 10 个场景卡片
+
+📱 查看场景 1/10...
+✅ home 页面激活成功
+📱 切换到 about (3/5)...
+  场景名称: 咖啡店线性思维
+  难度: beginner
+  描述: 线性思维陷阱场景...
+
+📱 查看场景 2/10...
+✅ about 页面激活成功
+📱 切换到 scenarios (4/5)...
+📱 步骤5: 选择第一个场景...
+📊 最终内存使用: 3.98MB
+📊 内存增长: 0.58MB (16.9%)
+✅ 长时间运行测试通过
+✅ 模态框打开成功
+✅ 模态框内容可见
+  ok 165 [Mobile Chrome] › e2e\relationship-time-delay.spec.js:26:9 › 恋爱关系时间延迟场景 - E2E 测试 › 场景初始化 › 应该正确加载恋爱关系时间延迟场景卡片 (12.8s)
+  ok 119 [msedge] › e2e\stress-performance.spec.js:175:7 › 压力性能并发测试 › 长时间运行：内存泄漏检测 (42.9s)
+  场景名称: 恋爱关系时间延迟
+  难度: intermediate
+  描述: 时间延迟偏差场景...
+  ok 154 [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:152:7 › Real Application Tests - Fixed v2 › should hide loading screen after page load (18.9s)
+  ok 158 [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:190:7 › Real Application Tests - Fixed v2 › should display feature cards (15.8s)
+✅ scenarios 页面激活成功
+📱 切换到 home (5/5)...
+
+📱 查看场景 3/10...
+  ok 164 [Mobile Chrome] › e2e\relationship-time-delay.spec.js:56:9 › 恋爱关系时间延迟场景 - E2E 测试 › 场景初始化 › 应该显示场景开始页面 (14.4s)
+  场景名称: 投资信息处理
+  难度: advanced
+  描述: 信息处理模式场景...
+✅ 模态框打开成功
+📱 步骤6: 查看场景介绍...
+✅ home 页面激活成功
+🎉 多场景快速切换测试完成！
+📱 关闭模态框...
+
+📱 查看场景 4/10...
+  ok 167 [Mobile Chrome] › e2e\relationship-time-delay.spec.js:84:9 › 恋爱关系时间延迟场景 - E2E 测试 › 时间延迟机制 › 应该显示时间延迟警告信息 (11.9s)
+✅ 模态框关闭成功
+🎉 模态框交互测试完成！
+  ok 156 [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:84:7 › Real Application Tests - Fixed v2 › should display navigation menu (16.1s)
+  ok 163 [Mobile Chrome] › e2e\relationship-time-delay.spec.js:40:9 › 恋爱关系时间延迟场景 - E2E 测试 › 场景初始化 › 应该正确打开恋爱关系场景游戏模态框 (17.5s)
+  场景名称: 投资信息处理
+  难度: intermediate
+  描述: 学习如何处理和整合多元投资信息源，避免确认偏误...
+  ok 168 [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:182:7 › Real Application Tests - Fixed v2 › should display hero content (8.0s)
+  ok 166 [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:131:7 › Real Application Tests - Fixed v2 › should display stats section (11.4s)
+  ok 161 [Mobile Chrome] › e2e\real-user-simulation.spec.js:220:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性 (19.7s)
+  ok 162 [Mobile Chrome] › e2e\real-user-simulation.spec.js:241:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭 (19.6s)
+
+📱 查看场景 5/10...
+  x  147 [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:72:7 › Real Application Tests - Fixed v2 › should navigate to profile page (22.7s)
+  ok 169 [Mobile Chrome] › e2e\relationship-time-delay.spec.js:110:9 › 恋爱关系时间延迟场景 - E2E 测试 › 时间延迟机制 › 应该在选择决策后显示延迟反馈 (11.7s)
+  场景名称: 商业战略推理游戏
+  难度: intermediate
+  描述: 模拟商业决策推理过程，测试用户在复杂商业环境中的决策思维...
+📱 步骤7: 开始游戏...
+
+📱 查看场景 6/10...
+  场景名称: 公共政策制定模拟
+  难度: intermediate
+  描述: 模拟公共政策制定过程，平衡多方利益相关者需求...
+
+📱 查看场景 7/10...
+✅ 游戏开始成功
+📱 步骤8: 阅读决策选项...
+  场景名称: 个人财务决策模拟
+  难度: beginner
+  描述: 模拟个人长期财务规划决策，体验复利和时间价值概念...
+
+📱 查看场景 8/10...
+  ok 170 [Mobile Chrome] › e2e\relationship-time-delay.spec.js:149:9 › 恋爱关系时间延迟场景 - E2E 测试 › 时间延迟机制 › 应该对高频联系显示风险警告 (12.2s)
+  ok 177 [Mobile Chrome] › e2e\relationship-time-delay.spec.js:664:9 › 恋爱关系时间延迟场景 - E2E 测试 › 教育目标验证 › 应该展示关系投资不会立即见效 (8.1s)
+  场景名称: 全球气候变化政策制定博弈
+  ok 180 [Mobile Chrome] › e2e\scenarios-4-6.spec.js:13:7 › Scenario 4: Business Strategy Reasoning Game › should load business strategy scenario card (7.9s)
+  难度: advanced
+  描述: 模拟多国在气候变化政策制定中的博弈与权衡...
+📱 步骤9: 做出决策...
+📱 步骤10: 查看反馈...
+
+📱 查看场景 9/10...
+  场景名称: AI治理与监管决策模拟
+  难度: advanced
+  描述: 模拟AI治理政策制定，平衡创新、安全、伦理等多方面考量...
+  ok 171 [Mobile Chrome] › e2e\relationship-time-delay.spec.js:332:9 › 恋爱关系时间延迟场景 - E2E 测试 › 多轮决策流程 › 应该显示觉醒时刻的教育内容 (14.9s)
+
+📱 查看场景 10/10...
+  ok 174 [Mobile Chrome] › e2e\relationship-time-delay.spec.js:537:9 › 恋爱关系时间延迟场景 - E2E 测试 › 时间线可视化 › 应该显示延迟效果时间线 (12.8s)
+  ok 176 [Mobile Chrome] › e2e\relationship-time-delay.spec.js:587:9 › 恋爱关系时间延迟场景 - E2E 测试 › 聊天界面 › 应该显示小林的消息回复 (11.6s)
+  ok 178 [Mobile Chrome] › e2e\relationship-time-delay.spec.js:685:9 › 恋爱关系时间延迟场景 - E2E 测试 › 教育目标验证 › 应该揭示人们低估时间延迟的认知偏差 (11.6s)
+  ok 172 [Mobile Chrome] › e2e\relationship-time-delay.spec.js:243:9 › 恋爱关系时间延迟场景 - E2E 测试 › 多轮决策流程 › 应该完成完整的 5 轮（月）游戏流程 (16.4s)
+  场景名称: 复杂金融市场危机应对模拟
+  难度: advanced
+  描述: 模拟金融危机应对决策，处理复杂金融系统风险...
+📱 步骤11: 关闭模态框...
+
+🎉 全场景卡片浏览测试完成！
+✅ 模态框关闭成功
+📱 步骤12: 返回首页...
+  ok 173 [Mobile Chrome] › e2e\relationship-time-delay.spec.js:422:9 › 恋爱关系时间延迟场景 - E2E 测试 › 多轮决策流程 › 应该显示最终结局和学习成果 (19.4s)
+  ok 185 [Mobile Chrome] › e2e\scenarios-4-6.spec.js:135:7 › Scenario 5: Public Policy Making Simulation › should load public policy scenario card (7.6s)
+  ok 160 [Mobile Chrome] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情 (36.2s)
+✅ 返回首页成功
+🎉 完整用户旅程测试完成！
+  ok 181 [Mobile Chrome] › e2e\scenarios-4-6.spec.js:49:7 › Scenario 4: Business Strategy Reasoning Game › should complete business strategy turn 1 (15.6s)
+  ok 179 [Mobile Chrome] › e2e\relationship-time-delay.spec.js:715:9 › 恋爱关系时间延迟场景 - E2E 测试 › 教育目标验证 › 应该体验延迟满足的重要性 (17.1s)
+  ok 159 [Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回 (37.4s)
+  ok 186 [Mobile Chrome] › e2e\scenarios-4-6.spec.js:148:7 › Scenario 5: Public Policy Making Simulation › should start public policy game successfully (6.6s)
+  ok 182 [Mobile Chrome] › e2e\scenarios-4-6.spec.js:79:7 › Scenario 4: Business Strategy Reasoning Game › should make decision and see feedback in business strategy (13.3s)
+  ok 191 [Mobile Chrome] › e2e\scenarios-4-6.spec.js:258:7 › Scenario 6: Personal Finance Decision Simulation › should load personal finance scenario card (8.5s)
+  ok 184 [Mobile Chrome] › e2e\scenarios-4-6.spec.js:108:7 › Scenario 4: Business Strategy Reasoning Game › should display game state metrics in business strategy (14.4s)
+  ok 192 [Mobile Chrome] › e2e\scenarios-4-6.spec.js:271:7 › Scenario 6: Personal Finance Decision Simulation › should start personal finance game successfully (7.9s)
+  ok 189 [Mobile Chrome] › e2e\scenarios-4-6.spec.js:201:7 › Scenario 5: Public Policy Making Simulation › should make decision and see feedback in public policy (13.2s)
+  x  175 [Mobile Chrome] › e2e\relationship-time-delay.spec.js:627:9 › 恋爱关系时间延迟场景 - E2E 测试 › 游戏重置功能 › 应该能够重新开始游戏 (20.0s)
+  ok 188 [Mobile Chrome] › e2e\scenarios-4-6.spec.js:171:7 › Scenario 5: Public Policy Making Simulation › should complete public policy turn 1 (14.5s)
+  ok 190 [Mobile Chrome] › e2e\scenarios-4-6.spec.js:230:7 › Scenario 5: Public Policy Making Simulation › should display game state metrics in public policy (15.7s)
+  ok 196 [Mobile Chrome] › e2e\scenarios-6-7.spec.js:15:7 › Scenario 6: Personal Finance Decision › should load personal finance scenario (10.8s)
+  ok 183 [Mobile Chrome] › e2e\relationship-time-delay.spec.js:189:9 › 恋爱关系时间延迟场景 - E2E 测试 › 多轮决策流程 › 应该完成第 1 月的两个决策 (14.5s)
+  ok 198 [Mobile Chrome] › e2e\scenarios-6-7.spec.js:42:7 › Scenario 6: Personal Finance Decision › should display personal finance start page (10.5s)
+  ok 197 [Mobile Chrome] › e2e\scenarios-6-7.spec.js:24:7 › Scenario 6: Personal Finance Decision › should start personal finance game (10.6s)
+  ok 193 [Mobile Chrome] › e2e\scenarios-4-6.spec.js:293:7 › Scenario 6: Personal Finance Decision Simulation › should complete personal finance turn 1 (15.0s)
+  ok 195 [Mobile Chrome] › e2e\scenarios-4-6.spec.js:370:7 › Scenario 6: Personal Finance Decision Simulation › should display game state metrics in personal finance (14.7s)
+  ok 201 [Mobile Chrome] › e2e\scenarios-6-7.spec.js:170:7 › Scenario 7: Climate Change Policy › should load climate change scenario (10.5s)
+  ok 194 [Mobile Chrome] › e2e\scenarios-4-6.spec.js:329:7 › Scenario 6: Personal Finance Decision Simulation › should make decision and see feedback in personal finance (16.6s)
+  ok 187 [Mobile Chrome] › e2e\scenarios-4-6.spec.js:26:7 › Scenario 4: Business Strategy Reasoning Game › should start business strategy game successfully (15.1s)
+  ok 203 [Mobile Chrome] › e2e\scenarios-6-7.spec.js:197:7 › Scenario 7: Climate Change Policy › should display climate change start page (11.2s)
+  ok 199 [Mobile Chrome] › e2e\scenarios-6-7.spec.js:55:7 › Scenario 6: Personal Finance Decision › should complete personal finance game flow (17.0s)
+  ok 200 [Mobile Chrome] › e2e\scenarios-6-7.spec.js:102:7 › Scenario 6: Personal Finance Decision › should complete multiple turns in personal finance game (16.6s)
+  ok 202 [Mobile Chrome] › e2e\scenarios-6-7.spec.js:179:7 › Scenario 7: Climate Change Policy › should start climate change game (14.3s)
+  ok 204 [Mobile Chrome] › e2e\scenarios-6-7.spec.js:257:7 › Scenario 7: Climate Change Policy › should complete multiple turns in climate change game (12.9s)
+  ok 205 [Mobile Chrome] › e2e\scenarios-8-9.spec.js:15:7 › Scenario 8: AI Governance Regulation › should load AI governance scenario (11.1s)
+  ok 206 [Mobile Chrome] › e2e\scenarios-8-9.spec.js:21:7 › Scenario 8: AI Governance Regulation › should start AI governance game (10.8s)
+  ok 212 [Mobile Chrome] › e2e\scenarios-8-9.spec.js:230:7 › Scenario 9: Financial Crisis Response › should load financial crisis scenario (7.1s)
+  ok 208 [Mobile Chrome] › e2e\scenarios-8-9.spec.js:39:7 › Scenario 8: AI Governance Regulation › should display AI governance start page (13.5s)
+  ok 210 [Mobile Chrome] › e2e\scenarios-8-9.spec.js:154:7 › Scenario 8: AI Governance Regulation › should display AI governance game state correctly (13.0s)
+  ok 209 [Mobile Chrome] › e2e\scenarios-8-9.spec.js:99:7 › Scenario 8: AI Governance Regulation › should complete 3 turns in AI governance game (17.8s)
+  ok 216 [Mobile Chrome] › e2e\scenarios-8-9.spec.js:267:7 › Scenario 9: Financial Crisis Response › should complete financial crisis game flow (13.1s)
+  ok 211 [Mobile Chrome] › e2e\scenarios-8-9.spec.js:176:7 › Scenario 8: AI Governance Regulation › should show decision feedback with correct values (17.5s)
+  ok 207 [Mobile Chrome] › e2e\scenarios-8-9.spec.js:52:7 › Scenario 8: AI Governance Regulation › should complete AI governance game flow (21.1s)
+  ok 221 [Mobile Chrome] › e2e\scenarios-interaction.spec.js:14:7 › Scenarios Interaction › should navigate to scenarios page (10.4s)
+  ok 214 [Mobile Chrome] › e2e\scenarios-8-9.spec.js:254:7 › Scenario 9: Financial Crisis Response › should display financial crisis start page (16.1s)
+  ok 213 [Mobile Chrome] › e2e\scenarios-8-9.spec.js:236:7 › Scenario 9: Financial Crisis Response › should start financial crisis game (16.2s)
+  ok 222 [Mobile Chrome] › e2e\scenarios-interaction.spec.js:23:7 › Scenarios Interaction › should load scenarios from API (10.5s)
+  ok 218 [Mobile Chrome] › e2e\scenarios-8-9.spec.js:369:7 › Scenario 9: Financial Crisis Response › should display financial crisis game state correctly (12.2s)
+⚡ 开始并发场景加载测试...
+  ok 223 [Mobile Chrome] › e2e\scenarios-interaction.spec.js:43:7 › Scenarios Interaction › should display scenario details correctly (10.2s)
+  ok 217 [Mobile Chrome] › e2e\scenarios-8-9.spec.js:314:7 › Scenario 9: Financial Crisis Response › should complete 3 turns in financial crisis game (14.1s)
+  ok 224 [Mobile Chrome] › e2e\scenarios-interaction.spec.js:60:7 › Scenarios Interaction › should handle scenario selection (10.6s)
+⚡ 开始API并发请求测试...
+
+📊 API并发测试结果:
+  总请求数: 20
+  成功: 0
+  失败: 20
+  平均响应时间: 104ms
+  最慢响应: 114ms
+  ok 225 [Mobile Chrome] › e2e\scenarios-interaction.spec.js:75:7 › Scenarios Interaction › should start game session correctly (8.8s)
+  ok 219 [Mobile Chrome] › e2e\scenarios-8-9.spec.js:391:7 › Scenario 9: Financial Crisis Response › should show financial crisis decision feedback with correct values (15.1s)
+📱 会话 1: 开始...
+⚡ 开始快速连续导航测试...
+  x  237 [Mobile Chrome] › e2e\stress-performance.spec.js:132:7 › 压力性能并发测试 › API并发请求：验证API稳定性 (148ms)
+⚡ 开始模态框并发测试...
+  ok 220 [Mobile Chrome] › e2e\scenarios-8-9.spec.js:437:7 › Scenario 9: Financial Crisis Response › should handle financial crisis game end state (16.0s)
+📱 导航 1/20: scenarios
+  ok 226 [Mobile Chrome] › e2e\scenarios-interaction.spec.js:99:7 › Scenarios Interaction › should display game controls for each scenario (8.8s)
+  ok 215 [Mobile Chrome] › e2e\scenarios-6-7.spec.js:210:7 › Scenario 7: Climate Change Policy › should complete climate change game flow (15.4s)
+📱 导航 2/20: home
+⚡ 开始长时间运行测试...
+📱 会话 2: 开始...
+📱 导航 3/20: about
+📱 导航 4/20: scenarios
+📊 初始内存使用: 3.25MB
+📱 会话 3: 开始...
+📱 导航 5/20: home
+  完成 1/100 次切换...
+📱 导航 6/20: about
+📱 导航 7/20: scenarios
+📱 导航 8/20: home
+📱 会话 4: 开始...
+  ok 230 [Mobile Chrome] › e2e\scenarios-interaction.spec.js:190:7 › Scenarios Interaction › should display appropriate loading states (8.2s)
+📱 导航 9/20: about
+📱 导航 10/20: scenarios
+📱 会话 5: 开始...
+📱 导航 11/20: home
+  ok 231 [Mobile Chrome] › e2e\scenarios-interaction.spec.js:226:7 › Scenarios Interaction › should track game session state (9.1s)
+📱 快速点击 5 个场景卡片...
+📱 导航 12/20: about
+  ok 233 [Mobile Chrome] › e2e\scenarios-interaction.spec.js:273:7 › Scenarios Interaction › should maintain responsive design during game (9.5s)
+📱 导航 13/20: scenarios
+📱 导航 14/20: home
+  ok 228 [Mobile Chrome] › e2e\scenarios-interaction.spec.js:161:7 › Scenarios Interaction › should handle game modal interactions (10.0s)
+📱 会话 6: 开始...
+📱 导航 15/20: about
+  ok 232 [Mobile Chrome] › e2e\scenarios-interaction.spec.js:249:7 › Scenarios Interaction › should provide game feedback and analysis (10.5s)
+  ok 227 [Mobile Chrome] › e2e\scenarios-interaction.spec.js:122:7 › Scenarios Interaction › should handle game decision submission (10.7s)
+📱 导航 16/20: scenarios
+  ok 229 [Mobile Chrome] › e2e\scenarios-interaction.spec.js:210:7 › Scenarios Interaction › should handle API errors gracefully (10.9s)
+📱 会话 7: 开始...
+📱 导航 17/20: home
+📱 会话 8: 开始...
+📱 导航 18/20: about
+📱 导航 19/20: scenarios
+📱 会话 9: 开始...
+📱 导航 20/20: home
+  完成 21/100 次切换...
+✅ 会话 1: 加载 10 个场景，耗时 8499ms
+
+📊 快速导航结果:
+  总次数: 20
+  总耗时: 6830ms
+  平均每次: 342ms
+📱 会话 10: 开始...
+✅ 会话 2: 加载 10 个场景，耗时 6662ms
+  ok 235 [Mobile Chrome] › e2e\stress-performance.spec.js:66:7 › 压力性能并发测试 › 快速连续导航：验证系统稳定性 (11.9s)
+✅ 会话 3: 加载 10 个场景，耗时 7018ms
+✅ 会话 4: 加载 10 个场景，耗时 6228ms
+✅ 会话 5: 加载 10 个场景，耗时 5732ms
+✅ 会话 7: 加载 10 个场景，耗时 4143ms
+✅ 会话 6: 加载 10 个场景，耗时 5360ms
+✅ 会话 8: 加载 10 个场景，耗时 4328ms
+✅ 会话 9: 加载 10 个场景，耗时 3782ms
+✅ 会话 10: 加载 10 个场景，耗时 3844ms
+
+📊 并发测试结果:
+  平均加载时间: 5560ms
+  最快: 3782ms
+  最慢: 8499ms
+  成功会话: 10/10
+  x  234 [Mobile Chrome] › e2e\stress-performance.spec.js:10:7 › 压力性能并发测试 › 并发场景加载：10个并发会话 (16.2s)
+  完成 41/100 次切换...
+  x  236 [Mobile Chrome] › e2e\stress-performance.spec.js:95:7 › 压力性能并发测试 › 模态框并发：同时打开多个模态框 (18.2s)
+  完成 61/100 次切换...
+  完成 81/100 次切换...
+📊 最终内存使用: 3.92MB
+📊 内存增长: 0.67MB (20.6%)
+  x  238 [Mobile Chrome] › e2e\stress-performance.spec.js:175:7 › 压力性能并发测试 › 长时间运行：内存泄漏检测 (31.3s)
+🧹 Cleaning up test environment...
+✅ Test environment cleaned up
+📊 Test Summary: {
+  totalTests: 0,
+  passedTests: 0,
+  failedTests: 0,
+  testDuration: 0,
+  performanceMetrics: {}
+}
+
+
+  1) [msedge] › e2e\api-integration.spec.js:14:7 › API Integration › should successfully connect to API endpoints 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+      30 |
+      31 |     // Verify API responses
+    > 32 |     expect(apiResponses.length).toBeGreaterThan(0);
+         |                                 ^
+      33 |
+      34 |     // Check that at least one API call was successful
+      35 |     const successfulCalls = apiResponses.filter(response => response.ok);
+        at D:\AIDevelop\failureLogic\tests\e2e\api-integration.spec.js:32:33
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-msedge\error-context.md
+
+  2) [msedge] › e2e\api-integration.spec.js:170:7 › API Integration › should handle API timeouts gracefully 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeTruthy[2m()[22m
+
+    Received: [31mfalse[39m
+
+      186 |                       await page.locator('text=加载失败').isVisible();
+      187 |
+    > 188 |     expect(hasContent).toBeTruthy();
+          |                        ^
+      189 |   });
+      190 |
+      191 |   test('should implement proper error handling', async ({ page }) => {
+        at D:\AIDevelop\failureLogic\tests\e2e\api-integration.spec.js:188:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-msedge\error-context.md
+
+  3) [msedge] › e2e\api-integration.spec.js:212:7 › API Integration › should validate API response data structure 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeTruthy[2m()[22m
+
+    Received: [31mnull[39m
+
+      234 |
+      235 |     // Validate data structure
+    > 236 |     expect(scenariosData).toBeTruthy();
+          |                           ^
+      237 |
+      238 |     if (scenariosData.scenarios) {
+      239 |       expect(Array.isArray(scenariosData.scenarios)).toBeTruthy();
+        at D:\AIDevelop\failureLogic\tests\e2e\api-integration.spec.js:236:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\api-integration-API-Integr-6bf90-API-response-data-structure-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\api-integration-API-Integr-6bf90-API-response-data-structure-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\api-integration-API-Integr-6bf90-API-response-data-structure-msedge\error-context.md
+
+  4) [msedge] › e2e\app-load.spec.js:172:7 › Application Loading › should track performance metrics 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeLessThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: < [32m5000[39m
+    Received:   [31m5485[39m
+
+      188 |     expect(performanceMetrics).toBeTruthy();
+      189 |     // More lenient timing thresholds to account for slower CI/build machines
+    > 190 |     expect(performanceMetrics.domContentLoaded).toBeLessThan(5000);
+          |                                                 ^
+      191 |     expect(performanceMetrics.loadComplete).toBeLessThan(10000);
+      192 |   });
+      193 |
+        at D:\AIDevelop\failureLogic\tests\e2e\app-load.spec.js:190:49
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\app-load-Application-Loadi-3ff71-d-track-performance-metrics-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\app-load-Application-Loadi-3ff71-d-track-performance-metrics-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\app-load-Application-Loadi-3ff71-d-track-performance-metrics-msedge\error-context.md
+
+  5) [msedge] › e2e\relationship-time-delay.spec.js:627:9 › 恋爱关系时间延迟场景 - E2E 测试 › 游戏重置功能 › 应该能够重新开始游戏 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('.scenario-card').filter({ hasText: '恋爱关系时间延迟' })[22m
+    [2m    - locator resolved to <div class="card scenario-card" onclick="if(window.GameManager){GameManager.startScenario('relationship-time-delay')}else{console.error('GameManager not available')}">…</div>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="game-page feedback-page">…</div> from <div id="game-modal" class="modal active">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="game-page feedback-page">…</div> from <div id="game-modal" class="modal active">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    15 × waiting for element to be visible, enabled and stable[22m
+    [2m       - element is visible, enabled and stable[22m
+    [2m       - scrolling into view if needed[22m
+    [2m       - done scrolling[22m
+    [2m       - <div class="game-page feedback-page">…</div> from <div id="game-modal" class="modal active">…</div> subtree intercepts pointer events[22m
+    [2m     - retrying click action[22m
+    [2m       - waiting 500ms[22m
+
+
+      648 |
+      649 |       // 重新打开场景
+    > 650 |       await relationshipCard.click();
+          |                              ^
+      651 |
+      652 |       // 验证重新开始
+      653 |       await page.waitForFunction(() => {
+        at D:\AIDevelop\failureLogic\tests\e2e\relationship-time-delay.spec.js:650:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\relationship-time-delay-恋爱-b3084----E2E-测试-游戏重置功能-应该能够重新开始游戏-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\relationship-time-delay-恋爱-b3084----E2E-测试-游戏重置功能-应该能够重新开始游戏-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\relationship-time-delay-恋爱-b3084----E2E-测试-游戏重置功能-应该能够重新开始游戏-msedge\error-context.md
+
+  6) [msedge] › e2e\stress-performance.spec.js:95:7 › 压力性能并发测试 › 模态框并发：同时打开多个模态框 ───────────────────
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('.scenario-card').nth(1)[22m
+    [2m    - locator resolved to <div class="card scenario-card" onclick="if(window.GameManager){GameManager.startScenario('relationship-time-delay')}else{console.error('GameManager not available')}">…</div>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <p class="feedback-quote">"咖啡品质不错，但选择太少。"</p> from <div id="game-modal" class="modal active">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <p class="feedback-quote">"咖啡品质不错，但选择太少。"</p> from <div id="game-modal" class="modal active">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    17 × waiting for element to be visible, enabled and stable[22m
+    [2m       - element is visible, enabled and stable[22m
+    [2m       - scrolling into view if needed[22m
+    [2m       - done scrolling[22m
+    [2m       - <p class="feedback-quote">"咖啡品质不错，但选择太少。"</p> from <div id="game-modal" class="modal active">…</div> subtree intercepts pointer events[22m
+    [2m     - retrying click action[22m
+    [2m       - waiting 500ms[22m
+
+
+      108 |     
+      109 |     for (let i = 0; i < clickCount; i++) {
+    > 110 |       await cards.nth(i).click();
+          |                          ^
+      111 |       await page.waitForTimeout(200);
+      112 |     }
+      113 |     
+        at D:\AIDevelop\failureLogic\tests\e2e\stress-performance.spec.js:110:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\stress-performance-压力性能并发测试-模态框并发：同时打开多个模态框-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\stress-performance-压力性能并发测试-模态框并发：同时打开多个模态框-msedge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\stress-performance-压力性能并发测试-模态框并发：同时打开多个模态框-msedge\error-context.md
+
+  7) [msedge] › e2e\stress-performance.spec.js:132:7 › 压力性能并发测试 › API并发请求：验证API稳定性 ─────────────────
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m20[39m
+    Received: [31m0[39m
+
+      169 |     
+      170 |     // 验证
+    > 171 |     expect(successCount).toBe(concurrentRequests);
+          |                          ^
+      172 |     expect(avgResponseTime).toBeLessThan(2000);
+      173 |   });
+      174 |   
+        at D:\AIDevelop\failureLogic\tests\e2e\stress-performance.spec.js:171:26
+
+  8) [Mobile Chrome] › e2e\api-integration.spec.js:14:7 › API Integration › should successfully connect to API endpoints 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+      30 |
+      31 |     // Verify API responses
+    > 32 |     expect(apiResponses.length).toBeGreaterThan(0);
+         |                                 ^
+      33 |
+      34 |     // Check that at least one API call was successful
+      35 |     const successfulCalls = apiResponses.filter(response => response.ok);
+        at D:\AIDevelop\failureLogic\tests\e2e\api-integration.spec.js:32:33
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\api-integration-API-Integr-9e48c-ly-connect-to-API-endpoints-Mobile-Chrome\error-context.md
+
+  9) [Mobile Chrome] › e2e\api-integration.spec.js:170:7 › API Integration › should handle API timeouts gracefully 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeTruthy[2m()[22m
+
+    Received: [31mfalse[39m
+
+      186 |                       await page.locator('text=加载失败').isVisible();
+      187 |
+    > 188 |     expect(hasContent).toBeTruthy();
+          |                        ^
+      189 |   });
+      190 |
+      191 |   test('should implement proper error handling', async ({ page }) => {
+        at D:\AIDevelop\failureLogic\tests\e2e\api-integration.spec.js:188:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\api-integration-API-Integr-a9a5b-dle-API-timeouts-gracefully-Mobile-Chrome\error-context.md
+
+  10) [Mobile Chrome] › e2e\api-integration.spec.js:212:7 › API Integration › should validate API response data structure 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeTruthy[2m()[22m
+
+    Received: [31mnull[39m
+
+      234 |
+      235 |     // Validate data structure
+    > 236 |     expect(scenariosData).toBeTruthy();
+          |                           ^
+      237 |
+      238 |     if (scenariosData.scenarios) {
+      239 |       expect(Array.isArray(scenariosData.scenarios)).toBeTruthy();
+        at D:\AIDevelop\failureLogic\tests\e2e\api-integration.spec.js:236:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\api-integration-API-Integr-6bf90-API-response-data-structure-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\api-integration-API-Integr-6bf90-API-response-data-structure-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\api-integration-API-Integr-6bf90-API-response-data-structure-Mobile-Chrome\error-context.md
+
+  11) [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:72:7 › Real Application Tests - Fixed v2 › should navigate to profile page 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-page="profile"]')[22m
+    [2m    - locator resolved to <button class="nav-item" data-page="profile">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">…</svg> from <button class="nav-item" data-page="about" onclick="NavigationManager.navigateTo('about')">…</button> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+    [2m    - <button class="nav-item" data-page="book" onclick="NavigationManager.navigateTo('book')">…</button> intercepts pointer events[22m
+    [2m  2 × retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m      - waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">…</svg> from <button class="nav-item" data-page="about" onclick="NavigationManager.navigateTo('about')">…</button> subtree intercepts pointer events[22m
+    [2m  2 × retrying click action[22m
+    [2m      - waiting 500ms[22m
+    [2m      - waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">…</svg> from <button class="nav-item" data-page="about" onclick="NavigationManager.navigateTo('about')">…</button> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 500ms[22m
+    [2m      - waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <button class="nav-item" data-page="book" onclick="NavigationManager.navigateTo('book')">…</button> intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 500ms[22m
+    [2m      - waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <path fill-rule="evenodd" clip-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"></path> from <button class="nav-item" data-page="about" onclick="NavigationManager.navigateTo('about')">…</button> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 500ms[22m
+    [2m      - waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">…</svg> from <button class="nav-item" data-page="about" onclick="NavigationManager.navigateTo('about')">…</button> subtree intercepts pointer events[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+    [2m    - <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">…</svg> from <button class="nav-item" data-page="about" onclick="NavigationManager.navigateTo('about')">…</button> subtree intercepts pointer events[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+    [2m    - <button class="nav-item" data-page="book" onclick="NavigationManager.navigateTo('book')">…</button> intercepts pointer events[22m
+    [2m  3 × retrying click action[22m
+    [2m      - waiting 500ms[22m
+    [2m      - waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">…</svg> from <button class="nav-item" data-page="about" onclick="NavigationManager.navigateTo('about')">…</button> subtree intercepts pointer events[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 500ms[22m
+
+
+      75 |
+      76 |     // When
+    > 77 |     await profileButton.click();
+         |                         ^
+      78 |
+      79 |     // Then
+      80 |     await expect(page.locator('#profile-page')).toHaveClass(/active/);
+        at D:\AIDevelop\failureLogic\tests\e2e\real-app-tests-fixed-v2.spec.js:77:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\real-app-tests-fixed-v2-Re-47ce6-ld-navigate-to-profile-page-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\real-app-tests-fixed-v2-Re-47ce6-ld-navigate-to-profile-page-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\real-app-tests-fixed-v2-Re-47ce6-ld-navigate-to-profile-page-Mobile-Chrome\error-context.md
+
+  12) [Mobile Chrome] › e2e\relationship-time-delay.spec.js:627:9 › 恋爱关系时间延迟场景 - E2E 测试 › 游戏重置功能 › 应该能够重新开始游戏 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('.scenario-card').filter({ hasText: '恋爱关系时间延迟' })[22m
+    [2m    - locator resolved to <div class="card scenario-card" onclick="if(window.GameManager){GameManager.startScenario('relationship-time-delay')}else{console.error('GameManager not available')}">…</div>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - element is outside of the viewport[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - element is outside of the viewport[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    15 × waiting for element to be visible, enabled and stable[22m
+    [2m       - element is visible, enabled and stable[22m
+    [2m       - scrolling into view if needed[22m
+    [2m       - done scrolling[22m
+    [2m       - element is outside of the viewport[22m
+    [2m     - retrying click action[22m
+    [2m       - waiting 500ms[22m
+
+
+      648 |
+      649 |       // 重新打开场景
+    > 650 |       await relationshipCard.click();
+          |                              ^
+      651 |
+      652 |       // 验证重新开始
+      653 |       await page.waitForFunction(() => {
+        at D:\AIDevelop\failureLogic\tests\e2e\relationship-time-delay.spec.js:650:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\relationship-time-delay-恋爱-b3084----E2E-测试-游戏重置功能-应该能够重新开始游戏-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\relationship-time-delay-恋爱-b3084----E2E-测试-游戏重置功能-应该能够重新开始游戏-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\relationship-time-delay-恋爱-b3084----E2E-测试-游戏重置功能-应该能够重新开始游戏-Mobile-Chrome\error-context.md
+
+  13) [Mobile Chrome] › e2e\stress-performance.spec.js:10:7 › 压力性能并发测试 › 并发场景加载：10个并发会话 ────────────
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeLessThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: < [32m5000[39m
+    Received:   [31m5559.6[39m
+
+      60 |     
+      61 |     // 验证性能
+    > 62 |     expect(avgLoadTime).toBeLessThan(5000); // 平均加载时间<5秒
+         |                         ^
+      63 |     expect(results.filter(r => r.cards > 0).length).toBe(concurrentSessions);
+      64 |   });
+      65 |   
+        at D:\AIDevelop\failureLogic\tests\e2e\stress-performance.spec.js:62:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\stress-performance-压力性能并发测试-并发场景加载：10个并发会话-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\stress-performance-压力性能并发测试-并发场景加载：10个并发会话-Mobile-Chrome\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\stress-performance-压力性能并发测试-并发场景加载：10个并发会话-Mobile-Chrome\test-failed-3.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\stress-performance-压力性能并发测试-并发场景加载：10个并发会话-Mobile-Chrome\test-failed-4.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #5: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\stress-performance-压力性能并发测试-并发场景加载：10个并发会话-Mobile-Chrome\test-failed-6.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #6: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\stress-performance-压力性能并发测试-并发场景加载：10个并发会话-Mobile-Chrome\test-failed-5.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #7: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\stress-performance-压力性能并发测试-并发场景加载：10个并发会话-Mobile-Chrome\test-failed-7.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #8: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\stress-performance-压力性能并发测试-并发场景加载：10个并发会话-Mobile-Chrome\test-failed-8.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #9: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\stress-performance-压力性能并发测试-并发场景加载：10个并发会话-Mobile-Chrome\test-failed-9.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #10: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\stress-performance-压力性能并发测试-并发场景加载：10个并发会话-Mobile-Chrome\test-failed-10.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  14) [Mobile Chrome] › e2e\stress-performance.spec.js:95:7 › 压力性能并发测试 › 模态框并发：同时打开多个模态框 ───────────
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('.scenario-card').nth(1)[22m
+    [2m    - locator resolved to <div class="card scenario-card" onclick="if(window.GameManager){GameManager.startScenario('relationship-time-delay')}else{console.error('GameManager not available')}">…</div>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - element is outside of the viewport[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - element is outside of the viewport[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    18 × waiting for element to be visible, enabled and stable[22m
+    [2m       - element is visible, enabled and stable[22m
+    [2m       - scrolling into view if needed[22m
+    [2m       - done scrolling[22m
+    [2m       - element is outside of the viewport[22m
+    [2m     - retrying click action[22m
+    [2m       - waiting 500ms[22m
+
+
+      108 |     
+      109 |     for (let i = 0; i < clickCount; i++) {
+    > 110 |       await cards.nth(i).click();
+          |                          ^
+      111 |       await page.waitForTimeout(200);
+      112 |     }
+      113 |     
+        at D:\AIDevelop\failureLogic\tests\e2e\stress-performance.spec.js:110:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\stress-performance-压力性能并发测试-模态框并发：同时打开多个模态框-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\stress-performance-压力性能并发测试-模态框并发：同时打开多个模态框-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\stress-performance-压力性能并发测试-模态框并发：同时打开多个模态框-Mobile-Chrome\error-context.md
+
+  15) [Mobile Chrome] › e2e\stress-performance.spec.js:132:7 › 压力性能并发测试 › API并发请求：验证API稳定性 ─────────
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m20[39m
+    Received: [31m0[39m
+
+      169 |     
+      170 |     // 验证
+    > 171 |     expect(successCount).toBe(concurrentRequests);
+          |                          ^
+      172 |     expect(avgResponseTime).toBeLessThan(2000);
+      173 |   });
+      174 |   
+        at D:\AIDevelop\failureLogic\tests\e2e\stress-performance.spec.js:171:26
+
+  16) [Mobile Chrome] › e2e\stress-performance.spec.js:175:7 › 压力性能并发测试 › 长时间运行：内存泄漏检测 ─────────────
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeLessThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: < [32m20[39m
+    Received:   [31m20.568765839393503[39m
+
+      209 |     
+      210 |     // 验证内存增长不超过20%
+    > 211 |     expect(memoryGrowthPercent).toBeLessThan(20);
+          |                                 ^
+      212 |     
+      213 |     console.log('✅ 长时间运行测试通过');
+      214 |   });
+        at D:\AIDevelop\failureLogic\tests\e2e\stress-performance.spec.js:211:33
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\stress-performance-压力性能并发测试-长时间运行：内存泄漏检测-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\stress-performance-压力性能并发测试-长时间运行：内存泄漏检测-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\stress-performance-压力性能并发测试-长时间运行：内存泄漏检测-Mobile-Chrome\error-context.md
+
+  16 failed
+    [msedge] › e2e\api-integration.spec.js:14:7 › API Integration › should successfully connect to API endpoints 
+    [msedge] › e2e\api-integration.spec.js:170:7 › API Integration › should handle API timeouts gracefully 
+    [msedge] › e2e\api-integration.spec.js:212:7 › API Integration › should validate API response data structure 
+    [msedge] › e2e\app-load.spec.js:172:7 › Application Loading › should track performance metrics ─
+    [msedge] › e2e\relationship-time-delay.spec.js:627:9 › 恋爱关系时间延迟场景 - E2E 测试 › 游戏重置功能 › 应该能够重新开始游戏 
+    [msedge] › e2e\stress-performance.spec.js:95:7 › 压力性能并发测试 › 模态框并发：同时打开多个模态框 ────────────────────
+    [msedge] › e2e\stress-performance.spec.js:132:7 › 压力性能并发测试 › API并发请求：验证API稳定性 ──────────────────
+    [Mobile Chrome] › e2e\api-integration.spec.js:14:7 › API Integration › should successfully connect to API endpoints 
+    [Mobile Chrome] › e2e\api-integration.spec.js:170:7 › API Integration › should handle API timeouts gracefully 
+    [Mobile Chrome] › e2e\api-integration.spec.js:212:7 › API Integration › should validate API response data structure 
+    [Mobile Chrome] › e2e\real-app-tests-fixed-v2.spec.js:72:7 › Real Application Tests - Fixed v2 › should navigate to profile page 
+    [Mobile Chrome] › e2e\relationship-time-delay.spec.js:627:9 › 恋爱关系时间延迟场景 - E2E 测试 › 游戏重置功能 › 应该能够重新开始游戏 
+    [Mobile Chrome] › e2e\stress-performance.spec.js:10:7 › 压力性能并发测试 › 并发场景加载：10个并发会话 ──────────────
+    [Mobile Chrome] › e2e\stress-performance.spec.js:95:7 › 压力性能并发测试 › 模态框并发：同时打开多个模态框 ─────────────
+    [Mobile Chrome] › e2e\stress-performance.spec.js:132:7 › 压力性能并发测试 › API并发请求：验证API稳定性 ───────────
+    [Mobile Chrome] › e2e\stress-performance.spec.js:175:7 › 压力性能并发测试 › 长时间运行：内存泄漏检测 ───────────────
+  222 passed (3.8m)

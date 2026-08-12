@@ -1,0 +1,846 @@
+
+
+🚀 Setting up test environment...
+⏳ Waiting for services to start...
+✅ API server is ready
+✅ Frontend server is ready
+✅ Test environment ready (94ms)
+
+Running 140 tests using 16 workers
+
+[1A[2K[1/140] [msedge] › e2e\app-load.spec.js:46:7 › Application Loading › should hide loading screen after app loads
+[1A[2K[2/140] [msedge] › e2e\app-load.spec.js:23:7 › Application Loading › should load the main page successfully
+[1A[2K[3/140] [msedge] › e2e\app-load.spec.js:59:7 › Application Loading › should load navigation items correctly
+[1A[2K[4/140] [msedge] › e2e\app-load.spec.js:109:7 › Application Loading › should handle API connectivity gracefully
+[1A[2K[5/140] [msedge] › e2e\app-load.spec.js:77:7 › Application Loading › should handle responsive design correctly
+[1A[2K[6/140] [msedge] › e2e\app-load.spec.js:91:7 › Application Loading › should initialize service worker correctly
+[1A[2K[7/140] [msedge] › e2e\app-load.spec.js:172:7 › Application Loading › should track performance metrics
+[1A[2K[8/140] [msedge] › e2e\app-load.spec.js:128:7 › Application Loading › should load PWA manifest correctly
+[1A[2K[9/140] [msedge] › e2e\app-load.spec.js:146:7 › Application Loading › should handle offline mode correctly
+[1A[2K[10/140] [msedge] › e2e\app-load.spec.js:194:7 › Application Loading › should handle accessibility requirements
+[1A[2K[11/140] [msedge] › e2e\bias-diagnosis.spec.js:12:7 › Cognitive trap diagnosis (API) › flags exponential misconception
+[1A[2K[12/140] [msedge] › e2e\bias-diagnosis.spec.js:34:7 › Cognitive trap diagnosis (API) › flags compound interest misunderstanding (linear intuition)
+[1A[2K[13/140] [msedge] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+[1A[2K[14/140] [msedge] › e2e\bias-diagnosis.spec.js:61:7 › Cognitive trap diagnosis (API) › flags complex system underestimation as complex_system_misunderstanding
+[1A[2K[15/140] [msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+[1A[2K[16/140] [msedge] › e2e\real-user-simulation.spec.js:220:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+[1A[2K[17/140] [msedge] › e2e\real-user-simulation.spec.js:241:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+[1A[2K[18/140] [msedge] › e2e\scenarios-4-6.spec.js:13:7 › Scenario 4: Business Strategy Reasoning Game › should load business strategy scenario card
+[1A[2K[19/140] [msedge] › e2e\scenarios-4-6.spec.js:26:7 › Scenario 4: Business Strategy Reasoning Game › should start business strategy game successfully
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+🔍 开始全场景卡片浏览测试...
+
+[1A[2K[20/140] [msedge] › e2e\scenarios-4-6.spec.js:49:7 › Scenario 4: Business Strategy Reasoning Game › should complete business strategy turn 1
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+🚀 开始真实用户模拟测试...
+
+[1A[2K📱 步骤1: 访问首页...
+
+[1A[2K[21/140] [msedge] › e2e\scenarios-4-6.spec.js:80:7 › Scenario 4: Business Strategy Reasoning Game › should make decision and see feedback in business strategy
+[1A[2K[22/140] [msedge] › e2e\scenarios-4-6.spec.js:109:7 › Scenario 4: Business Strategy Reasoning Game › should display game state metrics in business strategy
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:220:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+🔄 开始多场景快速切换测试...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:241:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+📦 开始模态框交互测试...
+
+[1A[2K[23/140] [msedge] › e2e\scenarios-4-6.spec.js:136:7 › Scenario 5: Public Policy Making Simulation › should load public policy scenario card
+[1A[2K[24/140] [msedge] › e2e\scenarios-4-6.spec.js:149:7 › Scenario 5: Public Policy Making Simulation › should start public policy game successfully
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 首页加载成功
+
+[1A[2K📱 步骤2: 导航到场景页面...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:220:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+📱 切换到 scenarios (1/5)...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 场景页面加载成功
+
+[1A[2K📱 步骤3: 等待场景卡片加载...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:220:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ scenarios 页面激活成功
+
+[1A[2K📱 切换到 home (2/5)...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+📊 找到 10 个场景卡片
+
+[1A[2K
+📱 查看场景 1/10...
+
+[1A[2K[25/140] [msedge] › e2e\scenarios-4-6.spec.js:172:7 › Scenario 5: Public Policy Making Simulation › should complete public policy turn 1
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:241:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+📱 打开模态框...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:220:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ home 页面激活成功
+
+[1A[2K📱 切换到 about (3/5)...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 找到 10 个场景卡片
+
+[1A[2K📱 步骤4: 浏览场景卡片...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 咖啡店线性思维
+
+[1A[2K  难度: beginner
+
+[1A[2K  描述: 线性思维陷阱场景...
+
+[1A[2K
+📱 查看场景 2/10...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:241:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+✅ 模态框打开成功
+
+[1A[2K✅ 模态框内容可见
+
+[1A[2K[26/140] [msedge] › e2e\scenarios-4-6.spec.js:202:7 › Scenario 5: Public Policy Making Simulation › should make decision and see feedback in public policy
+[1A[2K[27/140] [msedge] › e2e\scenarios-4-6.spec.js:259:7 › Scenario 6: Personal Finance Decision Simulation › should load personal finance scenario card
+[1A[2K[28/140] [msedge] › e2e\scenarios-4-6.spec.js:231:7 › Scenario 5: Public Policy Making Simulation › should display game state metrics in public policy
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 恋爱关系时间延迟
+
+[1A[2K[29/140] [msedge] › e2e\scenarios-4-6.spec.js:272:7 › Scenario 6: Personal Finance Decision Simulation › should start personal finance game successfully
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+📱 步骤5: 选择第一个场景...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  难度: intermediate
+
+[1A[2K  描述: 时间延迟偏差场景...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:220:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ about 页面激活成功
+
+[1A[2K📱 切换到 scenarios (4/5)...
+
+[1A[2K[30/140] [msedge] › e2e\scenarios-4-6.spec.js:294:7 › Scenario 6: Personal Finance Decision Simulation › should complete personal finance turn 1
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 3/10...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:241:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+📱 关闭模态框...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 投资信息处理
+
+[1A[2K  难度: advanced
+
+[1A[2K  描述: 信息处理模式场景...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:220:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ scenarios 页面激活成功
+
+[1A[2K📱 切换到 home (5/5)...
+
+[1A[2K[31/140] [msedge] › e2e\scenarios-4-6.spec.js:330:7 › Scenario 6: Personal Finance Decision Simulation › should make decision and see feedback in personal finance
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:241:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+✅ 模态框关闭成功
+
+[1A[2K🎉 模态框交互测试完成！
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 4/10...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 模态框打开成功
+
+[1A[2K📱 步骤6: 查看场景介绍...
+
+[1A[2K[32/140] [msedge] › e2e\scenarios-4-6.spec.js:371:7 › Scenario 6: Personal Finance Decision Simulation › should display game state metrics in personal finance
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 投资信息处理
+
+[1A[2K  难度: intermediate
+
+[1A[2K  描述: 学习如何处理和整合多元投资信息源，避免确认偏误...
+
+[1A[2K[33/140] [msedge] › e2e\scenarios-6-7.spec.js:15:7 › Scenario 6: Personal Finance Decision › should load personal finance scenario
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:220:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ home 页面激活成功
+
+[1A[2K🎉 多场景快速切换测试完成！
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 5/10...
+
+[1A[2K[34/140] [msedge] › e2e\scenarios-6-7.spec.js:24:7 › Scenario 6: Personal Finance Decision › should start personal finance game
+[1A[2K[35/140] [msedge] › e2e\scenarios-6-7.spec.js:42:7 › Scenario 6: Personal Finance Decision › should display personal finance start page
+[1A[2K[36/140] [msedge] › e2e\scenarios-6-7.spec.js:55:7 › Scenario 6: Personal Finance Decision › should complete personal finance game flow
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+📱 步骤7: 开始游戏...
+
+[1A[2K[37/140] [msedge] › e2e\scenarios-6-7.spec.js:102:7 › Scenario 6: Personal Finance Decision › should complete multiple turns in personal finance game
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 商业战略推理游戏
+
+[1A[2K  难度: intermediate
+
+[1A[2K  描述: 模拟商业决策推理过程，测试用户在复杂商业环境中的决策思维...
+
+[1A[2K
+📱 查看场景 6/10...
+
+[1A[2K  场景名称: 公共政策制定模拟
+
+[1A[2K  难度: intermediate
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 游戏开始成功
+
+[1A[2K📱 步骤8: 阅读决策选项...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  描述: 模拟公共政策制定过程，平衡多方利益相关者需求...
+
+[1A[2K
+📱 查看场景 7/10...
+
+[1A[2K  场景名称: 个人财务决策模拟
+
+[1A[2K  难度: beginner
+
+[1A[2K  描述: 模拟个人长期财务规划决策，体验复利和时间价值概念...
+
+[1A[2K
+📱 查看场景 8/10...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+📱 步骤9: 做出决策...
+
+[1A[2K📱 步骤10: 查看反馈...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 全球气候变化政策制定博弈
+
+[1A[2K  难度: advanced
+
+[1A[2K  描述: 模拟多国在气候变化政策制定中的博弈与权衡...
+
+[1A[2K
+📱 查看场景 9/10...
+
+[1A[2K  场景名称: AI治理与监管决策模拟
+
+[1A[2K  难度: advanced
+
+[1A[2K  描述: 模拟AI治理政策制定，平衡创新、安全、伦理等多方面考量...
+
+[1A[2K
+📱 查看场景 10/10...
+
+[1A[2K[38/140] [msedge] › e2e\scenarios-6-7.spec.js:170:7 › Scenario 7: Climate Change Policy › should load climate change scenario
+[1A[2K[39/140] [msedge] › e2e\scenarios-6-7.spec.js:257:7 › Scenario 7: Climate Change Policy › should complete multiple turns in climate change game
+[1A[2K[40/140] [msedge] › e2e\scenarios-6-7.spec.js:179:7 › Scenario 7: Climate Change Policy › should start climate change game
+[1A[2K[41/140] [msedge] › e2e\scenarios-6-7.spec.js:197:7 › Scenario 7: Climate Change Policy › should display climate change start page
+[1A[2K[42/140] [msedge] › e2e\scenarios-6-7.spec.js:210:7 › Scenario 7: Climate Change Policy › should complete climate change game flow
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+📱 步骤11: 关闭模态框...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 复杂金融市场危机应对模拟
+
+[1A[2K  难度: advanced
+
+[1A[2K  描述: 模拟金融危机应对决策，处理复杂金融系统风险...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 模态框关闭成功
+
+[1A[2K📱 步骤12: 返回首页...
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+🎉 全场景卡片浏览测试完成！
+
+[1A[2K[msedge] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 返回首页成功
+
+[1A[2K🎉 完整用户旅程测试完成！
+
+[1A[2K[43/140] [msedge] › e2e\scenarios-8-9.spec.js:39:7 › Scenario 8: AI Governance Regulation › should display AI governance start page
+[1A[2K[44/140] [msedge] › e2e\scenarios-8-9.spec.js:15:7 › Scenario 8: AI Governance Regulation › should load AI governance scenario
+[1A[2K[45/140] [msedge] › e2e\scenarios-8-9.spec.js:21:7 › Scenario 8: AI Governance Regulation › should start AI governance game
+[1A[2K[46/140] [msedge] › e2e\scenarios-8-9.spec.js:52:7 › Scenario 8: AI Governance Regulation › should complete AI governance game flow
+[1A[2K[47/140] [msedge] › e2e\scenarios-8-9.spec.js:99:7 › Scenario 8: AI Governance Regulation › should complete 3 turns in AI governance game
+[1A[2K[48/140] [msedge] › e2e\scenarios-8-9.spec.js:154:7 › Scenario 8: AI Governance Regulation › should display AI governance game state correctly
+[1A[2K[49/140] [msedge] › e2e\scenarios-8-9.spec.js:176:7 › Scenario 8: AI Governance Regulation › should show decision feedback with correct values
+[1A[2K[50/140] [msedge] › e2e\scenarios-8-9.spec.js:230:7 › Scenario 9: Financial Crisis Response › should load financial crisis scenario
+[1A[2K[51/140] [msedge] › e2e\scenarios-8-9.spec.js:236:7 › Scenario 9: Financial Crisis Response › should start financial crisis game
+[1A[2K[52/140] [msedge] › e2e\scenarios-8-9.spec.js:254:7 › Scenario 9: Financial Crisis Response › should display financial crisis start page
+[1A[2K[53/140] [msedge] › e2e\scenarios-8-9.spec.js:267:7 › Scenario 9: Financial Crisis Response › should complete financial crisis game flow
+[1A[2K[54/140] [msedge] › e2e\scenarios-8-9.spec.js:314:7 › Scenario 9: Financial Crisis Response › should complete 3 turns in financial crisis game
+[1A[2K[55/140] [msedge] › e2e\scenarios-8-9.spec.js:369:7 › Scenario 9: Financial Crisis Response › should display financial crisis game state correctly
+[1A[2K[56/140] [msedge] › e2e\scenarios-8-9.spec.js:391:7 › Scenario 9: Financial Crisis Response › should show financial crisis decision feedback with correct values
+[1A[2K[57/140] [msedge] › e2e\scenarios-8-9.spec.js:437:7 › Scenario 9: Financial Crisis Response › should handle financial crisis game end state
+[1A[2K[58/140] [msedge] › e2e\scenarios-interaction.spec.js:14:7 › Scenarios Interaction › should navigate to scenarios page
+[1A[2K[59/140] [msedge] › e2e\scenarios-interaction.spec.js:23:7 › Scenarios Interaction › should load scenarios from API
+[1A[2K[60/140] [msedge] › e2e\scenarios-interaction.spec.js:43:7 › Scenarios Interaction › should display scenario details correctly
+[1A[2K[61/140] [msedge] › e2e\scenarios-interaction.spec.js:60:7 › Scenarios Interaction › should handle scenario selection
+[1A[2K[62/140] [msedge] › e2e\scenarios-interaction.spec.js:75:7 › Scenarios Interaction › should start game session correctly
+[1A[2K[63/140] [msedge] › e2e\scenarios-interaction.spec.js:99:7 › Scenarios Interaction › should display game controls for each scenario
+[1A[2K[64/140] [msedge] › e2e\scenarios-interaction.spec.js:122:7 › Scenarios Interaction › should handle game decision submission
+[1A[2K[65/140] [msedge] › e2e\scenarios-interaction.spec.js:161:7 › Scenarios Interaction › should handle game modal interactions
+[1A[2K[66/140] [msedge] › e2e\scenarios-interaction.spec.js:190:7 › Scenarios Interaction › should display appropriate loading states
+[1A[2K[67/140] [msedge] › e2e\scenarios-interaction.spec.js:210:7 › Scenarios Interaction › should handle API errors gracefully
+[1A[2K[68/140] [msedge] › e2e\scenarios-interaction.spec.js:226:7 › Scenarios Interaction › should track game session state
+[1A[2K[69/140] [msedge] › e2e\scenarios-interaction.spec.js:249:7 › Scenarios Interaction › should provide game feedback and analysis
+[1A[2K[70/140] [msedge] › e2e\scenarios-interaction.spec.js:273:7 › Scenarios Interaction › should maintain responsive design during game
+[1A[2K[71/140] [Mobile Chrome] › e2e\app-load.spec.js:23:7 › Application Loading › should load the main page successfully
+[1A[2K[72/140] [Mobile Chrome] › e2e\app-load.spec.js:46:7 › Application Loading › should hide loading screen after app loads
+[1A[2K[73/140] [Mobile Chrome] › e2e\app-load.spec.js:128:7 › Application Loading › should load PWA manifest correctly
+[1A[2K[74/140] [Mobile Chrome] › e2e\app-load.spec.js:59:7 › Application Loading › should load navigation items correctly
+[1A[2K[75/140] [Mobile Chrome] › e2e\app-load.spec.js:77:7 › Application Loading › should handle responsive design correctly
+[1A[2K[76/140] [Mobile Chrome] › e2e\app-load.spec.js:109:7 › Application Loading › should handle API connectivity gracefully
+[1A[2K[77/140] [Mobile Chrome] › e2e\app-load.spec.js:91:7 › Application Loading › should initialize service worker correctly
+[1A[2K[78/140] [Mobile Chrome] › e2e\app-load.spec.js:146:7 › Application Loading › should handle offline mode correctly
+[1A[2K[79/140] [Mobile Chrome] › e2e\app-load.spec.js:172:7 › Application Loading › should track performance metrics
+[1A[2K[80/140] [Mobile Chrome] › e2e\app-load.spec.js:194:7 › Application Loading › should handle accessibility requirements
+[1A[2K[81/140] [Mobile Chrome] › e2e\bias-diagnosis.spec.js:12:7 › Cognitive trap diagnosis (API) › flags exponential misconception
+[1A[2K[82/140] [Mobile Chrome] › e2e\real-user-simulation.spec.js:220:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+[1A[2K[83/140] [Mobile Chrome] › e2e\bias-diagnosis.spec.js:34:7 › Cognitive trap diagnosis (API) › flags compound interest misunderstanding (linear intuition)
+[1A[2K[84/140] [Mobile Chrome] › e2e\scenarios-4-6.spec.js:13:7 › Scenario 4: Business Strategy Reasoning Game › should load business strategy scenario card
+[1A[2K[85/140] [Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+[1A[2K[86/140] [Mobile Chrome] › e2e\bias-diagnosis.spec.js:61:7 › Cognitive trap diagnosis (API) › flags complex system underestimation as complex_system_misunderstanding
+[1A[2K[87/140] [Mobile Chrome] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+[1A[2K[88/140] [Mobile Chrome] › e2e\scenarios-4-6.spec.js:26:7 › Scenario 4: Business Strategy Reasoning Game › should start business strategy game successfully
+[1A[2K[89/140] [Mobile Chrome] › e2e\real-user-simulation.spec.js:241:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+[1A[2K[90/140] [Mobile Chrome] › e2e\scenarios-4-6.spec.js:49:7 › Scenario 4: Business Strategy Reasoning Game › should complete business strategy turn 1
+[1A[2K[91/140] [Mobile Chrome] › e2e\scenarios-4-6.spec.js:80:7 › Scenario 4: Business Strategy Reasoning Game › should make decision and see feedback in business strategy
+[1A[2K[92/140] [Mobile Chrome] › e2e\scenarios-4-6.spec.js:109:7 › Scenario 4: Business Strategy Reasoning Game › should display game state metrics in business strategy
+[1A[2K[93/140] [Mobile Chrome] › e2e\scenarios-4-6.spec.js:136:7 › Scenario 5: Public Policy Making Simulation › should load public policy scenario card
+[1A[2K[94/140] [Mobile Chrome] › e2e\scenarios-4-6.spec.js:149:7 › Scenario 5: Public Policy Making Simulation › should start public policy game successfully
+[1A[2K[95/140] [Mobile Chrome] › e2e\scenarios-4-6.spec.js:172:7 › Scenario 5: Public Policy Making Simulation › should complete public policy turn 1
+[1A[2K[96/140] [Mobile Chrome] › e2e\scenarios-4-6.spec.js:202:7 › Scenario 5: Public Policy Making Simulation › should make decision and see feedback in public policy
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:220:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+🔄 开始多场景快速切换测试...
+
+[1A[2K📱 切换到 scenarios (1/5)...
+
+[1A[2K[97/140] [Mobile Chrome] › e2e\scenarios-4-6.spec.js:231:7 › Scenario 5: Public Policy Making Simulation › should display game state metrics in public policy
+[1A[2K[98/140] [Mobile Chrome] › e2e\scenarios-4-6.spec.js:259:7 › Scenario 6: Personal Finance Decision Simulation › should load personal finance scenario card
+[1A[2K✅ scenarios 页面激活成功
+
+[1A[2K📱 切换到 home (2/5)...
+
+[1A[2K✅ home 页面激活成功
+
+[1A[2K📱 切换到 about (3/5)...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+🔍 开始全场景卡片浏览测试...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+🚀 开始真实用户模拟测试...
+
+[1A[2K📱 步骤1: 访问首页...
+
+[1A[2K[99/140] [Mobile Chrome] › e2e\scenarios-4-6.spec.js:272:7 › Scenario 6: Personal Finance Decision Simulation › should start personal finance game successfully
+[1A[2K[100/140] [Mobile Chrome] › e2e\scenarios-4-6.spec.js:294:7 › Scenario 6: Personal Finance Decision Simulation › should complete personal finance turn 1
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:220:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ about 页面激活成功
+
+[1A[2K📱 切换到 scenarios (4/5)...
+
+[1A[2K[101/140] [Mobile Chrome] › e2e\scenarios-4-6.spec.js:330:7 › Scenario 6: Personal Finance Decision Simulation › should make decision and see feedback in personal finance
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 首页加载成功
+
+[1A[2K📱 步骤2: 导航到场景页面...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:220:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ scenarios 页面激活成功
+
+[1A[2K📱 切换到 home (5/5)...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+📊 找到 10 个场景卡片
+
+[1A[2K
+📱 查看场景 1/10...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:220:7 › 真实用户模拟 - 全场景自然交互走查 › 多场景快速切换：验证导航稳定性
+✅ home 页面激活成功
+
+[1A[2K🎉 多场景快速切换测试完成！
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 场景页面加载成功
+
+[1A[2K📱 步骤3: 等待场景卡片加载...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:241:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+📦 开始模态框交互测试...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 咖啡店线性思维
+
+[1A[2K  难度: beginner
+
+[1A[2K  描述: 线性思维陷阱场景...
+
+[1A[2K
+📱 查看场景 2/10...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 找到 10 个场景卡片
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 恋爱关系时间延迟
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+📱 步骤4: 浏览场景卡片...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  难度: intermediate
+
+[1A[2K  描述: 时间延迟偏差场景...
+
+[1A[2K
+📱 查看场景 3/10...
+
+[1A[2K  场景名称: 投资信息处理
+
+[1A[2K  难度: advanced
+
+[1A[2K  描述: 信息处理模式场景...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+📱 步骤5: 选择第一个场景...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 4/10...
+
+[1A[2K[102/140] [Mobile Chrome] › e2e\scenarios-4-6.spec.js:371:7 › Scenario 6: Personal Finance Decision Simulation › should display game state metrics in personal finance
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:241:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+📱 打开模态框...
+
+[1A[2K[103/140] [Mobile Chrome] › e2e\scenarios-6-7.spec.js:15:7 › Scenario 6: Personal Finance Decision › should load personal finance scenario
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 投资信息处理
+
+[1A[2K  难度: intermediate
+
+[1A[2K  描述: 学习如何处理和整合多元投资信息源，避免确认偏误...
+
+[1A[2K[104/140] [Mobile Chrome] › e2e\scenarios-6-7.spec.js:24:7 › Scenario 6: Personal Finance Decision › should start personal finance game
+[1A[2K[105/140] [Mobile Chrome] › e2e\scenarios-6-7.spec.js:42:7 › Scenario 6: Personal Finance Decision › should display personal finance start page
+[1A[2K[106/140] [Mobile Chrome] › e2e\scenarios-6-7.spec.js:55:7 › Scenario 6: Personal Finance Decision › should complete personal finance game flow
+[1A[2K
+📱 查看场景 5/10...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 模态框打开成功
+
+[1A[2K📱 步骤6: 查看场景介绍...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 商业战略推理游戏
+
+[1A[2K  难度: intermediate
+
+[1A[2K  描述: 模拟商业决策推理过程，测试用户在复杂商业环境中的决策思维...
+
+[1A[2K
+📱 查看场景 6/10...
+
+[1A[2K[107/140] [Mobile Chrome] › e2e\scenarios-6-7.spec.js:102:7 › Scenario 6: Personal Finance Decision › should complete multiple turns in personal finance game
+[1A[2K  场景名称: 公共政策制定模拟
+
+[1A[2K  难度: intermediate
+
+[1A[2K  描述: 模拟公共政策制定过程，平衡多方利益相关者需求...
+
+[1A[2K
+📱 查看场景 7/10...
+
+[1A[2K[108/140] [Mobile Chrome] › e2e\scenarios-6-7.spec.js:170:7 › Scenario 7: Climate Change Policy › should load climate change scenario
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+📱 步骤7: 开始游戏...
+
+[1A[2K[109/140] [Mobile Chrome] › e2e\scenarios-6-7.spec.js:179:7 › Scenario 7: Climate Change Policy › should start climate change game
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 个人财务决策模拟
+
+[1A[2K  难度: beginner
+
+[1A[2K  描述: 模拟个人长期财务规划决策，体验复利和时间价值概念...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:241:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+✅ 模态框打开成功
+
+[1A[2K✅ 模态框内容可见
+
+[1A[2K[110/140] [Mobile Chrome] › e2e\scenarios-6-7.spec.js:197:7 › Scenario 7: Climate Change Policy › should display climate change start page
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 8/10...
+
+[1A[2K[111/140] [Mobile Chrome] › e2e\scenarios-6-7.spec.js:210:7 › Scenario 7: Climate Change Policy › should complete climate change game flow
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+✅ 游戏开始成功
+
+[1A[2K📱 步骤8: 阅读决策选项...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 全球气候变化政策制定博弈
+
+[1A[2K  难度: advanced
+
+[1A[2K  描述: 模拟多国在气候变化政策制定中的博弈与权衡...
+
+[1A[2K
+📱 查看场景 9/10...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:241:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+📱 关闭模态框...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: AI治理与监管决策模拟
+
+[1A[2K  难度: advanced
+
+[1A[2K  描述: 模拟AI治理政策制定，平衡创新、安全、伦理等多方面考量...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:241:7 › 真实用户模拟 - 全场景自然交互走查 › 模态框交互：打开、操作、关闭
+✅ 模态框关闭成功
+
+[1A[2K🎉 模态框交互测试完成！
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+
+📱 查看场景 10/10...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+📱 步骤9: 做出决策...
+
+[1A[2K📱 步骤10: 查看反馈...
+
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:167:7 › 真实用户模拟 - 全场景自然交互走查 › 全场景卡片浏览：查看所有场景详情
+  场景名称: 复杂金融市场危机应对模拟
+
+[1A[2K  难度: advanced
+
+[1A[2K  描述: 模拟金融危机应对决策，处理复杂金融系统风险...
+
+[1A[2K
+🎉 全场景卡片浏览测试完成！
+
+[1A[2K[112/140] [Mobile Chrome] › e2e\scenarios-6-7.spec.js:257:7 › Scenario 7: Climate Change Policy › should complete multiple turns in climate change game
+[1A[2K[113/140] [Mobile Chrome] › e2e\scenarios-8-9.spec.js:39:7 › Scenario 8: AI Governance Regulation › should display AI governance start page
+[1A[2K[114/140] [Mobile Chrome] › e2e\scenarios-8-9.spec.js:21:7 › Scenario 8: AI Governance Regulation › should start AI governance game
+[1A[2K[115/140] [Mobile Chrome] › e2e\scenarios-8-9.spec.js:15:7 › Scenario 8: AI Governance Regulation › should load AI governance scenario
+[1A[2K[116/140] [Mobile Chrome] › e2e\scenarios-8-9.spec.js:52:7 › Scenario 8: AI Governance Regulation › should complete AI governance game flow
+[1A[2K[117/140] [Mobile Chrome] › e2e\scenarios-8-9.spec.js:99:7 › Scenario 8: AI Governance Regulation › should complete 3 turns in AI governance game
+[1A[2K[118/140] [Mobile Chrome] › e2e\scenarios-8-9.spec.js:154:7 › Scenario 8: AI Governance Regulation › should display AI governance game state correctly
+[1A[2K[Mobile Chrome] › e2e\real-user-simulation.spec.js:47:7 › 真实用户模拟 - 全场景自然交互走查 › 完整用户旅程：首页→场景列表→场景体验→返回
+📱 步骤11: 关闭模态框...
+
+[1A[2K[119/140] [Mobile Chrome] › e2e\scenarios-8-9.spec.js:176:7 › Scenario 8: AI Governance Regulation › should show decision feedback with correct values
+[1A[2K✅ 模态框关闭成功
+
+[1A[2K📱 步骤12: 返回首页...
+
+[1A[2K✅ 返回首页成功
+
+[1A[2K🎉 完整用户旅程测试完成！
+
+[1A[2K[120/140] [Mobile Chrome] › e2e\scenarios-8-9.spec.js:230:7 › Scenario 9: Financial Crisis Response › should load financial crisis scenario
+[1A[2K[121/140] [Mobile Chrome] › e2e\scenarios-8-9.spec.js:236:7 › Scenario 9: Financial Crisis Response › should start financial crisis game
+[1A[2K[122/140] [Mobile Chrome] › e2e\scenarios-8-9.spec.js:254:7 › Scenario 9: Financial Crisis Response › should display financial crisis start page
+[1A[2K[123/140] [Mobile Chrome] › e2e\scenarios-8-9.spec.js:267:7 › Scenario 9: Financial Crisis Response › should complete financial crisis game flow
+[1A[2K[124/140] [Mobile Chrome] › e2e\scenarios-8-9.spec.js:314:7 › Scenario 9: Financial Crisis Response › should complete 3 turns in financial crisis game
+[1A[2K[125/140] [Mobile Chrome] › e2e\scenarios-8-9.spec.js:369:7 › Scenario 9: Financial Crisis Response › should display financial crisis game state correctly
+[1A[2K[126/140] [Mobile Chrome] › e2e\scenarios-8-9.spec.js:391:7 › Scenario 9: Financial Crisis Response › should show financial crisis decision feedback with correct values
+[1A[2K[127/140] [Mobile Chrome] › e2e\scenarios-8-9.spec.js:437:7 › Scenario 9: Financial Crisis Response › should handle financial crisis game end state
+[1A[2K[128/140] [Mobile Chrome] › e2e\scenarios-interaction.spec.js:14:7 › Scenarios Interaction › should navigate to scenarios page
+[1A[2K[129/140] [Mobile Chrome] › e2e\scenarios-interaction.spec.js:23:7 › Scenarios Interaction › should load scenarios from API
+[1A[2K[130/140] [Mobile Chrome] › e2e\scenarios-interaction.spec.js:43:7 › Scenarios Interaction › should display scenario details correctly
+[1A[2K[131/140] [Mobile Chrome] › e2e\scenarios-interaction.spec.js:60:7 › Scenarios Interaction › should handle scenario selection
+[1A[2K  1) [Mobile Chrome] › e2e\scenarios-8-9.spec.js:39:7 › Scenario 8: AI Governance Regulation › should display AI governance start page 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('h3:has-text("AI治理")').first()[22m
+    [2m    - locator resolved to <h3 class="card-title">AI治理与监管决策模拟</h3>[22m
+    [2m  - attempting click action[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m  - element was detached from the DOM, retrying[22m
+    [2m    - locator resolved to <h3 class="card-title">AI治理与监管决策模拟</h3>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <span class="error-toast-icon">❌</span> from <div role="status" aria-live="polite" id="error-toast-container" class="error-toast-container">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is not stable[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 100ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m  - element was detached from the DOM, retrying[22m
+    [2m    - locator resolved to <h3 class="card-title">AI治理与监管决策模拟</h3>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div role="status" aria-live="polite" id="error-toast-container" class="error-toast-container">…</div> intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+    [2m    - <div role="status" aria-live="polite" id="error-toast-container" class="error-toast-container">…</div> intercepts pointer events[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 100ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is not stable[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 100ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <span class="error-toast-icon">❌</span> from <div role="status" aria-live="polite" id="error-toast-container" class="error-toast-container">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+    [2m    - <div role="status" aria-live="polite" id="error-toast-container" class="error-toast-container">…</div> intercepts pointer events[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+    [2m    - <span class="error-toast-icon">❌</span> from <div role="status" aria-live="polite" id="error-toast-container" class="error-toast-container">…</div> subtree intercepts pointer events[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+    [2m    - <button data-page="scenarios" class="nav-item active" onclick="NavigationManager.navigateTo('scenarios')">…</button> from <header class="app-header">…</header> subtree intercepts pointer events[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+    [2m    - <div role="alert" id="toast-1775289241592" class="error-toast error-toast-error">…</div> from <div role="status" aria-live="polite" id="error-toast-container" class="error-toast-container">…</div> subtree intercepts pointer events[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+    [2m    - <div role="status" aria-live="polite" id="error-toast-container" class="error-toast-container">…</div> intercepts pointer events[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+    [2m    - <div class="card scenario-card" onclick="if(window.GameManager){GameManager.startScenario('climate-change-policy')}else{console.error('GameManager not available')}">…</div> intercepts pointer events[22m
+    [2m  2 × retrying click action[22m
+    [2m      - waiting 500ms[22m
+    [2m      - waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <button data-page="scenarios" class="nav-item active" onclick="NavigationManager.navigateTo('scenarios')">…</button> from <header class="app-header">…</header> subtree intercepts pointer events[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+    [2m    - performing click action[22m
+    [2m    - <button class="btn btn-primary" onclick="event.stopPropagation(); if(window.GameManager){GameManager.startScenario('ai-governance-regulation')}else{console.error('GameManager not available')}">↵          开始挑战 (beginner难度)↵        </button> intercepts pointer events[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+    [2m    - <div class="card scenario-card" onclick="if(window.GameManager){GameManager.startScenario('climate-change-policy')}else{console.error('GameManager not available')}">…</div> intercepts pointer events[22m
+    [2m  2 × retrying click action[22m
+    [2m      - waiting 500ms[22m
+    [2m      - waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <button data-page="scenarios" class="nav-item active" onclick="NavigationManager.navigateTo('scenarios')">…</button> from <header class="app-header">…</header> subtree intercepts pointer events[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+
+
+      40 |     // Click the AI governance card
+      41 |     const aiCard = page.locator('h3:has-text("AI治理")').first();
+    > 42 |     await aiCard.click();
+         |                  ^
+      43 |
+      44 |     // Wait for game content
+      45 |     await page.waitForTimeout(2000);
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-8-9.spec.js:42:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\scenarios-8-9-Scenario-8-A-390cb-ay-AI-governance-start-page-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\scenarios-8-9-Scenario-8-A-390cb-ay-AI-governance-start-page-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\scenarios-8-9-Scenario-8-A-390cb-ay-AI-governance-start-page-Mobile-Chrome\error-context.md
+
+
+[1A[2K[132/140] [Mobile Chrome] › e2e\scenarios-interaction.spec.js:99:7 › Scenarios Interaction › should display game controls for each scenario
+[1A[2K[133/140] [Mobile Chrome] › e2e\scenarios-interaction.spec.js:122:7 › Scenarios Interaction › should handle game decision submission
+[1A[2K[134/140] [Mobile Chrome] › e2e\scenarios-interaction.spec.js:75:7 › Scenarios Interaction › should start game session correctly
+[1A[2K[135/140] [Mobile Chrome] › e2e\scenarios-interaction.spec.js:161:7 › Scenarios Interaction › should handle game modal interactions
+[1A[2K[136/140] [Mobile Chrome] › e2e\scenarios-interaction.spec.js:190:7 › Scenarios Interaction › should display appropriate loading states
+[1A[2K[137/140] [Mobile Chrome] › e2e\scenarios-interaction.spec.js:210:7 › Scenarios Interaction › should handle API errors gracefully
+[1A[2K[138/140] [Mobile Chrome] › e2e\scenarios-interaction.spec.js:226:7 › Scenarios Interaction › should track game session state
+[1A[2K[139/140] [Mobile Chrome] › e2e\scenarios-interaction.spec.js:249:7 › Scenarios Interaction › should provide game feedback and analysis
+[1A[2K[140/140] [Mobile Chrome] › e2e\scenarios-interaction.spec.js:273:7 › Scenarios Interaction › should maintain responsive design during game
+[1A[2K  2) [Mobile Chrome] › e2e\scenarios-8-9.spec.js:236:7 › Scenario 9: Financial Crisis Response › should start financial crisis game 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('h3:has-text("金融")').first()[22m
+    [2m    - locator resolved to <h3 class="card-title">复杂金融市场危机应对模拟</h3>[22m
+    [2m  - attempting click action[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m  - element was detached from the DOM, retrying[22m
+    [2m    - locator resolved to <h3 class="card-title">复杂金融市场危机应对模拟</h3>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <span class="error-toast-icon">❌</span> from <div role="status" aria-live="polite" id="error-toast-container" class="error-toast-container">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is not stable[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    3 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div role="status" aria-live="polite" id="error-toast-container" class="error-toast-container">…</div> intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+    [2m    - <span class="error-toast-icon">❌</span> from <div role="status" aria-live="polite" id="error-toast-container" class="error-toast-container">…</div> subtree intercepts pointer events[22m
+    [2m  2 × retrying click action[22m
+    [2m      - waiting 500ms[22m
+    [2m      - waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div role="alert" id="toast-1775289250026" class="error-toast error-toast-error">…</div> from <div role="status" aria-live="polite" id="error-toast-container" class="error-toast-container">…</div> subtree intercepts pointer events[22m
+    [2m  2 × retrying click action[22m
+    [2m      - waiting 500ms[22m
+    [2m      - waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div role="status" aria-live="polite" id="error-toast-container" class="error-toast-container">…</div> intercepts pointer events[22m
+    [2m  2 × retrying click action[22m
+    [2m      - waiting 500ms[22m
+    [2m      - waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="card scenario-card" onclick="if(window.GameManager){GameManager.startScenario('ai-governance-regulation')}else{console.error('GameManager not available')}">…</div> intercepts pointer events[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+    [2m    - <p class="card-subtitle">模拟金融危机应对决策，处理复杂金融系统风险</p> intercepts pointer events[22m
+    [2m  3 × retrying click action[22m
+    [2m      - waiting 500ms[22m
+    [2m      - waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="card scenario-card" onclick="if(window.GameManager){GameManager.startScenario('ai-governance-regulation')}else{console.error('GameManager not available')}">…</div> intercepts pointer events[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+    [2m    - performing click action[22m
+    [2m    - <div class="scenario-meta">…</div> intercepts pointer events[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+    [2m    - <div class="card scenario-card" onclick="if(window.GameManager){GameManager.startScenario('ai-governance-regulation')}else{console.error('GameManager not available')}">…</div> intercepts pointer events[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 500ms[22m
+
+
+      237 |     // Find the financial crisis card container and click it
+      238 |     const financeCard = page.locator('h3:has-text("金融")').first();
+    > 239 |     await financeCard.click();
+          |                       ^
+      240 |
+      241 |     // Wait for game modal
+      242 |     await expect(page.locator('#game-modal')).toHaveClass(/active/);
+        at D:\AIDevelop\failureLogic\tests\e2e\scenarios-8-9.spec.js:239:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\scenarios-8-9-Scenario-9-F-bd6b2-start-financial-crisis-game-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\scenarios-8-9-Scenario-9-F-bd6b2-start-financial-crisis-game-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\scenarios-8-9-Scenario-9-F-bd6b2-start-financial-crisis-game-Mobile-Chrome\error-context.md
+
+
+🧹 Cleaning up test environment...
+✅ Test environment cleaned up
+📊 Test Summary: {
+  totalTests: 0,
+  passedTests: 0,
+  failedTests: 0,
+  testDuration: 0,
+  performanceMetrics: {}
+}
+[1A[2K  2 failed
+    [Mobile Chrome] › e2e\scenarios-8-9.spec.js:39:7 › Scenario 8: AI Governance Regulation › should display AI governance start page 
+    [Mobile Chrome] › e2e\scenarios-8-9.spec.js:236:7 › Scenario 9: Financial Crisis Response › should start financial crisis game 
+  138 passed (2.9m)
