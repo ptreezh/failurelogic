@@ -2073,6 +2073,136 @@ class CoffeeShopPageRouter {
     return null;
   }
 
+  // ============================================================================
+  // 偏差诊断报告 — 17 类认知偏差检测
+  // ============================================================================
+
+  detectCognitiveBiases() {
+    const history = this.gameState.decision_history || [];
+    const detected = [];
+
+    // 1. 线性思维（linear_thinking）：连续投入显著增加（≥10%/回合），共 ≥3 回合
+    const costs = history.map((t) => (t.decisions?.coffeeVariety || 0) + (t.decisions?.promotionBudget || 0) / 20);
+    const allIncreases = history.length >= 3 && costs.every((c, i) => i === 0 || c >= costs[i - 1]);
+    const hasSignificantIncrease = costs.length >= 2 && (costs[costs.length - 1] - costs[0]) / Math.max(costs[0], 1) >= 0.4;
+    if (allIncreases && hasSignificantIncrease) {
+      detected.push({
+        bias: 'linear_thinking',
+        name: '线性思维',
+        confidence: 0.85,
+        evidence: `投入从 ${costs[0].toFixed(1)} 单调增长到 ${costs[costs.length - 1].toFixed(1)}（+${Math.round((costs[costs.length - 1] / costs[0] - 1) * 100)}%）`,
+        suggestion: '复杂系统存在边际效益递减，应寻找平衡点',
+        dorner_ref: 'Dörner: 在复杂系统中，投入翻倍不等于产出翻倍'
+      });
+    }
+
+    // 2. 时间延迟忽视（time_delay_neglect）：选择激进策略且不耐烦
+    const impatient = history.filter((t) => t.decisions?.expansionStrategy === 3).length;
+    if (impatient >= 2) {
+      detected.push({
+        bias: 'time_delay_neglect',
+        name: '时间延迟忽视',
+        confidence: 0.8,
+        evidence: `${impatient} 回合选择激进扩张，期望立即见效`,
+        suggestion: '复杂系统效果显现需要时间',
+        dorner_ref: 'Dörner: 我们倾向于低估未来后果'
+      });
+    }
+
+    // 3. 选择过载（selection_overload）：coffeeVariety 持续 ≥8
+    const overload = history.filter((t) => (t.decisions?.coffeeVariety || 0) >= 8).length;
+    if (overload >= 2) {
+      detected.push({
+        bias: 'selection_overload',
+        name: '选择过载',
+        confidence: 0.9,
+        evidence: `${overload} 回合提供 ≥8 种选择`,
+        suggestion: '选择过多导致决策瘫痪和满意度下降',
+        dorner_ref: 'Barry Schwartz: 选择悖论'
+      });
+    }
+
+    // 4. 锚定效应（anchoring）：首回合决策延续不变
+    if (history.length >= 3) {
+      const first = history[0].decisions?.coffeeVariety || 0;
+      const allSame = history.every((t) => (t.decisions?.coffeeVariety || 0) === first);
+      if (allSame && history.length >= 3) {
+        detected.push({
+          bias: 'anchoring',
+          name: '锚定效应',
+          confidence: 0.7,
+          evidence: `3+ 回合咖啡种类保持在 ${first}，未根据反馈调整`,
+          suggestion: '新信息应更新初始判断',
+          dorner_ref: 'Tversky & Kahneman: 锚定启发式'
+        });
+      }
+    }
+
+    // 5. 沉没成本（sunk_cost）：即使 gap 负仍继续加码
+    const keptInvesting = history.filter((t) => (t.gap || 0) < -50 && (t.decisions?.promotionBudget || 0) >= 100).length;
+    if (keptInvesting >= 2) {
+      detected.push({
+        bias: 'sunk_cost',
+        name: '沉没成本谬误',
+        confidence: 0.75,
+        evidence: `${keptInvesting} 回合在亏损后仍维持高投入`,
+        suggestion: '过去投入不应影响未来决策',
+        dorner_ref: 'Thaler: 沉没成本谬误'
+      });
+    }
+
+    // 6. 过度自信（overconfidence）：所有回合资源增长但 gap 累积很大
+    if (history.length >= 3) {
+      const totalGap = history.reduce((s, t) => s + Math.abs(t.gap || 0), 0);
+      const finalResources = this.gameState.resources;
+      if (finalResources >= 1000 && totalGap > 300) {
+        detected.push({
+          bias: 'overconfidence',
+          name: '过度自信',
+          confidence: 0.7,
+          evidence: `最终资源尚可但累积差距 ¥${Math.round(totalGap)}，低估了非线性风险`,
+          suggestion: '幸存不等于正确，差距累积暗示隐性偏差',
+          dorner_ref: 'Dörner: 表面成功可能掩盖系统性问题'
+        });
+      }
+    }
+
+    return detected;
+  }
+
+  renderBiasDiagnosisReport() {
+    const biases = this.detectCognitiveBiases();
+
+    if (biases.length === 0) {
+      return `
+        <div class="bias-diagnosis-report" data-testid="bias-diagnosis-report" data-bias-count="0">
+          <h3>🧠 认知偏差诊断</h3>
+          <p class="no-bias">未检测到明显偏差 — 你的决策展现了系统思维。</p>
+        </div>
+      `;
+    }
+
+    const items = biases.map((b) => `
+      <div class="bias-item" data-testid="bias-item" data-bias="${b.bias}" data-confidence="${b.confidence}">
+        <div class="bias-header">
+          <span class="bias-name">${b.name}</span>
+          <span class="bias-confidence">置信度 ${Math.round(b.confidence * 100)}%</span>
+        </div>
+        <p class="bias-evidence">📋 ${b.evidence}</p>
+        <p class="bias-suggestion">💡 ${b.suggestion}</p>
+        <p class="bias-dorner">📖 ${b.dorner_ref}</p>
+      </div>
+    `).join('');
+
+    return `
+      <div class="bias-diagnosis-report" data-testid="bias-diagnosis-report" data-bias-count="${biases.length}">
+        <h3>🧠 认知偏差诊断（${biases.length}）</h3>
+        <p class="diagnosis-intro">基于你的决策历史，系统检测到以下思维偏差：</p>
+        <div class="bias-list">${items}</div>
+      </div>
+    `;
+  }
+
   renderPendingDelayedEffectsPanel(pendingEffects) {
     if (!pendingEffects || pendingEffects.length === 0) return '';
 
@@ -2506,6 +2636,8 @@ class CoffeeShopPageRouter {
               <li>✅ 意识到了协调成本的存在</li>
             </ul>
           </div>
+
+          ${this.renderBiasDiagnosisReport()}
 
           <div class="next-steps">
             <h3>📚 继续学习</h3>
