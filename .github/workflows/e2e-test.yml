@@ -1,0 +1,98 @@
+name: E2E Tests (Failure Logic alignment)
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "e2e-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  e2e-coffee-shop:
+    name: Playwright E2E — Coffee Shop alignment
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Start static server
+        run: |
+          nohup node static-server.js > server.log 2>&1 &
+          echo $! > server.pid
+          sleep 2
+          curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3000/ || (cat server.log && exit 1)
+
+      - name: Run Playwright E2E (workers=1 for stability)
+        run: npx playwright test --config=tests/playwright.config.js --workers=1 --reporter=list
+
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: tests/playwright-report/
+          retention-days: 7
+
+      - name: Upload test results on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: tests/test-results/
+          retention-days: 7
+
+      - name: Cleanup server
+        if: always()
+        run: |
+          if [ -f server.pid ]; then
+            kill $(cat server.pid) 2>/dev/null || true
+            rm -f server.pid
+          fi
+
+  smoke-pages-deploy:
+    name: Smoke check deployed GitHub Pages
+    needs: e2e-coffee-shop
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Wait for Pages deployment to propagate
+        run: sleep 30
+
+      - name: Verify deployed page contains core markup
+        run: |
+          URL="https://ptreezh.github.io/failurelogic/"
+          echo "Checking $URL ..."
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "::error::GitHub Pages returned HTTP $HTTP_CODE (expected 200)"
+            exit 1
+          fi
+          # 验证关键元素在页面上
+          curl -s "$URL" | grep -q 'Failure Logic' || (echo "::error::Brand 'Failure Logic' not found" && exit 1)
+          curl -s "$URL" | grep -q 'page-router-base' || (echo "::error::page-router-base script missing" && exit 1)
+          # 确认 3 个空 router 引用已移除
+          if curl -s "$URL" | grep -q 'ai-governance-router.js'; then
+            echo "::warning::ai-governance-router.js still referenced (should be removed)"
+          fi
+          echo "✓ Deployed page smoke check passed"
