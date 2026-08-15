@@ -2203,6 +2203,83 @@ class CoffeeShopPageRouter {
     `;
   }
 
+  // ============================================================================
+  // 失败尸检 + 真实案例对照 — Dörner 反馈四层次之"终局反馈"
+  // ============================================================================
+
+  renderAutopsyTimeline() {
+    const history = this.gameState.decision_history || [];
+    if (history.length === 0) {
+      return '<p class="no-autopsy">无决策历史</p>';
+    }
+
+    const timeline = history.map((turn) => {
+      const gap = turn.gap || 0;
+      const gapClass = gap < -50 ? 'critical' : gap < 0 ? 'negative' : 'positive';
+      const gapSign = gap >= 0 ? '+' : '';
+      const decisionSummary = Object.entries(turn.decisions || {})
+        .filter(([k, v]) => v !== null && v !== undefined && v !== 0 && v !== '')
+        .map(([k, v]) => `${this.getDecisionLabel(k)}=${v}`)
+        .join(', ') || '无决策';
+
+      return `
+        <div class="autopsy-turn" data-testid="autopsy-turn" data-turn="${turn.turn}" data-gap-class="${gapClass}">
+          <div class="autopsy-turn-header">
+            <span class="autopsy-turn-num">第 ${turn.turn} 月</span>
+            <span class="autopsy-gap ${gapClass}">差距 ${gapSign}¥${Math.round(gap)}</span>
+          </div>
+          <div class="autopsy-decisions">${decisionSummary}</div>
+          <div class="autopsy-stats">
+            <span>期望利润：¥${Math.round(turn.linear_expectation?.total_expected_profit || 0)}</span>
+            <span>实际利润：¥${Math.round(turn.actual_result?.actual_profit || 0)}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="autopsy-timeline" data-testid="autopsy-timeline">
+        <h3>📊 决策时间线（尸检）</h3>
+        <p class="autopsy-hint">Dörner：每个决策都应追溯其完整因果链</p>
+        <div class="autopsy-turns">${timeline}</div>
+      </div>
+    `;
+  }
+
+  renderHistoricalCaseComparison() {
+    const biases = this.detectCognitiveBiases();
+    const relevantCase = (typeof pickRelevantCase === 'function') ? pickRelevantCase(biases) : null;
+
+    if (!relevantCase) {
+      return '';
+    }
+
+    return `
+      <div class="historical-case" data-testid="historical-case" data-case="${relevantCase.case_name}">
+        <h3>📚 真实案例对照</h3>
+        <div class="case-header">
+          <span class="case-name">${relevantCase.case_name}</span>
+          <span class="case-year">${relevantCase.year}</span>
+        </div>
+        <p class="case-summary">${relevantCase.summary}</p>
+        <div class="case-flow">
+          <div class="case-decision">
+            <strong>📋 当时决策：</strong>${relevantCase.decision_made}
+          </div>
+          <div class="case-outcome">
+            <strong>📉 实际结果：</strong>${relevantCase.actual_outcome}
+          </div>
+          <div class="case-dorner">
+            <strong>📖 理论对应：</strong>${relevantCase.dorner_ref}
+          </div>
+          <div class="case-lesson">
+            <strong>🎓 教训：</strong>${relevantCase.lesson}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   renderPendingDelayedEffectsPanel(pendingEffects) {
     if (!pendingEffects || pendingEffects.length === 0) return '';
 
@@ -2638,6 +2715,8 @@ class CoffeeShopPageRouter {
           </div>
 
           ${this.renderBiasDiagnosisReport()}
+          ${this.renderAutopsyTimeline()}
+          ${this.renderHistoricalCaseComparison()}
 
           <div class="next-steps">
             <h3>📚 继续学习</h3>

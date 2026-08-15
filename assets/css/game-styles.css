@@ -1416,6 +1416,135 @@ input[type="range"]::-moz-range-thumb:hover {
 .bias-dorner { color: #6b21a8; font-style: italic; }
 
 /* ============================================
+   失败尸检 + 历史案例对照 — Dörner《失败的逻辑》终局反馈
+   Iteration 7
+   ============================================ */
+
+.autopsy-timeline {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  margin: var(--space-lg) 0;
+  border-left: 4px solid #475569;
+}
+
+.autopsy-timeline h3 {
+  margin: 0 0 var(--space-xs) 0;
+  color: #1e293b;
+}
+
+.autopsy-hint {
+  margin: 0 0 var(--space-md) 0;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.autopsy-turns {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.autopsy-turn {
+  background: rgba(255, 255, 255, 0.7);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  border-left: 3px solid #cbd5e1;
+}
+
+.autopsy-turn[data-gap-class="critical"] {
+  border-left-color: #dc2626;
+  background: rgba(254, 226, 226, 0.7);
+}
+
+.autopsy-turn[data-gap-class="negative"] {
+  border-left-color: #f59e0b;
+  background: rgba(254, 243, 199, 0.5);
+}
+
+.autopsy-turn[data-gap-class="positive"] {
+  border-left-color: #10b981;
+}
+
+.autopsy-turn-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-xs);
+  font-weight: 600;
+}
+
+.autopsy-turn-num { color: #1e293b; }
+.autopsy-gap.critical { color: #b91c1c; }
+.autopsy-gap.negative { color: #c2410c; }
+.autopsy-gap.positive { color: #047857; }
+
+.autopsy-decisions {
+  color: #475569;
+  font-size: 0.9rem;
+  margin-bottom: var(--space-xs);
+}
+
+.autopsy-stats {
+  display: flex;
+  gap: var(--space-md);
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.historical-case {
+  background: linear-gradient(135deg, #faf5ff 0%, #ede9fe 100%);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  margin: var(--space-lg) 0;
+  border-left: 4px solid #7c3aed;
+}
+
+.historical-case h3 {
+  margin: 0 0 var(--space-sm) 0;
+  color: #4c1d95;
+}
+
+.case-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-md);
+}
+
+.case-name {
+  font-weight: 700;
+  color: #4c1d95;
+  font-size: 1.1rem;
+}
+
+.case-year {
+  font-size: 0.85rem;
+  color: #6d28d9;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.case-summary {
+  margin: var(--space-md) 0;
+  color: #5b21b6;
+  line-height: 1.5;
+}
+
+.case-flow > div {
+  margin: var(--space-sm) 0;
+  padding: var(--space-sm);
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: var(--radius-sm);
+  color: #4c1d95;
+  line-height: 1.5;
+  font-size: 0.92rem;
+}
+
+.case-flow strong { color: #4c1d95; }
+
+/* ============================================
    Compact Modal Layout - Fit content without scrolling
    ============================================ */
 
