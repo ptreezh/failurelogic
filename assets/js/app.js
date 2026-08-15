@@ -1975,10 +1975,12 @@ class CoffeeShopPageRouter {
   renderStateDisplay() {
     const pendingEffects = this.getPendingDelayedEffects();
     const pendingPanelHtml = this.renderPendingDelayedEffectsPanel(pendingEffects);
+    const tippingHtml = this.renderTippingPointWarning();
 
     return `
       <div class="state-display">
         <h3>📊 当前状态</h3>
+        ${tippingHtml}
         <div class="state-grid">
           <div class="state-item">
             <span class="state-label">😊 满意度</span>
@@ -1996,6 +1998,72 @@ class CoffeeShopPageRouter {
         ${pendingPanelHtml}
       </div>
     `;
+  }
+
+  // ============================================================================
+  // 临界点预警 + 级联反应可视化 — Dörner《失败的逻辑》失败四层次之
+  // "阈值崩溃"与"级联失败"
+  // ============================================================================
+
+  // 临界点定义：资金 < 0 → 破产级联
+  static TIPPING_POINTS = {
+    BANKRUPTCY: { threshold: 0, label: '破产阈值', cascade: 'system_collapse' },
+    SATISFACTION_COLLAPSE: { threshold: 20, label: '满意度崩溃阈值', cascade: 'churn_cascade' },
+    REPUTATION_COLLAPSE: { threshold: 15, label: '声誉崩溃阈值', cascade: 'negative_word_of_mouth' }
+  };
+
+  getCriticalDistance() {
+    // 距离破产阈值的距离（越大越安全）
+    return Math.round(this.gameState.resources);
+  }
+
+  getActiveTippingPoints() {
+    const active = [];
+    const r = this.gameState.resources;
+    const s = this.gameState.satisfaction;
+    const rep = this.gameState.reputation;
+    if (r < 200) active.push({ ...CoffeeShopPageRouter.TIPPING_POINTS.BANKRUPTCY, distance: r });
+    if (s < 30) active.push({ ...CoffeeShopPageRouter.TIPPING_POINTS.SATISFACTION_COLLAPSE, distance: s });
+    if (rep < 25) active.push({ ...CoffeeShopPageRouter.TIPPING_POINTS.REPUTATION_COLLAPSE, distance: rep });
+    return active;
+  }
+
+  renderTippingPointWarning() {
+    const active = this.getActiveTippingPoints();
+    if (active.length === 0) return '';
+
+    const items = active.map((tp) => {
+      const severity = tp.distance < tp.threshold ? 'breached' : tp.distance < 100 ? 'critical' : 'warning';
+      const bannerText = severity === 'breached'
+        ? `🚨 ${tp.label}已被突破（${tp.distance} ≤ ${tp.threshold}）— 系统进入不可逆 ${tp.cascade}`
+        : `⚠️ 接近${tp.label}：当前 ${tp.distance}，距阈值 ${tp.threshold} 仅 ${tp.distance - tp.threshold}`;
+      return `<div class="tipping-banner tipping-${severity}" data-testid="tipping-banner" data-severity="${severity}" data-cascade="${tp.cascade}">
+        <span class="tipping-label">${bannerText}</span>
+      </div>`;
+    }).join('');
+
+    return `<div class="tipping-warnings" data-testid="tipping-warnings">${items}</div>`;
+  }
+
+  getCascadeRootCause() {
+    // 从决策历史中找出触发级联失败的关键决策
+    const history = this.gameState.decision_history || [];
+    if (history.length === 0) return null;
+
+    // 找到最后一个让资金大幅减少或满意度大幅下降的决策
+    for (let i = history.length - 1; i >= 0; i--) {
+      const turn = history[i];
+      const gap = turn.gap || 0;
+      if (gap < -100) {
+        return {
+          turn: turn.turn,
+          decisions: turn.decisions,
+          gap,
+          narrative: turn.actual_result?.narrative || '该回合出现了严重的非线性后果'
+        };
+      }
+    }
+    return null;
   }
 
   renderPendingDelayedEffectsPanel(pendingEffects) {

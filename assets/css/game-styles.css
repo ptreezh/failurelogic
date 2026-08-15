@@ -1023,6 +1023,92 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 /* ============================================
+   临界点预警 + 级联反应 — Dörner《失败的逻辑》失败四层次之
+   "阈值崩溃"与"级联失败"
+   Iteration 3
+   ============================================ */
+
+.tipping-warnings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+
+.tipping-banner {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-left: 4px solid;
+  animation: tipping-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes tipping-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.tipping-banner.tipping-warning {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+  border-left-color: #f59e0b;
+}
+
+.tipping-banner.tipping-critical {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #991b1b;
+  border-left-color: #dc2626;
+}
+
+.tipping-banner.tipping-breached {
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  color: #fff;
+  border-left-color: #7f1d1d;
+  font-weight: 700;
+  animation: tipping-pulse-critical 0.8s ease-in-out infinite;
+}
+
+@keyframes tipping-pulse-critical {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.tipping-label {
+  display: block;
+}
+
+.cascade-chain {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #f1f5f9;
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  margin: var(--space-md) 0;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.85rem;
+  border-left: 4px solid #ef4444;
+}
+
+.cascade-chain h4 {
+  margin: 0 0 var(--space-sm) 0;
+  color: #fca5a5;
+}
+
+.cascade-step {
+  padding: var(--space-xs) 0;
+  border-bottom: 1px solid #334155;
+}
+
+.cascade-step:last-child {
+  border-bottom: none;
+}
+
+.cascade-step-arrow {
+  color: #f87171;
+  margin-right: var(--space-xs);
+}
+
+/* ============================================
    Compact Modal Layout - Fit content without scrolling
    ============================================ */
 
