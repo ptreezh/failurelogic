@@ -25,9 +25,11 @@ jobs:
       - name: Deploy to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: |
-          railway login --token ${{ secrets.RAILWAY_TOKEN }}
-          railway up --service failure-logic-api
+        # Railway CLI v4+ reads RAILWAY_TOKEN env var directly; the
+        # `railway login --token ...` form was removed in v4 and the
+        # `railway up` step was failing with "unexpected argument '--token'".
+        # Just run `railway up` — env var carries auth.
+        run: railway up --service failure-logic-api --detach
           
       - name: Get deployment URL
         env:
