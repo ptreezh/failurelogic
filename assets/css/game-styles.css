@@ -1109,6 +1109,106 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 /* ============================================
+   觉醒时刻 overlay — Dörner《失败的逻辑》核心训练机制
+   Iteration 4
+   ============================================ */
+
+.awakening-overlay {
+  background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 50%, #fbbf24 100%);
+  border-left: 6px solid #d97706;
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  margin: var(--space-lg) 0;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
+  animation: awakening-flash 0.6s ease-out;
+}
+
+@keyframes awakening-flash {
+  0% { transform: scale(0.95); opacity: 0; }
+  50% { transform: scale(1.02); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.awakening-overlay[data-level="moderate"] {
+  background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+  border-left-color: #2563eb;
+}
+
+.awakening-overlay[data-level="strong"] {
+  background: linear-gradient(135deg, #fed7aa 0%, #fb923c 100%);
+  border-left-color: #ea580c;
+}
+
+.awakening-overlay[data-level="profound"] {
+  background: linear-gradient(135deg, #fecaca 0%, #ef4444 100%);
+  border-left-color: #b91c1c;
+  color: #fff;
+}
+
+.awakening-overlay[data-level="profound"] .awakening-learning-point,
+.awakening-overlay[data-level="profound"] .awakening-evidence {
+  color: #fff;
+}
+
+.awakening-emoji {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: var(--space-sm);
+}
+
+.awakening-title {
+  text-align: center;
+  margin: 0 0 var(--space-md) 0;
+  color: inherit;
+  font-size: 1.5rem;
+}
+
+.awakening-type-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+  letter-spacing: 0.5px;
+}
+
+.awakening-message {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin: var(--space-md) 0;
+}
+
+.awakening-learning-point {
+  background: rgba(255, 255, 255, 0.5);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  margin: var(--space-md) 0;
+  line-height: 1.6;
+}
+
+.awakening-overlay[data-level="profound"] .awakening-learning-point {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.awakening-evidence {
+  margin-top: var(--space-md);
+  font-size: 0.9rem;
+}
+
+.awakening-evidence ul {
+  margin: var(--space-xs) 0 0 0;
+  padding-left: var(--space-lg);
+}
+
+.awakening-evidence li {
+  margin: var(--space-xs) 0;
+}
+
+/* ============================================
    Compact Modal Layout - Fit content without scrolling
    ============================================ */
 

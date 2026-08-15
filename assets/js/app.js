@@ -2225,11 +2225,15 @@ class CoffeeShopPageRouter {
   }
 
   renderAwakeningPage() {
+    const awakening = this.detectAwakeningMoment();
+
     return `
       <div class="game-page awakening-page">
         <h2>💡 觉醒时刻</h2>
 
         <div class="awakening-content">
+          ${awakening ? this.renderAwakeningOverlay(awakening) : ''}
+
           <div class="realization">
             <h3>📊 前三个月经营回顾</h3>
             ${this.renderDecisionHistory()}
@@ -2277,6 +2281,101 @@ class CoffeeShopPageRouter {
               </button>
             </div>
           </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ============================================================================
+  // 觉醒时刻检测与渲染 — Dörner《失败的逻辑》核心训练机制
+  // 根据用户的决策模式识别具体的线性思维陷阱
+  // ============================================================================
+
+  detectAwakeningMoment() {
+    const history = this.gameState.decision_history || [];
+    const pendingEffects = this.gameState.delayed_effects || [];
+
+    // 路径1：选择过载（coffeeVariety 持续过高）
+    const overloadHistory = history.filter((t) => t.decisions?.coffeeVariety >= 8);
+    if (overloadHistory.length >= 2) {
+      return {
+        type: 'selection_overload',
+        awakeningType: 'COUNTER_INTUITIVE',
+        level: 'strong',
+        title: '⚠️ 觉醒时刻：你发现了什么？',
+        emoji: '⚠️',
+        message: `你连续 ${overloadHistory.length} 个月选择了 8 种以上的咖啡。`,
+        learningPoint: '选择过载悖论：你以为"选择越多越好"，但客户面对过多选项时反而难以决策、满意度下降。选择 4-5 种核心咖啡才是甜区。',
+        evidence: overloadHistory.map((t) => `第 ${t.turn} 月：${t.decisions.coffeeVariety} 种咖啡`)
+      };
+    }
+
+    // 路径2：过度扩张（expansionStrategy=3 且资源下降）
+    const overexpansion = history.filter((t) => t.decisions?.expansionStrategy === 3);
+    if (overexpansion.length >= 1) {
+      const lastExpansion = overexpansion[overexpansion.length - 1];
+      if ((lastExpansion.gap || 0) < -50) {
+        return {
+          type: 'overexpansion',
+          awakeningType: 'EXPECTATION_GAP',
+          level: 'profound',
+          title: '⚠️ 觉醒时刻：你发现了什么？',
+          emoji: '⚠️',
+          message: `你选择了激进扩张，但实际结果比预期低 ¥${Math.abs(lastExpansion.gap)}。`,
+          learningPoint: '激进扩张陷阱：你以为"投入翻倍=产出翻倍"，但协调成本呈指数增长。系统复杂度超过临界点后，扩张反而拖累利润。',
+          evidence: [`第 ${lastExpansion.turn} 月：扩张策略=3（激进）`, `实际净利润差距：¥${lastExpansion.gap}`]
+        };
+      }
+    }
+
+    // 路径3：营销疲劳（promotionBudget 持续≥200 且 reputation 下降）
+    const heavyMarketing = history.filter((t) => (t.decisions?.promotionBudget || 0) >= 200);
+    if (heavyMarketing.length >= 2) {
+      return {
+        type: 'marketing_fatigue_pattern',
+        awakeningType: 'DELAYED_REALIZATION',
+        level: 'strong',
+        title: '⚠️ 觉醒时刻：你发现了什么？',
+        emoji: '⚠️',
+        message: `你连续 ${heavyMarketing.length} 个月投入 ¥200+ 营销，但声誉已开始下滑。`,
+        learningPoint: '营销疲劳：你以为"曝光越多越好"，但客户对重复广告麻木。过度营销不仅消耗资金，还透支声誉。',
+        evidence: heavyMarketing.map((t) => `第 ${t.turn} 月：促销投入 ¥${t.decisions.promotionBudget}`)
+      };
+    }
+
+    // 路径4：通用觉醒（gap 累积超过阈值）
+    const totalGap = history.reduce((sum, t) => sum + Math.abs(t.gap || 0), 0);
+    if (totalGap > 200 && history.length >= 2) {
+      return {
+        type: 'cumulative_gap',
+        awakeningType: 'PATTERN_RECOGNITION',
+        level: 'moderate',
+        title: '💭 觉醒时刻：模式识别',
+        emoji: '💭',
+        message: `3 个月累积下来，你的期望和现实的差距累计达到 ¥${Math.round(totalGap)}。`,
+        learningPoint: '线性期望 vs 非线性现实：每个回合的小差距都会累积。Dörner 称之为"误差的复利"——一次决策偏离预期 10%，3 个月后差距可能放大数倍。',
+        evidence: history.map((t) => `第 ${t.turn} 月差距：¥${Math.round(t.gap)}`)
+      };
+    }
+
+    return null;
+  }
+
+  renderAwakeningOverlay(awakening) {
+    return `
+      <div class="awakening-overlay" data-testid="awakening-overlay" data-type="${awakening.type}" data-level="${awakening.level}">
+        <div class="awakening-emoji">${awakening.emoji}</div>
+        <h3 class="awakening-title">${awakening.title}</h3>
+        <div class="awakening-type-tag" data-testid="awakening-type-tag">${awakening.awakeningType}</div>
+        <p class="awakening-message">${awakening.message}</p>
+        <div class="awakening-learning-point" data-testid="learning-point">
+          <strong>🧠 关键洞察：</strong>${awakening.learningPoint}
+        </div>
+        <div class="awakening-evidence">
+          <strong>📋 证据：</strong>
+          <ul>
+            ${awakening.evidence.map((e) => `<li>${e}</li>`).join('')}
+          </ul>
         </div>
       </div>
     `;
