@@ -1359,6 +1359,111 @@ class CoffeeShopPageRouter {
     };
   }
 
+  // ============================================================================
+  // 即时影响计算 — Dörner《失败的逻辑》失败四层次之"立即失败"
+  // 每个决策都应让用户感知到当前回合的状态变化，不能只给线性期望
+  // ============================================================================
+
+  calculateImmediateImpact(decision, value) {
+    // 即时影响：本次决策的成本和确定性收益（不依赖其他决策或延迟效应）
+    // 月底仍可能有协同/延迟变化，这里给出"现在可见"的部分
+    const impact = {
+      resources_delta: 0,
+      satisfaction_delta: 0,
+      reputation_delta: 0,
+      reason: '',
+      category: 'unknown'
+    };
+
+    switch (decision) {
+      case 'coffeeVariety': {
+        const newVariety = value - 3;
+        const cost = newVariety * 15;
+        impact.resources_delta = -cost;
+        impact.satisfaction_delta = newVariety * 2;
+        impact.category = 'product';
+        impact.reason = `新增${newVariety}种咖啡，消耗¥${cost}，短期客户感知+${newVariety * 2}`;
+        break;
+      }
+      case 'promotionBudget': {
+        // 营销即时消耗 + 即时获客
+        impact.resources_delta = -value;
+        impact.satisfaction_delta = 3;
+        impact.reputation_delta = value / 50;
+        impact.category = 'marketing';
+        impact.reason = `投入¥${value}营销，立即消耗预算并获得少量曝光`;
+        break;
+      }
+      case 'seats': {
+        const seatCost = value * 50;
+        impact.resources_delta = -seatCost;
+        impact.category = 'capacity';
+        impact.reason = `新增${value}座位，消耗¥${seatCost}，需时间让客户填满`;
+        break;
+      }
+      case 'premiumPrice': {
+        const priceDelta = value - 9;
+        impact.reputation_delta = priceDelta > 0 ? -1 : 1;
+        impact.category = 'pricing';
+        impact.reason = priceDelta > 0
+          ? `涨价¥${priceDelta}，可能流失价格敏感客户`
+          : `降价¥${Math.abs(priceDelta)}，吸引更多客户但利润降低`;
+        break;
+      }
+      case 'expansionStrategy': {
+        const costs = { 1: 50, 2: 150, 3: 300 };
+        const cost = costs[value] || 0;
+        impact.resources_delta = -cost;
+        impact.category = 'expansion';
+        impact.reason = `选择${value === 1 ? '保守' : value === 2 ? '稳健' : '激进'}扩张，立即消耗¥${cost}`;
+        break;
+      }
+      default:
+        impact.reason = '决策已记录，影响将在月底汇总';
+    }
+
+    // 选择过载的协调成本是即时可见的（与 nonlinear_thinking 对齐）
+    if (decision === 'coffeeVariety' && value >= 8) {
+      impact.satisfaction_delta -= 5;
+      impact.reason += '；⚠️ 超过8种咖啡触发选择过载';
+    }
+
+    return impact;
+  }
+
+  renderImmediateImpactCard(impact) {
+    if (!impact || impact.category === 'unknown') return '';
+
+    const renderDelta = (delta) => {
+      if (delta === 0) return '<span class="delta neutral">±0</span>';
+      const cls = delta > 0 ? 'positive' : 'negative';
+      const arrow = delta > 0 ? '↑' : '↓';
+      return `<span class="delta ${cls}">${arrow}${Math.abs(delta).toFixed(1)}</span>`;
+    };
+
+    return `
+      <div class="immediate-impact" data-testid="immediate-impact" data-category="${impact.category}">
+        <h3>📍 即时影响（本回合）</h3>
+        <div class="impact-grid">
+          <div class="impact-row">
+            <span class="impact-label">💰 资金</span>
+            ${renderDelta(impact.resources_delta)}
+          </div>
+          <div class="impact-row">
+            <span class="impact-label">😊 满意度</span>
+            ${renderDelta(impact.satisfaction_delta)}
+          </div>
+          <div class="impact-row">
+            <span class="impact-label">⭐ 声誉</span>
+            ${renderDelta(impact.reputation_delta)}
+          </div>
+        </div>
+        <p class="impact-reason">${impact.reason}</p>
+        <p class="impact-hint">💡 月底将揭示完整的非线性效应（协同成本/竞争反应/延迟反馈）</p>
+      </div>
+    `;
+  }
+
   // ========== Turn Summary ==========
 
   calculateTurnSummary() {
@@ -1754,6 +1859,10 @@ class CoffeeShopPageRouter {
     const decisionLabel = this.getDecisionLabel(feedback.decision);
     const unit = this.getDecisionUnit(feedback.decision);
 
+    // 即时影响卡 — Dörner 失败四层次之"立即失败"
+    const immediateImpact = this.calculateImmediateImpact(feedback.decision, feedback.value);
+    const immediateImpactHtml = this.renderImmediateImpactCard(immediateImpact);
+
     // Get illustration for feedback page
     let illustrationHtml = '';
     try {
@@ -1780,6 +1889,8 @@ class CoffeeShopPageRouter {
             <p>${thinking}</p>
             <p>期望净利润：${expectedProfit >= 0 ? '+' : ''}¥${expectedProfit}</p>
           </div>
+
+          ${immediateImpactHtml}
 
           ${feedback.warning ? `<p class="warning">${feedback.warning}</p>` : ''}
 

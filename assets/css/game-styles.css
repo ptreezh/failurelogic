@@ -870,6 +870,84 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 /* ============================================
+   即时影响卡 — Dörner《失败的逻辑》失败四层次之"立即失败"
+   Iteration 1
+   ============================================ */
+
+.immediate-impact {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  margin: var(--space-lg) 0;
+  border-left: 4px solid #f59e0b;
+}
+
+.immediate-impact h3 {
+  margin: 0 0 var(--space-md) 0;
+  color: #92400e;
+  font-size: 1.1rem;
+}
+
+.impact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xs);
+  margin: var(--space-md) 0;
+}
+
+.impact-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-xs) var(--space-sm);
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-sm);
+}
+
+.impact-label {
+  font-weight: 600;
+  color: #78350f;
+}
+
+.delta {
+  font-weight: 700;
+  font-family: var(--font-mono, monospace);
+  font-size: 1rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.delta.positive {
+  color: #047857;
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.delta.negative {
+  color: #b91c1c;
+  background: rgba(239, 68, 68, 0.15);
+}
+
+.delta.neutral {
+  color: #6b7280;
+  background: rgba(107, 114, 128, 0.1);
+}
+
+.impact-reason {
+  margin: var(--space-md) 0 var(--space-sm) 0;
+  color: #78350f;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.impact-hint {
+  margin: 0;
+  color: #92400e;
+  font-size: 0.85rem;
+  font-style: italic;
+  opacity: 0.85;
+}
+
+/* ============================================
    Compact Modal Layout - Fit content without scrolling
    ============================================ */
 
