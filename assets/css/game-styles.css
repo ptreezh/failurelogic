@@ -948,6 +948,81 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 /* ============================================
+   待显现影响面板 — Dörner《失败的逻辑》失败四层次之"延迟失败"
+   Iteration 2
+   ============================================ */
+
+.pending-effects-panel {
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+  border-radius: var(--radius-lg);
+  border-left: 4px solid #7c3aed;
+}
+
+.pending-effects-panel h4 {
+  margin: 0 0 var(--space-xs) 0;
+  color: #5b21b6;
+  font-size: 0.95rem;
+}
+
+.pending-hint {
+  margin: 0 0 var(--space-sm) 0;
+  color: #6d28d9;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.pending-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.pending-effect {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  gap: var(--space-sm);
+  align-items: center;
+  padding: var(--space-xs) var(--space-sm);
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+.pending-target {
+  font-weight: 600;
+  color: #4c1d95;
+}
+
+.pending-delta {
+  font-family: var(--font-mono, monospace);
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.pending-delta.positive {
+  color: #047857;
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.pending-delta.negative {
+  color: #b91c1c;
+  background: rgba(239, 68, 68, 0.15);
+}
+
+.pending-desc {
+  color: #5b21b6;
+}
+
+.pending-when {
+  color: #6d28d9;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+/* ============================================
    Compact Modal Layout - Fit content without scrolling
    ============================================ */
 

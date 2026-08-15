@@ -1158,6 +1158,9 @@ class CoffeeShopPageRouter {
   makeDecision(key, value) {
     this.tempDecisions[key] = value;
 
+    // 决策时立即入队延迟效应 — 让用户能立即在状态栏看到"待显现影响"
+    this.queueDelayedEffectForDecision(key, value);
+
     // Update page based on decision
     if (this.currentPage === 'TURN_1_DECISION_1') {
       this.currentPage = 'TURN_1_DECISION_1_FEEDBACK';
@@ -1169,6 +1172,40 @@ class CoffeeShopPageRouter {
       this.currentPage = 'TURN_2_DECISION_2_FEEDBACK';
     } else if (this.currentPage === 'TURN_3_DECISION_1') {
       this.currentPage = 'TURN_3_DECISION_1_FEEDBACK';
+    }
+  }
+
+  queueDelayedEffectForDecision(decision, value) {
+    const trigger_turn = this.currentTurn + 1;
+    if (decision === 'coffeeVariety' && value >= 8) {
+      this.queueDelayedEffect({
+        type: 'overload_penalty',
+        amount: -30,
+        description: '选择过载 — 客户因选项过多而流失',
+        trigger_turn,
+        source_turn: this.currentTurn,
+        target: 'satisfaction'
+      });
+    }
+    if (decision === 'promotionBudget' && value >= 200) {
+      this.queueDelayedEffect({
+        type: 'marketing_fatigue',
+        amount: -20,
+        description: '营销疲劳 — 客户对重复广告麻木',
+        trigger_turn: trigger_turn + 1,
+        source_turn: this.currentTurn,
+        target: 'reputation'
+      });
+    }
+    if (decision === 'expansionStrategy' && value === 3) {
+      this.queueDelayedEffect({
+        type: 'overexpansion_synergy',
+        amount: -50,
+        description: '过度扩张 — 协调成本激增',
+        trigger_turn: trigger_turn + 1,
+        source_turn: this.currentTurn,
+        target: 'resources'
+      });
     }
   }
 
@@ -1310,6 +1347,18 @@ class CoffeeShopPageRouter {
     this.currentTurn++;
     this.currentDecisionIndex = 0;
     this.tempDecisions = {};
+
+    // 应用当前回合（到达触发回合）到期的延迟效应
+    const newlyApplied = this.applyPendingDelayedEffects();
+    newlyApplied.forEach((eff) => {
+      if (eff.target === 'resources') {
+        this.gameState.resources += eff.amount;
+      } else if (eff.target === 'satisfaction') {
+        this.gameState.satisfaction += eff.amount;
+      } else if (eff.target === 'reputation') {
+        this.gameState.reputation += eff.amount;
+      }
+    });
 
     // Set page for next turn
     if (this.currentTurn === 2) {
@@ -1612,8 +1661,101 @@ class CoffeeShopPageRouter {
 
   // ========== Game State Updates ==========
 
+  // ============================================================================
+  // 延迟效应队列 — Dörner《失败的逻辑》失败四层次之"延迟失败"
+  // 决策的真实后果不总是在当下显现。把延迟效应纳入 gameState 并向用户可见
+  // ============================================================================
+
+  queueDelayedEffect(effect) {
+    if (!this.gameState.delayed_effects) {
+      this.gameState.delayed_effects = [];
+    }
+    // effect: { type, amount, description, trigger_turn, source_turn }
+    this.gameState.delayed_effects.push({
+      id: `de_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+      ...effect,
+      applied: false
+    });
+  }
+
+  collectDelayedEffectsForCurrentTurn() {
+    // 根据本回合决策，生成延迟效应
+    const nextTurn = this.currentTurn + 1;
+    const queued = [];
+
+    if (this.tempDecisions.coffeeVariety && this.tempDecisions.coffeeVariety >= 8) {
+      queued.push({
+        type: 'overload_penalty',
+        amount: -30,
+        description: '选择过载 — 客户因选项过多而流失',
+        trigger_turn: nextTurn,
+        source_turn: this.currentTurn,
+        target: 'satisfaction'
+      });
+    }
+
+    if (this.tempDecisions.promotionBudget && this.tempDecisions.promotionBudget >= 200) {
+      queued.push({
+        type: 'marketing_fatigue',
+        amount: -20,
+        description: '营销疲劳 — 客户对重复广告麻木',
+        trigger_turn: nextTurn + 1,
+        source_turn: this.currentTurn,
+        target: 'reputation'
+      });
+    }
+
+    if (this.tempDecisions.expansionStrategy === 3) {
+      queued.push({
+        type: 'overexpansion_synergy',
+        amount: -50,
+        description: '过度扩张 — 协调成本激增',
+        trigger_turn: nextTurn + 1,
+        source_turn: this.currentTurn,
+        target: 'resources'
+      });
+    }
+
+    queued.forEach((e) => this.queueDelayedEffect(e));
+    return queued;
+  }
+
+  getPendingDelayedEffects() {
+    if (!this.gameState.delayed_effects) return [];
+    return this.gameState.delayed_effects.filter(
+      (e) => !e.applied && e.trigger_turn > this.currentTurn
+    );
+  }
+
+  applyPendingDelayedEffects() {
+    if (!this.gameState.delayed_effects) return [];
+    const applied = [];
+    this.gameState.delayed_effects.forEach((e) => {
+      if (!e.applied && e.trigger_turn <= this.currentTurn) {
+        e.applied = true;
+        applied.push(e);
+      }
+    });
+    return applied;
+  }
+
   submitTurn() {
     const summary = this.calculateTurnSummary();
+
+    // 收集并入队本回合的延迟效应
+    const queued = this.collectDelayedEffectsForCurrentTurn();
+
+    // 应用当前回合到期的延迟效应
+    const applied = this.applyPendingDelayedEffects();
+    applied.forEach((eff) => {
+      if (eff.target === 'resources') {
+        this.gameState.resources += eff.amount;
+      } else if (eff.target === 'satisfaction') {
+        this.gameState.satisfaction += eff.amount;
+      } else if (eff.target === 'reputation') {
+        this.gameState.reputation += eff.amount;
+      }
+    });
 
     // Update game state
     this.gameState.resources = summary.actual_result.resources;
@@ -1627,7 +1769,9 @@ class CoffeeShopPageRouter {
       decisions: { ...this.tempDecisions },
       linear_expectation: summary.linear_expectation,
       actual_result: summary.actual_result,
-      gap: summary.gap
+      gap: summary.gap,
+      delayed_queued: queued,
+      delayed_applied: applied
     });
 
     // Clear temp decisions
@@ -1829,6 +1973,9 @@ class CoffeeShopPageRouter {
   }
 
   renderStateDisplay() {
+    const pendingEffects = this.getPendingDelayedEffects();
+    const pendingPanelHtml = this.renderPendingDelayedEffectsPanel(pendingEffects);
+
     return `
       <div class="state-display">
         <h3>📊 当前状态</h3>
@@ -1846,6 +1993,34 @@ class CoffeeShopPageRouter {
             <span class="state-value">${Math.round(this.gameState.reputation)}/100</span>
           </div>
         </div>
+        ${pendingPanelHtml}
+      </div>
+    `;
+  }
+
+  renderPendingDelayedEffectsPanel(pendingEffects) {
+    if (!pendingEffects || pendingEffects.length === 0) return '';
+
+    const items = pendingEffects.map((eff) => {
+      const turnsAway = Math.max(1, eff.trigger_turn - this.currentTurn);
+      const direction = eff.amount < 0 ? '↓' : '↑';
+      const cls = eff.amount < 0 ? 'negative' : 'positive';
+      const targetEmoji = eff.target === 'resources' ? '💰' : eff.target === 'satisfaction' ? '😊' : '⭐';
+      return `
+        <div class="pending-effect" data-testid="pending-effect" data-effect-type="${eff.type}">
+          <span class="pending-target">${targetEmoji} ${eff.target}</span>
+          <span class="pending-delta ${cls}">${direction}${Math.abs(eff.amount)}</span>
+          <span class="pending-desc">${eff.description}</span>
+          <span class="pending-when">📅 第${eff.trigger_turn}月显现（还有${turnsAway}回合）</span>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="pending-effects-panel" data-testid="pending-effects-panel">
+        <h4>📅 待显现影响（${pendingEffects.length}）</h4>
+        <p class="pending-hint">Dörner：复杂系统的后果常常延迟显现，这些是已触发但尚未生效的影响</p>
+        <div class="pending-list">${items}</div>
       </div>
     `;
   }
