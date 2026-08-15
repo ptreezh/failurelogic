@@ -1,0 +1,24 @@
+# Render Blueprint
+# Auto-deploys the api-server/ FastAPI backend on every push to main.
+# Connect this repo at https://render.com → New → Blueprint → pick this repo.
+# Once linked, Render watches main and redeploys on every commit.
+
+services:
+  - type: web
+    name: failure-logic-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    # Render exposes $PORT to the container; CMD in Dockerfile binds to it.
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: LOG_LEVEL
+        value: "INFO"
+      # CORS allow-list — keep the GitHub Pages origin allowed so the
+      # SPA at https://ptreezh.github.io/failurelogic/ can call us.
+      - key: ALLOWED_ORIGINS
+        value: "https://ptreezh.github.io"

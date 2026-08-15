@@ -100,3 +100,18 @@ jobs:
             echo "::warning::ai-governance-router.js still referenced (should be removed)"
           fi
           echo "✓ Deployed page smoke check passed"
+
+      - name: Verify Render backend health (best-effort)
+        # Render 部署由用户在 dashboard 手动触发，不在 CI 控制范围。
+        # 这里只做 best-effort 健康检查，不阻塞 workflow。
+        continue-on-error: true
+        run: |
+          RENDER_URL="https://failure-logic-api.onrender.com"
+          echo "Probing $RENDER_URL/health ..."
+          # Render free tier 冷启动可能 30-60s，用 90s 超时
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 90 "$RENDER_URL/health" || echo "000")
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "✓ Render backend reachable"
+          else
+            echo "::warning::Render backend returned HTTP $HTTP_CODE (may not be deployed yet, or cold start)"
+          fi
