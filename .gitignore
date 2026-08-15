@@ -200,6 +200,8 @@ tests/scene-ux-audit.js
 tests/playwright-report/data/
 tests/diagnose-api-connection.py
 tests/test-illustration.js
+# E2E specs (从 v3.5 起重新入库)
+!tests/e2e/
 
 # Root-level ad-hoc Python scripts (212 files - development artifacts)
 *.py

@@ -60,16 +60,15 @@ export default defineConfig({
   },
 
   // Configure projects for major browsers
+  // 优先使用 chromium（已通过 npx playwright install 安装），保留 Edge/移动端作为可选
   projects: [
     {
-      name: 'msedge',
+      name: 'chromium',
       use: {
-        ...devices['Desktop Edge'],
+        ...devices['Desktop Chrome'],
         headless: process.env.HEADLESS !== 'false',
       },
     },
-
-    // Test against mobile viewports
     {
       name: 'Mobile Chrome',
       use: {
