@@ -1098,7 +1098,14 @@ class NavigationManager {
   }
 
   static getProfilePage() {
-    return `<section class="page-section"><h1>用户档案</h1><p>个人资料页面</p></section>`;
+    let trainingPanelHtml = '';
+    if (typeof TrainingStageTracker !== 'undefined') {
+      if (typeof window.__trainingTracker === 'undefined') {
+        window.__trainingTracker = new TrainingStageTracker();
+      }
+      trainingPanelHtml = window.__trainingTracker.renderProfilePanel();
+    }
+    return `<section class="page-section"><h1>用户档案</h1>${trainingPanelHtml}</section>`;
   }
 
   static getSettingsPage() {
@@ -2429,6 +2436,23 @@ class CoffeeShopPageRouter {
     const finalResources = Math.round(this.gameState.resources);
     const finalSatisfaction = Math.round(this.gameState.satisfaction);
     const finalReputation = Math.round(this.gameState.reputation);
+
+    // 记录本局到训练阶段跟踪器
+    if (typeof TrainingStageTracker !== 'undefined' && !this._stageRecorded) {
+      const awakening = this.detectAwakeningMoment();
+      const gapTotal = (this.gameState.decision_history || []).reduce((s, t) => s + Math.abs(t.gap || 0), 0);
+      const biases = [];
+      if (awakening) biases.push({ type: awakening.type });
+      if (typeof window.__trainingTracker === 'undefined') {
+        window.__trainingTracker = new TrainingStageTracker();
+      }
+      window.__trainingTracker.recordGameOutcome({
+        awakening_count: awakening ? 1 : 0,
+        gap_total: gapTotal,
+        biases_detected: biases
+      });
+      this._stageRecorded = true;
+    }
 
     let rating = '';
     let message = '';
