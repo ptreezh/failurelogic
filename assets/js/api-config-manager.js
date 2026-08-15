@@ -48,9 +48,11 @@ class APIConfigManager {
       return ['http://localhost:8000'];
     }
 
-    // Production environment - Railway as primary, with fallbacks
+    // Production environment - Render as primary, with fallbacks.
+    // (2026-08-15: Railway 试用期过期，token 失效；切换到 Render Blueprint。)
     return [
-      'https://failure-logic-api-production.up.railway.app', // Primary: Railway (always available)
+      'https://failure-logic-api.onrender.com', // Primary: Render (new home)
+      'https://failure-logic-api-production.up.railway.app', // Backup: Railway (may be dead — token expired)
       'https://psychic-meme-rvq4v7pqwx3xxrr-8000.app.github.dev', // Backup: Codespaces (port 8000)
       'https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev',  // Legacy: Old Codespaces
     ];
