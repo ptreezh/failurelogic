@@ -243,3 +243,15 @@ tests/playwright-report/index.html
 tests/unit/run-relationship-tests.js
 tests/playwright-report/index.html
 tests/unit/run-relationship-tests.js
+
+# Secrets and local config (NEVER commit; see .env.example)
+.env
+.env.*
+!.env.example
+.kode-config.json
+.kode-config.*.json
+!.kode-config.example.json
+
+# Local agent artifacts
+.kilo/
+.qwen/
