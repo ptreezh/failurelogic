@@ -60,7 +60,7 @@ try:
     logger.info("✅ 成功导入uvicorn")
     
     # 使用环境变量中的端口
-    port = int(os.environ.get("PORT", 8080))
+    port = int(os.environ.get("PORT", 8000))
     logger.info(f"🚀 启动服务器，端口: {port}")
     
     # 启动服务器

@@ -1632,7 +1632,7 @@ async def serve_not_found(full_path: str):
 if __name__ == "__main__":
     # 优先使用环境变量 PORT（Railway、Render 等云平台）
     # 然后尝试命令行参数，最后使用默认端口 8081
-    port = int(os.getenv("PORT", sys.argv[1] if len(sys.argv) > 1 else 8082))
+    port = int(os.getenv("PORT", sys.argv[1] if len(sys.argv) > 1 else 8000))
     print(f"🚀 启动认知陷阱平台API服务器 (端口: {port})")
     print(f"📊 API文档: http://localhost:{port}/docs")
     uvicorn.run(app, host="0.0.0.0", port=port)

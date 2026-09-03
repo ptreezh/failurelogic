@@ -18,8 +18,8 @@ def start_server():
         from start import app
         import uvicorn
         
-        print("Starting cognitive traps platform API server on port 8082...")
-        uvicorn.run(app, host="0.0.0.0", port=8082, log_level="info")
+        print("Starting cognitive traps platform API server on port 8000...")
+        uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
     except Exception as e:
         print(f"Error starting server: {e}")
         import traceback
@@ -27,7 +27,7 @@ def start_server():
 
 def check_server_health():
     """Function to check if server is running"""
-    url = "http://localhost:8082/health"
+    url = "http://localhost:8000/health"
     timeout = 30  # seconds
     interval = 1  # second
     
@@ -37,8 +37,8 @@ def check_server_health():
             response = requests.get(url, timeout=5)
             if response.status_code == 200:
                 print(f"✓ Server is running! Health check passed.")
-                print(f"✓ API available at: http://localhost:8082")
-                print(f"✓ API docs available at: http://localhost:8082/docs")
+                print(f"✓ API available at: http://localhost:8000")
+                print(f"✓ API docs available at: http://localhost:8000/docs")
                 return True
         except (requests.ConnectionError, requests.ConnectTimeout):
             pass
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     
     # Check if the server becomes available
     if check_server_health():
-        print("\nThe cognitive traps platform API server is now running on port 8082!")
+        print("\nThe cognitive traps platform API server is now running on port 8000!")
         print("Press Ctrl+C to stop the server.")
         
         # Keep the main thread alive

@@ -68,7 +68,7 @@ try:
     logger.info("Successfully imported uvicorn")
 
     # 使用环境变量中的端口，这对于Railway部署很重要
-    port = int(os.environ.get("PORT", 8082))
+    port = int(os.environ.get("PORT", 8000))
     logger.info(f"Starting server on port {port}...")
     logger.info(f"Server will listen on http://0.0.0.0:{port}")
     
