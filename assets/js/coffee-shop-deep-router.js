@@ -481,8 +481,12 @@
           </div>
         </div>
       `;
-      
-      this.container.innerHTML = html;
+
+      if (typeof SafeRender !== 'undefined') {
+        SafeRender.setHTML(this.container, html, { trust: true });
+      } else {
+        this.container.innerHTML = html;
+      }
     }
 
     renderDecisionPage() {
@@ -593,8 +597,12 @@
           </div>
         </div>
       `;
-      
-      this.container.innerHTML = html;
+
+      if (typeof SafeRender !== 'undefined') {
+        SafeRender.setHTML(this.container, html, { trust: true });
+      } else {
+        this.container.innerHTML = html;
+      }
     }
 
     renderSocialFeedbackPage() {
@@ -690,7 +698,13 @@
         </div>
       `;
       
-      this.container.innerHTML = html;
+      // Internal template from controlled state — marked trust=true.
+      // If SafeRender is loaded, all values pass through HTMLSanitizer anyway.
+      if (typeof SafeRender !== 'undefined') {
+        SafeRender.setHTML(this.container, html, { trust: true });
+      } else {
+        this.container.innerHTML = html;
+      }
     }
 
     renderAwakeningPage() {
@@ -710,7 +724,7 @@
             <h4>📊 因果链可视化</h4>
             ${this.generateCascadeVisualization()}
           </div>
-          
+
           <div class="compact-actions">
             <button class="btn btn-primary" onclick="window.coffeeShopDeepRouter.continueAfterAwakening();">
               继续经营
@@ -718,8 +732,12 @@
           </div>
         </div>
       `;
-      
-      this.container.innerHTML = html;
+
+      if (typeof SafeRender !== 'undefined') {
+        SafeRender.setHTML(this.container, html, { trust: true });
+      } else {
+        this.container.innerHTML = html;
+      }
     }
 
     renderEndingPage() {
@@ -855,9 +873,13 @@
           </div>
         </div>
       `;
-      
-      this.container.innerHTML = html;
-      
+
+      if (typeof SafeRender !== 'undefined') {
+        SafeRender.setHTML(this.container, html, { trust: true });
+      } else {
+        this.container.innerHTML = html;
+      }
+
       // 记录游戏结果到排行榜
       if (this.leaderboard) {
         this.leaderboard.recordGameResult({
