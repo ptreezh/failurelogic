@@ -251,14 +251,10 @@ try:
 except ImportError:
     print("认知测试端点不可用")
 
-# 导入并注册场景端点
-try:
-    from endpoints.scenarios import router as scenarios_router
-
-    app.include_router(scenarios_router)
-    print("✓ 场景端点已注册")
-except ImportError as e:
-    print(f"场景端点不可用: {e}")
+# 场景端点由 start.py 自身定义 (line 449 等) 直接挂载，
+# 不再 include endpoints/scenarios.py（其路由与 start.py 冲突导致死代码）。
+# R2.2 修复：删除 endpoints/scenarios.py
+print("✓ 场景端点已注册（由 start.py 直接定义）")
 
 # 导入并注册测试结果端点
 try:
