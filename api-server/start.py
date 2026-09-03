@@ -35,15 +35,18 @@ app = FastAPI(
     version="2.0.0",
 )
 
-# 配置CORS中间件
+# 配置 CORS 中间件（从 ALLOWED_ORIGINS 环境变量读取，逗号分隔）
+# 默认允许 GitHub Pages（生产）和 localhost（开发）
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS", "https://ptreezh.github.io,http://localhost:3000,http://localhost:8000")
+allowed_origins = [o.strip() for o in allowed_origins_env.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-    # 添加中文支持
-    allow_origin_regex=".*"
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
+    allow_origin_regex=None,  # 严格白名单
 )
 
 # 注册全局异常处理器
