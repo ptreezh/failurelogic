@@ -4,3 +4,6 @@ python-multipart>=0.0.6
 requests>=2.31.0
 pydantic[email]>=2.5.0
 pydantic-settings>=2.1.0
+
+# Test dependencies (separate from production)
+# Use: pip install -r requirements-test.txt for tests
