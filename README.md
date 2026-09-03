@@ -38,7 +38,15 @@
 
 ## API 配置
 
-应用支持多种 API 端点配置，包括本地开发和云端部署。
+应用通过 `assets/js/api-config-manager.js` 自动切换 API 端点：
+
+| 环境 | 后端 |
+|------|------|
+| 本地开发 | http://localhost:8000 |
+| 生产（主） | https://failure-logic-api.onrender.com |
+| 生产（备） | Railway / Codespaces（已弃用）|
+
+后端自动 fallback 机制：30 秒健康检查 + 2 秒超时 + 指数退避。
 
 ## 认知科学基础
 

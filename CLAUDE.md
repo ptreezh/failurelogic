@@ -21,14 +21,18 @@ Failure Logic is a cognitive bias education interactive game platform based on D
 python api-server/start.py
 
 # Start on custom port
-python api-server/start.py 8082
+PORT=9000 python api-server/start.py
 
 # Start with health check (recommended)
 python api-server/launch_server.py
 
-# Run backend tests
-cd api-server
+# Install test deps
+pip install -r api-server/requirements-test.txt
+
+# Run backend tests (from repo root)
 pytest
+pytest -v  # verbose
+pytest api-server/logic/test_pattern_tracker.py  # specific
 pytest -v  # verbose output
 pytest logic/test_cognitive_bias_analysis.py  # specific test file
 ```
@@ -92,7 +96,7 @@ pytest test_exponential_calculations.py -v
 
 The application uses a **multi-source API fallback system** for reliability:
 
-1. **Development**: `http://localhost:8000` (or 8082)
+1. **Development**: `http://localhost:8000`
 2. **Production** (in priority order):
    - Primary: `https://psychic-meme-rvq4v7pqwx3xxrr-8000.app.github.dev` (Codespaces)
    - Backup: `https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev`
@@ -106,22 +110,26 @@ The application uses a **multi-source API fallback system** for reliability:
 
 ```
 api-server/
-├── start.py              # Main FastAPI application entry point
+├── start.py              # Main FastAPI application entry point (~1640 lines, 2026-09-03)
 ├── launch_server.py      # Server launcher with health monitoring
+├── server_runner.py      # Direct uvicorn launcher
+├── debug_server.py       # Debug-mode launcher (full tracebacks)
 ├── endpoints/            # API route handlers
 │   ├── cognitive_tests.py      # Cognitive bias test endpoints
-│   ├── scenarios.py            # Game scenario endpoints
-│   └── test_results.py         # Test result endpoints
+│   ├── interactive.py          # LLM-driven interactive endpoints
+│   └── test_results.py         # Test result endpoints (mock data)
 ├── logic/                # Core business logic
-│   ├── cognitive_bias_analysis.py      # Bias detection algorithms
-│   ├── exponential_calculations.py     # Exponential growth calculations
+│   ├── cognitive_bias_analysis.py       # Bias detection
 │   ├── enhanced_cognitive_bias_detection.py  # Advanced bias detection
-│   └── feedback_system.py       # Feedback generation logic
+│   ├── exponential_calculations.py      # Exponential/compound calcs (R2.3 restored)
+│   ├── compound_interest.py             # Compound interest (R2.3 restored)
+│   ├── pattern_tracker.py               # Decision pattern tracker (R2.1 extracted)
+│   └── feedback_system.py               # Feedback generation
 ├── models/               # Pydantic data models
 ├── data/                 # Static scenario/test data (JSON)
-│   ├── game_scenarios.json
-│   ├── historical_cases.json
-│   └── exponential_questions.json
+│   └── scenarios.py             # BASE_SCENARIOS list (R2.3 restored)
+├── loaders/              # Scenario data loading mechanisms (R2.3 restored)
+│   └── scenario_loader.py
 └── utils/                # Error handlers and utilities
 ```
 
@@ -213,7 +221,7 @@ The frontend automatically routes API requests based on hostname via `api-config
 
 ## Important Notes
 
-- **API Port Configuration**: The API uses port 8000 by default, but 8082 is also supported. Check `launch_server.py` for the active port.
+- **API Port Configuration**: Backend defaults to port 8000 (Dockerfile + unified across all launchers in 2026-09-03). Override with `PORT` env var.
 - **PWA Support**: The app is installable as a PWA. Ensure `manifest.json` and service worker registration remain functional when modifying frontend.
 - **Cross-Origin Issues**: The backend has CORS enabled for all origins during development. Adjust for production.
 - **Difficulty Levels**: When creating game sessions, always pass the `difficulty` parameter to ensure proper scenario scaling.
