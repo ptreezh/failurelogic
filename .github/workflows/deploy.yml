@@ -27,16 +27,23 @@ jobs:
           # .gitmodules 中 archived-scenarios/planning-with-files 的 url 丢失，
           # 导致默认 recursive submodules 模式失败。Pages 部署不需要子模块内容。
           submodules: false
-      
+
+      - name: Prepare Pages artifact (exclude secrets, api-server, tests)
+        id: prepare
+        run: |
+          ARTIFACT_DIR=$(bash scripts/prepare-pages.sh)
+          echo "artifact_dir=$ARTIFACT_DIR" >> "$GITHUB_OUTPUT"
+          echo "Files prepared:"
+          find "$ARTIFACT_DIR" -type f | head -20
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
-          path: '.'
-      
+          path: ${{ steps.prepare.outputs.artifact_dir }}
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

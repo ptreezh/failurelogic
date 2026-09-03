@@ -146,6 +146,7 @@ validation_report.json
 
 # Scripts, skills, types, assets features (not yet production)
 scripts/
+!scripts/prepare-pages.sh
 skills/
 types/
 assets/js/adaptive-learning-system.js
