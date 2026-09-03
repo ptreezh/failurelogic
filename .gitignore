@@ -203,8 +203,9 @@ tests/test-illustration.js
 # E2E specs (从 v3.5 起重新入库)
 !tests/e2e/
 
-# Root-level ad-hoc Python scripts (212 files - development artifacts)
-*.py
+# Root-level ad-hoc Python scripts (development artifacts only at repo root)
+# Scope to root: /*.py would catch all files; /*.py restricts to root
+/*.py
 
 # Ad-hoc test/diagnostic scripts (not pytest, not run by CI)
 analyze_*.py
