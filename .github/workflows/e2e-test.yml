@@ -39,6 +39,23 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install backend test dependencies
+        run: pip install -r api-server/requirements-test.txt
+
+      - name: Run backend pytest
+        run: |
+          python -m pytest api-server/logic/ \
+            --tb=short \
+            -q
+
+      - name: Start static server
+
       - name: Start static server
         run: |
           nohup node static-server.js > server.log 2>&1 &
