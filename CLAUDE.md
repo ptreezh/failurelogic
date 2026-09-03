@@ -10,7 +10,7 @@ Failure Logic is a cognitive bias education interactive game platform based on D
 - **Frontend**: Vanilla JavaScript (ES6+), PWA with Service Worker
 - **Backend**: Python FastAPI (port 8000/8082)
 - **Testing**: Playwright E2E tests
-- **Deployment**: GitHub Pages (frontend), GitHub Codespaces (backend)
+- **Deployment**: GitHub Pages (frontend), Render.com (backend)
 
 ## Common Development Commands
 
@@ -98,9 +98,8 @@ The application uses a **multi-source API fallback system** for reliability:
 
 1. **Development**: `http://localhost:8000`
 2. **Production** (in priority order):
-   - Primary: `https://psychic-meme-rvq4v7pqwx3xxrr-8000.app.github.dev` (Codespaces)
-   - Backup: `https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev`
-   - Fallback: Vercel deployments
+   - Primary: `https://failure-logic-api.onrender.com` (Render)
+   - Backup: Railway (token expired) → Codespaces (legacy)
 
 **Key Files:**
 - `assets/js/api-config-manager.js` - API source management with health checks and automatic failover
@@ -212,12 +211,12 @@ The Playwright config starts both:
 - PWA manifest: `manifest.json`
 - Service worker: `sw.js` (for offline support)
 
-### Backend (Codespaces/Vercel)
+### Backend (Render)
 
-- Primary: GitHub Codespaces at `https://psychic-meme-rvq4v7pqwx3xxrr-8000.app.github.dev`
-- Backup: Vercel deployment
+- Primary: Render.com at `https://failure-logic-api.onrender.com` (since 2026-08-15)
+- Migrated from Railway (token expired) → Render Blueprint
 
-The frontend automatically routes API requests based on hostname via `api-config-manager.js`.
+The frontend automatically routes API requests via `assets/js/api-config-manager.js`.
 
 ## Important Notes
 
