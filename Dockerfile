@@ -10,27 +10,30 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+# Install system dependencies (gcc for any compiled deps, curl for HEALTHCHECK)
+RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy API server requirements first for caching
-COPY api-server/requirements.txt .
+# Copy API server requirements only (don't pollute with root requirements.txt
+# which contains pytest/playwright/aiohttp - test-only deps)
+COPY api-server/requirements.txt /tmp/requirements.txt
 
-# Install Python dependencies
+# Install Python dependencies (production only)
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir -r /tmp/requirements.txt && \
+    rm /tmp/requirements.txt
 
 # Copy the rest of the application
 COPY . .
 
-# Expose port (Railway will set PORT environment variable)
+# Expose port (Render/Railway will set PORT environment variable)
 EXPOSE $PORT
 
-# Health check (adjust for Railway)
+# Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD curl -f http://localhost:${PORT}/health || exit 1
 
-# Run the application with proper host binding for Railway
+# Run the application
 CMD ["sh", "-c", "uvicorn api-server.start:app --host 0.0.0.0 --port ${PORT}"]
