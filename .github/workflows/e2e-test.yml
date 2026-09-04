@@ -50,9 +50,26 @@ jobs:
 
       - name: Run backend pytest
         run: |
-          python -m pytest api-server/logic/ \
+          python -m pytest api-server/logic api-server/utils api-server/models \
             --tb=short \
             -q
+
+      - name: Run backend pytest with coverage
+        run: |
+          python -m pytest api-server/logic api-server/utils api-server/models \
+            --cov=api-server/logic \
+            --cov=api-server/utils \
+            --cov=api-server/models \
+            --cov-report=term-missing \
+            --cov-report=xml \
+            --cov-fail-under=40
+
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
 
       - name: Start static server
 
