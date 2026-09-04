@@ -345,7 +345,285 @@ class EnhancedCognitiveBiasAnalyzer:
             )
         
         return safe_numeric_operation(operation)
-    
+    @handle_calculation_errors
+    def detect_hindsight_bias(
+        self, past_estimate: float, would_have_estimated: float
+    ) -> BiasDetectionResult:
+        """
+        事后诸葛亮偏差：事后认为"我早就知道"
+        测量事后估算与原估算的偏离程度
+        """
+        def operation():
+            if past_estimate == 0:
+                error_ratio = float("inf") if would_have_estimated != 0 else 0
+            else:
+                error_ratio = abs(would_have_estimated - past_estimate) / abs(past_estimate)
+            confidence_score = min(error_ratio, 1.0) if error_ratio != float("inf") else 1.0
+            if error_ratio > 2.0:
+                strength_level = "severe"
+            elif error_ratio > 1.0:
+                strength_level = "strong"
+            elif error_ratio > 0.3:
+                strength_level = "moderate"
+            else:
+                strength_level = "weak"
+            detected = confidence_score >= self.bias_thresholds[BiasType.HINDSIGHT_BIAS]
+            explanation = f"事后估算{past_estimate}与原估算{would_have_estimated}偏离{abs(error_ratio):.2%}。事后诸葛亮偏差指人们在事件发生后认为自己早就预见到结果。"
+            supporting_evidence = [f"事后/原估算偏离: {abs(error_ratio):.2%}", "记忆被结果污染"]
+            recommendations = ["记录决策时的真实预期", "避免用结果反推判断"]
+            return BiasDetectionResult(
+                bias_type=BiasType.HINDSIGHT_BIAS,
+                detected=detected,
+                confidence_score=confidence_score,
+                strength_level=strength_level,
+                explanation=explanation,
+                supporting_evidence=supporting_evidence,
+                recommendations=recommendations,
+                timestamp=datetime.now(),
+            )
+        return safe_numeric_operation(operation)
+
+    @handle_calculation_errors
+    def detect_representativeness_bias(
+        self, stereotype_match: float, base_rate: float
+    ) -> BiasDetectionResult:
+        """
+        代表性启发偏差：忽略基础概率
+        stereotype_match: 用户对"是否符合典型特征"的估计 (0-1)
+        base_rate: 客观基础概率 (0-1)
+        """
+        def operation():
+            if base_rate <= 0:
+                error_ratio = float("inf") if stereotype_match > 0 else 0
+            else:
+                error_ratio = abs(stereotype_match - base_rate) / base_rate
+            confidence_score = min(error_ratio, 1.0) if error_ratio != float("inf") else 1.0
+            if error_ratio > 3.0:
+                strength_level = "severe"
+            elif error_ratio > 1.5:
+                strength_level = "strong"
+            elif error_ratio > 0.5:
+                strength_level = "moderate"
+            else:
+                strength_level = "weak"
+            detected = confidence_score >= self.bias_thresholds[BiasType.REPRESENTATIVENESS_BIAS]
+            explanation = f"代表性估计{stereotype_match:.0%}与基础概率{base_rate:.0%}偏离{abs(error_ratio):.2%}。代表性启发偏差指人们倾向于根据是否符合典型特征来判断概率，忽视基础概率。"
+            supporting_evidence = [f"代表性 vs 基础率偏离: {abs(error_ratio):.2%}", "忽视统计先验"]
+            recommendations = ["使用贝叶斯推理", "明确区分典型性与概率"]
+            return BiasDetectionResult(
+                bias_type=BiasType.REPRESENTATIVENESS_BIAS,
+                detected=detected,
+                confidence_score=confidence_score,
+                strength_level=strength_level,
+                explanation=explanation,
+                supporting_evidence=supporting_evidence,
+                recommendations=recommendations,
+                timestamp=datetime.now(),
+            )
+        return safe_numeric_operation(operation)
+
+    @handle_calculation_errors
+    def detect_loss_aversion_bias(
+        self, loss_amount: float, gain_amount: float
+    ) -> BiasDetectionResult:
+        """
+        损失厌恶偏差：损失的心理冲击 > 等量收益
+        检测用户对相同金额损失/收益的不对称反应
+        """
+        def operation():
+            if gain_amount <= 0:
+                ratio = float("inf") if loss_amount > 0 else 0
+            else:
+                ratio = loss_amount / gain_amount
+            # 标准理论：损失厌恶系数约 2.0-2.5
+            confidence_score = min(max((ratio - 1.0) / 2.0, 0), 1.0)
+            if ratio > 3.0:
+                strength_level = "severe"
+            elif ratio > 2.0:
+                strength_level = "strong"
+            elif ratio > 1.5:
+                strength_level = "moderate"
+            else:
+                strength_level = "weak"
+            detected = confidence_score >= self.bias_thresholds[BiasType.LOSS_AVERSION_BIAS]
+            explanation = f"损失/收益比={ratio:.2f}。损失厌恶指相同金额的损失带来的负面心理冲击约为收益的{ratio:.1f}倍。"
+            supporting_evidence = [f"损失/收益比例: {ratio:.2f}", f"理论基准: 2.0-2.5"]
+            recommendations = ["客观评估损失与收益", "避免因避免损失而错失机会"]
+            return BiasDetectionResult(
+                bias_type=BiasType.LOSS_AVERSION_BIAS,
+                detected=detected,
+                confidence_score=confidence_score,
+                strength_level=strength_level,
+                explanation=explanation,
+                supporting_evidence=supporting_evidence,
+                recommendations=recommendations,
+                timestamp=datetime.now(),
+            )
+        return safe_numeric_operation(operation)
+
+    @handle_calculation_errors
+    def detect_status_quo_bias(
+        self, current_choice: float, alternative_choice: float
+    ) -> BiasDetectionResult:
+        """
+        现状偏好：倾向于维持现状
+        检测用户对"改变 vs 不变"的偏好强度
+        """
+        def operation():
+            if current_choice + alternative_choice == 0:
+                ratio = 0
+            else:
+                ratio = current_choice / (current_choice + alternative_choice)
+            # 0.5 = 完全中立；偏离越大越偏向现状
+            deviation = abs(ratio - 0.5) * 2  # 归一化到 0-1
+            confidence_score = deviation
+            if deviation > 0.6:
+                strength_level = "severe"
+            elif deviation > 0.4:
+                strength_level = "strong"
+            elif deviation > 0.2:
+                strength_level = "moderate"
+            else:
+                strength_level = "weak"
+            detected = deviation >= self.bias_thresholds[BiasType.STATUS_QUO_BIAS]
+            explanation = f"现状选择偏好度={deviation:.2%}。现状偏好指人们倾向于维持当前状态，即使改变可能带来更好结果。"
+            supporting_evidence = [f"选择偏离中立: {deviation:.2%}", "对变化的阻力"]
+            recommendations = ["明确评估每个选项", "考虑沉没成本"]
+            return BiasDetectionResult(
+                bias_type=BiasType.STATUS_QUO_BIAS,
+                detected=detected,
+                confidence_score=confidence_score,
+                strength_level=strength_level,
+                explanation=explanation,
+                supporting_evidence=supporting_evidence,
+                recommendations=recommendations,
+                timestamp=datetime.now(),
+            )
+        return safe_numeric_operation(operation)
+
+    @handle_calculation_errors
+    def detect_anchor_adjustment_bias(
+        self, high_anchor_estimate: float, low_anchor_estimate: float, reasonable_value: float
+    ) -> BiasDetectionResult:
+        """
+        锚定与调整偏差：初始锚点影响最终估计
+        比较不同锚点下估算与合理值的差异
+        """
+        def operation():
+            if reasonable_value == 0:
+                return BiasDetectionResult(
+                    bias_type=BiasType.ANCHOR_ADJUSTMENT_BIAS,
+                    detected=False,
+                    confidence_score=0.0,
+                    strength_level="weak",
+                    explanation="合理值为零，无法计算锚定偏差",
+                    supporting_evidence=[],
+                    recommendations=["提供非零参考值"],
+                    timestamp=datetime.now(),
+                )
+            high_deviation = abs(high_anchor_estimate - reasonable_value) / abs(reasonable_value)
+            low_deviation = abs(low_anchor_estimate - reasonable_value) / abs(reasonable_value)
+            avg_deviation = (high_deviation + low_deviation) / 2
+            confidence_score = min(avg_deviation, 1.0)
+            if avg_deviation > 1.0:
+                strength_level = "severe"
+            elif avg_deviation > 0.5:
+                strength_level = "strong"
+            elif avg_deviation > 0.2:
+                strength_level = "moderate"
+            else:
+                strength_level = "weak"
+            detected = confidence_score >= self.bias_thresholds[BiasType.ANCHOR_ADJUSTMENT_BIAS]
+            explanation = f"高锚点估算偏离{high_deviation:.2%}，低锚点估算偏离{low_deviation:.2%}。锚定偏差指不同初始锚点导致不同最终估计。"
+            supporting_evidence = [f"高锚点偏离: {high_deviation:.2%}", f"低锚点偏离: {low_deviation:.2%}", f"平均偏离: {avg_deviation:.2%}"]
+            recommendations = ["多角度独立估算", "使用历史数据基准"]
+            return BiasDetectionResult(
+                bias_type=BiasType.ANCHOR_ADJUSTMENT_BIAS,
+                detected=detected,
+                confidence_score=confidence_score,
+                strength_level=strength_level,
+                explanation=explanation,
+                supporting_evidence=supporting_evidence,
+                recommendations=recommendations,
+                timestamp=datetime.now(),
+            )
+        return safe_numeric_operation(operation)
+
+    @handle_calculation_errors
+    def detect_framing_effect_bias(
+        self, positive_frame_choice: float, negative_frame_choice: float
+    ) -> BiasDetectionResult:
+        """
+        框架效应偏差：相同事实的不同表述导致不同选择
+        positive_frame_choice: 正向框架下的选择概率 (0-1)
+        negative_frame_choice: 负向框架下的选择概率 (0-1)
+        """
+        def operation():
+            deviation = abs(positive_frame_choice - negative_frame_choice)
+            confidence_score = min(deviation, 1.0)
+            if deviation > 0.5:
+                strength_level = "severe"
+            elif deviation > 0.3:
+                strength_level = "strong"
+            elif deviation > 0.15:
+                strength_level = "moderate"
+            else:
+                strength_level = "weak"
+            detected = confidence_score >= self.bias_thresholds[BiasType.FRAMING_EFFECT_BIAS]
+            explanation = f"正向框架选择{positive_frame_choice:.0%}，负向框架{negative_frame_choice:.0%}，偏离{deviation:.2%}。框架效应指相同实质的不同表述影响决策。"
+            supporting_evidence = [f"框架差异: {deviation:.2%}", "语言影响判断"]
+            recommendations = ["关注实质而非表述", "多种框架分析同一问题"]
+            return BiasDetectionResult(
+                bias_type=BiasType.FRAMING_EFFECT_BIAS,
+                detected=detected,
+                confidence_score=confidence_score,
+                strength_level=strength_level,
+                explanation=explanation,
+                supporting_evidence=supporting_evidence,
+                recommendations=recommendations,
+                timestamp=datetime.now(),
+            )
+        return safe_numeric_operation(operation)
+
+    @handle_calculation_errors
+    def detect_social_proof_bias(
+        self, group_behavior: float, independent_judgment: float
+    ) -> BiasDetectionResult:
+        """
+        社会认同偏差：倾向于跟随他人行为
+        group_behavior: 跟随群体的程度 (0-1)
+        independent_judgment: 独立判断的程度 (0-1)
+        """
+        def operation():
+            if group_behavior + independent_judgment == 0:
+                ratio = 0
+            else:
+                ratio = group_behavior / (group_behavior + independent_judgment)
+            confidence_score = ratio
+            if ratio > 0.8:
+                strength_level = "severe"
+            elif ratio > 0.65:
+                strength_level = "strong"
+            elif ratio > 0.5:
+                strength_level = "moderate"
+            else:
+                strength_level = "weak"
+            detected = confidence_score >= self.bias_thresholds[BiasType.SOCIAL_PROOF_BIAS]
+            explanation = f"跟随群体程度={ratio:.2%}。社会认同指人们倾向于根据多数人行为做决策。"
+            supporting_evidence = [f"群体跟随度: {ratio:.2%}", "可能忽视独立判断"]
+            recommendations = ["基于证据独立判断", "考虑少数派的合理意见"]
+            return BiasDetectionResult(
+                bias_type=BiasType.SOCIAL_PROOF_BIAS,
+                detected=detected,
+                confidence_score=confidence_score,
+                strength_level=strength_level,
+                explanation=explanation,
+                supporting_evidence=supporting_evidence,
+                recommendations=recommendations,
+                timestamp=datetime.now(),
+            )
+        return safe_numeric_operation(operation)
+
     @handle_calculation_errors
     def detect_all_biases(self, user_data: Dict[str, Any]) -> List[BiasDetectionResult]:
         """
@@ -397,9 +675,63 @@ class EnhancedCognitiveBiasAnalyzer:
             )
             results.append(result)
         
-        # TODO: 实现剩余的认知偏差检测方法
-        # 由于篇幅限制，这里只实现了部分偏差检测
-        
+        # Hindsight bias (事后诸葛亮)
+        if all(key in user_data for key in ['past_estimate', 'would_have_estimated']):
+            result = self.detect_hindsight_bias(
+                user_data['past_estimate'],
+                user_data['would_have_estimated']
+            )
+            results.append(result)
+
+        # Representativeness bias (代表性启发)
+        if all(key in user_data for key in ['stereotype_match', 'base_rate']):
+            result = self.detect_representativeness_bias(
+                user_data['stereotype_match'],
+                user_data['base_rate']
+            )
+            results.append(result)
+
+        # Loss aversion bias (损失厌恶)
+        if all(key in user_data for key in ['loss_amount', 'gain_amount']):
+            result = self.detect_loss_aversion_bias(
+                user_data['loss_amount'],
+                user_data['gain_amount']
+            )
+            results.append(result)
+
+        # Status quo bias (现状偏好)
+        if all(key in user_data for key in ['current_choice', 'alternative_choice']):
+            result = self.detect_status_quo_bias(
+                user_data['current_choice'],
+                user_data['alternative_choice']
+            )
+            results.append(result)
+
+        # Anchor adjustment bias (锚定与调整)
+        if all(key in user_data for key in ['high_anchor_estimate', 'low_anchor_estimate', 'reasonable_value']):
+            result = self.detect_anchor_adjustment_bias(
+                user_data['high_anchor_estimate'],
+                user_data['low_anchor_estimate'],
+                user_data['reasonable_value']
+            )
+            results.append(result)
+
+        # Framing effect bias (框架效应)
+        if all(key in user_data for key in ['positive_frame_choice', 'negative_frame_choice']):
+            result = self.detect_framing_effect_bias(
+                user_data['positive_frame_choice'],
+                user_data['negative_frame_choice']
+            )
+            results.append(result)
+
+        # Social proof bias (社会认同)
+        if all(key in user_data for key in ['group_behavior', 'independent_judgment']):
+            result = self.detect_social_proof_bias(
+                user_data['group_behavior'],
+                user_data['independent_judgment']
+            )
+            results.append(result)
+
         return results
     
     def calculate_overall_bias_profile(self, results: List[BiasDetectionResult]) -> Dict[str, Any]:
