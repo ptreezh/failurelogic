@@ -119,13 +119,16 @@
 
       const q = this.expQuestions[this.currentExpIndex];
       if (!q) {
-        container.innerHTML = '<p>指数测试题加载完成</p>';
+        if (typeof SafeRender !== 'undefined') {
+          SafeRender.setHTML(container, '<p>指数测试题加载完成</p>', { trust: true });
+        } else {
+          container.innerHTML = '<p>指数测试题加载完成</p>';
+        }
         return;
       }
 
-      container.innerHTML = `
-        <div class="question-card">
-          <h3>${this.currentExpIndex + 1}. ${q.questionText}</h3>
+      if (typeof SafeRender !== 'undefined') {
+        SafeRender.setHTML(container, `          <h3>${this.currentExpIndex + 1}. ${q.questionText}</h3>
           <div class="options">
             ${q.options.map((opt, idx) => `
               <div class="option">
@@ -145,7 +148,30 @@
           <button id="exp-prev-question" ${this.currentExpIndex <= 0 ? 'disabled' : ''}>上一题</button>
           <button id="exp-next-question" ${this.currentExpIndex >= this.expQuestions.length - 1 ? 'disabled' : ''}>下一题</button>
         </div>
-      `;
+`, { trust: true });
+      } else {
+        container.innerHTML = `          <h3>${this.currentExpIndex + 1}. ${q.questionText}</h3>
+          <div class="options">
+            ${q.options.map((opt, idx) => `
+              <div class="option">
+                <input type="radio" name="exp-question-${q.testId}" id="exp-opt-${q.testId}-${idx}" value="${idx}">
+                <label for="exp-opt-${q.testId}-${idx}">${String.fromCharCode(65 + idx)}. ${opt}</label>
+              </div>
+            `).join('')}
+          </div>
+          <div class="user-estimation">
+            <label for="exp-estimation-${q.testId}">请输入您的估算值:</label>
+            <input type="number" id="exp-estimation-${q.testId}" placeholder="例如：您认为2^200大约是多少">
+          </div>
+          <button class="btn btn-outline check-answer-btn" data-question-id="${q.testId}" data-type="exp">检查答案</button>
+          <div class="explanation" id="exp-explanation-${q.testId}" style="display: none;"></div>
+        </div>
+        <div class="navigation-controls">
+          <button id="exp-prev-question" ${this.currentExpIndex <= 0 ? 'disabled' : ''}>上一题</button>
+          <button id="exp-next-question" ${this.currentExpIndex >= this.expQuestions.length - 1 ? 'disabled' : ''}>下一题</button>
+        </div>
+`;
+      }
 
       document.getElementById('exp-prev-question')?.addEventListener('click', () => {
         if (this.currentExpIndex > 0) {
@@ -179,10 +205,13 @@
           const isCorrect = userChoice === question.correctAnswer;
           
           explanationEl.style.display = 'block';
-          explanationEl.innerHTML = `
-            <strong>${isCorrect ? '✅ 正确！' : '❌ 不正确'}</strong>
-            <p>${question.explanation}</p>
-          `;
+          if (typeof SafeRender !== 'undefined') {
+            SafeRender.setHTML(explanationEl, `            <p>${question.explanation}</p>
+`, { trust: true });
+          } else {
+            explanationEl.innerHTML = `            <p>${question.explanation}</p>
+`;
+          }
 
           this.submitAnswer(questionId, userChoice, null, 'exponential');
         });
@@ -195,13 +224,16 @@
 
       const q = this.compQuestions[this.currentCompIndex];
       if (!q) {
-        container.innerHTML = '<p>复利测试题加载完成</p>';
+        if (typeof SafeRender !== 'undefined') {
+          SafeRender.setHTML(container, '<p>复利测试题加载完成</p>', { trust: true });
+        } else {
+          container.innerHTML = '<p>复利测试题加载完成</p>';
+        }
         return;
       }
 
-      container.innerHTML = `
-        <div class="question-card">
-          <h3>${this.currentCompIndex + 1}. ${q.questionText}</h3>
+      if (typeof SafeRender !== 'undefined') {
+        SafeRender.setHTML(container, `          <h3>${this.currentCompIndex + 1}. ${q.questionText}</h3>
           <div class="options">
             ${q.options.map((opt, idx) => `
               <div class="option">
@@ -221,7 +253,30 @@
           <button id="comp-prev-question" ${this.currentCompIndex <= 0 ? 'disabled' : ''}>上一题</button>
           <button id="comp-next-question" ${this.currentCompIndex >= this.compQuestions.length - 1 ? 'disabled' : ''}>下一题</button>
         </div>
-      `;
+`, { trust: true });
+      } else {
+        container.innerHTML = `          <h3>${this.currentCompIndex + 1}. ${q.questionText}</h3>
+          <div class="options">
+            ${q.options.map((opt, idx) => `
+              <div class="option">
+                <input type="radio" name="comp-question-${q.testId}" id="comp-opt-${q.testId}-${idx}" value="${idx}">
+                <label for="comp-opt-${q.testId}-${idx}">${String.fromCharCode(65 + idx)}. ${opt}</label>
+              </div>
+            `).join('')}
+          </div>
+          <div class="user-estimation">
+            <label for="comp-estimation-${q.testId}">请输入您的估算值:</label>
+            <input type="number" id="comp-estimation-${q.testId}" placeholder="例如：您认为30年后是多少">
+          </div>
+          <button class="btn btn-outline check-answer-btn" data-question-id="${q.testId}" data-type="comp">检查答案</button>
+          <div class="explanation" id="comp-explanation-${q.testId}" style="display: none;"></div>
+        </div>
+        <div class="navigation-controls">
+          <button id="comp-prev-question" ${this.currentCompIndex <= 0 ? 'disabled' : ''}>上一题</button>
+          <button id="comp-next-question" ${this.currentCompIndex >= this.compQuestions.length - 1 ? 'disabled' : ''}>下一题</button>
+        </div>
+`;
+      }
 
       document.getElementById('comp-prev-question')?.addEventListener('click', () => {
         if (this.currentCompIndex > 0) {
@@ -255,10 +310,13 @@
           const isCorrect = userChoice === question.correctAnswer;
           
           explanationEl.style.display = 'block';
-          explanationEl.innerHTML = `
-            <strong>${isCorrect ? '✅ 正确！' : '❌ 不正确'}</strong>
-            <p>${question.explanation}</p>
-          `;
+          if (typeof SafeRender !== 'undefined') {
+            SafeRender.setHTML(explanationEl, `            <p>${question.explanation}</p>
+`, { trust: true });
+          } else {
+            explanationEl.innerHTML = `            <p>${question.explanation}</p>
+`;
+          }
 
           this.submitAnswer(questionId, userChoice, null, 'compound');
         });
@@ -306,9 +364,8 @@
 
       const resultEl = document.getElementById('compound-result');
       if (resultEl) {
-        resultEl.innerHTML = `
-          <h3>计算结果</h3>
-          <p><strong>本金:</strong> ${principal.toLocaleString()} 元</p>
+        if (typeof SafeRender !== 'undefined') {
+          SafeRender.setHTML(resultEl, `          <p><strong>本金:</strong> ${principal.toLocaleString()} 元</p>
           <p><strong>年利率:</strong> ${rate}%</p>
           <p><strong>时间:</strong> ${time} 年</p>
           <p><strong>复利结果:</strong> <span class="highlight">${compoundAmount.toLocaleString(undefined, {maximumFractionDigits: 2})} 元</span></p>
@@ -316,7 +373,18 @@
           <p><strong>复利优势:</strong> ${difference.toLocaleString(undefined, {maximumFractionDigits: 2})} 元</p>
           <p><strong>优势百分比:</strong> ${advantagePercentage.toFixed(2)}%</p>
           <div class="explanation-text">复利效应：在${time}年期，${rate}%年利率下，复利最终金额是${compoundAmount.toLocaleString(undefined, {maximumFractionDigits: 2})}元，而线性增长仅为${linearAmount.toLocaleString(undefined, {maximumFractionDigits: 2})}元。</div>
-        `;
+`, { trust: true });
+        } else {
+          resultEl.innerHTML = `          <p><strong>本金:</strong> ${principal.toLocaleString()} 元</p>
+          <p><strong>年利率:</strong> ${rate}%</p>
+          <p><strong>时间:</strong> ${time} 年</p>
+          <p><strong>复利结果:</strong> <span class="highlight">${compoundAmount.toLocaleString(undefined, {maximumFractionDigits: 2})} 元</span></p>
+          <p><strong>线性增长结果:</strong> ${linearAmount.toLocaleString(undefined, {maximumFractionDigits: 2})} 元</p>
+          <p><strong>复利优势:</strong> ${difference.toLocaleString(undefined, {maximumFractionDigits: 2})} 元</p>
+          <p><strong>优势百分比:</strong> ${advantagePercentage.toFixed(2)}%</p>
+          <div class="explanation-text">复利效应：在${time}年期，${rate}%年利率下，复利最终金额是${compoundAmount.toLocaleString(undefined, {maximumFractionDigits: 2})}元，而线性增长仅为${linearAmount.toLocaleString(undefined, {maximumFractionDigits: 2})}元。</div>
+`;
+        }
       }
     }
 
@@ -345,13 +413,19 @@
 
       const resultEl = document.getElementById('exponential-result');
       if (resultEl) {
-        resultEl.innerHTML = `
-          <h3>计算结果</h3>
-          <p><strong>底数:</strong> ${base}</p>
+        if (typeof SafeRender !== 'undefined') {
+          SafeRender.setHTML(resultEl, `          <p><strong>底数:</strong> ${base}</p>
           <p><strong>指数:</strong> ${exponent}</p>
           <p><strong>结果:</strong> ${resultScientific}</p>
           <p><strong>比较说明:</strong> ${comparison}</p>
-        `;
+`, { trust: true });
+        } else {
+          resultEl.innerHTML = `          <p><strong>底数:</strong> ${base}</p>
+          <p><strong>指数:</strong> ${exponent}</p>
+          <p><strong>结果:</strong> ${resultScientific}</p>
+          <p><strong>比较说明:</strong> ${comparison}</p>
+`;
+        }
       }
     }
 

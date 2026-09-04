@@ -774,8 +774,8 @@
         </div>
       `;
 
-      if (typeof HTMLSanitizer !== 'undefined' && HTMLSanitizer.setInnerHTML) {
-        HTMLSanitizer.setInnerHTML(this.container, html);
+      if (typeof SafeRender !== 'undefined') {
+        SafeRender.setHTML(this.container, html, { trust: true });
       } else {
         this.container.innerHTML = html;
       }
@@ -818,8 +818,8 @@
         </div>
       `;
 
-      if (typeof HTMLSanitizer !== 'undefined' && HTMLSanitizer.setInnerHTML) {
-        HTMLSanitizer.setInnerHTML(this.container, html);
+      if (typeof SafeRender !== 'undefined') {
+        SafeRender.setHTML(this.container, html, { trust: true });
       } else {
         this.container.innerHTML = html;
       }
@@ -919,8 +919,8 @@
         </div>
       `;
 
-      if (typeof HTMLSanitizer !== 'undefined' && HTMLSanitizer.setInnerHTML) {
-        HTMLSanitizer.setInnerHTML(this.container, html);
+      if (typeof SafeRender !== 'undefined') {
+        SafeRender.setHTML(this.container, html, { trust: true });
       } else {
         this.container.innerHTML = html;
       }

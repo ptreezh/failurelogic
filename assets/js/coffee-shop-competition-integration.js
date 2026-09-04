@@ -310,7 +310,11 @@
                     </div>
                 `;
 
-                this.container.innerHTML = html;
+                if (typeof SafeRender !== 'undefined') {
+                  SafeRender.setHTML(this.container, html, { trust: true });
+                } else {
+                  this.container.innerHTML = html;
+                }
             }
 
             renderSocialFeedbackPage() {
@@ -399,7 +403,11 @@
                     </div>
                 `;
 
-                this.container.innerHTML = html;
+                if (typeof SafeRender !== 'undefined') {
+                  SafeRender.setHTML(this.container, html, { trust: true });
+                } else {
+                  this.container.innerHTML = html;
+                }
             }
 
             renderEndingPage() {
@@ -513,7 +521,11 @@
                     </div>
                 `;
 
-                this.container.innerHTML = html;
+                if (typeof SafeRender !== 'undefined') {
+                  SafeRender.setHTML(this.container, html, { trust: true });
+                } else {
+                  this.container.innerHTML = html;
+                }
 
                 if (this.leaderboard) {
                     this.leaderboard.recordGameResult({
