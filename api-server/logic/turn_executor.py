@@ -1,9 +1,20 @@
 """
-Turn executor (R7.1 moved from start.py).
+Turn executor (R7.1 moved from start.py, R9.2 documented but not refactored).
 
 Implements execute_real_logic — the main scenario state mutation
-function handling 12 scenario_id branches (coffee-shop, relationship,
-investment, 3 game-*, 3 hist-*, 3 adv-game-*).
+function handling 12 scenario_id branches:
+  - coffee-shop-linear-thinking (咖啡店线性思维)
+  - relationship-time-delay (关系时间延迟)
+  - investment-confirmation-bias (投资确认偏误)
+  - game-001 / game-002 / game-003 (商业/政策/理财)
+  - hist-001 / hist-002 / hist-003 (挑战者/泰坦尼克/猪湾)
+  - adv-game-001 / adv-game-002 / adv-game-003 (气候/AI/金融危机)
+
+R9.2 attempted to split into 12 helper functions but reverted due to
+indentation refactoring risk. Current monolithic form is 493 lines;
+see research/ROADMAP.md for planned R10+ decomposition.
+
+Returns: mutated new_state dict with values clamped to valid ranges.
 """
 
 from typing import Dict, Any
@@ -13,7 +24,12 @@ import random
 def execute_real_logic(
     scenario_id: str, current_state: Dict, decisions: Dict, difficulty: str = "beginner"
 ) -> Dict:
-    """执行真实的业务逻辑，支持不同难度级别"""
+    """执行真实的业务逻辑，支持不同难度级别。
+
+    Dispatches to one of 12 inline branches based on scenario_id.
+    Each branch mutates new_state (copy of current_state) based on
+    decisions.get("action") or decisions.get("option") etc.
+    """
     new_state = current_state.copy()
 
     # 根据不同场景和难度执行逻辑
