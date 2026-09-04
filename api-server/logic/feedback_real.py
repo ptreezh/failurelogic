@@ -49,6 +49,7 @@ def generate_pattern_analysis_feedback(
 继续下一个回合，系统将提供更深入的个性化分析。
 """
 
+    bias_reveal = pattern_analysis  # R9.1: 修复 NameError（原代码引用了未定义变量）
     return base_feedback + bias_reveal
 
 
@@ -61,9 +62,15 @@ def generate_advanced_feedback(
     new_state: Dict,
     decision_history: List[Dict],
     pattern_tracker: Optional[DecisionPatternTracker],
-    turn_number: int
+    turn_number: int,
+    cross_scenario_analyzer: Optional["CrossScenarioAnalyzer"] = None,
 ) -> str:
-    """生成高级个性化反馈（第4+回合）"""
+    """生成高级个性化反馈（第4+回合）
+
+    Args:
+        cross_scenario_analyzer: R9.1 新增参数；传入后启用跨场景洞察。
+                                 保持向后兼容：默认 None 时跳过跨场景分析。
+    """
 
     # 基础反馈
     base_feedback = generate_real_feedback(scenario_id, decisions, old_state, new_state, "beginner")
@@ -76,8 +83,8 @@ def generate_advanced_feedback(
         if pattern_insight:
             additional_insight += f"\n\n{pattern_insight}"
 
-    # 添加跨场景洞察（如果用户玩过多个场景）
-    if turn_number >= 4:
+    # 添加跨场景洞察（如果用户玩过多个场景，且 analyzer 已注入）
+    if turn_number >= 4 and cross_scenario_analyzer is not None:
         cross_scenario_insight = cross_scenario_analyzer.generate_cross_scenario_insight(
             [scenario_id]  # 这里应该传入用户玩过的所有场景ID
         )

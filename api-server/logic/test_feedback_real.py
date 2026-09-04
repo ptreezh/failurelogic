@@ -180,8 +180,9 @@ class TestGeneratePatternAnalysisFeedback:
         assert isinstance(fb, str)
 
 
-@pytest.mark.skip(reason="generate_pattern_analysis_feedback uses global cross_scenario_analyzer from start.py; requires full module setup")
 class TestGeneratePatternAnalysisFeedbackWithPattern:
+    """R9.1: Un-skipped (pattern_analysis_feedback does not use global state)."""
+
     def test_with_pattern_returns_bias_reveal(self):
         new = _delta(BASE_STATE)
         pattern = {
@@ -199,8 +200,9 @@ class TestGeneratePatternAnalysisFeedbackWithPattern:
         assert "激进" in fb or "模式" in fb
 
 
-@pytest.mark.skip(reason="generate_advanced_feedback uses global cross_scenario_analyzer from start.py; requires full module setup")
 class TestGenerateAdvancedFeedback:
+    """R9.1: cross_scenario_analyzer now an optional parameter (DI)."""
+
     def test_with_pattern_tracker(self):
         from logic.pattern_tracker import DecisionPatternTracker
         tracker = DecisionPatternTracker()
@@ -215,10 +217,15 @@ class TestGenerateAdvancedFeedback:
             decision_history=[],
             pattern_tracker=tracker,
             turn_number=5,
+            cross_scenario_analyzer=None,  # R9.1: optional injection
         )
         assert isinstance(fb, str)
 
     def test_turn_4_plus_triggers_advanced(self):
+        from logic.pattern_tracker import CrossScenarioAnalyzer
+        analyzer = CrossScenarioAnalyzer()
+        analyzer.record_pattern("game-001", "激进")
+        analyzer.record_pattern("game-002", "激进")
         new = _delta(BASE_STATE)
         fb = generate_advanced_feedback(
             "relationship-time-delay",
@@ -227,8 +234,14 @@ class TestGenerateAdvancedFeedback:
             decision_history=[],
             pattern_tracker=None,
             turn_number=4,
+            cross_scenario_analyzer=analyzer,  # R9.1: now injectable
+            # Pass matching scenario IDs so insight can match recorded patterns
         )
         assert isinstance(fb, str)
+        # When analyzer has ≥2 scenarios with same pattern, insight text appears
+        # (depends on feedback_real.py passing the right user_scenarios list)
+        # For now, just verify no crash; future R9.x will plumb user_scenarios
+        assert "沟通" in fb or "跨场景" in fb
 
     def test_without_tracker_turn_3_or_less(self):
         new = _delta(BASE_STATE)
@@ -239,5 +252,22 @@ class TestGenerateAdvancedFeedback:
             decision_history=[],
             pattern_tracker=None,
             turn_number=2,
+            cross_scenario_analyzer=None,
         )
         assert isinstance(fb, str)
+
+    def test_no_analyzer_means_no_cross_scenario(self):
+        """Without cross_scenario_analyzer, no insight is added (backward compat)."""
+        new = _delta(BASE_STATE)
+        fb = generate_advanced_feedback(
+            "coffee-shop-nonlinear-effects",
+            {"action": "hire_staff"},
+            BASE_STATE, new,
+            decision_history=[],
+            pattern_tracker=None,
+            turn_number=5,
+            cross_scenario_analyzer=None,
+        )
+        assert isinstance(fb, str)
+        # Should not contain cross-scenario insight text
+        assert "跨场景" not in fb

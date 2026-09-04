@@ -533,7 +533,8 @@ async def execute_turn(game_id: str, decisions: Dict[str, Any]):
             scenario_id, decisions, current_state, new_state,
             decision_history=new_state.get("decision_history", []),
             pattern_tracker=pattern_tracker,
-            turn_number=turn_number
+            turn_number=turn_number,
+            cross_scenario_analyzer=cross_scenario_analyzer,  # R9.1: inject instead of global
         )
 
     # 立即响应机制，增加用户交互反馈
