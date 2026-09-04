@@ -88,21 +88,37 @@ npm run test:scenarios                     # Specific scenario tests
 ```
 
 ## Anti-Patterns (FORBIDDEN)
+
+> Last audited: 2026-09-04 (R5.2)
+
 1. `TODO`/`FIXME` comments in production code
+   - Status: 1 known instance — `api-server/logic/enhanced_cognitive_bias_detection.py:400`
+     documents the unimplemented 7 of 12 bias types (intentional placeholder)
 2. `XXX` placeholder patterns in naming
+   - Status: ✅ 0 instances (R5.2 fix: app.js:9626)
 3. `console.log`/`console.warn`/`console.error` in production
+   - Status: 23 remaining in production JS (down from 360)
+   - Major sources: `performance-monitoring.js` (intentional debug), `app.js` (legacy)
 4. `innerHTML` usage without sanitization (XSS risk)
+   - Status: 19 router render paths now use `SafeRender.setHTML` (R1.7 + R5.1)
+   - Remaining: ~55 raw `innerHTML` in `app.js` (15182 lines, R6+ scope)
 5. Generic `except Exception as e:` blocks
+   - Status: 43 remaining (mainly in `start.py` legacy feedback paths)
 6. Global window object pollution (`window.coffeeShopRouter`, etc.)
+   - Status: 223 `window.*` references (most are intentional singleton routers)
+   - New code should use IIFE / module pattern instead
 7. Inline event handlers in HTML (`onclick="..."`)
+   - Status: 87 in `app.js` (R6+ refactor)
 8. Debug mode flags in production builds
+   - Status: 2 (`.env.example DEBUG=True` + `server_runner.py logging.basicConfig(DEBUG)`)
 9. Empty/mixed language test files
+   - Status: ✅ 0 instances
 
 ## Deployment Notes
-- **CI**: Custom 7-stage Spec-Kit pipeline in `.github/workflows/`
-- **Pre-commit**: Black, isort, flake8, Prettier hooks configured
-- **Vercel**: Configured but has issues (points to non-existent `api/index.py`, uses Python 3.9 vs project's 3.12)
-- **GitHub Pages**: Used with Codespaces as primary hosting solution
+- **CI**: `.github/workflows/e2e-test.yml` runs pytest + Playwright E2E on every push to main
+- **Frontend**: GitHub Pages via `.github/workflows/deploy.yml` (auto-deploy on push)
+- **Backend**: Render.com Blueprint via `render.yaml` (since 2026-08-15, migrated from Railway)
+- **Cleanup**: vercel.json / Procfile / railway.toml / deploy-to-railway.yml removed in R3.2
 
 ## Key Files and Directories
 - `api-server/start.py`: Main API server entry point with comprehensive decision tracking

@@ -9623,7 +9623,7 @@ class GameManager {
       };
 
     } else if (scenarioId.startsWith('game-')) {
-      // game-XXX scenarios use option selection
+      // game-* scenarios use option selection
       const selectedOption = document.querySelector('.option-btn.selected');
       if (selectedOption) {
         decision = {
