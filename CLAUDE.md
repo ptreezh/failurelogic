@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+[![Tooling tests](https://github.com/ptreezh/failureLogic/actions/workflows/tooling-tests.yml/badge.svg)](https://github.com/ptreezh/failureLogic/actions/workflows/tooling-tests.yml)
+
 ## Project Overview
 
 Failure Logic is a cognitive bias education interactive game platform based on Dietrich Dörner's "The Logic of Failure" theory. The platform provides a safe environment for users to experience and learn about cognitive biases through interactive decision-making scenarios.

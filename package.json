@@ -4,7 +4,16 @@
   "private": true,
   "scripts": {
     "start": "node static-server.js",
-    "test:e2e": "npx playwright test --config=tests/playwright.config.js tests/e2e --reporter=list"
+    "test:e2e": "npx playwright test --config=tests/playwright.config.js tests/e2e --reporter=list",
+    "wrappers:help": "echo \"Use 'make help' on Linux/macOS/WSL, or one of:\" && echo \"  npm run wrappers:test      - all 6 test suites\" && echo \"  npm run wrappers:lint      - syntax check all wrappers\" && echo \"  npm run wrappers:security  - scan for accidentally committed tokens\" && echo \"  npm run wrappers:info      - show repo info (git-platform-ops)\" && echo \"  npm run wrappers:auth      - show loaded tokens (git-platform-ops)\" && echo \"  npm run wrappers:notes     - show commits since last tag (release-ops)\"",
+    "wrappers:test": "bash tests/git-platform-ops/test.sh && bash tests/publish-ops/test.sh && bash tests/release-ops/test.sh && pwsh tests/git-platform-ops/test.ps1 && pwsh tests/publish-ops/test.ps1 && pwsh tests/release-ops/test.ps1",
+    "wrappers:test:bash": "bash tests/git-platform-ops/test.sh && bash tests/publish-ops/test.sh && bash tests/release-ops/test.sh",
+    "wrappers:test:ps": "pwsh tests/git-platform-ops/test.ps1 && pwsh tests/publish-ops/test.ps1 && pwsh tests/release-ops/test.ps1",
+    "wrappers:lint": "bash -n scripts/git-platform-ops.sh && bash -n scripts/publish-ops.sh && bash -n scripts/release-ops.sh",
+    "wrappers:security": "node -e \"const {execSync}=require('child_process'); try { const out = require('child_process').execSync('grep -rEn \\'ghp_[A-Za-z0-9]{20,}\\' . --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=tests || true').toString(); if (out.trim()) { console.error('FAIL: GitHub PAT found'); process.exit(1); } else { console.log('OK: no real-looking tokens'); }\" && git check-ignore .git-token && echo 'OK: .git-token is gitignored'",
+    "wrappers:info": "bash scripts/git-platform-ops.sh info",
+    "wrappers:auth": "bash scripts/git-platform-ops.sh auth-status",
+    "wrappers:notes": "bash scripts/release-ops.sh notes"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",

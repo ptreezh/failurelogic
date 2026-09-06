@@ -36,6 +36,15 @@ jobs:
           echo "Runner: $RUNNER_OS"
           bash --version | head -1
           pwsh --version
+          make --version | head -1
+
+      - name: Verify Makefile is valid
+        run: |
+          # `make help` exercises the awk-based self-doc logic.
+          make help | head -5
+          # Smoke test that the test target wires up correctly (uses --dry-run
+          # equivalent: dry-print without running).
+          make -n test | head -10
 
       - name: Bash wrapper tests (git-platform-ops)
         run: bash tests/git-platform-ops/test.sh
