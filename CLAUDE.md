@@ -232,12 +232,18 @@ AI assistants (Claude Code, Doubao, etc.) working in this repo must follow these
 
 - **Never read or quote credentials.** `.env`, `.git-token`, and any `*credentials*` / `*.pem` file contains secrets. Do not `Read`, `cat`, `echo`, or paste their contents into chat.
 - **Suggest commands via env var references.** Use `$env:GH_TOKEN` / `$env:GITEE_TOKEN` in suggested commands, never literal token values.
-- **Wrap auth commands with `scripts/with-token.ps1`.** It loads tokens from `.git-token` (gitignored) into the spawned process without exposing them:
+- **Wrap auth commands with `scripts/with-token.ps1`** for ad-hoc work, or **use the `git-platform-ops` skill** (`scripts/git-platform-ops.ps1`) for structured push/PR/issue operations. Both load tokens from `.git-token` (gitignored) into the spawned process without exposing them.
   ```powershell
-  .\scripts\with-token.ps1 -Run "git push origin main"
-  .\scripts\with-token.ps1 -Shell   # for multi-command sessions
+  .\scripts\with-token.ps1 -Run "git push origin main"           # ad-hoc
+  .\scripts\git-platform-ops.ps1 -Action push                    # structured
+  .\scripts\git-platform-ops.ps1 -Action pr-create -Title "..."  # structured
   ```
 - **Minimum token scopes when generating new ones:**
   - GitHub: Fine-grained PAT, single repo, Contents: Read+Write only, 7-day expiry
   - Gitee: Personal Token, `projects` scope only, 7-day expiry
 - **If a token is exposed** (chat log, screenshot, commit, public file): stop work, revoke it at the issuer's settings page, regenerate, and audit access logs.
+
+## Agent Skills Available
+
+- **`git-platform-ops`** (auto-loaded for this repo) — preferred for push, PR, and issue operations. See `.claude/skills/git-platform-ops/SKILL.md`.
+- For non-Claude agents (Doubao, etc.), point them at `docs/agent-skill-git-platform-ops.md` before any git auth operation.

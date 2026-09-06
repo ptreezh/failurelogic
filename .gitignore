@@ -149,6 +149,7 @@ scripts/
 !scripts/prepare-pages.sh
 !scripts/with-token.ps1
 skills/
+!.claude/skills/git-platform-ops/
 types/
 assets/js/adaptive-learning-system.js
 assets/js/advanced-data-analytics.js
