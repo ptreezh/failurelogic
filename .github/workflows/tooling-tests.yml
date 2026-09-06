@@ -1,0 +1,113 @@
+name: Tooling tests (git-platform-ops wrapper)
+
+# Lightweight CI for the git-platform-ops PowerShell + Bash wrappers and
+# the with-token.ps1 loader. Runs in <10s on ubuntu-latest. No Python deps,
+# no Playwright. Complements e2e-test.yml (which covers the application).
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "tooling-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  wrapper-tests:
+    name: Wrapper smoke tests (bash + PowerShell)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # archived-scenarios/planning-with-files 的 .gitmodules url 丢失，
+          # 默认 recursive 模式会失败。Tooling 测试不需要子模块。
+          submodules: false
+
+      - name: Show runner info
+        run: |
+          echo "Runner: $RUNNER_OS"
+          bash --version | head -1
+          pwsh --version
+
+      - name: Bash wrapper tests (test.sh)
+        run: bash tests/git-platform-ops/test.sh
+
+      - name: PowerShell wrapper tests (test.ps1)
+        run: pwsh tests/git-platform-ops/test.ps1
+
+      - name: Verify scripts are syntactically valid
+        run: |
+          echo "--- bash -n scripts/git-platform-ops.sh ---"
+          bash -n scripts/git-platform-ops.sh && echo "OK"
+          echo "--- pwsh lint scripts/git-platform-ops.ps1 ---"
+          pwsh -NoProfile -Command '
+            $errors = $null
+            $tokens = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile(
+              (Resolve-Path "scripts/git-platform-ops.ps1").Path, [ref]$tokens, [ref]$errors)
+            if ($errors -and $errors.Count -gt 0) {
+              $errors | ForEach-Object { Write-Host $_ }
+              exit 1
+            }
+            Write-Host "OK"
+          '
+          echo "--- pwsh lint scripts/with-token.ps1 ---"
+          pwsh -NoProfile -Command '
+            $errors = $null
+            $tokens = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile(
+              (Resolve-Path "scripts/with-token.ps1").Path, [ref]$tokens, [ref]$errors)
+            if ($errors -and $errors.Count -gt 0) {
+              $errors | ForEach-Object { Write-Host $_ }
+              exit 1
+            }
+            Write-Host "OK"
+          '
+
+  security-check:
+    name: "Security: verify no real tokens in tracked files"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Scan for accidentally committed tokens
+        # .git-token should be gitignored, but verify no real-looking
+        # PAT strings leaked into any tracked file. Tests/ is excluded
+        # because test fixtures legitimately contain placeholder tokens
+        # like ghp_test1234... to verify the masking logic.
+        run: |
+          if grep -rEn 'ghp_[A-Za-z0-9]{20,}' . \
+              --exclude-dir=.git \
+              --exclude-dir=node_modules \
+              --exclude-dir=tests 2>/dev/null; then
+            echo "::error::GitHub PAT (ghp_*) prefix found in tracked files"
+            exit 1
+          fi
+          if grep -rEn 'gho_[A-Za-z0-9]{20,}' . \
+              --exclude-dir=.git \
+              --exclude-dir=node_modules \
+              --exclude-dir=tests 2>/dev/null; then
+            echo "::error::GitHub OAuth (gho_*) prefix found in tracked files"
+            exit 1
+          fi
+          echo "OK - no real-looking GitHub tokens found"
+
+      - name: Verify .git-token is ignored
+        run: |
+          if ! git check-ignore .git-token; then
+            echo "::error::.git-token is NOT gitignored - secrets could be committed"
+            exit 1
+          fi
+          echo "OK - .git-token is properly gitignored"
