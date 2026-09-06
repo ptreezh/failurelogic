@@ -145,12 +145,15 @@ article.html
 validation_report.json
 
 # Scripts, skills, types, assets features (not yet production)
-scripts/
-!scripts/prepare-pages.sh
-!scripts/with-token.ps1
-skills/
-!.claude/skills/git-platform-ops/
-types/
+# Note: directory-level ignores prevent ! exceptions from re-including new files
+# (per git docs: "It is not possible to re-include a file if a parent directory
+# of that file is excluded"). Use specific filename patterns when you need to
+# exclude some files in a tracked directory.
+# Leading / anchors the pattern to repo root, so .claude/skills/ is NOT affected.
+/skills/
+/types/
+# scripts/ is fully tracked. Add local-only scripts by name (e.g. scripts/agent-*.sh)
+# rather than reintroducing the directory-level ignore.
 assets/js/adaptive-learning-system.js
 assets/js/advanced-data-analytics.js
 assets/js/advanced-scenario-interaction.js

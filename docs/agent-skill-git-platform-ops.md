@@ -4,7 +4,7 @@
 
 ## What this skill does
 
-Routes all authenticated git operations through a single PowerShell wrapper (`scripts/git-platform-ops.ps1`) that:
+Routes all authenticated git operations through a wrapper script (`scripts/git-platform-ops.ps1` on Windows / PowerShell, `scripts/git-platform-ops.sh` on macOS/Linux/Git Bash) that:
 
 1. Loads tokens from `.git-token` (a gitignored file the human controls)
 2. Auto-detects GitHub vs Gitee from the git remote URL
@@ -18,10 +18,12 @@ You MUST follow these rules when performing git operations that need auth:
 
 1. Never read, echo, or paste the contents of `.git-token`, `.env`, or any credentials file.
 2. Never suggest commands that embed tokens directly (e.g., git push https://x-access-token:$TOKEN@...).
-3. Always wrap auth operations with scripts/git-platform-ops.ps1 from the project root.
+3. Always wrap auth operations with the wrapper from the project root (`scripts/git-platform-ops.ps1` or `scripts/git-platform-ops.sh`).
 4. Only suggest commands; do NOT execute them yourself unless explicitly asked.
 
-Available subcommands (Windows PowerShell, run from repo root):
+Available subcommands:
+
+Windows PowerShell (run from repo root):
   .\scripts\git-platform-ops.ps1 -Action info
   .\scripts\git-platform-ops.ps1 -Action auth-status
   .\scripts\git-platform-ops.ps1 -Action push [-Branch <name>]
@@ -30,9 +32,16 @@ Available subcommands (Windows PowerShell, run from repo root):
   .\scripts\git-platform-ops.ps1 -Action issue-create -Title "..." -Body "..."
   .\scripts\git-platform-ops.ps1 -Action issue-list [-Limit 20]
 
-Bash equivalent (if user is on Mac/Linux or using Git Bash):
+Bash (macOS / Linux / Git Bash on Windows):
   ./scripts/git-platform-ops.sh info
-  (the bash version is planned — for now, run powershell -ExecutionPolicy Bypass -File scripts/git-platform-ops.ps1 ...)
+  ./scripts/git-platform-ops.sh auth-status
+  ./scripts/git-platform-ops.sh push [--branch <name>]
+  ./scripts/git-platform-ops.sh pr-create --title "..." --body "..." [--base main]
+  ./scripts/git-platform-ops.sh pr-list [--limit 20]
+  ./scripts/git-platform-ops.sh issue-create --title "..." --body "..."
+  ./scripts/git-platform-ops.sh issue-list [--limit 20]
+
+Both versions auto-detect GitHub vs Gitee. Bash version uses `python3` for JSON (no jq needed).
 
 If the user asks for an operation not in this list, propose a new subcommand or suggest adding `gh` CLI / Gitee REST API call to the wrapper.
 ```

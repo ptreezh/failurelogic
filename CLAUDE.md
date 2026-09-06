@@ -245,5 +245,5 @@ AI assistants (Claude Code, Doubao, etc.) working in this repo must follow these
 
 ## Agent Skills Available
 
-- **`git-platform-ops`** (auto-loaded for this repo) — preferred for push, PR, and issue operations. See `.claude/skills/git-platform-ops/SKILL.md`.
+- **`git-platform-ops`** (auto-loaded for this repo) — preferred for push, PR, and issue operations. See `.claude/skills/git-platform-ops/SKILL.md`. Both PowerShell (`scripts/git-platform-ops.ps1`) and Bash (`scripts/git-platform-ops.sh`) versions available.
 - For non-Claude agents (Doubao, etc.), point them at `docs/agent-skill-git-platform-ops.md` before any git auth operation.

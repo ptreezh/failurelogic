@@ -13,6 +13,7 @@ AI tools (Claude Code, Doubao, etc.) must never see or paste real tokens. This s
 
 ## Available subcommands
 
+PowerShell (Windows default):
 ```powershell
 .\scripts\git-platform-ops.ps1 -Action info                       # Show current repo + platform
 .\scripts\git-platform-ops.ps1 -Action auth-status                # Show loaded tokens (masked)
@@ -24,7 +25,19 @@ AI tools (Claude Code, Doubao, etc.) must never see or paste real tokens. This s
 .\scripts\git-platform-ops.ps1 -Action issue-list -Limit 20
 ```
 
-The script auto-detects GitHub vs Gitee from `git remote get-url origin`. For GitHub it prefers `gh` CLI if available, otherwise falls back to REST API. Gitee always uses REST API.
+Bash (macOS / Linux / Git Bash on Windows):
+```bash
+./scripts/git-platform-ops.sh info
+./scripts/git-platform-ops.sh auth-status
+./scripts/git-platform-ops.sh push
+./scripts/git-platform-ops.sh push --branch feature-x
+./scripts/git-platform-ops.sh pr-create --title "..." --body "..." --base main
+./scripts/git-platform-ops.sh pr-list --limit 20
+./scripts/git-platform-ops.sh issue-create --title "..." --body "..."
+./scripts/git-platform-ops.sh issue-list --limit 20
+```
+
+The script auto-detects GitHub vs Gitee from `git remote get-url origin`. For GitHub it prefers `gh` CLI if available, otherwise falls back to REST API. Gitee always uses REST API. Bash version uses `python3` for JSON construction (no `jq` dependency).
 
 ## Behavior rules
 
