@@ -109,6 +109,10 @@ out="$(cd "$REPO_ROOT" && "$WRAPPER" pr-create --token-file "$tf" 2>&1 || true)"
 assert_contains "pr-create requires --title" "$out" "--title required"
 out="$(cd "$REPO_ROOT" && "$WRAPPER" issue-create --token-file "$tf" 2>&1 || true)"
 assert_contains "issue-create requires --title" "$out" "--title required"
+out="$(cd "$REPO_ROOT" && "$WRAPPER" pr-status --token-file "$tf" 2>&1 || true)"
+assert_contains "pr-status requires --number" "$out" "--number required"
+out="$(cd "$REPO_ROOT" && "$WRAPPER" pr-wait --token-file "$tf" 2>&1 || true)"
+assert_contains "pr-wait requires --number" "$out" "--number required"
 
 # ---- T7: comment and blank lines in token file -----------------------------
 f="$(mktemp)"; TEMP_FILES+=("$f")
@@ -148,6 +152,13 @@ out="$(cd "$REPO_ROOT" && "$WRAPPER" --help 2>&1)"
 ec=$?
 assert_eq "--help exits 0" "$ec" "0"
 assert_contains "--help shows action list" "$out" "auth-status"
+assert_contains "--help shows auth-gh"    "$out" "auth-gh"
+assert_contains "--help shows pr-status" "$out" "pr-status"
+assert_contains "--help shows pr-wait"   "$out" "pr-wait"
+
+# ---- T10: auth-gh errors when token file missing (without running gh) ------
+out="$(cd "$REPO_ROOT" && "$WRAPPER" auth-gh --token-file /tmp/__nonexistent_$$ 2>&1 || true)"
+assert_contains "auth-gh errors when token file missing" "$out" "Token file not found"
 
 echo ""
 echo "=== Results: $PASS passed, $FAIL failed ==="

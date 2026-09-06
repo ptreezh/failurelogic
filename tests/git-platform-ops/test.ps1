@@ -165,6 +165,22 @@ try {
 }
 Assert-Contains -Desc 'issue-create requires -Title' -Haystack $out -Needle '-Title is required'
 
+Push-Location $RepoRoot
+try {
+    $out = powershell -ExecutionPolicy Bypass -File $Wrapper -Action pr-status -TokenFile $tf 2>&1 | Out-String
+} finally {
+    Pop-Location
+}
+Assert-Contains -Desc 'pr-status requires -Number' -Haystack $out -Needle '-Number is required'
+
+Push-Location $RepoRoot
+try {
+    $out = powershell -ExecutionPolicy Bypass -File $Wrapper -Action pr-wait -TokenFile $tf 2>&1 | Out-String
+} finally {
+    Pop-Location
+}
+Assert-Contains -Desc 'pr-wait requires -Number' -Haystack $out -Needle '-Number is required'
+
 # ---- T7: comment and blank lines in token file -----------------------------
 $f = [System.IO.Path]::GetTempFileName()
 $script:TempFiles += $f
@@ -198,6 +214,16 @@ Assert-NotContains -Desc 'full GH token never appears in auth-status output' `
     -Haystack $out -Needle 'ghp_test1234567890abcdefgh'
 Assert-NotContains -Desc 'full GITEE token never appears in auth-status output' `
     -Haystack $out -Needle 'test1234567890abcdef'
+
+# ---- T9: auth-gh errors when token file missing ----------------------------
+$missing = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "__nonexistent_auth_$([System.Guid]::NewGuid()).txt")
+Push-Location $RepoRoot
+try {
+    $out = powershell -ExecutionPolicy Bypass -File $Wrapper -Action auth-gh -TokenFile $missing 2>&1 | Out-String
+} finally {
+    Pop-Location
+}
+Assert-Contains -Desc 'auth-gh errors when token file missing' -Haystack $out -Needle 'Token file not found'
 
 # ---- Cleanup ---------------------------------------------------------------
 Cleanup-TempFiles

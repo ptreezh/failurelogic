@@ -6,9 +6,12 @@
 # Usage:
 #   ./scripts/git-platform-ops.sh info
 #   ./scripts/git-platform-ops.sh auth-status
+#   ./scripts/git-platform-ops.sh auth-gh
 #   ./scripts/git-platform-ops.sh push [--branch X]
 #   ./scripts/git-platform-ops.sh pr-create --title "..." --body "..." [--base main]
 #   ./scripts/git-platform-ops.sh pr-list [--limit N]
+#   ./scripts/git-platform-ops.sh pr-status --number N
+#   ./scripts/git-platform-ops.sh pr-wait --number N [--timeout 600]
 #   ./scripts/git-platform-ops.sh issue-create --title "..." --body "..."
 #   ./scripts/git-platform-ops.sh issue-list [--limit N]
 #
@@ -23,7 +26,9 @@ BRANCH=""
 TITLE=""
 BODY=""
 BASE=""
+NUMBER=""
 LIMIT=10
+TIMEOUT=600
 
 # ---- Usage -------------------------------------------------------------------
 usage() {
@@ -44,7 +49,9 @@ while [[ $# -gt 0 ]]; do
         --title)      TITLE="$2"; shift 2 ;;
         --body)       BODY="$2"; shift 2 ;;
         --base)       BASE="$2"; shift 2 ;;
+        --number)     NUMBER="$2"; shift 2 ;;
         --limit)      LIMIT="$2"; shift 2 ;;
+        --timeout)    TIMEOUT="$2"; shift 2 ;;
         --token-file) TOKEN_FILE="$2"; shift 2 ;;
         -h|--help)    usage 0 ;;
         *) echo "Unknown arg: $1" >&2; usage 1 ;;
@@ -125,7 +132,7 @@ api_call() {
 # ---- Token loading -----------------------------------------------------------
 NEEDS_AUTH=0
 case "$ACTION" in
-    auth-status|push|pr-create|pr-list|issue-create|issue-list) NEEDS_AUTH=1 ;;
+    auth-status|auth-gh|push|pr-create|pr-list|pr-status|pr-wait|issue-create|issue-list) NEEDS_AUTH=1 ;;
 esac
 
 if [[ "$NEEDS_AUTH" == "1" ]]; then
@@ -155,6 +162,26 @@ case "$ACTION" in
                 echo "  $n = (not set)"
             fi
         done
+        ;;
+
+    auth-gh)
+        if ! command -v gh >/dev/null 2>&1; then
+            echo "gh CLI not installed. Install: https://cli.github.com" >&2
+            exit 1
+        fi
+        if [[ ! -f "$TOKEN_FILE" ]]; then
+            echo "Token file not found: $TOKEN_FILE" >&2
+            echo "Run: cp .git-token.example $TOKEN_FILE" >&2
+            exit 1
+        fi
+        require_token GH_TOKEN
+        echo "$GH_TOKEN" | gh auth login --with-token
+        login=$(gh api user --jq '.login' 2>/dev/null || true)
+        if [[ -n "$login" ]]; then
+            echo "gh CLI authenticated as $login"
+        else
+            echo "gh CLI authentication completed"
+        fi
         ;;
 
     info)
@@ -234,6 +261,97 @@ for p in json.load(sys.stdin):
     print(f\"#{p['number']} [{p['state']}] {p['title']} - {p['html_url']}\")
 "
         fi
+        ;;
+
+    pr-status)
+        [[ -n "$NUMBER" ]] || { echo "--number required" >&2; exit 1; }
+        url="$(get_remote_url)"
+        plat="$(get_platform "$url")"
+        read -r owner repo <<< "$(get_owner_repo "$url")"
+
+        if [[ "$plat" == "github" ]] && command -v gh >/dev/null 2>&1; then
+            gh pr view "$NUMBER" --repo "$owner/$repo" \
+                --json state,title,mergeable,mergeStateStatus,statusCheckRollup,reviewDecision,url
+        elif [[ "$plat" == "github" ]]; then
+            curl -sS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+                "https://api.github.com/repos/$owner/$repo/pulls/$NUMBER" \
+                | python3 -c "
+import json, sys
+p = json.load(sys.stdin)
+print(f\"PR #{p['number']}: {p['title']}\")
+print(f\"  State:      {p['state']}\")
+print(f\"  Mergeable:  {p['mergeable']}\")
+print(f\"  URL:        {p['html_url']}\")
+"
+        else
+            curl -sS -H "Authorization: token $GITEE_TOKEN" \
+                "https://gitee.com/api/v5/repos/$owner/$repo/pulls/$NUMBER" \
+                | python3 -c "
+import json, sys
+p = json.load(sys.stdin)
+print(f\"PR #{p['number']}: {p['title']}\")
+print(f\"  State:      {p['state']}\")
+print(f\"  Mergeable:  {p.get('mergeable', 'n/a')}\")
+print(f\"  URL:        {p['html_url']}\")
+"
+        fi
+        ;;
+
+    pr-wait)
+        [[ -n "$NUMBER" ]] || { echo "--number required" >&2; exit 1; }
+        (( TIMEOUT >= 10 )) || TIMEOUT=10
+        interval=10
+        elapsed=0
+        attempt=0
+
+        url="$(get_remote_url)"
+        plat="$(get_platform "$url")"
+        read -r owner repo <<< "$(get_owner_repo "$url")"
+
+        while (( elapsed < TIMEOUT )); do
+            attempt=$((attempt + 1))
+
+            if [[ "$plat" == "github" ]] && command -v gh >/dev/null 2>&1; then
+                pr_json="$(gh pr view "$NUMBER" --repo "$owner/$repo" \
+                    --json mergeStateStatus,statusCheckRollup,reviewDecision)"
+                state=$(echo "$pr_json" | python3 -c "import json,sys; print(json.load(sys.stdin).get('mergeStateStatus',''))")
+                pending=$(echo "$pr_json" | python3 -c "
+import json, sys
+rollup = json.load(sys.stdin).get('statusCheckRollup') or []
+print(sum(1 for c in rollup if c.get('conclusion') not in ('SUCCESS','SKIPPEN','NEUTRAL')))
+")
+                review=$(echo "$pr_json" | python3 -c "import json,sys; print(json.load(sys.stdin).get('reviewDecision') or '')")
+                if [[ "$state" == "GREEN" && "$pending" == "0" && ( -z "$review" || "$review" == "APPROVED" ) ]]; then
+                    echo "PR #$NUMBER is ready (attempt $attempt)"
+                    exit 0
+                fi
+            else
+                # Fallback: assume ready after polling once (no detailed checks)
+                echo "[$attempt] polling PR #$NUMBER (next check in ${interval}s)"
+                if (( attempt == 1 )); then
+                    # Real check via curl
+                    if [[ "$plat" == "github" ]]; then
+                        ready=$(curl -sS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+                            "https://api.github.com/repos/$owner/$repo/pulls/$NUMBER" \
+                            | python3 -c "import json,sys; print(json.load(sys.stdin).get('mergeable', False))")
+                    else
+                        ready=$(curl -sS -H "Authorization: token $GITEE_TOKEN" \
+                            "https://gitee.com/api/v5/repos/$owner/$repo/pulls/$NUMBER" \
+                            | python3 -c "import json,sys; print(json.load(sys.stdin).get('mergeable', False))")
+                    fi
+                    if [[ "$ready" == "True" ]]; then
+                        echo "PR #$NUMBER is mergeable (attempt $attempt)"
+                        exit 0
+                    fi
+                fi
+            fi
+
+            echo "[$attempt] state=$state pending=$pending review=$review (next check in ${interval}s)"
+            sleep "$interval"
+            elapsed=$((elapsed + interval))
+        done
+        echo "Timed out after ${TIMEOUT}s waiting for PR #$NUMBER" >&2
+        exit 1
         ;;
 
     issue-create)

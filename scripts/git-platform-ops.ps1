@@ -7,10 +7,13 @@
 #
 # Subcommands:
 #   auth-status                                  Show loaded tokens (masked)
+#   auth-gh                                      Set up gh CLI auth from GH_TOKEN
 #   info                                         Show current repo + platform
 #   push [-Branch X] [-Remote Y]                 git push with injected auth
 #   pr-create -Title "..." -Body "..." -Base main  Create a PR
 #   pr-list [-Limit N]                           List open PRs
+#   pr-status -Number N                          Show PR state, mergeable, CI checks
+#   pr-wait -Number N [-Timeout 600]             Poll PR until checks pass or timeout
 #   issue-create -Title "..." -Body "..."        Create an issue
 #   issue-list [-Limit N]                        List open issues
 #
@@ -21,7 +24,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)]
-    [ValidateSet('auth-status', 'info', 'push', 'pr-create', 'pr-list', 'issue-create', 'issue-list')]
+    [ValidateSet('auth-status', 'auth-gh', 'info', 'push', 'pr-create', 'pr-list', 'pr-status', 'pr-wait', 'issue-create', 'issue-list')]
     [string]$Action,
 
     [string]$Remote = 'origin',
@@ -29,7 +32,9 @@ param(
     [string]$Title,
     [string]$Body,
     [string]$Base,
+    [int]$Number = 0,
     [int]$Limit = 10,
+    [int]$Timeout = 600,
     [string]$TokenFile = '.git-token'
 )
 
@@ -172,6 +177,26 @@ switch ($Action) {
         }
     }
 
+    'auth-gh' {
+        if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
+            Write-Error "gh CLI not installed. Install: https://cli.github.com"
+            exit 1
+        }
+        if (-not (Test-Path $TokenFile)) {
+            Write-Error "Token file not found: $TokenFile"
+            exit 1
+        }
+        $tok = Get-Token -VarName 'GH_TOKEN'
+        $tok | gh auth login --with-token
+        if ($LASTEXITCODE -ne 0) { throw "gh auth login failed" }
+        $login = gh api user --jq '.login' 2>$null
+        if ($login) {
+            Write-Host "gh CLI authenticated as $login"
+        } else {
+            Write-Host "gh CLI authentication completed"
+        }
+    }
+
     'info' {
         try {
             $url  = Get-RemoteUrl -RemoteName $Remote
@@ -262,6 +287,81 @@ switch ($Action) {
         } catch {
             Write-Error $_.Exception.Message; exit 1
         }
+    }
+
+    'pr-status' {
+        if ($Number -le 0) { Write-Error '-Number is required for pr-status'; exit 1 }
+        try {
+            $url  = Get-RemoteUrl -RemoteName $Remote
+            $plat = Get-Platform   -Url $url
+            $or   = Get-OwnerRepo  -Url $url
+
+            if ($plat -eq 'github') {
+                if (Get-Command gh -ErrorAction SilentlyContinue) {
+                    gh pr view $Number --repo "$($or.Owner)/$($or.Repo)" `
+                        --json state,title,mergeable,mergeStateStatus,statusCheckRollup,reviewDecision,url `
+                        | ConvertFrom-Json | Format-List
+                } else {
+                    $pr = Invoke-GithubApi -Method GET -Path "/repos/$($or.Owner)/$($or.Repo)/pulls/$Number"
+                    Write-Host "PR #$($pr.number): $($pr.title)"
+                    Write-Host "  State:      $($pr.state)"
+                    Write-Host "  Mergeable:  $($pr.mergeable)"
+                    Write-Host "  URL:        $($pr.html_url)"
+                }
+            } else {
+                $pr = Invoke-GiteeApi -Method GET -Path "/repos/$($or.Owner)/$($or.Repo)/pulls/$Number"
+                Write-Host "PR #$($pr.number): $($pr.title)"
+                Write-Host "  State:      $($pr.state)"
+                Write-Host "  Mergeable:  $($pr.mergeable)"
+                Write-Host "  URL:        $($pr.html_url)"
+            }
+        } catch {
+            Write-Error $_.Exception.Message; exit 1
+        }
+    }
+
+    'pr-wait' {
+        if ($Number -le 0) { Write-Error '-Number is required for pr-wait'; exit 1 }
+        if ($Timeout -lt 10) { $Timeout = 10 }
+        $interval = 10
+        $deadline = (Get-Date).AddSeconds($Timeout)
+        $attempt = 0
+
+        while ((Get-Date) -lt $deadline) {
+            $attempt++
+            $url  = Get-RemoteUrl -RemoteName $Remote
+            $plat = Get-Platform   -Url $url
+            $or   = Get-OwnerRepo  -Url $url
+
+            if ($plat -eq 'github') {
+                if (Get-Command gh -ErrorAction SilentlyContinue) {
+                    $pr = gh pr view $Number --repo "$($or.Owner)/$($or.Repo)" `
+                        --json state,mergeStateStatus,statusCheckRollup,reviewDecision `
+                        | ConvertFrom-Json
+                    $state = $pr.mergeStateStatus
+                    $checks = ($pr.statusCheckRollup | Where-Object { $_.conclusion -notin @('SUCCESS','SKIPPED','NEUTRAL') }).Count
+                    $review = $pr.reviewDecision
+                } else {
+                    $resp = Invoke-GithubApi -Method GET -Path "/repos/$($or.Owner)/$($or.Repo)/pulls/$Number"
+                    $state = if ($resp.mergeable) { 'CLEAN' } else { 'DIRTY' }
+                    $checks = -1; $review = $null
+                }
+                $ready = ($state -in @('GREEN','CLEAN')) -and ($checks -eq 0) -and ($review -in @($null,'APPROVED'))
+            } else {
+                $resp = Invoke-GiteeApi -Method GET -Path "/repos/$($or.Owner)/$($or.Repo)/pulls/$Number"
+                $state = if ($resp.mergeable) { 'CLEAN' } else { 'DIRTY' }
+                $ready = ($state -eq 'CLEAN')
+            }
+
+            if ($ready) {
+                Write-Host "PR #$Number is ready (attempt $attempt)"
+                exit 0
+            }
+            Write-Host "[$attempt] state=$state checks_pending=$checks review=$review (next check in ${interval}s)"
+            Start-Sleep -Seconds $interval
+        }
+        Write-Error "Timed out after ${Timeout}s waiting for PR #$Number"
+        exit 1
     }
 
     'issue-create' {
