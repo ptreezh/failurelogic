@@ -1,6 +1,9 @@
-# .git-token.example — template for local git credentials.
+# .git-token.example — template for local credentials.
 # Copy to .git-token (which is gitignored) and fill in real values.
 #
+# ============================================================================
+# Git platform tokens (used by scripts/git-platform-ops.{ps1,sh})
+# ============================================================================
 # Generate tokens at:
 #   GitHub: https://github.com/settings/personal-access-tokens/new
 #   Gitee:  https://gitee.com/personal_access_tokens
@@ -14,8 +17,23 @@
 # How they get used:
 #   .\scripts\with-token.ps1 -Run "git push https://x-access-token:`$GH_TOKEN@github.com/user/repo.git"
 #   .\scripts\with-token.ps1 -Run "git push https://oauth2:`$GITEE_TOKEN@gitee.com/user/repo.git"
-#
-# IMPORTANT: never paste actual token values into chat, screenshots, or commits.
 
 GH_TOKEN=ghp_replace_me_with_fine_grained_pat
 GITEE_TOKEN=replace_me_with_gitee_personal_token
+
+# ============================================================================
+# Publish tokens (used by scripts/publish-ops.{ps1,sh})
+# ============================================================================
+# Leave any section blank if you don't use that tool. The wrapper scripts
+# only require the tokens they actually need for the chosen subcommand.
+#
+# Docker Hub: https://hub.docker.com/settings/security
+#   DOCKERHUB_USERNAME = your Docker Hub username
+#   DOCKERHUB_TOKEN    = Personal Access Token (not your password)
+#
+# npm: https://www.npmjs.com/settings/~/tokens
+#   NPM_TOKEN = Automation token (publish without 2FA prompts)
+
+DOCKERHUB_USERNAME=your_dockerhub_username
+DOCKERHUB_TOKEN=dckr_pat_replace_me
+NPM_TOKEN=npm_replace_me

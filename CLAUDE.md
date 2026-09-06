@@ -245,5 +245,6 @@ AI assistants (Claude Code, Doubao, etc.) working in this repo must follow these
 
 ## Agent Skills Available
 
-- **`git-platform-ops`** (auto-loaded for this repo) — preferred for push, PR, and issue operations. See `.claude/skills/git-platform-ops/SKILL.md`. Both PowerShell (`scripts/git-platform-ops.ps1`) and Bash (`scripts/git-platform-ops.sh`) versions available.
+- **`git-platform-ops`** (auto-loaded for this repo) — preferred for push, PR, and issue operations. See `.claude/skills/git-platform-ops/SKILL.md`. Both PowerShell (`scripts/git-platform-ops.ps1`) and Bash (`scripts/git-platform-ops.sh`) versions available. Subcommands: `auth-gh`, `auth-status`, `info`, `push`, `pr-create`, `pr-list`, `pr-status`, `pr-wait`, `issue-create`, `issue-list`.
+- **`publish-ops`** — Docker build/push and npm publish with token injection from `.git-token`. Wrapper: `scripts/publish-ops.{ps1,sh}`. Subcommands: `docker-build`, `docker-push`, `npm-publish`. Use the same security model as `git-platform-ops`.
 - For non-Claude agents (Doubao, etc.), point them at `docs/agent-skill-git-platform-ops.md` before any git auth operation.
