@@ -225,3 +225,19 @@ The frontend automatically routes API requests via `assets/js/api-config-manager
 - **Cross-Origin Issues**: The backend has CORS enabled for all origins during development. Adjust for production.
 - **Difficulty Levels**: When creating game sessions, always pass the `difficulty` parameter to ensure proper scenario scaling.
 - **Decision Pattern Tracking**: Each game session maintains its own `DecisionPatternTracker` instance for personalized feedback.
+
+## Security Practices (for AI Tools)
+
+AI assistants (Claude Code, Doubao, etc.) working in this repo must follow these rules. They protect tokens from leaking into chat logs, screenshots, or commits.
+
+- **Never read or quote credentials.** `.env`, `.git-token`, and any `*credentials*` / `*.pem` file contains secrets. Do not `Read`, `cat`, `echo`, or paste their contents into chat.
+- **Suggest commands via env var references.** Use `$env:GH_TOKEN` / `$env:GITEE_TOKEN` in suggested commands, never literal token values.
+- **Wrap auth commands with `scripts/with-token.ps1`.** It loads tokens from `.git-token` (gitignored) into the spawned process without exposing them:
+  ```powershell
+  .\scripts\with-token.ps1 -Run "git push origin main"
+  .\scripts\with-token.ps1 -Shell   # for multi-command sessions
+  ```
+- **Minimum token scopes when generating new ones:**
+  - GitHub: Fine-grained PAT, single repo, Contents: Read+Write only, 7-day expiry
+  - Gitee: Personal Token, `projects` scope only, 7-day expiry
+- **If a token is exposed** (chat log, screenshot, commit, public file): stop work, revoke it at the issuer's settings page, regenerate, and audit access logs.

@@ -1,0 +1,21 @@
+# .git-token.example — template for local git credentials.
+# Copy to .git-token (which is gitignored) and fill in real values.
+#
+# Generate tokens at:
+#   GitHub: https://github.com/settings/personal-access-tokens/new
+#   Gitee:  https://gitee.com/personal_access_tokens
+#
+# Token guidance:
+#   - Expiry: 7 days or less
+#   - GitHub: use Fine-grained PAT, scope to ONE repo, Contents: Read and write
+#   - Gitee: scope = projects only
+#   - Both: do NOT enable account-wide or admin scopes
+#
+# How they get used:
+#   .\scripts\with-token.ps1 -Run "git push https://x-access-token:`$GH_TOKEN@github.com/user/repo.git"
+#   .\scripts\with-token.ps1 -Run "git push https://oauth2:`$GITEE_TOKEN@gitee.com/user/repo.git"
+#
+# IMPORTANT: never paste actual token values into chat, screenshots, or commits.
+
+GH_TOKEN=ghp_replace_me_with_fine_grained_pat
+GITEE_TOKEN=replace_me_with_gitee_personal_token

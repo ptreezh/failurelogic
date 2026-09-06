@@ -147,6 +147,7 @@ validation_report.json
 # Scripts, skills, types, assets features (not yet production)
 scripts/
 !scripts/prepare-pages.sh
+!scripts/with-token.ps1
 skills/
 types/
 assets/js/adaptive-learning-system.js
@@ -251,6 +252,9 @@ tests/unit/run-relationship-tests.js
 .env
 .env.*
 !.env.example
+.git-token
+.git-token.*
+!.git-token.example
 .kode-config.json
 .kode-config.*.json
 !.kode-config.example.json
