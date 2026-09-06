@@ -49,12 +49,21 @@ jobs:
       - name: PowerShell wrapper tests (publish-ops)
         run: pwsh tests/publish-ops/test.ps1
 
+      - name: Bash wrapper tests (release-ops)
+        run: bash tests/release-ops/test.sh
+
+      - name: PowerShell wrapper tests (release-ops)
+        # release-ops tests create temp git repos via git init.
+        run: pwsh tests/release-ops/test.ps1
+
       - name: Verify scripts are syntactically valid
         run: |
           echo "--- bash -n scripts/git-platform-ops.sh ---"
           bash -n scripts/git-platform-ops.sh && echo "OK"
           echo "--- bash -n scripts/publish-ops.sh ---"
           bash -n scripts/publish-ops.sh && echo "OK"
+          echo "--- bash -n scripts/release-ops.sh ---"
+          bash -n scripts/release-ops.sh && echo "OK"
           echo "--- pwsh lint scripts/git-platform-ops.ps1 ---"
           pwsh -NoProfile -Command '
             $errors = $null
@@ -85,6 +94,18 @@ jobs:
             $tokens = $null
             [void][System.Management.Automation.Language.Parser]::ParseFile(
               (Resolve-Path "scripts/publish-ops.ps1").Path, [ref]$tokens, [ref]$errors)
+            if ($errors -and $errors.Count -gt 0) {
+              $errors | ForEach-Object { Write-Host $_ }
+              exit 1
+            }
+            Write-Host "OK"
+          '
+          echo "--- pwsh lint scripts/release-ops.ps1 ---"
+          pwsh -NoProfile -Command '
+            $errors = $null
+            $tokens = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile(
+              (Resolve-Path "scripts/release-ops.ps1").Path, [ref]$tokens, [ref]$errors)
             if ($errors -and $errors.Count -gt 0) {
               $errors | ForEach-Object { Write-Host $_ }
               exit 1

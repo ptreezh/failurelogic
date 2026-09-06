@@ -175,7 +175,7 @@ case "$ACTION" in
             exit 1
         fi
         require_token GH_TOKEN
-        echo "$GH_TOKEN" | gh auth login --with-token
+        echo "$GH_TOKEN" | gh auth login --with-token >/dev/null 2>&1 || true
         login=$(gh api user --jq '.login' 2>/dev/null || true)
         if [[ -n "$login" ]]; then
             echo "gh CLI authenticated as $login"
