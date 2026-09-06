@@ -32,6 +32,8 @@ usage() {
 }
 
 # ---- Parse args --------------------------------------------------------------
+# Handle --help / -h as first positional (before ACTION assignment).
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then usage 0; fi
 if [[ $# -lt 1 ]]; then usage 1; fi
 ACTION="$1"; shift
 
