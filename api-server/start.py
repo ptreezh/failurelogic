@@ -486,7 +486,12 @@ async def execute_turn(game_id: str, decisions: Dict[str, Any]):
     decision_record = {
         "turn": current_state["turn_number"],
         "decisions": decisions,
-        "result_state": new_state.copy(),
+        # NOTE: deliberately NOT embedding new_state here. Previously each
+        # decision_record embedded the full new_state (which itself contained
+        # the full decision_history), causing O(2^N) response growth.
+        # Consumers (feedback_real.py, turn_helpers.py) only need the
+        # `decisions` field — the latest state is always available in the
+        # response's top-level `game_state`. See docs/audit-2026-09-07.md.
         "difficulty": difficulty,
         "timestamp": datetime.now().isoformat()
     }

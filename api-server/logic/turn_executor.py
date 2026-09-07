@@ -33,7 +33,10 @@ def execute_real_logic(
     new_state = current_state.copy()
 
     # 根据不同场景和难度执行逻辑
-    if scenario_id == "coffee-shop-linear-thinking":
+    # Scenario IDs accept both the canonical (BASE_SCENARIOS in start.py) and
+    # legacy names so in-flight URLs don't break after renames. See
+    # docs/audit-2026-09-07.md for the rename history.
+    if scenario_id in ("coffee-shop-linear-thinking", "coffee-shop-nonlinear-effects"):
         # 咖啡店场景：线性思维陷阱
         action = decisions.get("action", "")
         amount = decisions.get("amount", 0)
@@ -250,7 +253,7 @@ def execute_real_logic(
                         100, new_state["satisfaction"] + network_effect
                     )
 
-    elif scenario_id == "investment-confirmation-bias":
+    elif scenario_id in ("investment-confirmation-bias", "investment-information-processing"):
         # 投资场景：确认偏误
         action = decisions.get("action", "")
         amount = decisions.get("amount", 0)
