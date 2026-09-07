@@ -7,10 +7,13 @@
 #       List commits since the given tag (default: most recent tag, or HEAD
 #       if no tags exist).
 #
-#   tag --version V [--message "..."] [--push] [--dry-run]
-#       Create an annotated git tag.
+#   verify --version V
+#       Verify a signed tag's GPG signature.
 #
-#   release --version V [--title "..."] [--notes-file PATH] [--draft] [--dry-run]
+#   tag --version V [--message "..."] [--push] [--dry-run] [--sign] [--sign-key ID]
+#       Create an annotated (or signed) git tag.
+#
+#   release --version V [--title "..."] [--notes-file PATH] [--draft] [--dry-run] [--sign] [--sign-key ID]
 #       Create a GitHub release for the given tag.
 #
 # Setup:
@@ -31,6 +34,8 @@ TITLE=""
 PUSH=0
 DRAFT=0
 DRY_RUN=0
+SIGN=0
+SIGN_KEY=""
 REMOTE="origin"
 TOKEN_FILE=".git-token"
 
@@ -56,6 +61,8 @@ while [[ $# -gt 0 ]]; do
         --push)       PUSH=1; shift ;;
         --draft)      DRAFT=1; shift ;;
         --dry-run)    DRY_RUN=1; shift ;;
+        --sign)       SIGN=1; shift ;;
+        --sign-key)   SIGN_KEY="$2"; shift 2 ;;
         --remote)     REMOTE="$2"; shift 2 ;;
         --token-file) TOKEN_FILE="$2"; shift 2 ;;
         *) echo "Unknown arg: $1" >&2; usage 1 ;;
@@ -153,15 +160,27 @@ case "$ACTION" in
         fi
 
         msg="${MESSAGE:-Release $full_tag}"
+        # Build the tag command based on --sign flag.
+        if (( SIGN )); then
+            tag_args=(tag -s "$full_tag" -m "$msg")
+            if [[ -n "$SIGN_KEY" ]]; then
+                tag_args=("${tag_args[@]}" -u "$SIGN_KEY")
+            fi
+            tag_kind="signed"
+        else
+            tag_args=(tag -a "$full_tag" -m "$msg")
+            tag_kind="annotated"
+        fi
+
         if (( DRY_RUN )); then
-            echo "[dry-run] git tag -a $full_tag -m '$msg'" >&2
+            echo "[dry-run] git ${tag_args[*]}" >&2
             if (( PUSH )); then
                 echo "[dry-run] git push $REMOTE $full_tag" >&2
             fi
             exit 0
         fi
-        git tag -a "$full_tag" -m "$msg"
-        echo "Created tag $full_tag"
+        git "${tag_args[@]}"
+        echo "Created $tag_kind tag $full_tag"
         if (( PUSH )); then
             echo ">>> git push $REMOTE $full_tag" >&2
             git push "$REMOTE" "$full_tag"
@@ -189,11 +208,21 @@ case "$ACTION" in
         # Create tag if missing
         if ! git rev-parse -q --verify "refs/tags/$full_tag" >/dev/null; then
             msg="${MESSAGE:-Release $full_tag}"
-            if (( DRY_RUN )); then
-                echo "[dry-run] git tag -a $full_tag -m '$msg'" >&2
+            if (( SIGN )); then
+                tag_args=(tag -s "$full_tag" -m "$msg")
+                if [[ -n "$SIGN_KEY" ]]; then
+                    tag_args=("${tag_args[@]}" -u "$SIGN_KEY")
+                fi
+                tag_kind="signed"
             else
-                git tag -a "$full_tag" -m "$msg"
-                echo "Created tag $full_tag"
+                tag_args=(tag -a "$full_tag" -m "$msg")
+                tag_kind="annotated"
+            fi
+            if (( DRY_RUN )); then
+                echo "[dry-run] git ${tag_args[*]}" >&2
+            else
+                git "${tag_args[@]}"
+                echo "Created $tag_kind tag $full_tag"
             fi
         fi
 
@@ -234,6 +263,28 @@ case "$ACTION" in
         echo ">>> gh release create $full_tag" >&2
         gh release create "$full_tag" --notes-file "$notes_path" "${title_arg[@]}" "${draft_arg[@]}"
         echo "Released $full_tag"
+        ;;
+
+    verify)
+        if [[ -z "$VERSION" ]]; then
+            echo "--version required" >&2; exit 1
+        fi
+        full_tag="v${VERSION#v}"
+        if ! git rev-parse -q --verify "refs/tags/$full_tag" >/dev/null; then
+            echo "Tag '$full_tag' does not exist locally." >&2; exit 1
+        fi
+        echo ">>> git tag -v $full_tag" >&2
+        # git tag -v returns 1 if unsigned or signature invalid.
+        # Suppress GPG's interactive prompts; capture exit code.
+        GIT_TERMINAL_PROMPT=0 git tag -v "$full_tag"
+        rc=$?
+        if [[ $rc -eq 0 ]]; then
+            echo "OK: signature verified for $full_tag"
+            exit 0
+        else
+            echo "FAIL: signature check returned exit $rc" >&2
+            exit 1
+        fi
         ;;
 
     *) echo "Unknown action: $ACTION" >&2; usage 1 ;;

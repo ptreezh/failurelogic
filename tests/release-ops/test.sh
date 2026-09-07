@@ -97,7 +97,7 @@ assert_contains "tag accepts v-prefixed semver (dry-run)" "$out" "git tag -a v2.
 # T5: tag creates annotated tag (real run)
 repo="$(make_repo)"
 out="$(cd "$repo" && "$WRAPPER" tag --version 0.1.0 2>&1 || true)"
-assert_contains "tag creation succeeds" "$out" "Created tag v0.1.0"
+assert_contains "tag creation succeeds" "$out" "tag v0.1.0"
 tag_list="$(cd "$repo" && git tag -l)"
 assert_contains "tag v0.1.0 exists" "$tag_list" "v0.1.0"
 tag_type="$(cd "$repo" && git cat-file -t v0.1.0 2>/dev/null || true)"
@@ -163,6 +163,35 @@ assert_contains "release --dry-run prints dry-run tag line" "$out" "[dry-run] gi
 assert_contains "release --dry-run prints dry-run push line" "$out" "[dry-run] git push"
 tag_list="$(cd "$repo" && git tag -l)"
 assert_not_contains "release --dry-run does not actually create tag" "$tag_list" "v1.5.0"
+
+# T14: tag --sign emits git tag -s
+repo="$(make_repo)"
+out="$(cd "$repo" && "$WRAPPER" tag --version 1.0.0 --sign --dry-run 2>&1 || true)"
+assert_contains "tag --sign uses -s flag in dry-run" "$out" "git tag -s v1.0.0"
+
+# T15: tag --sign-key emits -u KEY
+repo="$(make_repo)"
+out="$(cd "$repo" && "$WRAPPER" tag --version 1.0.0 --sign --sign-key ABCDEF12 --dry-run 2>&1 || true)"
+assert_contains "tag --sign-key uses -u with key id" "$out" "-u ABCDEF12"
+
+# T16: tag without --sign defaults to -a
+repo="$(make_repo)"
+out="$(cd "$repo" && "$WRAPPER" tag --version 1.0.0 --dry-run 2>&1 || true)"
+assert_contains "tag without --sign uses -a (annotated)" "$out" "git tag -a v1.0.0"
+assert_not_contains "tag without --sign does not mention signed" "$out" "signed"
+
+# T17: verify requires --version
+out="$(cd "$REPO_ROOT" && "$WRAPPER" verify 2>&1 || true)"
+assert_contains "verify requires --version" "$out" "--version required"
+
+# T18: verify on nonexistent tag
+out="$(cd "$REPO_ROOT" && "$WRAPPER" verify --version 99.99.99 2>&1 || true)"
+assert_contains "verify errors on nonexistent tag" "$out" "does not exist"
+
+# T19: --help mentions --sign
+out="$(cd "$REPO_ROOT" && "$WRAPPER" --help 2>&1)"
+assert_contains "--help mentions --sign" "$out" "--sign"
+assert_contains "--help mentions verify" "$out" "verify"
 
 echo ""
 echo "=== Results: $PASS passed, $FAIL failed ==="

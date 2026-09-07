@@ -132,7 +132,7 @@ Assert-Contains -Desc 'tag accepts v-prefixed semver' -Haystack $out -Needle 'gi
 # T5: tag creates annotated tag (real run)
 $repo = New-TempRepo
 $out = Invoke-Release -Action 'tag' -Dir $repo -Extra @{ Version = '0.1.0' }
-Assert-Contains -Desc 'tag creation succeeds' -Haystack $out -Needle 'Created tag v0.1.0'
+Assert-Contains -Desc 'tag creation succeeds' -Haystack $out -Needle 'tag v0.1.0'
 Push-Location $repo
 try {
     $existing = git tag -l
@@ -236,6 +236,35 @@ try {
     Pop-Location
 }
 Assert-NotContains -Desc 'release --dry-run does not actually create tag' -Haystack $existingTags -Needle 'v1.5.0'
+
+# T14: tag -Sign emits git tag -s
+$repo = New-TempRepo
+$out = Invoke-Release -Action 'tag' -Dir $repo -Extra @{ Version = '1.0.0'; Sign = $true; DryRun = $true }
+Assert-Contains -Desc 'tag -Sign uses -s in dry-run' -Haystack $out -Needle 'git tag -s v1.0.0'
+
+# T15: tag -SignKey emits -u KEY
+$repo = New-TempRepo
+$out = Invoke-Release -Action 'tag' -Dir $repo -Extra @{ Version = '1.0.0'; Sign = $true; SignKey = 'ABCDEF12'; DryRun = $true }
+Assert-Contains -Desc 'tag -SignKey uses -u with key id' -Haystack $out -Needle '-u ABCDEF12'
+
+# T16: tag without -Sign defaults to -a
+$repo = New-TempRepo
+$out = Invoke-Release -Action 'tag' -Dir $repo -Extra @{ Version = '1.0.0'; DryRun = $true }
+Assert-Contains -Desc 'tag without -Sign uses -a' -Haystack $out -Needle 'git tag -a v1.0.0'
+Assert-NotContains -Desc 'tag without -Sign does not mention signed' -Haystack $out -Needle 'signed'
+
+# T17: verify requires -Version
+$out = Invoke-Release -Action 'verify' -Dir $RepoRoot
+Assert-Contains -Desc 'verify requires -Version' -Haystack $out -Needle '-Version is required'
+
+# T18: verify on nonexistent tag
+$out = Invoke-Release -Action 'verify' -Dir $RepoRoot -Extra @{ Version = '99.99.99' }
+Assert-Contains -Desc 'verify errors on nonexistent tag' -Haystack $out -Needle 'does not exist'
+
+# T19: --help mentions Sign and verify
+$out = pwsh -NoProfile -File $Wrapper --help 2>&1 | Out-String
+Assert-Contains -Desc '--help mentions -Sign' -Haystack $out -Needle '-Sign'
+Assert-Contains -Desc '--help mentions verify' -Haystack $out -Needle 'verify'
 
 Cleanup-TempDirs
 

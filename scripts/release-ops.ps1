@@ -9,11 +9,14 @@
 #       List commits since the given tag (default: most recent tag, or HEAD
 #       if no tags exist). Useful for changelog generation.
 #
-#   tag -Version V [-Message "..."] [-Push] [-DryRun]
+#   tag -Version V [-Message "..."] [-Push] [-DryRun] [-Sign] [-SignKey ID]
 #       Create an annotated git tag. With -Push, also push to origin.
 #       Version is validated as semver (X.Y.Z, optional -rc.N / -beta.N suffix).
 #
-#   release -Version V [-Title "..."] [-NotesFile PATH] [-Draft] [-DryRun]
+#   release -Version V [-Title "..."] [-NotesFile PATH] [-Draft] [-DryRun] [-Sign] [-SignKey ID]
+#
+#   verify -Version V
+#       Verify a signed tag's GPG signature.
 #       Create a GitHub release for the given tag. Pushes the tag if needed,
 #       then calls `gh release create`. Requires auth-gh to have been run
 #       first, or pass -TokenFile to load GH_TOKEN inline.
@@ -40,6 +43,8 @@ param(
     [switch]$Push,
     [switch]$Draft,
     [switch]$DryRun,
+    [switch]$Sign,
+    [string]$SignKey,
     [string]$Remote = 'origin',
     [string]$TokenFile = '.git-token'
 )
@@ -56,7 +61,7 @@ if (-not $Action) {
     exit 1
 }
 
-$validActions = @('notes', 'tag', 'release')
+$validActions = @('notes', 'tag', 'release', 'verify')
 if ($Action -notin $validActions) {
     Write-Error "Unknown action: $Action. Use one of: $($validActions -join ', ')"
     exit 1
@@ -171,16 +176,27 @@ switch ($Action) {
         }
 
         $msg = if ($Message) { $Message } else { "Release $fullTag" }
+
+        # Build tag command: -s (signed) or -a (annotated).
+        if ($Sign) {
+            $tagArgs = @('-s', $fullTag, '-m', $msg)
+            if ($SignKey) { $tagArgs += @('-u', $SignKey) }
+            $tagKind = 'signed'
+        } else {
+            $tagArgs = @('-a', $fullTag, '-m', $msg)
+            $tagKind = 'annotated'
+        }
+
         if ($DryRun) {
-            Write-Host "[dry-run] git tag -a $fullTag -m '$msg'" -ForegroundColor Yellow
+            Write-Host "[dry-run] git tag $($tagArgs -join ' ')" -ForegroundColor Yellow
             if ($Push) {
                 Write-Host "[dry-run] git push $Remote $fullTag" -ForegroundColor Yellow
             }
             return
         }
-        git tag -a $fullTag -m $msg
+        git tag @tagArgs
         if ($LASTEXITCODE -ne 0) { throw "git tag failed" }
-        Write-Host "Created tag $fullTag"
+        Write-Host "Created $tagKind tag $fullTag"
         if ($Push) {
             Write-Host ">>> git push $Remote $fullTag" -ForegroundColor DarkGray
             git push $Remote $fullTag
@@ -209,12 +225,20 @@ switch ($Action) {
         $existing = git tag -l $fullTag
         if (-not $existing) {
             $msg = if ($Message) { $Message } else { "Release $fullTag" }
-            if ($DryRun) {
-                Write-Host "[dry-run] git tag -a $fullTag -m '$msg'" -ForegroundColor Yellow
+            if ($Sign) {
+                $tagArgs = @('-s', $fullTag, '-m', $msg)
+                if ($SignKey) { $tagArgs += @('-u', $SignKey) }
+                $tagKind = 'signed'
             } else {
-                git tag -a $fullTag -m $msg
+                $tagArgs = @('-a', $fullTag, '-m', $msg)
+                $tagKind = 'annotated'
+            }
+            if ($DryRun) {
+                Write-Host "[dry-run] git tag $($tagArgs -join ' ')" -ForegroundColor Yellow
+            } else {
+                git tag @tagArgs
                 if ($LASTEXITCODE -ne 0) { throw "git tag failed" }
-                Write-Host "Created tag $fullTag"
+                Write-Host "Created $tagKind tag $fullTag"
             }
         }
         # Push if not already on remote
@@ -256,6 +280,27 @@ switch ($Action) {
         # Cleanup temp notes
         if (-not $NotesFile -and (Test-Path $notesPath)) {
             Remove-Item $notesPath -Force -ErrorAction SilentlyContinue
+        }
+    }
+
+    'verify' {
+        if (-not $Version) { Write-Error '-Version is required for verify'; exit 1 }
+        $fullTag = if ($Version -match '^v') { $Version } else { "v$Version" }
+        $existing = git tag -l $fullTag
+        if (-not $existing) {
+            Write-Error "Tag '$fullTag' does not exist locally."
+            exit 1
+        }
+        Write-Host ">>> git tag -v $fullTag" -ForegroundColor DarkGray
+        # Disable GPG's interactive prompt; capture exit code.
+        $env:GIT_TERMINAL_PROMPT = '0'
+        git tag -v $fullTag
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "OK: signature verified for $fullTag"
+            exit 0
+        } else {
+            Write-Error "Signature check failed (exit $LASTEXITCODE)"
+            exit 1
         }
     }
 }
