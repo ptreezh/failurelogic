@@ -158,11 +158,34 @@ Design proposal (next commit):
 
 ## What to do RIGHT NOW
 
-1. Commit this audit doc (no code change)
-2. Wait for user confirmation on:
-   - Is "depth on Challenger" the right priority?
-   - Or do they want a different scenario?
-   - Or do they want to redesign the project from scratch with proper
-     Dörner scenarios?
-3. Until user confirms, do NOT touch existing scenarios (would be a
-   step backward without alignment)
+1. ✅ Commit this audit doc (done: 2e3d945)
+2. ✅ Design deep scenario content (done: 4fb84c7 — challenger_launch.json)
+3. ✅ Register Challenger in BASE_SCENARIOS (done: 77a990c — appears in /scenarios/)
+4. ⏸ Backend execute_real_logic for Challenger — DEFERRED (not yet wired)
+5. ⏸ Frontend narrative renderer — DEFERRED (5x bigger than backend)
+6. ⏸ End-to-end cognitive impact verification — DEFERRED
+
+## Open questions for user
+
+Before continuing implementation, I need to confirm direction:
+
+1. **Is Challenger the right priority?**
+   - Challenger is a real historical case, all 5 Dörner lessons fit naturally
+   - But it's dated (1986), modern learners may not relate
+   - Alternative: design a contemporary scenario (e.g., supply-chain crisis,
+     startup scaling decision, climate policy)
+
+2. **Should the 30 shallow scenarios be removed?**
+   - Currently they're noise around the one deep scenario
+   - User said "shallow ones have no value"
+   - But removing content is destructive; may break user expectations
+
+3. **Front-end investment is the real blocker**
+   - Backend work is ~80 lines (manageable)
+   - Frontend narrative renderer + option picker + state visualizer is
+     ~300-500 lines (substantial UX work)
+   - Should I scope it as "minimum viable Challenger UI" (basic text +
+     4 buttons) or invest in proper state visualization?
+
+The audit and Challenger design are committed. The next commit depends
+on user direction.
