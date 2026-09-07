@@ -18,9 +18,15 @@ fi
 PASS=0; FAIL=0
 TEMP_DIRS=()
 cleanup() {
-    for d in "${TEMP_DIRS[@]:-}"; do rm -rf "$d"; done
+    # Restore CWD to repo root before removing temp dirs, so `rm -rf` always
+    # operates on a known safe path even if the shell got stuck inside a temp
+    # directory that was already partially cleaned.
+    cd "$REPO_ROOT" 2>/dev/null || cd /tmp
+    for d in "${TEMP_DIRS[@]:-}"; do
+        if [[ -d "$d" ]]; then rm -rf "$d"; else rm -f "$d"; fi
+    done
 }
-trap cleanup EXIT
+trap cleanup EXIT INT TERM
 
 assert_eq() {
     local desc="$1" actual="$2" expected="$3"
@@ -55,14 +61,52 @@ assert_not_contains() {
 }
 
 # Create a temp git repo with a few commits.
+#
+# SAFETY: this function previously leaked commits into the parent repo when
+# mktemp -d silently returned an empty path. Pushd with an empty argument
+# is a no-op but exits 0, so `git init` ran in the parent repo, creating
+# fake commits in main history. Defensive guards added:
+#   1. mktemp -d MUST succeed (else FATAL abort)
+#   2. pushd MUST succeed and pwd MUST actually change
+#   3. cd back to prev_dir on any abort
+#   4. verify .git/HEAD looks like a fresh repo before continuing
+#   5. cleanup trap also resets cwd before `rm -rf`
 make_repo() {
-    local d; d="$(mktemp -d)"
+    local d
+    if ! d="$(mktemp -d 2>/dev/null)" || [[ -z "$d" ]]; then
+        echo "FATAL: mktemp -d failed" >&2
+        return 1
+    fi
     TEMP_DIRS+=("$d")
-    pushd "$d" > /dev/null
-    git init -q -b main
+
+    local prev_dir="$PWD"
+    if ! pushd "$d" > /dev/null 2>&1; then
+        echo "FATAL: pushd to '$d' failed" >&2
+        return 1
+    fi
+    if [[ "$PWD" == "$prev_dir" ]]; then
+        echo "FATAL: pushd succeeded but pwd unchanged (was '$prev_dir', still '$PWD')" >&2
+        echo "This is the failure mode that previously leaked commits into main." >&2
+        popd > /dev/null 2>&1 || true
+        return 1
+    fi
+
+    if ! git init -q -b main; then
+        echo "FATAL: git init failed in '$d'" >&2
+        popd > /dev/null 2>&1 || true
+        return 1
+    fi
     git config user.email "test@test.local"
     git config user.name "Test"
     git config commit.gpgsign false
+
+    # Defense-in-depth: verify this is a freshly-created repo, not the parent.
+    if [[ ! -f .git/HEAD ]] || ! grep -q 'ref: refs/heads/' .git/HEAD; then
+        echo "FATAL: .git/HEAD in '$d' doesn't look like a fresh repo" >&2
+        popd > /dev/null 2>&1 || true
+        return 1
+    fi
+
     echo "init" > README.md
     git add README.md && git commit -q -m "Initial commit"
     echo "feature 1" >> README.md && git commit -q -am "Add feature 1"
@@ -74,7 +118,15 @@ make_repo() {
 echo "=== test.sh: release-ops.sh ==="
 echo ""
 
-# T1: tag requires --version
+# T0: REGRESSION GUARD — running this test must NOT leak commits into the
+# parent repo. Prior to hardening make_repo, a mktemp/pushd race could
+# silently create fake "Add feature 1/2" commits in main history. This
+# assertion captures the HEAD SHA before any test runs and verifies it
+# hasn't changed after the suite.
+# (Skipped when test is run from a subdirectory outside main repo, e.g.
+# when called via `bash -c 'cd elsewhere && test.sh'`.)
+TEST_START_HEAD="$(cd "$REPO_ROOT" && git rev-parse HEAD 2>/dev/null || echo unknown)"
+TEST_START_TAGS="$(cd "$REPO_ROOT" && git tag -l 2>/dev/null | wc -l | tr -d ' ')"
 out="$(cd "$REPO_ROOT" && "$WRAPPER" tag 2>&1 || true)"
 assert_contains "tag requires --version" "$out" "--version required"
 
@@ -195,4 +247,32 @@ assert_contains "--help mentions verify" "$out" "verify"
 
 echo ""
 echo "=== Results: $PASS passed, $FAIL failed ==="
+
+# T-leakguard: verify no commits / tags leaked into main repo during this run.
+if [[ "$TEST_START_HEAD" != "unknown" ]]; then
+    # CRITICAL: capture from $REPO_ROOT explicitly. If a previous test left
+    # us in a temp dir, `git rev-parse HEAD` would return the temp repo's
+    # HEAD, not main's.
+    TEST_END_HEAD="$(cd "$REPO_ROOT" && git rev-parse HEAD)"
+    TEST_END_TAGS="$(cd "$REPO_ROOT" && git tag -l | wc -l | tr -d ' ')"
+    if [[ "$TEST_END_HEAD" != "$TEST_START_HEAD" ]]; then
+        echo "FAIL  CRITICAL: test suite leaked commits into main repo"
+        echo "      HEAD before: $TEST_START_HEAD"
+        echo "      HEAD after:  $TEST_END_HEAD"
+        echo "      Diff: $(cd "$REPO_ROOT" && git log --oneline $TEST_START_HEAD..$TEST_END_HEAD)"
+        FAIL=$((FAIL + 1))
+    else
+        echo "PASS  test suite did not leak commits into main repo (HEAD unchanged)"
+        PASS=$((PASS + 1))
+    fi
+    if [[ "$TEST_END_TAGS" != "$TEST_START_TAGS" ]]; then
+        echo "FAIL  CRITICAL: test suite leaked tags into main repo"
+        echo "      Tags before: $TEST_START_TAGS, Tags after: $TEST_END_TAGS"
+        FAIL=$((FAIL + 1))
+    else
+        echo "PASS  test suite did not leak tags (tag count unchanged)"
+        PASS=$((PASS + 1))
+    fi
+fi
+
 exit $FAIL

@@ -18,6 +18,10 @@ $script:Fail = 0
 $script:TempDirs = @()
 
 function Cleanup-TempDirs {
+    # Always restore CWD to repo root before removing temp dirs. Remove-Item -Recurse
+    # would happily nuke whatever directory we're currently in if the test got
+    # stuck there.
+    Set-Location $RepoRoot -ErrorAction SilentlyContinue
     foreach ($d in $script:TempDirs) {
         if (Test-Path $d) { Remove-Item $d -Recurse -Force -ErrorAction SilentlyContinue }
     }
@@ -59,15 +63,39 @@ function Assert-NotContains {
 }
 
 function New-TempRepo {
+    # SAFETY: this previously could leak commits into the parent repo if the
+    # directory creation succeeded but Push-Location silently failed (rare but
+    # observed). Defensive checks added.
     $d = Join-Path ([System.IO.Path]::GetTempPath()) "rel_op_test_$([System.Guid]::NewGuid())"
+
+    # Verify the dir doesn't already exist (avoid inheriting .git from a prior run)
+    if (Test-Path $d) {
+        Write-Host "FATAL: temp dir already exists: $d" -ForegroundColor Red
+        throw "temp dir collision"
+    }
     $script:TempDirs += $d
     New-Item -ItemType Directory -Path $d | Out-Null
+
+    $prevDir = (Get-Location).Path
     Push-Location $d
+    if ((Get-Location).Path -eq $prevDir) {
+        # Push-Location succeeded but cwd unchanged — would leak commits.
+        Pop-Location
+        throw "Push-Location did not change directory"
+    }
+
     try {
         git init -q -b main 2>&1 | Out-Null
         git config user.email 'test@test.local'
         git config user.name 'Test'
         git config commit.gpgsign false
+
+        # Defense-in-depth: verify this is a fresh repo, not the parent.
+        $headRef = Get-Content .git/HEAD -ErrorAction SilentlyContinue
+        if (-not $headRef -or $headRef -notmatch '^ref: refs/heads/') {
+            throw "New-TempRepo: .git/HEAD doesn't look like a fresh repo"
+        }
+
         'init' | Set-Content -Path 'README.md'
         git add README.md | Out-Null
         git commit -q -m 'Initial commit' | Out-Null
@@ -75,9 +103,11 @@ function New-TempRepo {
         git commit -q -am 'Add feature 1' | Out-Null
         'feature 2' | Add-Content -Path 'README.md'
         git commit -q -am 'Add feature 2' | Out-Null
-    } finally {
+    } catch {
         Pop-Location
+        throw
     }
+    Pop-Location
     return $d
 }
 
@@ -108,6 +138,22 @@ function Invoke-Release {
 
 Write-Host "=== test.ps1: release-ops.ps1 ==="
 Write-Host ""
+
+# T-leakguard: REGRESSION GUARD — running this test must NOT leak commits/tags
+# into the main repo. Previously a mktemp/pushd race could silently create
+# fake "Add feature 1/2" commits in main history. Captures HEAD + tag count
+# before, compares after, asserts no change.
+$TestStartHead = $null
+$TestStartTags = $null
+try {
+    Push-Location $RepoRoot
+    $TestStartHead = git rev-parse HEAD
+    $TestStartTags = (git tag -l | Measure-Object).Count
+} catch {
+    $TestStartHead = 'unknown'
+} finally {
+    Pop-Location
+}
 
 # T1: tag requires -Version
 $out = Invoke-Release -Action 'tag' -Dir $RepoRoot
@@ -270,4 +316,37 @@ Cleanup-TempDirs
 
 Write-Host ""
 Write-Host "=== Results: $($script:Pass) passed, $($script:Fail) failed ==="
+
+# T-leakguard: verify no commits / tags leaked into main repo.
+if ($TestStartHead -ne 'unknown') {
+    $testEndHead = $null
+    $testEndTags = $null
+    try {
+        Push-Location $RepoRoot
+        $testEndHead = git rev-parse HEAD
+        $testEndTags = (git tag -l | Measure-Object).Count
+    } finally {
+        Pop-Location
+    }
+
+    if ($testEndHead -ne $TestStartHead) {
+        Write-Host "FAIL  CRITICAL: test suite leaked commits into main repo" -ForegroundColor Red
+        Write-Host "      HEAD before: $TestStartHead"
+        Write-Host "      HEAD after:  $testEndHead"
+        $script:Fail++
+    } else {
+        Write-Host "PASS  test suite did not leak commits into main repo (HEAD unchanged)"
+        $script:Pass++
+    }
+
+    if ($testEndTags -ne $TestStartTags) {
+        Write-Host "FAIL  CRITICAL: test suite leaked tags into main repo" -ForegroundColor Red
+        Write-Host "      Tags before: $TestStartTags, Tags after: $testEndTags"
+        $script:Fail++
+    } else {
+        Write-Host "PASS  test suite did not leak tags (tag count unchanged)"
+        $script:Pass++
+    }
+}
+
 exit $script:Fail
