@@ -253,6 +253,31 @@ def execute_real_logic(
                         100, new_state["satisfaction"] + network_effect
                     )
 
+    elif scenario_id == "challenger-launch":
+        # Dörner-style 10-turn scenario: see api-server/logic/challenger_scenario.py
+        # and api-server/data/scenarios/challenger_launch.json. Each turn the
+        # player picks option A/B/C/D; the engine applies that turn's effects
+        # from the JSON and tracks accepted_risks_count / ignored_warnings_count
+        # for the cognitive bias reveal at turn 6.
+        from logic.challenger_scenario import apply_turn as _apply_challenger
+        from logic.challenger_scenario import get_initial_state as _chal_init
+        # Seeding: if the session was created with the legacy initial_state,
+        # Challenger keys (engineer_confidence etc.) are missing. Replace the
+        # legacy keys with Challenger's own initial state before applying effects.
+        if "engineer_confidence" not in new_state:
+            chal_init = _chal_init()
+            for k, v in chal_init.items():
+                new_state.setdefault(k, v)
+        chosen_option = decisions.get("option") or decisions.get("choice") or decisions.get("action") or ""
+        _apply_challenger(new_state, chosen_option)
+        # Challenger carries its own state shape (engineer_confidence etc.)
+        # not the legacy (resources/satisfaction/reputation) triple. Drop the
+        # legacy keys so the frontend doesn't render stale numbers.
+        new_state.pop("resources", None)
+        new_state.pop("satisfaction", None)
+        new_state.pop("reputation", None)
+        new_state.pop("knowledge", None)
+
     elif scenario_id in ("investment-confirmation-bias", "investment-information-processing"):
         # 投资场景：确认偏误
         action = decisions.get("action", "")
@@ -511,11 +536,15 @@ def execute_real_logic(
             new_state["knowledge"] = min(100, new_state["knowledge"] + 20)
             new_state["satisfaction"] = max(0, new_state["satisfaction"] - 10)
 
-    # 确保数值在合理范围内
-    new_state["resources"] = max(0, new_state["resources"])
-    new_state["satisfaction"] = max(0, min(100, new_state["satisfaction"]))
-    new_state["reputation"] = max(0, min(100, new_state["reputation"]))
-    new_state["knowledge"] = max(0, min(100, new_state["knowledge"]))
+    # 确保数值在合理范围内（仅对存在 legacy 字段的场景做 clamp）
+    if "resources" in new_state:
+        new_state["resources"] = max(0, new_state["resources"])
+    if "satisfaction" in new_state:
+        new_state["satisfaction"] = max(0, min(100, new_state["satisfaction"]))
+    if "reputation" in new_state:
+        new_state["reputation"] = max(0, min(100, new_state["reputation"]))
+    if "knowledge" in new_state:
+        new_state["knowledge"] = max(0, min(100, new_state["knowledge"]))
 
     return new_state
 

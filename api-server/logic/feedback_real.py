@@ -117,10 +117,15 @@ def generate_real_feedback(
     action = decisions.get("action", "default")
     amount = decisions.get("amount", 0)
 
-    # 计算变化值
-    satisfaction_change = new_state["satisfaction"] - old_state["satisfaction"]
-    resources_change = new_state["resources"] - old_state["resources"]
-    knowledge_change = new_state["knowledge"] - old_state["knowledge"]
+    # 计算变化值（对没有 legacy 字段的场景容错）
+    satisfaction_change = new_state.get("satisfaction", 0) - old_state.get("satisfaction", 0)
+    resources_change = new_state.get("resources", 0) - old_state.get("resources", 0)
+    knowledge_change = new_state.get("knowledge", 0) - old_state.get("knowledge", 0)
+
+    # Challenger-style scenario: redirect to dedicated feedback function
+    if scenario_id == "challenger-launch":
+        from logic.challenger_scenario import generate_feedback_for_turn as _chal_fb
+        return _chal_fb(new_state, new_state.get("turn_number", 1))
 
     if scenario_id == "coffee-shop-nonlinear-effects":
         if action == "hire_staff":

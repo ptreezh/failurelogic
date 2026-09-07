@@ -7,6 +7,15 @@ Pure utility functions with no side effects on global state.
 
 from typing import Dict, List, Optional
 
+from logic.challenger_scenario import detect_pattern, generate_feedback_for_turn
+
+
+def _challenger_confusion_feedback(decisions, old_state, new_state, turn_number):
+    """Wraps generate_feedback_for_turn so turn_helpers exposes a clean
+    internal function for use inside generate_confusion_feedback's
+    scenario dispatch."""
+    return generate_feedback_for_turn(new_state, turn_number)
+
 
 def detect_decision_pattern(scenario_id: str, decision_history: List[Dict]) -> Optional[Dict]:
     """检测用户在决策历史中的模式"""
@@ -60,9 +69,15 @@ def generate_confusion_feedback(
 ) -> str:
     """生成困惑时刻反馈（第1-2回合）- 只展示结果，不揭示偏误"""
 
-    # 计算变化
-    satisfaction_change = new_state["satisfaction"] - old_state["satisfaction"]
-    resources_change = new_state["resources"] - old_state["resources"]
+    # 计算变化（对没有 legacy 字段的场景容错）
+    satisfaction_change = new_state.get("satisfaction", 0) - old_state.get("satisfaction", 0)
+    resources_change = new_state.get("resources", 0) - old_state.get("resources", 0)
+
+    # Challenger-style scenario: state has its own keys (engineer_confidence etc.)
+    if scenario_id == "challenger-launch":
+        return _challenger_confusion_feedback(
+            decisions, old_state, new_state, turn_number
+        )
 
     # 咖啡店场景的困惑反馈
     if scenario_id == "coffee-shop-nonlinear-effects":
