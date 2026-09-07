@@ -129,6 +129,10 @@ def apply_turn(state: Dict[str, Any], option_id: str) -> Dict[str, Any]:
             state[key] = max(0, min(100, state[key]))
     if "budget_used_pct" in state:
         state["budget_used_pct"] = max(0, min(200, state["budget_used_pct"]))
+    # Counter fields must be >= 0 — "un-accepting" a risk doesn't undo history.
+    for counter_key in ["accepted_risks_count", "ignored_warnings_count"]:
+        if counter_key in state:
+            state[counter_key] = max(0, state[counter_key])
 
     return state
 
@@ -198,6 +202,60 @@ def detect_pattern(state: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         }
 
     return None
+
+
+def generate_feedback_for_turn(state: Dict[str, Any], turn_number: int) -> str:
+    """Generate scenario-appropriate feedback for a turn.
+
+    For turns 1-5 (before pattern reveal): brief, action-specific feedback
+    that hints at consequences without naming them — matches Dörner's
+    'create confusion' principle.
+
+    For turn 6 (pattern reveal): structured analysis with detected bias
+    and reflection questions.
+
+    For turns 7-10: progressive insight based on accumulated pattern.
+
+    The 'feel' is intentionally restrained — letting the player discover
+    consequences rather than lecturing.
+    """
+    data = _load_scenario()
+    step = None
+    for s in data["steps"]:
+        if s["turn"] == turn_number:
+            step = s
+            break
+    if step is None:
+        return ""
+
+    if step.get("is_pattern_reveal"):
+        # Turn 6: name the bias pattern explicitly
+        pattern = detect_pattern(state)
+        if pattern:
+            return (
+                f"【系统分析·第 {turn_number} 回合】\n\n"
+                f"{pattern['evidence']}\n\n"
+                f"【Dörner 反思】\n"
+                + "\n".join(f"  {i+1}. {q}" for i, q in enumerate(pattern['reflection_questions']))
+                + f"\n\n现在请你：{step['situation'].split('\\n\\n')[-1]}"
+            )
+        return step["situation"]
+
+    # Other turns: brief feedback highlighting the most relevant state change
+    feedback_parts = []
+    accepted = state.get("accepted_risks_count", 0)
+    ignored = state.get("ignored_warnings_count", 0)
+    if accepted or ignored:
+        feedback_parts.append(
+            f"到现在你已接受 {accepted} 次风险评估，忽视 {ignored} 次警告。"
+        )
+    if state.get("engineer_confidence") is not None:
+        ec = state["engineer_confidence"]
+        if ec < 50:
+            feedback_parts.append(
+                "⚠️ 工程师团队的信心已经低于 50%——他们在犹豫是否继续提出担忧。"
+            )
+    return " ".join(feedback_parts) if feedback_parts else "已记录。"
 
 
 def get_summary(state: Dict[str, Any]) -> Dict[str, Any]:
