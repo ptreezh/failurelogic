@@ -66,6 +66,8 @@ import os
 import json
 
 # 基础场景定义
+# - 3 shallow stubs from earlier (kept for backward compat — see audit)
+# - 1 deep scenario: Challenger launch decision (Dörner-style, 10 turns)
 BASE_SCENARIOS = [
     {
         "id": "coffee-shop-nonlinear-effects",
@@ -162,6 +164,21 @@ BASE_SCENARIOS = [
                 ],
             },
         ],
+    },
+    {
+        "id": "challenger-launch",
+        "name": "挑战者号发射决策",
+        "description": "1986年1月，挑战者号航天飞机计划发射。工程师们对低温下O型密封圈的性能提出严重担忧，但发射日期面临巨大压力：在10回合内平衡工程安全、预算、媒体关注和政治承诺。",
+        "fullDescription": "10回合多状态模拟。每个决定都影响后续的信息流、信任度和风险敞口。第6回合会基于你的决策模式揭示认知偏差。",
+        "difficulty": "advanced",
+        "estimatedDuration": 45,
+        "targetPatterns": ["time_delay", "confirmation_bias", "single_target_optimization", "side_effects", "lack_of_self_criticism"],
+        "decisionPattern": "压力下的多变量风险决策",
+        "duration": "30-45分钟",
+        "category": "重大工程决策",
+        "thumbnail": "/assets/images/challenger.jpg",
+        "advancedChallenges": [],
+        "scenario_file": "scenarios/challenger_launch.json"
     },
 ]
 
