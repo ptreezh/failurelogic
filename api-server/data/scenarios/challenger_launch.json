@@ -1,0 +1,226 @@
+{
+  "scenarioId": "challenger-launch",
+  "title": "挑战者号发射决策",
+  "subtitle": "在压力下做风险决策的认知偏差",
+  "difficulty": "advanced",
+  "estimatedDuration": 45,
+  "category": "重大工程决策",
+
+  "description": "1986年1月，挑战者号航天飞机计划发射。工程师们对低温下O型密封圈的性能提出严重担忧，但发射日期面临巨大压力：你需要平衡工程安全、预算、媒体关注和政治承诺。10个回合内做出你的决定——每一个选择都将影响后续的信息流、信任度和风险敞口。",
+
+  "dornerLessons": [
+    "时间延迟：O型环的失效风险会在发射后数秒才显现，但你今天看不到",
+    "单目标优化：追逐'按时发射'忽视了更重要的安全指标",
+    "确认偏误：寻找支持'如期发射'的证据，忽视质疑的证据",
+    "自我批评缺失：当事实不符合假设时拒绝更新心智模型",
+    "副作用：每个'小让步'都有非预期的下游效应"
+  ],
+
+  "initialState": {
+    "days_to_launch": 30,
+    "o_ring_risk_data": "limited",
+    "engineer_confidence": 75,
+    "schedule_pressure": 60,
+    "budget_used_pct": 87,
+    "public_attention": 85,
+    "morale_boost_per_decision": 0,
+    "ignored_warnings_count": 0,
+    "accepted_risks_count": 0
+  },
+
+  "stakeholders": [
+    {"id": "engineers", "name": "Thiokol 工程师团队", "concern": "O型环在低温下可能失效"},
+    {"id": "management", "name": "NASA 管理层", "concern": "预算超支、政治压力、按时发射"},
+    {"id": "media", "name": "媒体与公众", "concern": "Christa McAuliffe 教师上太空的历史性时刻"},
+    {"id": "contractors", "name": "承包商与分包商", "concern": "次级合同履行时间窗口"}
+  ],
+
+  "steps": [
+    {
+      "turn": 1,
+      "phase": "压力初现",
+      "situation": "距离原定发射日还有30天。Thiokol工程师Morton Thiokol提交了一份备忘录：之前的7次飞行中，O型密封圈在53°F以上的表现有数据，但在更低温度下'没有数据'。他请求推迟发射以进行低温测试。\n\n管理层希望你'评估这个请求的成本和影响'。你面前有：\n  - 工程师备忘录（4页，含技术细节）\n  - 管理层备忘（1页，强调预算和政治窗口）",
+      "options": [
+        {"id": "A", "text": "批准推迟发射，命令3周低温测试", "expected_concerns_addressed": ["engineering"]},
+        {"id": "B", "text": "要求工程师出具'书面保证'即可按时发射", "expected_concerns_addressed": []},
+        {"id": "C", "text": "搁置备忘录，要求'额外数据'再议（拖延决策）", "expected_concerns_addressed": []},
+        {"id": "D", "text": "召开跨部门会议，让工程师当面向管理层解释", "expected_concerns_addressed": ["engineering", "management"]}
+      ],
+      "expected_effects": {
+        "A": {"engineer_confidence": +15, "schedule_pressure": -20, "budget_used_pct": +3, "public_attention": -10, "morale_boost": +5},
+        "B": {"engineer_confidence": -10, "schedule_pressure": +5, "ignored_warnings_count": +1, "morale_boost": -5},
+        "C": {"schedule_pressure": -2, "engineer_confidence": -5, "ignored_warnings_count": +1},
+        "D": {"engineer_confidence": +5, "schedule_pressure": -5, "budget_used_pct": +1}
+      }
+    },
+
+    {
+      "turn": 2,
+      "phase": "政治压力升级",
+      "situation": "白宫新闻秘书问及发射计划，总统科学顾问提到'教师上太空'作为国家形象工程。民调显示公众对NASA的支持率与'按时发射'的承诺正相关。\n\n管理层转发邮件：'总统办公室预期1月28日有重大宣布。'",
+      "options": [
+        {"id": "A", "text": "向总统办公室解释技术风险，建议推迟政治承诺", "expected_concerns_addressed": ["engineering"]},
+        {"id": "B", "text": "保持低调，让政治层自行处理——你专注于技术", "expected_concerns_addressed": []},
+        {"id": "C", "text": "主动游说推迟，宣传'安全第一'以建立政治资本", "expected_concerns_addressed": ["engineering", "media"]},
+        {"id": "D", "text": "接受政治压力，按原计划发射并加强宣传", "expected_concerns_addressed": ["management"]}
+      ],
+      "expected_effects": {
+        "A": {"schedule_pressure": -10, "public_attention": -15, "engineer_confidence": +5},
+        "B": {"schedule_pressure": +10, "accepted_risks_count": +1},
+        "C": {"schedule_pressure": -8, "public_attention": +10, "engineer_confidence": +8},
+        "D": {"schedule_pressure": +15, "public_attention": +20, "engineer_confidence": -8, "accepted_risks_count": +1}
+      }
+    },
+
+    {
+      "turn": 3,
+      "phase": "工程数据浮现",
+      "situation": "Thiokol工程师团队发来一份更详细的技术评估：之前的飞行数据显示，O型环在53°F以下时，密封性能下降。但管理层要求他们'重新分析'数据（暗示期望得到不同结论）。\n\n工程师向你私下表达：'我们觉得管理层在找理由证明发射是安全的，而不是真正评估风险。'",
+      "options": [
+        {"id": "A", "text": "支持工程师，要求管理层接受原始数据结论", "expected_concerns_addressed": ["engineering"]},
+        {"id": "B", "text": "保持中立，要求'更多分析'以避免冲突", "expected_concerns_addressed": []},
+        {"id": "C", "text": "亲自审查原始数据，独立判断", "expected_concerns_addressed": ["engineering"]},
+        {"id": "D", "text": "支持管理层'重新分析'的方向", "expected_concerns_addressed": ["management"]}
+      ],
+      "expected_effects": {
+        "A": {"engineer_confidence": +10, "schedule_pressure": -5, "ignored_warnings_count": -1, "accepted_risks_count": -1},
+        "B": {"engineer_confidence": -5, "ignored_warnings_count": +1},
+        "C": {"engineer_confidence": +8, "schedule_pressure": -3, "o_ring_risk_data": "comprehensive"},
+        "D": {"engineer_confidence": -15, "ignored_warnings_count": +2, "schedule_pressure": +5}
+      }
+    },
+
+    {
+      "turn": 4,
+      "phase": "气象预警",
+      "situation": "天气预报更新：发射日（1月28日）佛州肯尼迪角的预测温度为31°F（-0.5°C），远低于之前任何一次飞行记录。\n\n工程师紧急请求：'31°F超出了我们所有的测试范围。我们强烈建议推迟。'",
+      "options": [
+        {"id": "A", "text": "立即推迟发射，等待更温暖的窗口", "expected_concerns_addressed": ["engineering"]},
+        {"id": "B", "text": "推迟到2月初，给工程师一周分析时间", "expected_concerns_addressed": ["engineering", "management"]},
+        {"id": "C", "text": "按原计划发射，但要求'额外监测'", "expected_concerns_addressed": ["management"]},
+        {"id": "D", "text": "推迟到春天（4月），完全避开冬季窗口", "expected_concerns_addressed": ["engineering"]}
+      ],
+      "expected_effects": {
+        "A": {"engineer_confidence": +15, "schedule_pressure": -20, "budget_used_pct": +5, "public_attention": -8, "morale_boost": +10},
+        "B": {"engineer_confidence": +10, "schedule_pressure": -10, "budget_used_pct": +3, "morale_boost": +5},
+        "C": {"engineer_confidence": -15, "schedule_pressure": +5, "accepted_risks_count": +1, "ignored_warnings_count": +1, "morale_boost": -10},
+        "D": {"engineer_confidence": +20, "schedule_pressure": -30, "budget_used_pct": +12, "public_attention": -20, "morale_boost": +15}
+      }
+    },
+
+    {
+      "turn": 5,
+      "phase": "最终审查会议",
+      "situation": "1月27日傍晚。距离发射14小时。Thiokol工程师们请求与管理层召开紧急电话会议。会上，工程师们列出了14个独立的风险因素，全部指向O型环失效。建议：'至少推迟一周。'\n\n管理层意见分歧：一半认为应该推迟，一半认为风险'可接受'。最终决策权在你。",
+      "options": [
+        {"id": "A", "text": "推迟一周——工程师的判断优先", "expected_concerns_addressed": ["engineering"]},
+        {"id": "B", "text": "推迟24小时——给双方妥协", "expected_concerns_addressed": ["engineering"]},
+        {"id": "C", "text": "按原计划发射——风险评估已经做过了", "expected_concerns_addressed": ["management"]},
+        {"id": "D", "text": "请求承包商出具'同意发射'的书面确认", "expected_concerns_addressed": ["management"]}
+      ],
+      "expected_effects": {
+        "A": {"engineer_confidence": +15, "schedule_pressure": -15, "budget_used_pct": +4, "morale_boost": +10},
+        "B": {"engineer_confidence": +8, "schedule_pressure": -8, "budget_used_pct": +2, "morale_boost": +4},
+        "C": {"engineer_confidence": -20, "schedule_pressure": +10, "accepted_risks_count": +2, "ignored_warnings_count": +1, "morale_boost": -15},
+        "D": {"engineer_confidence": -10, "schedule_pressure": +5, "ignored_warnings_count": +1, "accepted_risks_count": +1, "morale_boost": -8}
+      }
+    },
+
+    {
+      "turn": 6,
+      "phase": "【认知偏差揭示】",
+      "is_pattern_reveal": true,
+      "situation": "你在前5个回合中做出了若干决策。系统现在展示你的决策模式。\n\n【系统分析】\n过去5回合，你对工程担忧的处理方式：\n- 接受了 {accepted_risks_count} 次'风险评估完成'的结论\n- 忽视了 {ignored_warnings_count} 次'具体警告'\n- 在工程师提出担忧时，倾向于 [支持 / 搁置 / 妥协] 的比例是 X%\n\n【真实模式】\nDörner将此现象命名为'自我确认循环'：当决策者倾向于寻找支持已有结论的证据时，他们会系统性地低估反向证据的重要性。\n\n【反思问题】\n你在这个决策中是否：\n1. 对每一份工程警告给予同等权重？\n2. 当数据与你的假设冲突时，是修改假设还是修改数据？\n3. 是否在寻找'推迟'的理由，还是在寻找'如期发射'的理由？",
+      "options": [
+        {"id": "A", "text": "承认我的决策模式有问题，重新评估当前发射计划", "expected_concerns_addressed": ["engineering"]},
+        {"id": "B", "text": "承认偏差但认为'过去已发生，重点是接下来的决定'", "expected_concerns_addressed": []},
+        {"id": "C", "text": "认为系统分析不准确，我不认同", "expected_concerns_addressed": []},
+        {"id": "D", "text": "询问系统：我的具体偏差模式是什么", "expected_concerns_addressed": ["engineering"]}
+      ],
+      "expected_effects": {
+        "A": {"engineer_confidence": +10, "schedule_pressure": -10, "morale_boost": +5},
+        "B": {"engineer_confidence": +3, "schedule_pressure": -3},
+        "C": {"engineer_confidence": -10, "schedule_pressure": +5, "ignored_warnings_count": +1, "morale_boost": -5},
+        "D": {"engineer_confidence": +5, "schedule_pressure": -5, "morale_boost": +3}
+      }
+    },
+
+    {
+      "turn": 7,
+      "phase": "新闻泄露",
+      "situation": "《纽约时报》记者联系NASA询问'发射前是否有内部安全争议'。公关部门警告：如果消息泄露，'发射的政治意义将被工程师担忧掩盖'。\n\n管理层请求：'请不要对媒体确认任何内部争议。'",
+      "options": [
+        {"id": "A", "text": "向媒体坦白内部争议——公众有权知道", "expected_concerns_addressed": ["engineering", "media"]},
+        {"id": "B", "text": "对媒体'无可奉告'——让管理层处理公关", "expected_concerns_addressed": ["management"]},
+        {"id": "C", "text": "主动发布'安全审查进行中'的声明——既诚实又保护发射", "expected_concerns_addressed": ["engineering", "management", "media"]},
+        {"id": "D", "text": "要求管理层公开'所有工程师支持发射'的声明", "expected_concerns_addressed": ["management"]}
+      ],
+      "expected_effects": {
+        "A": {"public_attention": +20, "schedule_pressure": -25, "engineer_confidence": +15, "budget_used_pct": +2},
+        "B": {"public_attention": +15, "schedule_pressure": +5, "engineer_confidence": -5},
+        "C": {"public_attention": +10, "schedule_pressure": -10, "engineer_confidence": +10, "morale_boost": +5},
+        "D": {"public_attention": -10, "schedule_pressure": +10, "engineer_confidence": -20, "ignored_warnings_count": +2, "morale_boost": -15}
+      }
+    },
+
+    {
+      "turn": 8,
+      "phase": "发射前夜",
+      "situation": "1月27日晚11点。距离发射9小时。天气预报不变：31°F。\n\nThiokol的最后通牒：'我们不能保证安全。如果按计划发射，我们要求出具书面弃权声明。'\n\n工程师的最后一个问题：'你愿意承担这个责任吗？'",
+      "options": [
+        {"id": "A", "text": "推迟发射——不接受书面弃权", "expected_concerns_addressed": ["engineering"]},
+        {"id": "B", "text": "要求工程师签弃权声明，按原计划发射", "expected_concerns_addressed": ["management"]},
+        {"id": "C", "text": "召开第二次电话会议，要求工程师详细解释每个风险", "expected_concerns_addressed": ["engineering"]},
+        {"id": "D", "text": "绕过工程师，直接询问独立专家意见", "expected_concerns_addressed": ["engineering"]}
+      ],
+      "expected_effects": {
+        "A": {"engineer_confidence": +20, "schedule_pressure": -25, "budget_used_pct": +5, "morale_boost": +15},
+        "B": {"engineer_confidence": -25, "schedule_pressure": +10, "accepted_risks_count": +2, "morale_boost": -20},
+        "C": {"engineer_confidence": +5, "schedule_pressure": -5, "budget_used_pct": +1},
+        "D": {"engineer_confidence": -5, "schedule_pressure": -5, "budget_used_pct": +2}
+      }
+    },
+
+    {
+      "turn": 9,
+      "phase": "发射日早晨",
+      "situation": "1月28日早7点。温度已下降到28°F——比预测还低3度。冰霜覆盖发射台。\n\n技术监控显示：发射台服务塔有冰柱。机械工程师警告：'冰可能影响回收系统。'\n\n你需要做发射前最后决策：",
+      "options": [
+        {"id": "A", "text": "推迟到中午，等温度回升", "expected_concerns_addressed": ["engineering"]},
+        {"id": "B", "text": "推迟到明天，重新评估", "expected_concerns_addressed": ["engineering"]},
+        {"id": "C", "text": "请专业团队除冰后发射", "expected_concerns_addressed": ["engineering", "management"]},
+        {"id": "D", "text": "按计划发射——冰是次要问题，O型环才是核心", "expected_concerns_addressed": ["management"]}
+      ],
+      "expected_effects": {
+        "A": {"schedule_pressure": -10, "engineer_confidence": +5, "budget_used_pct": +1},
+        "B": {"schedule_pressure": -20, "engineer_confidence": +10, "budget_used_pct": +3, "public_attention": -5, "morale_boost": +5},
+        "C": {"schedule_pressure": -5, "engineer_confidence": +3, "budget_used_pct": +4, "morale_boost": +2},
+        "D": {"engineer_confidence": -15, "schedule_pressure": +5, "accepted_risks_count": +1, "ignored_warnings_count": +1, "morale_boost": -10}
+      }
+    },
+
+    {
+      "turn": 10,
+      "phase": "最终发射决策",
+      "situation": "距离发射30分钟。一切准备就绪——除了温度：26°F。所有过去的警告都已摆在桌面上。\n\n这是你作为决策者的最后时刻：",
+      "options": [
+        {"id": "A", "text": "发射——所有警告都已权衡，我接受残余风险", "expected_concerns_addressed": ["management"]},
+        {"id": "B", "text": "推迟到下周，等待更温暖的窗口", "expected_concerns_addressed": ["engineering"]},
+        {"id": "C", "text": "推迟到明年，重新设计O型环材料", "expected_concerns_addressed": ["engineering"]},
+        {"id": "D", "text": "无限期推迟——直到所有工程担忧解决", "expected_concerns_addressed": ["engineering"]}
+      ],
+      "expected_effects": {
+        "A": {"schedule_pressure": 0, "engineer_confidence": -30, "accepted_risks_count": +3, "morale_boost": -25},
+        "B": {"schedule_pressure": -25, "engineer_confidence": +15, "budget_used_pct": +5, "morale_boost": +10},
+        "C": {"schedule_pressure": -50, "engineer_confidence": +25, "budget_used_pct": +20, "morale_boost": +20},
+        "D": {"schedule_pressure": -100, "engineer_confidence": +30, "budget_used_pct": +50, "morale_boost": +25}
+      }
+    }
+  ],
+
+  "feedback_patterns": {
+    "confirmation_bias_exhibit": "在前6回合中，如果 accepted_risks_count >= 3 且 ignored_warnings_count >= 2",
+    "single_target_optimization_exhibit": "如果玩家持续以 schedule_pressure 降低为最优解（即使伴随 engineer_confidence 下降）",
+    "complexity_blindness_exhibit": "如果玩家在 turn 8/9 仍选择按计划发射，忽视累积风险"
+  }
+}
