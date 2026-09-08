@@ -203,6 +203,7 @@ def detect_patterns(state: Dict[str, Any]) -> List[Dict[str, Any]]:
     patterns.append(_detect_time_delay_blindness(state))
     patterns.append(_detect_side_effect_neglect(state))
     patterns.append(_detect_lack_of_self_criticism(state))
+    patterns.append(_detect_self_reference(state))
 
     # Filter out None results
     return [p for p in patterns if p is not None]
@@ -374,6 +375,58 @@ def _detect_lack_of_self_criticism(state: Dict[str, Any]) -> Optional[Dict[str, 
                 "知道偏差后，你为什么还是这样选？",
                 "如果你不能让自己的行为改变，知道这些有什么用？",
                 "你今天的选择，会让明天的你成为更好的决策者吗？",
+            ],
+        }
+    return None
+
+
+
+def _detect_self_reference(state: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """F3: Player's public deference to management causes management to harden.
+
+    When player makes decisions that prioritize 'management' concerns while
+    NOT addressing 'engineering' concerns, the cumulative effect is that
+    management becomes more confident in launching and less receptive to
+    engineering warnings thereafter. This is the self-referential loop:
+    the player's interventions change the system's response to future
+    interventions.
+
+    Detection: count decisions where expected_concerns_addressed includes
+    'management' but not 'engineering'. If >= 2 such suppressions happen
+    while engineering concerns are recent, return the pattern.
+    """
+    decision_history = state.get("decision_history", [])
+    if len(decision_history) < 2:
+        return None
+
+    # Decisions that side with management without addressing engineering
+    management_suppressions = [
+        d for d in decision_history
+        if "management" in d.get("expected_concerns_addressed", [])
+        and "engineering" not in d.get("expected_concerns_addressed", [])
+    ]
+
+    # Recent engineering concerns exist (would have been side-stepped)
+    engineering_decisions = [
+        d for d in decision_history[-4:]  # last 4 turns
+        if "engineering" in d.get("expected_concerns_addressed", [])
+    ]
+
+    if len(management_suppressions) >= 2 and engineering_decisions:
+        return {
+            "pattern_type": "self_reference",
+            "dorner_concept": "自指循环",
+            "evidence": (
+                f"你在 {len(management_suppressions)} 个决策中站在管理层一边，"
+                f"同时绕过了 {len(engineering_decisions)} 个最近的工程担忧。"
+                "Dörner 称为'自指循环'：你的每一次公开声明（同意管理层、接受发射日期）"
+                "都反过来让 NASA 管理层更固执——他们把你的沉默当作'安全'的证据，"
+                "下一轮会要求更少的工程数据。"
+            ),
+            "reflection_questions": [
+                "你的'接受管理层'决策是否影响了工程师的发言权？",
+                "如果你的决策让管理层'更有信心'，下次工程师的警告会被如何对待？",
+                "你的每一次同意是否在积累最终决策的'沉默成本'？",
             ],
         }
     return None
