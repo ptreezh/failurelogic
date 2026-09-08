@@ -9281,20 +9281,55 @@ class GameManager {
           <p>${scenario.fullDescription}</p>
         </div>
 
-        <div class="game-state" id="game-state-display">
+        <div class="game-state" id="game-state-display" data-scenario-id="${scenario.id || (scenario.scenarioId) || ''}">
           <h3>当前状态</h3>
           <div class="state-grid">
-            <div class="state-item">
+            <div class="state-item legacy-state" data-var="satisfaction">
               <span class="state-label">满意度</span>
               <span class="state-value" id="state-satisfaction">50</span>
             </div>
-            <div class="state-item">
+            <div class="state-item legacy-state" data-var="resources">
               <span class="state-label">资源</span>
               <span class="state-value" id="state-resources">1000</span>
             </div>
-            <div class="state-item">
+            <div class="state-item legacy-state" data-var="reputation">
               <span class="state-label">声誉</span>
               <span class="state-value" id="state-reputation">50</span>
+            </div>
+            <div id="challenger-state-grid" class="challenger-state-grid" style="display: none;">
+              <div class="state-item challenger-temp" data-var="temperature">
+                <span class="state-label">🌡️ 预报温度 (°F)</span>
+                <span class="state-value" id="state-temperature">36</span>
+                <span class="state-hint">历史最低: 53°F</span>
+              </div>
+              <div class="state-item challenger-engineer" data-var="engineer_confidence">
+                <span class="state-label">👷 工程师信心</span>
+                <span class="state-value" id="state-engineer-confidence">75</span>
+              </div>
+              <div class="state-item challenger-schedule" data-var="schedule_pressure">
+                <span class="state-label">📅 进度压力</span>
+                <span class="state-value" id="state-schedule-pressure">60</span>
+              </div>
+              <div class="state-item challenger-budget" data-var="budget_used_pct">
+                <span class="state-label">💰 预算占比 %</span>
+                <span class="state-value" id="state-budget">87</span>
+              </div>
+              <div class="state-item challenger-attention" data-var="public_attention">
+                <span class="state-label">📺 公众关注</span>
+                <span class="state-value" id="state-attention">85</span>
+              </div>
+              <div class="state-item challenger-morale" data-var="team_morale">
+                <span class="state-label">🤝 团队士气</span>
+                <span class="state-value" id="state-morale">50</span>
+              </div>
+              <div class="state-item challenger-risks" data-var="risks">
+                <span class="state-label">⚠️ 接受风险 / 忽视警告</span>
+                <span class="state-value"><span id="state-accepted-risks">0</span> / <span id="state-ignored-warnings">0</span></span>
+              </div>
+              <div class="state-item challenger-unresolved" data-var="unresolved">
+                <span class="state-label">❓ 未解决风险</span>
+                <span class="state-value" id="state-unresolved">0</span>
+              </div>
             </div>
           </div>
         </div>
@@ -9506,20 +9541,55 @@ class GameManager {
           <p>${scenario.fullDescription}</p>
         </div>
 
-        <div class="game-state" id="game-state-display">
+        <div class="game-state" id="game-state-display" data-scenario-id="${scenario.id || (scenario.scenarioId) || ''}">
           <h3>当前状态</h3>
           <div class="state-grid">
-            <div class="state-item">
+            <div class="state-item legacy-state" data-var="satisfaction">
               <span class="state-label">满意度</span>
               <span class="state-value" id="state-satisfaction">50</span>
             </div>
-            <div class="state-item">
+            <div class="state-item legacy-state" data-var="resources">
               <span class="state-label">资源</span>
               <span class="state-value" id="state-resources">1000</span>
             </div>
-            <div class="state-item">
+            <div class="state-item legacy-state" data-var="reputation">
               <span class="state-label">声誉</span>
               <span class="state-value" id="state-reputation">50</span>
+            </div>
+            <div id="challenger-state-grid" class="challenger-state-grid" style="display: none;">
+              <div class="state-item challenger-temp" data-var="temperature">
+                <span class="state-label">🌡️ 预报温度 (°F)</span>
+                <span class="state-value" id="state-temperature">36</span>
+                <span class="state-hint">历史最低: 53°F</span>
+              </div>
+              <div class="state-item challenger-engineer" data-var="engineer_confidence">
+                <span class="state-label">👷 工程师信心</span>
+                <span class="state-value" id="state-engineer-confidence">75</span>
+              </div>
+              <div class="state-item challenger-schedule" data-var="schedule_pressure">
+                <span class="state-label">📅 进度压力</span>
+                <span class="state-value" id="state-schedule-pressure">60</span>
+              </div>
+              <div class="state-item challenger-budget" data-var="budget_used_pct">
+                <span class="state-label">💰 预算占比 %</span>
+                <span class="state-value" id="state-budget">87</span>
+              </div>
+              <div class="state-item challenger-attention" data-var="public_attention">
+                <span class="state-label">📺 公众关注</span>
+                <span class="state-value" id="state-attention">85</span>
+              </div>
+              <div class="state-item challenger-morale" data-var="team_morale">
+                <span class="state-label">🤝 团队士气</span>
+                <span class="state-value" id="state-morale">50</span>
+              </div>
+              <div class="state-item challenger-risks" data-var="risks">
+                <span class="state-label">⚠️ 接受风险 / 忽视警告</span>
+                <span class="state-value"><span id="state-accepted-risks">0</span> / <span id="state-ignored-warnings">0</span></span>
+              </div>
+              <div class="state-item challenger-unresolved" data-var="unresolved">
+                <span class="state-label">❓ 未解决风险</span>
+                <span class="state-value" id="state-unresolved">0</span>
+              </div>
             </div>
           </div>
         </div>
@@ -10446,6 +10516,44 @@ class GameManager {
 
     if (trustEl && newState.trust !== undefined) {
       trustEl.textContent = newState.trust;
+    }
+
+    // Challenger scenario (v2.0: 13 state variables + progressive reveals)
+    const challengerGrid = document.getElementById('challenger-state-grid');
+    const scenarioId = (AppState.gameSession && AppState.gameSession.scenarioId) || '';
+    if (challengerGrid && (scenarioId === 'challenger-launch' || scenarioId.includes('challenger'))) {
+      challengerGrid.style.display = 'grid';
+      // Hide legacy 3 variables for Challenger scenario
+      document.querySelectorAll('.legacy-state').forEach(el => el.style.display = 'none');
+
+      const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el && val !== undefined && val !== null) el.textContent = val;
+      };
+      setVal('state-temperature', newState.temperature_forecast_f);
+      setVal('state-engineer-confidence', newState.engineer_confidence);
+      setVal('state-schedule-pressure', newState.schedule_pressure);
+      setVal('state-budget', newState.budget_used_pct);
+      setVal('state-attention', newState.public_attention);
+      setVal('state-morale', newState.team_morale);
+      setVal('state-accepted-risks', newState.accepted_risks_count);
+      setVal('state-ignored-warnings', newState.ignored_warnings_count);
+      setVal('state-unresolved', newState.risk_acknowledged_unresolved);
+
+      // Color code critical variables
+      const tempEl = document.getElementById('state-temperature');
+      if (tempEl && newState.temperature_forecast_f !== undefined) {
+        tempEl.style.color = newState.temperature_forecast_f < 53 ? '#d33' :
+                              newState.temperature_forecast_f < 70 ? '#e80' : '#080';
+      }
+      const engEl = document.getElementById('state-engineer-confidence');
+      if (engEl && newState.engineer_confidence !== undefined) {
+        engEl.style.color = newState.engineer_confidence < 50 ? '#d33' :
+                            newState.engineer_confidence < 70 ? '#e80' : '#080';
+      }
+    } else if (challengerGrid) {
+      challengerGrid.style.display = 'none';
+      document.querySelectorAll('.legacy-state').forEach(el => el.style.display = '');
     }
 
     // Generic game state display fallback

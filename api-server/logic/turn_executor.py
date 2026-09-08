@@ -254,25 +254,27 @@ def execute_real_logic(
                     )
 
     elif scenario_id == "challenger-launch":
-        # Dörner-style 10-turn scenario: see api-server/logic/challenger_scenario.py
+        # Dörner-style 10-turn scenario (v2.0): see api-server/logic/challenger_scenario.py
         # and api-server/data/scenarios/challenger_launch.json. Each turn the
         # player picks option A/B/C/D; the engine applies that turn's effects
-        # from the JSON and tracks accepted_risks_count / ignored_warnings_count
-        # for the cognitive bias reveal at turn 6.
+        # from the JSON and tracks 13 state variables for the progressive
+        # bias reveals (turns 5/6/8/10).
         from logic.challenger_scenario import apply_turn as _apply_challenger
         from logic.challenger_scenario import get_initial_state as _chal_init
         # Seeding: if the session was created with the legacy initial_state,
-        # Challenger keys (engineer_confidence etc.) are missing. Replace the
-        # legacy keys with Challenger's own initial state before applying effects.
+        # Challenger keys are missing. Replace the legacy keys with
+        # Challenger's own initial state before applying effects.
         if "engineer_confidence" not in new_state:
             chal_init = _chal_init()
             for k, v in chal_init.items():
                 new_state.setdefault(k, v)
         chosen_option = decisions.get("option") or decisions.get("choice") or decisions.get("action") or ""
-        _apply_challenger(new_state, chosen_option)
-        # Challenger carries its own state shape (engineer_confidence etc.)
-        # not the legacy (resources/satisfaction/reputation) triple. Drop the
-        # legacy keys so the frontend doesn't render stale numbers.
+        # v2.0: support optional decision justification for reflection hook
+        decision_justification = decisions.get("justification") or decisions.get("reason")
+        _apply_challenger(new_state, chosen_option, decision_justification=decision_justification)
+        # Store last chosen option for outcome routing (turn 10)
+        new_state["last_chosen_option"] = chosen_option
+        # Challenger carries its own state shape — drop legacy keys
         new_state.pop("resources", None)
         new_state.pop("satisfaction", None)
         new_state.pop("reputation", None)

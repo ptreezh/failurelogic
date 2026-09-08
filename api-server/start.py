@@ -528,7 +528,13 @@ async def execute_turn(game_id: str, decisions: Dict[str, Any]):
     # 第4+回合：个性化深入反馈
     turn_number = new_state["turn_number"]
 
-    if turn_number <= 2:
+    # Challenger-style scenarios have their own feedback function that knows
+    # about the data-driven pattern reveal (at step 6). Route here so the
+    # default coffee-shop feedback doesn't get applied.
+    if scenario_id == "challenger-launch":
+        from logic.challenger_scenario import generate_feedback_for_turn as _chal_fb
+        feedback = _chal_fb(new_state, turn_number)
+    elif turn_number <= 2:
         # 早期回合：制造困惑时刻
         feedback = generate_confusion_feedback(
             scenario_id, decisions, current_state, new_state,
