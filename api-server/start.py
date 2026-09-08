@@ -512,6 +512,13 @@ async def execute_turn(game_id: str, decisions: Dict[str, Any]):
         "difficulty": difficulty,
         "timestamp": datetime.now().isoformat()
     }
+    # v2.1: Challenger's turn_executor branch stashes a rich per-option
+    # context dict on new_state. Merge it into the decision_record so
+    # reveal feedback (and frontend display) can reference what the player
+    # actually picked.
+    last_ctx = new_state.pop("_last_option_context", None)
+    if last_ctx:
+        decision_record.update(last_ctx)
     new_state["decision_history"] = current_state.get("decision_history", []) + [decision_record]
 
     # 更新会话状态

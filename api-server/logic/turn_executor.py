@@ -274,6 +274,36 @@ def execute_real_logic(
         _apply_challenger(new_state, chosen_option, decision_justification=decision_justification)
         # Store last chosen option for outcome routing (turn 10)
         new_state["last_chosen_option"] = chosen_option
+        # v2.1: stash the chosen option's full context (text + consequences + effects)
+        # on the returned state so start.py can build a rich decision_record.
+        # Without this, reveal feedback can't reference what the player actually
+        # picked.
+        from logic.challenger_scenario import get_step
+        step_now = get_step(new_state["turn_number"] - 1)  # current step is turn_number-1 after increment
+        if step_now is None:
+            step_now = get_step(new_state["turn_number"])
+        chosen_option_full = None
+        if step_now is not None:
+            for opt in step_now.get("options", []):
+                if opt["id"] == chosen_option:
+                    chosen_option_full = opt
+                    break
+        if chosen_option_full is not None:
+            new_state["_last_option_context"] = {
+                "option_id": chosen_option,
+                "option_text": chosen_option_full.get("text", ""),
+                "option_consequences_for_player": chosen_option_full.get(
+                    "consequences_for_player", ""
+                ),
+                "option_weight": chosen_option_full.get("weight", "neutral"),
+                "expected_concerns_addressed": chosen_option_full.get(
+                    "expected_concerns_addressed", []
+                ),
+                "applied_effects": step_now.get("expected_effects", {}).get(
+                    chosen_option, {}
+                ),
+                "justification": decision_justification,
+            }
         # Challenger carries its own state shape — drop legacy keys
         new_state.pop("resources", None)
         new_state.pop("satisfaction", None)

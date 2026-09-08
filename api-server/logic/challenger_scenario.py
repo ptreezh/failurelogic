@@ -617,7 +617,14 @@ def _generate_action_feedback(
 def _generate_reveal_feedback(
     state: Dict[str, Any], step: Dict[str, Any], turn_number: int
 ) -> str:
-    """Generate progressive reveal feedback (turn 5/6/8)."""
+    """Generate progressive reveal feedback (turn 5/6/8).
+
+    v2.1 enhancement: each reveal phase starts with a specific
+    reference to the player's actual choices in prior turns. The
+    player sees "you chose X on turn N" rather than "you made choices".
+    Dörner's pedagogy requires concrete memory of own behavior, not
+    abstract pattern description.
+    """
     reveal_phase = step.get("reveal_phase", 1)
     patterns = detect_patterns(state)
 
@@ -633,6 +640,22 @@ def _generate_reveal_feedback(
 
     parts = []
     parts.append(f"【Dörner 模式揭示 · 第 {reveal_phase} 阶段 · turn {turn_number}】\n")
+
+    # v2.1: reference player's actual prior choices (up to 3 most relevant)
+    prior_decisions = _select_key_decisions_for_reveal(
+        state.get("decision_history", []), reveal_phase
+    )
+    if prior_decisions:
+        parts.append("📌 你的具体决策回顾：")
+        for d in prior_decisions:
+            opt_id = d.get("option_id", "?")
+            opt_text = d.get("option_text", "?")[:60]
+            opt_conseq = d.get("option_consequences_for_player", "")
+            line = f"  • Turn {d.get('turn', '?')} ({opt_id}): \"{opt_text}...\""
+            if opt_conseq:
+                line += f"\n      → {opt_conseq[:70]}..."
+            parts.append(line)
+        parts.append("")
 
     # Show what we detected
     if patterns_to_show:
@@ -661,6 +684,35 @@ def _generate_reveal_feedback(
         parts.append("\n接下来：T-30 分钟是你最后的机会（turn 9）。")
 
     return "\n".join(parts)
+
+
+def _select_key_decisions_for_reveal(
+    decision_history: List[Dict[str, Any]], reveal_phase: int
+) -> List[Dict[str, Any]]:
+    """Pick up to 3 decisions from history that are most relevant to the
+    reveal phase. Uses applied_effects scoring — decisions that incremented
+    counters (accepted_risks, ignored_warnings, dissent_suppressed) rank
+    highest because they're the strongest bias signals.
+    """
+    if not decision_history:
+        return []
+    scored = []
+    for d in decision_history:
+        effects = d.get("applied_effects", {}) or {}
+        score = 0
+        if effects.get("accepted_risks_count", 0) > 0:
+            score += 10
+        if effects.get("ignored_warnings_count", 0) > 0:
+            score += 8
+        if effects.get("dissent_suppressed_count", 0) > 0:
+            score += 12
+        if effects.get("risk_acknowledged_unresolved", 0) > 0:
+            score += 6
+        # Recent decisions weighted slightly higher
+        score += d.get("turn", 0) * 0.1
+        scored.append((score, d))
+    scored.sort(key=lambda x: -x[0])
+    return [d for score, d in scored if score > 0][:3]
 
 
 def _generate_final_outcome_feedback(
