@@ -204,6 +204,7 @@ def detect_patterns(state: Dict[str, Any]) -> List[Dict[str, Any]]:
     patterns.append(_detect_side_effect_neglect(state))
     patterns.append(_detect_lack_of_self_criticism(state))
     patterns.append(_detect_self_reference(state))
+    patterns.append(_detect_regulation_lag(state))
 
     # Filter out None results
     return [p for p in patterns if p is not None]
@@ -427,6 +428,64 @@ def _detect_self_reference(state: Dict[str, Any]) -> Optional[Dict[str, Any]]:
                 "你的'接受管理层'决策是否影响了工程师的发言权？",
                 "如果你的决策让管理层'更有信心'，下次工程师的警告会被如何对待？",
                 "你的每一次同意是否在积累最终决策的'沉默成本'？",
+            ],
+        }
+    return None
+
+
+
+def _detect_regulation_lag(state: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """F8: Oscillation between safe and risk decisions (regulation lag).
+
+    When player's choices oscillate between postponing and rushing, they're
+    applying band-aid corrections rather than addressing the underlying
+    system. Dörner's experiments showed that oscillating controllers
+    perform WORSE than consistently cautious ones — because the system
+    can't stabilize. The controller's correction always arrives after the
+    system's drift has already moved further.
+
+    Detection rule: among the last 4-5 decisions, count direction changes.
+    A direction change is when consecutive decisions have opposite
+    safe/risk weights. >= 3 direction changes in 5 turns = oscillation.
+    """
+    decision_history = state.get("decision_history", [])
+    if len(decision_history) < 4:
+        return None
+
+    # Classify each decision as "toward_safety" or "toward_risk"
+    safe_weights = {"extreme_safe", "safe"}
+    risk_weights = {"extreme_risk", "risky"}
+
+    directions = []
+    for d in decision_history[-5:]:
+        w = d.get("weight", "")
+        if w in safe_weights:
+            directions.append("safe")
+        elif w in risk_weights:
+            directions.append("risk")
+        else:
+            directions.append("neutral")
+
+    # Count direction changes (safe<->risk transitions)
+    changes = 0
+    for i in range(1, len(directions)):
+        if directions[i] != directions[i-1] and directions[i] != "neutral" and directions[i-1] != "neutral":
+            changes += 1
+
+    if changes >= 3 and len([d for d in directions if d != "neutral"]) >= 4:
+        return {
+            "pattern_type": "regulation_lag",
+            "dorner_concept": "调节滞后",
+            "evidence": (
+                f"你在最近 {len(directions)} 个决策中有 {changes} 次方向切换。"
+                "Dörner 称为'调节滞后'：你在'安全优先'和'按时发射'之间反复振荡，"
+                "但系统的真实状态没有改变——你只是在和系统的滞后效应赛跑。"
+                "振荡的控制者比一致的保守者表现更差，因为系统来不及稳定。"
+            ),
+            "reflection_questions": [
+                "你的最近几个决策是在'修正'前一个，还是在'回应'新信息？",
+                "如果系统对你的每次纠正都反应滞后 2-3 回合，你怎么避免过冲？",
+                "你的控制是'前瞻'的，还是'追着系统跑'的？",
             ],
         }
     return None
