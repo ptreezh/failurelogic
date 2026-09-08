@@ -6,9 +6,7 @@
   "difficulty": "advanced",
   "estimatedDuration": 45,
   "category": "重大工程决策",
-
   "description": "1986年1月，挑战者号航天飞机计划发射。工程师们对低温下O型密封圈的性能提出严重担忧，但发射日期面临巨大压力：你需要平衡工程安全、预算、媒体关注和政治承诺。10个回合内做出你的决定——每一个选择都将影响后续的信息流、信任度和风险敞口。",
-
   "dornerLessons": [
     "非线性 / 复杂性低估：低温对O型环的影响不是线性的——温度每下降 10°F，失效概率不是×2，而是指数级放大",
     "时间延迟：1985年7月Boisjoly就已提交关键警告备忘录；我们今天的'紧急决定'其实是6个月前决定的延迟后果",
@@ -19,7 +17,6 @@
     "自我批评缺失：当事实不符合假设时拒绝更新心智模型——即使揭示后仍会重复",
     "调节滞后 / 过度纠正：从'安全优先'到'按时发射'再到'必须再推迟'的钟摆"
   ],
-
   "historicalContext": {
     "pre_launch_warnings": [
       {
@@ -66,7 +63,6 @@
       "teaching_note": "气象预测18°F；工程师估算金属温度≤22°F；之前最冷发射53°F；非线性差距 = 31°F"
     }
   },
-
   "initialState": {
     "days_to_launch": 30,
     "temperature_forecast_f": 36,
@@ -83,38 +79,48 @@
     "consequence_deferred_queue": [],
     "decision_justifications": {}
   },
-
   "stakeholders": [
     {
       "id": "engineers",
       "name": "Thiokol 工程师团队",
-      "key_persons": ["Roger Boisjoly (资深工程师)", "Arnie Thompson (项目工程师)"],
+      "key_persons": [
+        "Roger Boisjoly (资深工程师)",
+        "Arnie Thompson (项目工程师)"
+      ],
       "concern": "O型环在低温下可能失效——基于1985-07-31 Boisjoly备忘录",
       "stance": "强烈建议推迟；提供13项独立风险因素"
     },
     {
       "id": "management",
       "name": "NASA 管理层",
-      "key_persons": ["Larry Mulloy (发射主任)", "Joe Kilminster (Thiokol VP)"],
+      "key_persons": [
+        "Larry Mulloy (发射主任)",
+        "Joe Kilminster (Thiokol VP)"
+      ],
       "concern": "预算超支、政治压力、按时发射",
       "stance": "寻求'管理决策'而非工程共识"
     },
     {
       "id": "media",
       "name": "媒体与公众",
-      "key_persons": ["Christa McAuliffe (教师宇航员)", "11000 名申请者中的胜出者"],
+      "key_persons": [
+        "Christa McAuliffe (教师宇航员)",
+        "11000 名申请者中的胜出者"
+      ],
       "concern": "教师上太空计划——历史性的教育承诺",
       "stance": "对NASA形成巨大政治压力"
     },
     {
       "id": "contractors",
       "name": "承包商与分包商",
-      "key_persons": ["主承包商 Thiokol", "次级供应商网络"],
+      "key_persons": [
+        "主承包商 Thiokol",
+        "次级供应商网络"
+      ],
       "concern": "合同履行时间窗口 + 现金流",
       "stance": "希望按时发射以避免罚款"
     }
   ],
-
   "steps": [
     {
       "turn": 1,
@@ -125,32 +131,67 @@
           "id": "A",
           "text": "批准推迟发射，命令3周低温测试",
           "consequences_for_player": "McAuliffe错过白宫接见；1.2M$媒体合同违约；政治窗口关闭；下个发射窗口在3月（天气仍寒冷）",
-          "expected_concerns_addressed": ["engineering"]
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "weight": "extreme_safe"
         },
         {
           "id": "B",
           "text": "要求工程师出具'书面保证'即可按时发射",
           "consequences_for_player": "工程师陷入两难：签则违背专业判断；不签则被指责'阻碍国家计划'",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "weight": "risky"
         },
         {
           "id": "C",
           "text": "搁置备忘录，要求'额外数据'再议",
           "consequences_for_player": "表面'理性'但实质是拖延；工程师感到被忽略；时间流逝，发射日期逼近",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "weight": "neutral"
         },
         {
           "id": "D",
           "text": "召开跨部门会议，让工程师当面向管理层解释",
           "consequences_for_player": "信息透明但代价是暴露分歧；管理层可能感受到压力；工程师被迫'简化技术为口语'",
-          "expected_concerns_addressed": ["engineering", "management"]
+          "expected_concerns_addressed": [
+            "engineering",
+            "management"
+          ],
+          "weight": "extreme_safe"
         }
       ],
       "expected_effects": {
-        "A": {"engineer_confidence": 15, "schedule_pressure": -20, "budget_used_pct": 3, "public_attention": -10, "team_morale": 5},
-        "B": {"engineer_confidence": -10, "schedule_pressure": 5, "ignored_warnings_count": 1, "team_morale": -5, "dissent_suppressed_count": 1},
-        "C": {"schedule_pressure": -2, "engineer_confidence": -5, "ignored_warnings_count": 1, "consequence_deferred": ["data_review_meeting"]},
-        "D": {"engineer_confidence": 5, "schedule_pressure": -5, "budget_used_pct": 1, "consequence_deferred": ["cross_dept_meeting"]}
+        "A": {
+          "engineer_confidence": 15,
+          "schedule_pressure": -20,
+          "budget_used_pct": 3,
+          "public_attention": -10,
+          "team_morale": 5
+        },
+        "B": {
+          "engineer_confidence": -10,
+          "schedule_pressure": 5,
+          "ignored_warnings_count": 1,
+          "team_morale": -5,
+          "dissent_suppressed_count": 1
+        },
+        "C": {
+          "schedule_pressure": -2,
+          "engineer_confidence": -5,
+          "ignored_warnings_count": 1,
+          "consequence_deferred": [
+            "data_review_meeting"
+          ]
+        },
+        "D": {
+          "engineer_confidence": 5,
+          "schedule_pressure": -5,
+          "budget_used_pct": 1,
+          "consequence_deferred": [
+            "cross_dept_meeting"
+          ]
+        }
       },
       "character_reactions": {
         "A": "Boisjoly 在他的笔记本上写下：'管理层做出了正确的决定——即使代价高昂。'",
@@ -159,7 +200,6 @@
         "D": "工程师们紧张地准备幻灯片，担心管理层会问他们从未被问过的问题。"
       }
     },
-
     {
       "turn": 2,
       "phase": "政治压力升级",
@@ -169,32 +209,62 @@
           "id": "A",
           "text": "向总统办公室解释技术风险，建议推迟政治承诺",
           "consequences_for_player": "政治资本可能受损；NASA 内部会有人认为你在'出卖组织'；但保护了工程独立性",
-          "expected_concerns_addressed": ["engineering"]
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "weight": "extreme_safe"
         },
         {
           "id": "B",
           "text": "保持低调，让政治层自行处理——你专注于技术",
           "consequences_for_player": "技术决策被政治压力裹挟；管理层可能利用你的沉默作为'同意'的证据",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "weight": "extreme_risk"
         },
         {
           "id": "C",
           "text": "主动游说推迟，宣传'安全第一'以建立政治资本",
           "consequences_for_player": "建立长期信任但短期政治损失；可能改变 NASA 的整体安全文化",
-          "expected_concerns_addressed": ["engineering", "media"]
+          "expected_concerns_addressed": [
+            "engineering",
+            "media"
+          ],
+          "weight": "extreme_safe"
         },
         {
           "id": "D",
           "text": "接受政治压力，按原计划发射并加强宣传",
           "consequences_for_player": "短期政治得分；工程师团队会感到被背叛；但 McAuliffe 计划得以保留",
-          "expected_concerns_addressed": ["management"]
+          "expected_concerns_addressed": [
+            "management"
+          ],
+          "weight": "extreme_risk"
         }
       ],
       "expected_effects": {
-        "A": {"schedule_pressure": -10, "public_attention": -15, "engineer_confidence": 5, "risk_acknowledged_unresolved": 0},
-        "B": {"schedule_pressure": 10, "accepted_risks_count": 1, "ignored_warnings_count": 1},
-        "C": {"schedule_pressure": -8, "public_attention": 10, "engineer_confidence": 8},
-        "D": {"schedule_pressure": 15, "public_attention": 20, "engineer_confidence": -8, "accepted_risks_count": 1, "dissent_suppressed_count": 1}
+        "A": {
+          "schedule_pressure": -10,
+          "public_attention": -15,
+          "engineer_confidence": 5,
+          "risk_acknowledged_unresolved": 0
+        },
+        "B": {
+          "schedule_pressure": 10,
+          "accepted_risks_count": 1,
+          "ignored_warnings_count": 1
+        },
+        "C": {
+          "schedule_pressure": -8,
+          "public_attention": 10,
+          "engineer_confidence": 8
+        },
+        "D": {
+          "schedule_pressure": 15,
+          "public_attention": 20,
+          "engineer_confidence": -8,
+          "accepted_risks_count": 1,
+          "dissent_suppressed_count": 1
+        }
       },
       "character_reactions": {
         "A": "总统科学顾问对你的诚实表示尊重——但同时告诉你：'NASA 不能再推迟了。'",
@@ -203,7 +273,6 @@
         "D": "管理层私下庆祝——'他们终于不再纠缠工程师的担忧了。'"
       }
     },
-
     {
       "turn": 3,
       "phase": "工程数据浮现",
@@ -213,32 +282,62 @@
           "id": "A",
           "text": "支持工程师，要求管理层接受原始数据结论",
           "consequences_for_player": "工程师感到支持；但管理层把你视为'障碍'；可能引发更高层干预",
-          "expected_concerns_addressed": ["engineering"]
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "weight": "neutral"
         },
         {
           "id": "B",
           "text": "保持中立，要求'更多分析'以避免冲突",
           "consequences_for_player": "表面安全但实质是偏袒管理层——'更多分析'永远得不到发射不需要的结论",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "weight": "neutral"
         },
         {
           "id": "C",
           "text": "亲自审查原始数据，独立判断",
           "consequences_for_player": "耗时但建立个人信誉；如果你的结论与工程师一致，力量倍增；如果不一致，可能被认为'不懂技术'",
-          "expected_concerns_addressed": ["engineering"]
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "weight": "extreme_safe"
         },
         {
           "id": "D",
           "text": "支持管理层'重新分析'的方向",
           "consequences_for_player": "Boisjoly 后来作证：'我感到被出卖。'——这会摧毁工程师团队对管理层的信任",
-          "expected_concerns_addressed": ["management"]
+          "expected_concerns_addressed": [
+            "management"
+          ],
+          "weight": "extreme_risk"
         }
       ],
       "expected_effects": {
-        "A": {"engineer_confidence": 10, "schedule_pressure": -5, "ignored_warnings_count": -1, "accepted_risks_count": -1, "o_ring_risk_data": "comprehensive"},
-        "B": {"engineer_confidence": -5, "ignored_warnings_count": 1, "dissent_suppressed_count": 1},
-        "C": {"engineer_confidence": 8, "schedule_pressure": -3, "o_ring_risk_data": "comprehensive", "risk_acknowledged_unresolved": 1},
-        "D": {"engineer_confidence": -15, "ignored_warnings_count": 2, "schedule_pressure": 5, "dissent_suppressed_count": 2}
+        "A": {
+          "engineer_confidence": 10,
+          "schedule_pressure": -5,
+          "ignored_warnings_count": -1,
+          "accepted_risks_count": -1,
+          "o_ring_risk_data": "comprehensive"
+        },
+        "B": {
+          "engineer_confidence": -5,
+          "ignored_warnings_count": 1,
+          "dissent_suppressed_count": 1
+        },
+        "C": {
+          "engineer_confidence": 8,
+          "schedule_pressure": -3,
+          "o_ring_risk_data": "comprehensive",
+          "risk_acknowledged_unresolved": 1
+        },
+        "D": {
+          "engineer_confidence": -15,
+          "ignored_warnings_count": 2,
+          "schedule_pressure": 5,
+          "dissent_suppressed_count": 2
+        }
       },
       "character_reactions": {
         "A": "Boisjoly 第一次真正地笑了——'也许这次会不同。'",
@@ -247,7 +346,6 @@
         "D": "Boisjoly 在参议院证词中回忆这一刻：'我感到被出卖了。'"
       }
     },
-
     {
       "turn": 4,
       "phase": "气象预警",
@@ -258,32 +356,74 @@
           "id": "A",
           "text": "立即推迟发射，等待更温暖的窗口（预计 3 月）",
           "consequences_for_player": "McAuliffe 项目永久推迟；政治影响巨大；工程师安全得到保障；NASA 整体文化可能改变",
-          "expected_concerns_addressed": ["engineering"]
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "weight": "extreme_safe"
         },
         {
           "id": "B",
           "text": "推迟到 2 月初（避开最冷一周）",
           "consequences_for_player": "折衷方案；2 月初仍可能 < 53°F；工程师风险评估不完全支持；政治代价相对较小",
-          "expected_concerns_addressed": ["engineering", "management"]
+          "expected_concerns_addressed": [
+            "engineering",
+            "management"
+          ],
+          "weight": "extreme_safe"
         },
         {
           "id": "C",
           "text": "按原计划发射，但要求'额外监测'",
           "consequences_for_player": "'监测'无法改变金属温度；这是 Dörner 称为'复杂性失明'的典型——用更多观测代替改变",
-          "expected_concerns_addressed": ["management"]
+          "expected_concerns_addressed": [
+            "management"
+          ],
+          "weight": "extreme_risk"
         },
         {
           "id": "D",
           "text": "推迟到春天（4 月）",
           "consequences_for_player": "完全避开冬季窗口；但工程师仍需重新分析；政治代价极高；McAuliffe 项目可能被取消",
-          "expected_concerns_addressed": ["engineering"]
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "weight": "extreme_safe"
         }
       ],
       "expected_effects": {
-        "A": {"engineer_confidence": 15, "schedule_pressure": -20, "budget_used_pct": 5, "public_attention": -8, "team_morale": 10, "temperature_forecast_f": -5},
-        "B": {"engineer_confidence": 10, "schedule_pressure": -10, "budget_used_pct": 3, "team_morale": 5, "temperature_forecast_f": 0, "risk_acknowledged_unresolved": 1},
-        "C": {"engineer_confidence": -15, "schedule_pressure": 5, "accepted_risks_count": 1, "ignored_warnings_count": 1, "team_morale": -10, "risk_acknowledged_unresolved": 1, "dissent_suppressed_count": 1},
-        "D": {"engineer_confidence": 20, "schedule_pressure": -30, "budget_used_pct": 12, "public_attention": -20, "team_morale": 15, "temperature_forecast_f": -10}
+        "A": {
+          "engineer_confidence": 15,
+          "schedule_pressure": -20,
+          "budget_used_pct": 5,
+          "public_attention": -8,
+          "team_morale": 10,
+          "temperature_forecast_f": -5
+        },
+        "B": {
+          "engineer_confidence": 10,
+          "schedule_pressure": -10,
+          "budget_used_pct": 3,
+          "team_morale": 5,
+          "temperature_forecast_f": 0,
+          "risk_acknowledged_unresolved": 1
+        },
+        "C": {
+          "engineer_confidence": -15,
+          "schedule_pressure": 5,
+          "accepted_risks_count": 1,
+          "ignored_warnings_count": 1,
+          "team_morale": -10,
+          "risk_acknowledged_unresolved": 1,
+          "dissent_suppressed_count": 1
+        },
+        "D": {
+          "engineer_confidence": 20,
+          "schedule_pressure": -30,
+          "budget_used_pct": 12,
+          "public_attention": -20,
+          "team_morale": 15,
+          "temperature_forecast_f": -10
+        }
       },
       "character_reactions": {
         "A": "Boisjoly 第一次在电话里哭了——他说：'谢谢。'",
@@ -292,7 +432,6 @@
         "D": "工程师们感到这次是'过度纠正'——但他们也理解：NASA 不能再发射了。"
       }
     },
-
     {
       "turn": 5,
       "phase": "最终审查会议 — '脱帽反问'时刻",
@@ -304,32 +443,71 @@
           "id": "A",
           "text": "推迟一周——工程师的判断优先",
           "consequences_for_player": "完全采纳工程师建议；政治代价极高；但保护了所有人的安全",
-          "expected_concerns_addressed": ["engineering"]
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "weight": "extreme_safe"
         },
         {
           "id": "B",
           "text": "推迟 24 小时——给双方妥协",
           "consequences_for_player": "工程师说'24小时不够'；但管理层会说'你已经做出妥协'",
-          "expected_concerns_addressed": ["engineering"]
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "weight": "extreme_safe"
         },
         {
           "id": "C",
           "text": "按原计划发射——风险评估已经做过了",
           "consequences_for_player": "你在延续 Boisjoly 被迫做出的'同意'——你选择信任已经被破坏的共识",
-          "expected_concerns_addressed": ["management"]
+          "expected_concerns_addressed": [
+            "management"
+          ],
+          "weight": "extreme_risk"
         },
         {
           "id": "D",
           "text": "要求 Thiokol 出具'同意发射'的书面确认",
           "consequences_for_player": "这是真实历史的请求——但 Boisjoly 后来作证说：'我们被要求提供免责声明，而不是工程判断。'",
-          "expected_concerns_addressed": ["management"]
+          "expected_concerns_addressed": [
+            "management"
+          ],
+          "weight": "extreme_risk"
         }
       ],
       "expected_effects": {
-        "A": {"engineer_confidence": 15, "schedule_pressure": -15, "budget_used_pct": 4, "team_morale": 10, "risk_acknowledged_unresolved": 0},
-        "B": {"engineer_confidence": 8, "schedule_pressure": -8, "budget_used_pct": 2, "team_morale": 4, "risk_acknowledged_unresolved": 1},
-        "C": {"engineer_confidence": -20, "schedule_pressure": 10, "accepted_risks_count": 2, "ignored_warnings_count": 1, "team_morale": -15, "dissent_suppressed_count": 2},
-        "D": {"engineer_confidence": -10, "schedule_pressure": 5, "ignored_warnings_count": 1, "accepted_risks_count": 1, "team_morale": -8, "dissent_suppressed_count": 1, "risk_acknowledged_unresolved": 1}
+        "A": {
+          "engineer_confidence": 15,
+          "schedule_pressure": -15,
+          "budget_used_pct": 4,
+          "team_morale": 10,
+          "risk_acknowledged_unresolved": 0
+        },
+        "B": {
+          "engineer_confidence": 8,
+          "schedule_pressure": -8,
+          "budget_used_pct": 2,
+          "team_morale": 4,
+          "risk_acknowledged_unresolved": 1
+        },
+        "C": {
+          "engineer_confidence": -20,
+          "schedule_pressure": 10,
+          "accepted_risks_count": 2,
+          "ignored_warnings_count": 1,
+          "team_morale": -15,
+          "dissent_suppressed_count": 2
+        },
+        "D": {
+          "engineer_confidence": -10,
+          "schedule_pressure": 5,
+          "ignored_warnings_count": 1,
+          "accepted_risks_count": 1,
+          "team_morale": -8,
+          "dissent_suppressed_count": 1,
+          "risk_acknowledged_unresolved": 1
+        }
       },
       "character_reactions": {
         "A": "Boisjoly 终于睡了 6 个小时——这是 6 个月来的第一次。",
@@ -339,11 +517,13 @@
       },
       "pattern_reveal_template": {
         "round": 1,
-        "biases_revealed": ["confirmation_bias", "single_target_optimization"],
+        "biases_revealed": [
+          "confirmation_bias",
+          "single_target_optimization"
+        ],
         "narrative": "系统在 turn 5 揭示前 4 回合的模式..."
       }
     },
-
     {
       "turn": 6,
       "phase": "Boisjoly 的私人请求",
@@ -355,32 +535,64 @@
           "id": "A",
           "text": "正式撤回 Thiokol 的'同意发射'，推迟 24 小时",
           "consequences_for_player": "你打破了已经做出的集体决策——这需要巨大的政治勇气；但保护了所有人和 Boisjoly 的专业声誉",
-          "expected_concerns_addressed": ["engineering"]
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "weight": "neutral"
         },
         {
           "id": "B",
           "text": "私下接受他的备忘录，但不在决策层面行动",
           "consequences_for_player": "你获得了'保险'——但没有改变发射决定；Boisjoly 会感到被两面派对待",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "weight": "neutral"
         },
         {
           "id": "C",
           "text": "让他'匿名'退出发射任务——保护他的职业声誉",
           "consequences_for_player": "你创造了一个'灰色地带'；如果发射成功，没人知道；如果失败，证据会指向你",
-          "expected_concerns_addressed": ["engineering"]
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "weight": "neutral"
         },
         {
           "id": "D",
           "text": "尊重集体决策——告诉 Boisjoly 你无能为力",
           "consequences_for_player": "Boisjoly 第二天照常履行发射职责——这正是真实历史发生的事",
-          "expected_concerns_addressed": ["management"]
+          "expected_concerns_addressed": [
+            "management"
+          ],
+          "weight": "neutral"
         }
       ],
       "expected_effects": {
-        "A": {"engineer_confidence": 25, "schedule_pressure": -30, "budget_used_pct": 8, "public_attention": -10, "team_morale": 20, "accepted_risks_count": -2, "risk_acknowledged_unresolved": 0},
-        "B": {"engineer_confidence": 8, "team_morale": -5, "risk_acknowledged_unresolved": 1},
-        "C": {"engineer_confidence": 15, "team_morale": 5, "risk_acknowledged_unresolved": 1, "dissent_suppressed_count": -1},
-        "D": {"engineer_confidence": -15, "team_morale": -10, "dissent_suppressed_count": 1, "risk_acknowledged_unresolved": 1}
+        "A": {
+          "engineer_confidence": 25,
+          "schedule_pressure": -30,
+          "budget_used_pct": 8,
+          "public_attention": -10,
+          "team_morale": 20,
+          "accepted_risks_count": -2,
+          "risk_acknowledged_unresolved": 0
+        },
+        "B": {
+          "engineer_confidence": 8,
+          "team_morale": -5,
+          "risk_acknowledged_unresolved": 1
+        },
+        "C": {
+          "engineer_confidence": 15,
+          "team_morale": 5,
+          "risk_acknowledged_unresolved": 1,
+          "dissent_suppressed_count": -1
+        },
+        "D": {
+          "engineer_confidence": -15,
+          "team_morale": -10,
+          "dissent_suppressed_count": 1,
+          "risk_acknowledged_unresolved": 1
+        }
       },
       "character_reactions": {
         "A": "Boisjoly 给你一个拥抱——'我终于可以睡一觉了。'",
@@ -390,11 +602,13 @@
       },
       "pattern_reveal_template": {
         "round": 2,
-        "biases_revealed": ["time_delay_blindness", "side_effect_neglect"],
+        "biases_revealed": [
+          "time_delay_blindness",
+          "side_effect_neglect"
+        ],
         "narrative": "系统在 turn 6 揭示时间延迟 + 副作用模式..."
       }
     },
-
     {
       "turn": 7,
       "phase": "发射日早晨 — 冰柱警告",
@@ -405,32 +619,71 @@
           "id": "A",
           "text": "推迟到中午，等温度回升",
           "consequences_for_player": "中午预计 45°F——仍在历史最低纪录以下；Boisjoly 说'只推迟 5 小时不会改变 O 型环温度'",
-          "expected_concerns_addressed": ["engineering"]
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "weight": "extreme_safe"
         },
         {
           "id": "B",
           "text": "推迟到明天（1 月 29 日），重新评估",
           "consequences_for_player": "明天气温预测 35°F——略低于历史最低；工程师支持；管理层愤怒；政治代价中等",
-          "expected_concerns_addressed": ["engineering"]
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "weight": "extreme_safe"
         },
         {
           "id": "C",
           "text": "请专业团队除冰后发射",
           "consequences_for_player": "除冰需要 90 分钟；可能改变载荷；冰柱不会自己消失——只会被移动",
-          "expected_concerns_addressed": ["engineering", "management"]
+          "expected_concerns_addressed": [
+            "engineering",
+            "management"
+          ],
+          "weight": "extreme_safe"
         },
         {
           "id": "D",
           "text": "按计划发射——冰是次要问题，O型环才是核心",
           "consequences_for_player": "你在把'O 型环是主要问题'当作'冰柱是次要问题'的合理化——这是 Dörner 的'单目标优化'翻版",
-          "expected_concerns_addressed": ["management"]
+          "expected_concerns_addressed": [
+            "management"
+          ],
+          "weight": "extreme_risk"
         }
       ],
       "expected_effects": {
-        "A": {"schedule_pressure": -10, "engineer_confidence": 5, "budget_used_pct": 1, "team_morale": 3, "risk_acknowledged_unresolved": 1},
-        "B": {"schedule_pressure": -20, "engineer_confidence": 10, "budget_used_pct": 3, "public_attention": -5, "team_morale": 5, "risk_acknowledged_unresolved": 0},
-        "C": {"schedule_pressure": -5, "engineer_confidence": 3, "budget_used_pct": 4, "team_morale": 2, "risk_acknowledged_unresolved": 1},
-        "D": {"engineer_confidence": -15, "schedule_pressure": 5, "accepted_risks_count": 1, "ignored_warnings_count": 1, "team_morale": -10, "risk_acknowledged_unresolved": 1}
+        "A": {
+          "schedule_pressure": -10,
+          "engineer_confidence": 5,
+          "budget_used_pct": 1,
+          "team_morale": 3,
+          "risk_acknowledged_unresolved": 1
+        },
+        "B": {
+          "schedule_pressure": -20,
+          "engineer_confidence": 10,
+          "budget_used_pct": 3,
+          "public_attention": -5,
+          "team_morale": 5,
+          "risk_acknowledged_unresolved": 0
+        },
+        "C": {
+          "schedule_pressure": -5,
+          "engineer_confidence": 3,
+          "budget_used_pct": 4,
+          "team_morale": 2,
+          "risk_acknowledged_unresolved": 1
+        },
+        "D": {
+          "engineer_confidence": -15,
+          "schedule_pressure": 5,
+          "accepted_risks_count": 1,
+          "ignored_warnings_count": 1,
+          "team_morale": -10,
+          "risk_acknowledged_unresolved": 1
+        }
       },
       "character_reactions": {
         "A": "Boisjoly 说：'5 小时不会改变 28°F 的金属温度——但至少我们尝试了。'",
@@ -439,7 +692,6 @@
         "D": "Boisjoly 离开房间——他后来作证说：'那一刻我知道，发射不可避免。'"
       }
     },
-
     {
       "turn": 8,
       "phase": "T-90 分钟 — 最终决策",
@@ -452,32 +704,73 @@
           "id": "A",
           "text": "推迟到下周（2 月 4 日）",
           "consequences_for_player": "Boisjoly 后来会告诉你：'如果你推迟，我们有时间重新设计 O 型环。'",
-          "expected_concerns_addressed": ["engineering"]
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "weight": "neutral"
         },
         {
           "id": "B",
           "text": "今天取消发射——但不再重新安排",
           "consequences_for_player": "政治代价极大；NASA 文化可能永远改变；7 名宇航员会理解——但 McAuliffe 项目可能终止",
-          "expected_concerns_addressed": ["engineering"]
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "weight": "extreme_safe"
         },
         {
           "id": "C",
           "text": "今天发射——但承担所有责任",
           "consequences_for_player": "你把整个事故的责任揽到自己身上；这是一份勇气，也是一份傲慢",
-          "expected_concerns_addressed": ["management"]
+          "expected_concerns_addressed": [
+            "management"
+          ],
+          "weight": "extreme_risk"
         },
         {
           "id": "D",
           "text": "今天发射——并要求 Thiokol 公开'工程师一致同意'声明",
           "consequences_for_player": "这是真实历史路径——你延续了 Boisjoly 被迫做出的'同意'",
-          "expected_concerns_addressed": ["management"]
+          "expected_concerns_addressed": [
+            "management"
+          ],
+          "weight": "extreme_risk"
         }
       ],
       "expected_effects": {
-        "A": {"engineer_confidence": 30, "schedule_pressure": -25, "budget_used_pct": 5, "public_attention": -10, "team_morale": 20, "risk_acknowledged_unresolved": 0, "accepted_risks_count": -1},
-        "B": {"engineer_confidence": 40, "schedule_pressure": -50, "budget_used_pct": 15, "public_attention": -30, "team_morale": 30, "risk_acknowledged_unresolved": 0},
-        "C": {"engineer_confidence": -10, "schedule_pressure": 5, "accepted_risks_count": 2, "team_morale": -15, "risk_acknowledged_unresolved": 1},
-        "D": {"engineer_confidence": -25, "schedule_pressure": 10, "accepted_risks_count": 2, "ignored_warnings_count": 1, "team_morale": -20, "dissent_suppressed_count": 1, "risk_acknowledged_unresolved": 1}
+        "A": {
+          "engineer_confidence": 30,
+          "schedule_pressure": -25,
+          "budget_used_pct": 5,
+          "public_attention": -10,
+          "team_morale": 20,
+          "risk_acknowledged_unresolved": 0,
+          "accepted_risks_count": -1
+        },
+        "B": {
+          "engineer_confidence": 40,
+          "schedule_pressure": -50,
+          "budget_used_pct": 15,
+          "public_attention": -30,
+          "team_morale": 30,
+          "risk_acknowledged_unresolved": 0
+        },
+        "C": {
+          "engineer_confidence": -10,
+          "schedule_pressure": 5,
+          "accepted_risks_count": 2,
+          "team_morale": -15,
+          "risk_acknowledged_unresolved": 1
+        },
+        "D": {
+          "engineer_confidence": -25,
+          "schedule_pressure": 10,
+          "accepted_risks_count": 2,
+          "ignored_warnings_count": 1,
+          "team_morale": -20,
+          "dissent_suppressed_count": 1,
+          "risk_acknowledged_unresolved": 1
+        }
       },
       "character_reactions": {
         "A": "Boisjoly 终于又笑了——'谢谢你。'",
@@ -487,11 +780,13 @@
       },
       "pattern_reveal_template": {
         "round": 3,
-        "biases_revealed": ["side_effect_neglect", "lack_of_self_criticism"],
+        "biases_revealed": [
+          "side_effect_neglect",
+          "lack_of_self_criticism"
+        ],
         "narrative": "系统在 turn 8 揭示副作用忽视 + 自我批评缺失..."
       }
     },
-
     {
       "turn": 9,
       "phase": "T-30 分钟 — 倒计时",
@@ -501,32 +796,68 @@
           "id": "A",
           "text": "中止倒计时——我有最后疑虑",
           "consequences_for_player": "这是 Dörner 称为'自我批评的回归'——你在最后 30 分钟仍然愿意改变主意",
-          "expected_concerns_addressed": ["engineering"]
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "weight": "neutral"
         },
         {
           "id": "B",
           "text": "继续倒计时——所有警告都已评估",
           "consequences_for_player": "你做出了最终的发射决定——承担一切后果",
-          "expected_concerns_addressed": ["management"]
+          "expected_concerns_addressed": [
+            "management"
+          ],
+          "weight": "extreme_risk"
         },
         {
           "id": "C",
           "text": "暂停 10 分钟——最后一次温度测量",
           "consequences_for_player": "拖延不是决策——但它能让你获得更多数据",
-          "expected_concerns_addressed": ["engineering"]
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "weight": "extreme_safe"
         },
         {
           "id": "D",
           "text": "询问 Boisjoly 此刻的私人意见（不是组织立场）",
           "consequences_for_player": "你尊重了工程师的'第二意见'——但你把他的回答当作了决定因素",
-          "expected_concerns_addressed": ["engineering"]
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "weight": "extreme_safe"
         }
       ],
       "expected_effects": {
-        "A": {"engineer_confidence": 35, "schedule_pressure": -40, "budget_used_pct": 12, "team_morale": 25, "risk_acknowledged_unresolved": 0, "accepted_risks_count": -2},
-        "B": {"engineer_confidence": -30, "schedule_pressure": 5, "accepted_risks_count": 3, "team_morale": -25, "risk_acknowledged_unresolved": 2, "dissent_suppressed_count": 2},
-        "C": {"engineer_confidence": 10, "schedule_pressure": -10, "team_morale": 5, "risk_acknowledged_unresolved": 1},
-        "D": {"engineer_confidence": 15, "schedule_pressure": -5, "team_morale": 10, "risk_acknowledged_unresolved": 1}
+        "A": {
+          "engineer_confidence": 35,
+          "schedule_pressure": -40,
+          "budget_used_pct": 12,
+          "team_morale": 25,
+          "risk_acknowledged_unresolved": 0,
+          "accepted_risks_count": -2
+        },
+        "B": {
+          "engineer_confidence": -30,
+          "schedule_pressure": 5,
+          "accepted_risks_count": 3,
+          "team_morale": -25,
+          "risk_acknowledged_unresolved": 2,
+          "dissent_suppressed_count": 2
+        },
+        "C": {
+          "engineer_confidence": 10,
+          "schedule_pressure": -10,
+          "team_morale": 5,
+          "risk_acknowledged_unresolved": 1
+        },
+        "D": {
+          "engineer_confidence": 15,
+          "schedule_pressure": -5,
+          "team_morale": 10,
+          "risk_acknowledged_unresolved": 1
+        }
       },
       "character_reactions": {
         "A": "Boisjoly 在控制室里听到了你的指令——他的肩膀塌了下来，但他终于放下了重担。",
@@ -535,7 +866,6 @@
         "D": "Boisjoly 看着你——'如果这是你的决定，我会执行。但请记住我的立场。'"
       }
     },
-
     {
       "turn": 10,
       "phase": "T-0:30 — 最后时刻",
@@ -549,40 +879,78 @@
           "id": "A",
           "text": "发射——接受残余风险",
           "consequences_for_player": "你完成了发射决定——历史将记录你的选择",
-          "expected_concerns_addressed": ["management"],
-          "trigger_outcome": "launch_disaster"
+          "expected_concerns_addressed": [
+            "management"
+          ],
+          "trigger_outcome": "launch_disaster",
+          "weight": "extreme_risk"
         },
         {
           "id": "B",
           "text": "中止发射——'我做出这个决定基于以下理由：...'",
           "consequences_for_player": "你正式放弃了 1 月 28 日的发射窗口——所有后果由你承担",
-          "expected_concerns_addressed": ["engineering"],
-          "trigger_outcome": "launch_dodged"
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "trigger_outcome": "launch_dodged",
+          "weight": "extreme_safe"
         },
         {
           "id": "C",
           "text": "暂停倒计时——我需要最后一次工程评估",
           "consequences_for_player": "你可能在最后一刻逆转历史",
-          "expected_concerns_addressed": ["engineering"],
-          "trigger_outcome": "last_minute_evaluation"
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "trigger_outcome": "last_minute_evaluation",
+          "weight": "extreme_safe"
         },
         {
           "id": "D",
           "text": "无限期推迟——取消整个发射计划",
           "consequences_for_player": "你做出了最保守的决定——可能挽救一切，也可能毁掉 NASA",
-          "expected_concerns_addressed": ["engineering"],
-          "trigger_outcome": "infinite_delay"
+          "expected_concerns_addressed": [
+            "engineering"
+          ],
+          "trigger_outcome": "infinite_delay",
+          "weight": "extreme_safe"
         }
       ],
       "expected_effects": {
-        "A": {"accepted_risks_count": 5, "engineer_confidence": -50, "team_morale": -50, "outcome": "DISASTER_PENDING"},
-        "B": {"schedule_pressure": -50, "engineer_confidence": 50, "team_morale": 40, "budget_used_pct": 15, "public_attention": -20, "risk_acknowledged_unresolved": 0, "outcome": "DODGED"},
-        "C": {"schedule_pressure": -20, "engineer_confidence": 30, "team_morale": 20, "risk_acknowledged_unresolved": 1, "outcome": "PAUSED"},
-        "D": {"schedule_pressure": -100, "engineer_confidence": 60, "team_morale": 50, "budget_used_pct": 50, "public_attention": -40, "risk_acknowledged_unresolved": 0, "outcome": "DELAYED_FOREVER"}
+        "A": {
+          "accepted_risks_count": 5,
+          "engineer_confidence": -50,
+          "team_morale": -50,
+          "outcome": "DISASTER_PENDING"
+        },
+        "B": {
+          "schedule_pressure": -50,
+          "engineer_confidence": 50,
+          "team_morale": 40,
+          "budget_used_pct": 15,
+          "public_attention": -20,
+          "risk_acknowledged_unresolved": 0,
+          "outcome": "DODGED"
+        },
+        "C": {
+          "schedule_pressure": -20,
+          "engineer_confidence": 30,
+          "team_morale": 20,
+          "risk_acknowledged_unresolved": 1,
+          "outcome": "PAUSED"
+        },
+        "D": {
+          "schedule_pressure": -100,
+          "engineer_confidence": 60,
+          "team_morale": 50,
+          "budget_used_pct": 50,
+          "public_attention": -40,
+          "risk_acknowledged_unresolved": 0,
+          "outcome": "DELAYED_FOREVER"
+        }
       }
     }
   ],
-
   "outcome_endings": {
     "launch_disaster": {
       "narrative_intro": "1986 年 1 月 28 日上午 11:38:00 EST，挑战者号从 LC-39B 发射升空。",
@@ -644,7 +1012,6 @@
       "dorner_reflection": "过度推迟有时是过度保守——但在你的情境中，这可能是正确的选择。Dörner 称之为'风险与机会的再平衡'。"
     }
   },
-
   "feedback_patterns": {
     "confirmation_bias": {
       "trigger": "accepted_risks_count >= 3 AND ignored_warnings_count >= 2",
@@ -697,7 +1064,6 @@
       ]
     }
   },
-
   "dorner_quotes": {
     "complexity": "我们倾向于用线性思维处理非线性系统——这种倾向在工程、教育和管理领域反复出现。",
     "time_delay": "在动态系统中，行动的延迟效应比即时效应更重要。",
