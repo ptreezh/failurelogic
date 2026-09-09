@@ -300,7 +300,15 @@ def _detect_time_delay_blindness(state: Dict[str, Any]) -> Optional[Dict[str, An
 
 def _detect_side_effect_neglect(state: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     """F4: decision_justifications don't mention other parties / future effects."""
-    justifications = state.get("decision_justifications", {})
+    decision_history = state.get("decision_history", [])
+    justifications = {}
+    # v2.1: justifications are stored per-turn in decision_history.
+    # Fall back to state-level for backward compat.
+    for d in decision_history:
+        j = d.get("justification")
+        if j:
+            justifications[str(d.get("turn", ""))] = j
+    justifications.update(state.get("decision_justifications", {}))
     if not justifications:
         return None
 
@@ -356,12 +364,16 @@ def _detect_lack_of_self_criticism(state: Dict[str, Any]) -> Optional[Dict[str, 
         if d.get("turn", 0) > first_reveal_turn
     ]
 
-    # Did they keep accepting risks after reveal?
-    # We track this via accepted_risks_count growth post-reveal
-    initial = _load_scenario()["initialState"]
-    post_reveal_accepted_growth = state.get("accepted_risks_count", 0)  # simplified
+    # v2.1: read accepted_risks_count from post-reveal decisions directly,
+    # not from state top-level. State has the cumulative count, but for the
+    # "persists after reveal" test we need to count risk acceptances AFTER
+    # the first reveal, not before.
+    post_reveal_risk_accepts = sum(
+        d.get("applied_effects", {}).get("accepted_risks_count", 0)
+        for d in post_reveal_decisions
+    )
 
-    if len(post_reveal_decisions) >= 2 and post_reveal_accepted_growth >= 1:
+    if len(post_reveal_decisions) >= 2 and post_reveal_risk_accepts >= 1:
         return {
             "pattern_type": "lack_of_self_criticism",
             "dorner_concept": "自我批评缺失",
@@ -458,7 +470,10 @@ def _detect_regulation_lag(state: Dict[str, Any]) -> Optional[Dict[str, Any]]:
 
     directions = []
     for d in decision_history[-5:]:
-        w = d.get("weight", "")
+        # v2.1: weight is stored in option_weight inside decision_history
+        # (see _last_option_context in turn_executor.py). Accept both keys
+        # for backward compat with v2.0 data and synthetic test data.
+        w = d.get("weight", "") or d.get("option_weight", "")
         if w in safe_weights:
             directions.append("safe")
         elif w in risk_weights:
@@ -533,9 +548,12 @@ def generate_feedback_for_turn(state: Dict[str, Any], turn_number: int) -> str:
     data = _load_scenario()
     last_step = data["steps"][-1]
     # The choice was on step[turn_number - 1] (post-increment from start.py).
+    # Past-last-step clamps to final outcome render (turn 10).
     target_turn = min(turn_number - 1, last_step["turn"])
+    # Below turn 1 — caller is misusing the API (turn_number should be >=1).
+    # Don't fall back to step 1; return empty.
     if target_turn < 1:
-        target_turn = 1
+        return ""
     step = None
     for s in data["steps"]:
         if s["turn"] == target_turn:
@@ -699,20 +717,26 @@ def _select_key_decisions_for_reveal(
     scored = []
     for d in decision_history:
         effects = d.get("applied_effects", {}) or {}
-        score = 0
-        if effects.get("accepted_risks_count", 0) > 0:
-            score += 10
-        if effects.get("ignored_warnings_count", 0) > 0:
-            score += 8
-        if effects.get("dissent_suppressed_count", 0) > 0:
-            score += 12
-        if effects.get("risk_acknowledged_unresolved", 0) > 0:
-            score += 6
-        # Recent decisions weighted slightly higher
-        score += d.get("turn", 0) * 0.1
+        # Skip decisions with zero counter increments (calibrated choices).
+        # Reveal references should highlight the bias-relevant moments.
+        counter_delta = (
+            effects.get("accepted_risks_count", 0)
+            + effects.get("ignored_warnings_count", 0)
+            + effects.get("dissent_suppressed_count", 0)
+            + effects.get("risk_acknowledged_unresolved", 0)
+        )
+        if counter_delta <= 0:
+            continue
+        score = (
+            effects.get("accepted_risks_count", 0) * 10
+            + effects.get("ignored_warnings_count", 0) * 8
+            + effects.get("dissent_suppressed_count", 0) * 12
+            + effects.get("risk_acknowledged_unresolved", 0) * 6
+            + d.get("turn", 0) * 0.1  # recency tiebreaker
+        )
         scored.append((score, d))
     scored.sort(key=lambda x: -x[0])
-    return [d for score, d in scored if score > 0][:3]
+    return [d for _, d in scored][:3]
 
 
 def _generate_final_outcome_feedback(
