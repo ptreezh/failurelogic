@@ -22,6 +22,7 @@ from logic.challenger_scenario import (
     detect_patterns,
     generate_feedback_for_turn,
     get_summary,
+    escape_justification,
     _detect_confirmation_bias,
     _detect_single_target_optimization,
     _detect_time_delay_blindness,
@@ -149,6 +150,49 @@ def test_temperature_forecast_clamped(fresh_state):
     fresh_state["temperature_forecast_f"] = 200
     apply_turn(fresh_state, "A")
     assert fresh_state["temperature_forecast_f"] <= 120
+
+
+# ---- escape_justification (XSS protection per spec round 5) ----
+
+def test_escape_justification_handles_none():
+    assert escape_justification(None) is None
+
+
+def test_escape_justification_handles_empty():
+    assert escape_justification("") is None
+    assert escape_justification("   ") is None  # whitespace
+
+
+def test_escape_justification_html_escapes_special_chars():
+    escaped = escape_justification("<script>alert('xss')</script>")
+    assert "<script>" not in escaped
+    assert "&lt;script&gt;" in escaped
+
+
+def test_escape_justification_caps_length():
+    long_text = "x" * 500
+    escaped = escape_justification(long_text, max_length=200)
+    assert len(escaped) == 200
+
+
+def test_escape_justification_strips_whitespace():
+    escaped = escape_justification("  hello  ")
+    assert escaped == "hello"
+
+
+def test_apply_turn_sanitizes_xss_in_justification(fresh_state):
+    apply_turn(fresh_state, "A",
+               decision_justification='<img src=x onerror=alert(1)>')
+    stored = fresh_state["decision_justifications"]["1"]
+    assert "<img" not in stored
+    assert "&lt;img" in stored
+
+
+def test_apply_turn_drops_oversize_justification(fresh_state):
+    long_text = "y" * 1000
+    apply_turn(fresh_state, "A", decision_justification=long_text)
+    stored = fresh_state["decision_justifications"]["1"]
+    assert len(stored) == 200  # default max_length
 
 
 # ---- Bias detectors ----

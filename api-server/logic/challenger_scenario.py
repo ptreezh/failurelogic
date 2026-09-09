@@ -49,6 +49,25 @@ def _load_scenario() -> Dict[str, Any]:
     return _SCENARIO_DATA
 
 
+
+def escape_justification(text: Optional[str], max_length: int = 200) -> Optional[str]:
+    """Sanitize user-provided decision justification for storage.
+
+    Per spec round 5 engineering constraint: HTML-escape (defense against
+    XSS if justifications are later rendered into HTML), strip to max length,
+    return None for empty input.
+
+    Called from apply_turn() before storing in decision_justifications dict.
+    """
+    import html
+    if text is None:
+        return None
+    text = text.strip()[:max_length]
+    if not text:
+        return None
+    return html.escape(text)
+
+
 def get_initial_state() -> Dict[str, Any]:
     """Return the initial state for a new Challenger session (v2.0)."""
     return dict(_load_scenario()["initialState"])
@@ -123,11 +142,21 @@ def apply_turn(
         else:
             state[key] = value
 
-    # Save decision justification if provided (reflection hook RH1)
-    if decision_justification and decision_justification.strip():
+    # Save decision justification if provided (reflection hook RH1).
+    # escape_justification() handles XSS hardening (per spec) and length cap.
+    sanitized = escape_justification(decision_justification)
+    if sanitized:
         if "decision_justifications" not in state:
             state["decision_justifications"] = {}
-        state["decision_justifications"][str(current_turn)] = decision_justification.strip()
+        state["decision_justifications"][str(current_turn)] = sanitized
+
+    # Also store justification in the per-turn decision record (v2.1) so it
+    # appears in decision_history alongside the option text.
+    # We mutate the "_last_option_context" dict that turn_executor stashed,
+    # which start.py will merge into the actual decision_record.
+    last_ctx = state.get("_last_option_context")
+    if last_ctx is not None:
+        last_ctx["justification"] = sanitized
 
     # Remember what the player just chose (used by final outcome feedback).
     state["last_chosen_option"] = option_id
