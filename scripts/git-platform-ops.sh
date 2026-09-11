@@ -146,6 +146,11 @@ if [[ "$NEEDS_AUTH" == "1" ]]; then
         # Strip surrounding quotes
         value="${value%\'}"; value="${value#\'}"
         value="${value%\"}"; value="${value#\"}"
+        # Strip trailing CR (Windows line endings — CRLF). Without this,
+        # `value` becomes "token<CR>" which breaks downstream usage.
+        value="${value%$'\r'}"
+        # Also strip CR from key (some Windows tools put it before =)
+        key="${key%$'\r'}"
         export "$key=$value"
     done < "$TOKEN_FILE"
 fi

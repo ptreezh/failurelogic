@@ -128,6 +128,14 @@ out="$(cd "$REPO_ROOT" && "$WRAPPER" auth-status --token-file "$f" 2>&1)"
 assert_contains "comment lines are skipped" "$out" "GH_TOKEN = ghp_***efgh"
 assert_contains "blank lines are skipped"   "$out" "GITEE_TOKEN = test***cdef"
 
+# ---- T7b: CRLF line endings (Windows-generated files) --------------------
+# Some Windows tools (Notepad, PowerShell Out-File) save with CRLF.
+# The wrapper must strip the \r and parse correctly.
+f="$(mktemp)"; TEMP_FILES+=("$f")
+printf 'GH_TOKEN=ghp_crlf1234567890ab\r\nGITEE_TOKEN=crlf1234567890ab\r\n' > "$f"
+out="$(cd "$REPO_ROOT" && "$WRAPPER" auth-status --token-file "$f" 2>&1)"
+assert_contains "CRLF endings don't break parsing" "$out" "GH_TOKEN = ghp_***90ab"
+
 # ---- T8: security - full token must NEVER appear in output -----------------
 tf="$(make_token_file 1)"
 out="$(cd "$REPO_ROOT" && "$WRAPPER" auth-status --token-file "$tf" 2>&1)"
