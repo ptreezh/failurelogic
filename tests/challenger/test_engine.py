@@ -111,11 +111,6 @@ def test_apply_turn_records_last_chosen_option(fresh_state):
     assert fresh_state["last_chosen_option"] == "B"
 
 
-def test_apply_turn_records_last_chosen_option(fresh_state):
-    apply_turn(fresh_state, "B")
-    assert fresh_state["last_chosen_option"] == "B"
-
-
 def test_apply_turn_invalid_option_no_state_change(fresh_state):
     before = dict(fresh_state)
     apply_turn(fresh_state, "Z")  # not a real option
