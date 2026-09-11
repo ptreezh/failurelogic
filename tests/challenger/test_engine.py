@@ -6,7 +6,7 @@ Covers:
 - 8 Dörner bias detectors (F1 non-linearity is structural; F2-F8 are detector-level)
 - Outcome routing (3 branches)
 - Deferred consequences (F2 time delay)
-- Decision justification storage
+- Decision justification storage + XSS hardening
 - Edge cases (invalid option, out-of-range turn)
 """
 
