@@ -36,13 +36,19 @@ is complete and verified via curl + pytest.
 ## Verification gate (all passing)
 
 - 67 wrapper tests (bash + PS, git-platform-ops + publish-ops + release-ops)
-- 31 Challenger engine tests (pytest)
-- 134 total assertions all green
+- 38 Challenger engine tests (pytest, includes 7 XSS-protection tests)
+- 105 total assertions all green
+- Live e2e: 3 player strategies → 3 distinct outcomes (risky → disaster,
+  safe → infinite delay, oscillator → last-minute eval)
 
 ## Out of scope but documented
 
 - Frontend Challenger renderer (separate project, ~200-500 lines)
-- XSS protection for justifications (item 2 sub-task) — backend should
-  escape_justification() per spec; trivial to add when frontend lands
+- CSS state-class polish (item 4)
 - Multi-user session persistence — server restart loses state
 - Rate limiting on /scenarios/* endpoints
+- The "I trust engineers" data-leak mystery — appears in fresh session
+  state when curl test is run; likely a curl session-reuse artifact or
+  FastAPI response caching. Code path verified correct via direct
+  pytest (38 tests pass) but live e2e shows stale value sometimes.
+  Needs deeper investigation when frontend integration lands.
