@@ -161,9 +161,9 @@ Design proposal (next commit):
 1. ✅ Commit this audit doc (done: 2e3d945)
 2. ✅ Design deep scenario content (done: 4fb84c7 — challenger_launch.json)
 3. ✅ Register Challenger in BASE_SCENARIOS (done: 77a990c — appears in /scenarios/)
-4. ⏸ Backend execute_real_logic for Challenger — DEFERRED (not yet wired)
-5. ⏸ Frontend narrative renderer — DEFERRED (5x bigger than backend)
-6. ⏸ End-to-end cognitive impact verification — DEFERRED
+4. ✅ Backend execute_real_logic for Challenger (done: 33b4f17 — applies effects per turn)
+5. ⏸ Frontend narrative renderer — DEFERRED (5x bigger than backend; out of scope)
+6. ✅ End-to-end cognitive impact verification (done: 7bf21bf — 3 strategies → 3 distinct outcomes verified via curl + 38 pytest engine tests)
 
 ## Open questions for user
 
