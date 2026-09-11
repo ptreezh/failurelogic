@@ -47,8 +47,13 @@ is complete and verified via curl + pytest.
 - CSS state-class polish (item 4)
 - Multi-user session persistence — server restart loses state
 - Rate limiting on /scenarios/* endpoints
-- The "I trust engineers" data-leak mystery — appears in fresh session
-  state when curl test is run; likely a curl session-reuse artifact or
-  FastAPI response caching. Code path verified correct via direct
-  pytest (38 tests pass) but live e2e shows stale value sometimes.
-  Needs deeper investigation when frontend integration lands.
+
+## Resolved during commit
+
+- The "I trust engineers" data-leak mystery — was Python bytecode cache
+  (api-server/logic/__pycache__/) containing pre-XSS-fix code. After
+  `find . -name __pycache__ -exec rm -rf` + fresh `python api-server/start.py`,
+  fresh sessions correctly return `decision_justifications: {}` for empty
+  input and properly escape XSS payloads. Lesson: any debug that finds
+  "impossible" behavior should `rm -rf __pycache__/` and restart before
+  deeper investigation.
