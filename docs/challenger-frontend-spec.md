@@ -428,3 +428,29 @@ A user can play Challenger end-to-end when:
 - Existing UI is mostly Chinese with some English. Challenger scenario
   is fully bilingual (Chinese situation + Boisjoly English quotes).
 - No special handling needed beyond what's already there.
+
+
+### G21: Read first, code second — concrete verification checklist
+
+Before TDD step 1, I will grep/read:
+
+- [ ] `grep -n "configManager.request" assets/js/app.js` — exact signature
+- [ ] `grep -n "navigateTo\|currentPage" assets/js/app.js` — page transition API
+- [ ] `grep -n "currentScenario" assets/js/app.js` — how state is passed to router
+- [ ] `grep -n "challenger-state-grid" assets/js/app.js` — existing HTML structure
+- [ ] `cat assets/css/scenarios/relationship-time-delay.css | head -30` — CSS pattern
+- [ ] `grep -n "DecisionPatternTracker\|CrossScenarioAnalyzer" api-server/start.py` — see what needs reinit on load
+- [ ] `cat api-server/data/scenarios/challenger_launch.json | python -c "import json,sys; d=json.load(sys.stdin); print(d['steps'][5]['options'][0])"` — confirm step data shape for UI
+
+### G22: Spec coverage check
+- All decisions D1-D7 justified ✓
+- All grill-down issues G1-G21 documented ✓
+- DoD has 10 numbered user actions verifiable ✓
+- Implementation steps 1-10 (frontend) + B1-B3 (backend) ✓
+- Risk register ✓
+
+### G23: Total scope estimate
+- Backend: ~150 lines (sessions_store.py + endpoint + 3 tests)
+- Frontend: ~400 lines (router + state updates + justification UI + CSS)
+- Tests: ~300 lines (Python e2e + manual browser checklist)
+- Total: ~850 lines across 13 atomic commits
