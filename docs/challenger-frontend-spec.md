@@ -312,6 +312,36 @@ sessions active)?
 - Consistency with existing code
 - Smaller commit, easier to review
 
+### G9: Concurrent writes to tmp/sessions/<id>.json
+- User refreshes mid-session → client sends POST turn (server writes
+  session file) + client also tries to restore from localStorage on
+  subsequent page load.
+- Risk: two writers (POST handler + on-startup restore) could clobber
+  each other mid-write, corrupting JSON.
+- Mitigation: use atomic rename. Write to `tmp/sessions/<id>.json.tmp`,
+  then `os.replace()` to atomically swap into place. The kernel
+  guarantees atomicity on the same filesystem.
+- TDD: test_concurrent_writes_dont_corrupt (spawn 10 threads doing
+  simultaneous save+load on the same session_id, assert JSON still parses).
+
+### G10: Decision justification textarea on mobile
+- Mobile viewport ~360px wide, full-screen dialog blocks decision UI
+- Textarea defaulting collapsed (accordion) hides the feature
+- Fix: textarea is VISIBLE by default on desktop AND mobile, but does
+  NOT auto-focus (would steal keyboard context). User clicks into it
+  to type.
+- Max-height + scroll for mobile (don't push options off screen).
+
+### G11: session restore rebuilds non-serializable objects
+- PatternTracker and CrossScenarioAnalyzer are per-session and not in
+  the JSON snapshot (they hold Python object refs to scenario analyzers).
+- On startup load, the JSON must re-initialize these objects.
+- Implementation: load JSON, then for each loaded session, call
+  `DecisionPatternTracker()` constructor and assign to session dict.
+  Verified by test: save session with tracked state, restart (re-import),
+  assert pattern tracker is fresh instance and session['pattern_tracker']
+  is the new tracker.
+
 ## Risk Register
 
 | Risk | Severity | Mitigation |
