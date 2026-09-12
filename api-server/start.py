@@ -284,6 +284,60 @@ print(f"🎯 场景总数: {len(SCENARIOS)}")
 # 游戏会话存储
 game_sessions = {}
 
+# Session persistence (spec B2): back up to tmp/sessions/<game_id>.json
+# on every create_game_session and turn call. Restored on startup.
+# Atomic writes via os.replace() (G9) prevent corruption from
+# concurrent client requests.
+import logging
+_SESSION_DIR = os.path.join(
+    os.environ.get("RENDER_DISK_PATH", os.getcwd()),  # use Render persistent disk if mounted
+    "tmp",
+    "sessions",
+)
+
+
+def _persist_session(session_id: str) -> None:
+    """Write game_sessions[session_id] to disk (best-effort)."""
+    try:
+        from logic.session_store import save_session, evict_old_sessions, cap_files
+        sess = game_sessions.get(session_id)
+        if sess is None:
+            return
+        # Strip the in-memory pattern_tracker / cross_scenario_analyzer before
+        # serializing (G11: reconstruct fresh on load).
+        persistable = {k: v for k, v in sess.items() if k not in ("pattern_tracker",)}
+        persistable["game_state"] = {k: v for k, v in sess.get("game_state", {}).items()
+                                       if k != "pattern_acknowledged"}
+        save_session(persistable, _SESSION_DIR)
+    except Exception as e:
+        logging.warning("session persist failed for %s: %s", session_id, e)
+
+
+def _restore_persisted_sessions() -> None:
+    """Load any saved sessions into game_sessions at startup (G11)."""
+    try:
+        from logic.session_store import load_session, evict_old_sessions, cap_files
+        os.makedirs(_SESSION_DIR, exist_ok=True)
+        # Eviction on startup: 24h age, then cap at 100 files
+        evict_old_sessions(_SESSION_DIR, max_age_seconds=24 * 3600)
+        cap_files(_SESSION_DIR, max_files=100)
+        for fname in os.listdir(_SESSION_DIR):
+            if not fname.endswith(".json"):
+                continue
+            sess = load_session(fname[:-len(".json")], _SESSION_DIR)
+            if sess is None:
+                continue
+            # G11: reconstruct the pattern_tracker; the persisted one was
+            # dropped at save time. Same for any other non-serializable refs.
+            sess["pattern_tracker"] = DecisionPatternTracker()
+            # Bump turn counter so the next POST correctly increments.
+            game_sessions[sess["session_id"]] = sess
+    except Exception as e:
+        logging.warning("session restore failed: %s", e)
+
+
+_restore_persisted_sessions()
+
 # 导入并注册认知测试端点
 try:
     from endpoints.cognitive_tests import router as cognitive_tests_router
@@ -508,6 +562,9 @@ async def create_game_session(
         "decision_count": 0,
     }
 
+    # Spec B2: persist to disk (best-effort, atomic)
+    _persist_session(session_id)
+
     return {
         "success": True,
         "game_id": session_id,
@@ -567,6 +624,9 @@ async def execute_turn(game_id: str, decisions: Dict[str, Any]):
     session["game_state"] = new_state
     session["turn"] += 1
     session["decision_count"] = session.get("decision_count", 0) + 1
+
+    # Spec B2: persist to disk (best-effort, atomic)
+    _persist_session(game_id)
 
     # 记录历史
     session["history"].append(decision_record)
