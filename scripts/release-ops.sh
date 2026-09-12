@@ -126,6 +126,10 @@ load_gh_token() {
         [[ -z "$key" || "$key" =~ ^[[:space:]]*# ]] && continue
         value="${value%\'}"; value="${value#\'}"
         value="${value%\"}"; value="${value#\"}"
+        # Strip trailing CR (Windows CRLF files). Without this, GH_TOKEN
+        # becomes "ghp_real\r" which gh CLI rejects.
+        value="${value%$'\r'}"
+        key="${key%$'\r'}"
         export "$key=$value"
     done < "$TOKEN_FILE"
     if [[ -z "${GH_TOKEN:-}" ]]; then

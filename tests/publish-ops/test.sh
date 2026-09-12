@@ -123,6 +123,29 @@ else
     ((PASS++))
 fi
 
+# T15: CRLF line endings (Windows-generated files)
+# The wrapper's token parser must strip \r from CRLF files; otherwise the
+# masked token would print as "dckr_crlf12345\r7890" (extra \r breaks login).
+# We use docker-push which prints "(user: X)" before attempting login —
+# if CRLF leaked, "win\r" would appear and break the docker login line.
+token_file="$(mktemp)"; TEMP_FILES+=("$token_file")
+printf 'DOCKERHUB_USERNAME=win\r\nDOCKERHUB_TOKEN=dckr_crlf1234567890\r\nNPM_TOKEN=npm_crlf1234567890\r\n' > "$token_file"
+out="$(cd "$REPO_ROOT" && "$WRAPPER" docker-push --image fake --token-file "$token_file" 2>&1 || true)"
+# After CRLF stripping, "(user: win)" prints clean (no trailing CR).
+assert_contains "CRLF endings don't break token parsing" "$out" "(user: win)"
+assert_not_contains_helper() {
+    local desc="$1" haystack="$2" needle="$3"
+    if [[ "$haystack" != *"$needle"* ]]; then
+        echo "PASS  $desc"
+        ((PASS++))
+    else
+        echo "FAIL  $desc"
+        ((FAIL++))
+        echo "      must NOT contain: $needle"
+    fi
+}
+assert_not_contains_helper "CRLF stripped: no \r in output" "$out" $'\r'
+
 echo ""
 echo "=== Results: $PASS passed, $FAIL failed ==="
 exit $FAIL

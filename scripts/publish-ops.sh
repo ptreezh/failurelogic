@@ -72,6 +72,10 @@ while IFS='=' read -r key value || [[ -n "$key" ]]; do
     [[ -z "$key" || "$key" =~ ^[[:space:]]*# ]] && continue
     value="${value%\'}"; value="${value#\'}"
     value="${value%\"}"; value="${value#\"}"
+    # Strip trailing CR (Windows CRLF files). Without this, DOCKERHUB_TOKEN
+    # becomes "dckr_real\r" which docker login rejects.
+    value="${value%$'\r'}"
+    key="${key%$'\r'}"
     export "$key=$value"
 done < "$TOKEN_FILE"
 
