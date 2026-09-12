@@ -361,3 +361,40 @@ sessions active)?
 - [ ] Session persistence: tab refresh resumes, server restart resumes
 - [ ] All 136 existing tests still pass
 - [ ] 5+ new tests for the integration
+
+
+### G12: Multi-tab race condition
+- User opens 2 tabs, both submit "turn 1" before either refreshes.
+- Server sees: POST turn1 (state=1) → state=2; POST turn1 (state=1) → state=2.
+- Result: 2x turn 1 written to decision_history, same final turn_number.
+- Mitigation: client checks response.turnNumber; if unexpected, shows
+  "其他标签已推进游戏 — 当前是第 N 回合" warning and re-renders.
+
+### G13: /tmp/ lifecycle on Render
+- /tmp on Render is ephemeral container filesystem, wiped on restart.
+- That's our design intent: tmp/ survives code-level restarts but not
+  container redeploys. Document explicitly.
+
+### G14: Frontend test infrastructure choice
+- No JS test framework in repo (no Jest, Mocha, etc.).
+- Options for ChallengerRouter tests:
+  (a) Add Jest: heavy, requires npm install + config
+  (b) Playwright (already a dev dep via tests/playwright-report)
+  (c) Pure e2e via Python http.client driving the API
+- Pick: (c) for backend + manual browser test for frontend router.
+  Frontend is small enough that the e2e + manual check covers risk.
+
+### G15: "User actually playable" Definition of Done (refined)
+A user can play Challenger end-to-end when:
+1. Opens browser → sees Challenger card in scenarios grid
+2. Clicks it → T1 page loads with full situation text
+3. Sees 4 options (A/B/C/D) + justification textarea (default visible)
+4. Picks option, optionally writes 1-2 sentence justification, submits
+5. Sees state grid update (engineer_confidence, schedule_pressure, etc.)
+   with visual highlight on changed values
+6. Sees feedback card with T1 result
+7. Repeats steps 3-6 through T10
+8. At T6, sees bias-pattern reveal card with bold bias name
+9. At T10, sees outcome narrative (launch_disaster OR infinite_delay OR
+   last_minute_evaluation) with full styling
+10. Mid-game page refresh: returns to last completed turn, "继续?" prompt
