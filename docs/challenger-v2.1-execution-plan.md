@@ -4,7 +4,7 @@
 > Round 5 of grill-down has confirmed the spec is internally consistent and
 > aligned with Dörner's pedagogical goals. This document tracks execution.
 
-## Status: 5/6 IMPROVEMENTS DONE
+## Status: 6/7 BACKEND ITEMS DONE (frontend still deferred)
 
 | # | Improvement | Status | Commit |
 |---|------------|--------|--------|
@@ -12,9 +12,24 @@
 | 3.1 | F3 self-reference detector | DONE | 1182988 |
 | 3.2 | F8 regulation-lag detector | DONE | 69c4a34 |
 | 1 | Reveal references player's actual decisions | DONE | 949734b |
-| (extra) | 31-test pytest suite for Challenger engine | DONE | e68be0f |
-| 2 | Decision justification UI (backend + frontend) | DEFERRED | — |
-| 4 | CSS state-class polish | DEFERRED | — |
+| 2a | escape_justification (XSS + length cap) | DONE | ed3e042 |
+| extra | 42-test pytest suite (38 engine + 4 subprocess XSS) | DONE | e68be0f, 764bd6c |
+| 2b | Decision justification UI (textarea per turn) | DEFERRED | frontend |
+| 4 | CSS state-class polish | DEFERRED | frontend |
+
+## Adjacent improvements (not in original spec)
+
+While testing the engine I found two related bugs in the wrapper scripts:
+
+- git-platform-ops.sh, publish-ops.sh, release-ops.sh all failed to
+  strip trailing \r from CRLF-encoded token files (Windows-generated).
+  Fix in 8dfa9ac and 403bf29. Plus regression tests in all 4 test
+  files (16, 19, 25, 33 — total 93 wrapper tests now passing).
+- A `git-platform-ops/test.ps1` CRLF regression test was added in
+  eefbf9f to confirm PS `.Trim()` behavior.
+
+These aren't in the original spec but are correctness fixes for the
+same root cause.
 
 ## Why deferred (2 and 4)
 
