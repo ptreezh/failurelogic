@@ -202,6 +202,21 @@ try {
 Assert-Contains -Desc 'comment lines are skipped' -Haystack $out -Needle 'GH_TOKEN = ghp_***efgh'
 Assert-Contains -Desc 'blank lines are skipped'   -Haystack $out -Needle 'GITEE_TOKEN = test***cdef'
 
+# ---- T7b: CRLF line endings (Windows-generated files) -------------------
+# PS .Trim() automatically strips trailing \r; verify the wrapper
+# works correctly when fed CRLF-encoded tokens.
+$tf = New-PubTokenFile
+Set-Content -Path $tf -Value "GH_TOKEN=ghp_crlf1234567890ab`r`nGITEE_TOKEN=crlf1234567890ab`r`n" -NoNewline
+Push-Location $RepoRoot
+try {
+    $out = powershell -ExecutionPolicy Bypass -File $Wrapper -Action auth-status -TokenFile $tf 2>&1 | Out-String
+} finally {
+    Pop-Location
+}
+Assert-Contains -Desc 'CRLF endings do not break token parsing (PS)' `
+    -Haystack $out -Needle 'GH_TOKEN = ghp_***90ab'
+
+
 # ---- T8: security - full token must NEVER appear in output -----------------
 $tf = New-TokenFile -WithNewline '1'
 Push-Location $RepoRoot
