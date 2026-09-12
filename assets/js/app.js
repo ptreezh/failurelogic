@@ -9036,6 +9036,9 @@ class GameManager {
     } else if (scenarioId === 'financial-crisis-response') {
       this.startFinancialCrisisGame();
       return;
+    } else if (scenarioId === 'challenger-launch') {
+      this.startChallengerGame();
+      return;
     }
 
     // Get the selected difficulty from user preferences
@@ -12134,6 +12137,78 @@ class GameManager {
     }
 
     Log.log('✅ Financial Crisis game initialized');
+  }
+
+  // Challenger scenario: data-driven 10-turn Dörner deep dive. Uses
+  // ChallengerRouter (assets/js/challenger-router.js) which fetches each
+  // turn's step + submits turns via the standard /scenarios/{game_id}/turn
+  // endpoint. AppState.gameSession.gameId is set BEFORE the router renders,
+  // so resume-on-load (localStorage) can locate the snapshot.
+  static async startChallengerGame() {
+    Log.log('🚀 Starting Challenger game...');
+    this.showGameModal();
+
+    // Reuse session if user just clicked resume, otherwise create fresh.
+    let gameId = (AppState.gameSession && AppState.gameSession.gameId)
+      || window.__challengerResumeGameId;
+
+    try {
+      if (gameId) {
+        // Try restoring: GET scenario step 1 should succeed if session is alive.
+        // If server-side restart wiped it, fall through to fresh create.
+      } else {
+        const sessionData = await ApiService.scenarios.createGameSession('challenger-launch', 'beginner');
+        gameId = sessionData.gameId || sessionData.game_id;
+        AppState.gameSession = {
+          gameId: gameId,
+          scenarioId: 'challenger-launch',
+          difficulty: 'beginner',
+          status: 'active',
+          gameState: sessionData.gameState || sessionData.game_state || {},
+          currentTurn: 1,
+          decision_history: []
+        };
+      }
+    } catch (e) {
+      Log.error('[challenger] session create failed:', e);
+      this.displayError('会话创建失败，请稍后重试');
+      return;
+    }
+
+    if (!gameId) {
+      this.displayError('未能获取会话 ID');
+      return;
+    }
+
+    const router = new ChallengerRouter(
+      (AppState.gameSession && AppState.gameSession.gameState) || {},
+      { gameId: gameId }
+    );
+    window.challengerRouter = router;
+
+    // Check for resumable localStorage snapshot
+    const snap = ChallengerRouter.loadSnapshot(gameId);
+    if (snap && snap.turn > 0) {
+      const ok = window.confirm(
+        `检测到上次未完成的对局（第 ${snap.turn} 回合）。\n点"确定"从该回合继续，点"取消"从头开始。`
+      );
+      if (ok) {
+        router.lastTurnNumber = snap.turn;
+        router.gameState = snap.gameState || router.gameState;
+        await router.continueToNextTurn();
+        window.__challengerResumeGameId = null;
+        return;
+      } else {
+        ChallengerRouter.clearSnapshot(gameId);
+      }
+    }
+    window.__challengerResumeGameId = null;
+
+    const container = document.getElementById('game-container');
+    if (container) {
+      container.innerHTML = await router.renderStartPage();
+    }
+    Log.log('✅ Challenger game initialized, gameId=', gameId);
   }
 
   static startClimateChangeGame() {

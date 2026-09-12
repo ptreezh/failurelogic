@@ -585,6 +585,13 @@ async def execute_turn(game_id: str, decisions: Dict[str, Any]):
     current_state = session["game_state"].copy()
     difficulty = session.get("difficulty", "beginner")  # 获取难度级别
 
+    # Accept both flat ({option, justification}) and wrapped
+    # ({user_id, decisions: {option, justification}}) payloads. The frontend
+    # ApiService.games.executeTurn() wrapper sends the wrapped form; existing
+    # curl clients and test fixtures send the flat form.
+    if "decisions" in decisions and isinstance(decisions.get("decisions"), dict):
+        decisions = decisions["decisions"]
+
     # ===== 增强功能：追踪决策模式 =====
     pattern_tracker = session.get("pattern_tracker")
     if pattern_tracker:

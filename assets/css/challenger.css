@@ -1,0 +1,234 @@
+/* challenger.css — scoped styles for Challenger scenario UI.
+ * Loaded via <link> in index.html. Namespace: .challenger-* selectors.
+ */
+
+.challenger-state-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.challenger-state-grid .state-item {
+  background: var(--bg-secondary, #f5f5f5);
+  padding: 10px 14px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.challenger-state-grid .state-label {
+  font-size: 12px;
+  color: var(--text-secondary, #666);
+}
+
+.challenger-state-grid .state-value {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-primary, #222);
+  transition: background-color 0.4s ease, color 0.4s ease;
+  padding: 2px 6px;
+  border-radius: 4px;
+  align-self: flex-start;
+}
+
+.challenger-state-grid .state-value.state-increased {
+  animation: challenger-flash-green 0.7s ease;
+}
+
+.challenger-state-grid .state-value.state-decreased {
+  animation: challenger-flash-red 0.7s ease;
+}
+
+.challenger-state-grid .state-hint {
+  font-size: 11px;
+  color: var(--text-secondary, #888);
+}
+
+@keyframes challenger-flash-green {
+  0%   { background-color: rgba(40, 167, 69, 0.4); }
+  100% { background-color: transparent; }
+}
+
+@keyframes challenger-flash-red {
+  0%   { background-color: rgba(220, 53, 69, 0.4); }
+  100% { background-color: transparent; }
+}
+
+.challenger-decision-page .situation-card,
+.challenger-decision-page .decision-card {
+  background: var(--bg-card, #fff);
+  padding: 18px;
+  border-radius: 10px;
+  margin: 16px 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.challenger-decision-page .reveal-banner {
+  background: rgba(255, 193, 7, 0.15);
+  color: #b88600;
+  border-left: 4px solid #ffc107;
+  padding: 8px 12px;
+  margin-top: 12px;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.challenger-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.challenger-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 2px solid var(--border, #ddd);
+  border-radius: 8px;
+  background: var(--bg-card, #fff);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.1s;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+
+.challenger-option:hover {
+  border-color: var(--primary, #4a90e2);
+  transform: translateX(2px);
+}
+
+.challenger-option.selected {
+  border-color: var(--primary, #4a90e2);
+  background: rgba(74, 144, 226, 0.08);
+}
+
+.challenger-option .option-letter {
+  font-weight: 700;
+  font-size: 18px;
+  min-width: 24px;
+  color: var(--primary, #4a90e2);
+}
+
+.challenger-option .option-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.challenger-option .option-tag.option-safe {
+  background: rgba(40, 167, 69, 0.15);
+  color: #28a745;
+}
+
+.challenger-option .option-tag.option-neutral {
+  background: rgba(108, 117, 125, 0.15);
+  color: #6c757d;
+}
+
+.challenger-option .option-tag.option-risky {
+  background: rgba(220, 53, 69, 0.15);
+  color: #dc3545;
+}
+
+.challenger-option .option-text {
+  flex: 1;
+  line-height: 1.4;
+}
+
+.challenger-decision-page .justification-area {
+  margin-top: 12px;
+}
+
+.challenger-decision-page .justification-area label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.challenger-decision-page .justification-area .char-counter {
+  font-size: 12px;
+  color: var(--text-secondary, #666);
+}
+
+.challenger-decision-page textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 6px;
+  font: inherit;
+  resize: vertical;
+}
+
+.challenger-submit {
+  margin-top: 14px;
+  width: 100%;
+}
+
+.challenger-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Feedback / outcome cards */
+.pattern-reveal-card,
+.outcome-card {
+  background: var(--bg-card, #fff);
+  padding: 18px;
+  border-radius: 10px;
+  margin: 16px 0;
+  white-space: pre-wrap;
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+.pattern-reveal-card {
+  border-left: 5px solid #ffc107;
+  background: rgba(255, 193, 7, 0.05);
+}
+
+.outcome-card.outcome-critical {
+  border-left: 5px solid #fd7e14;
+  background: rgba(253, 126, 20, 0.05);
+}
+
+.outcome-card.outcome-final {
+  border-left: 5px solid #dc3545;
+  background: rgba(220, 53, 69, 0.05);
+}
+
+.feedback-pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: inherit;
+  margin: 0;
+}
+
+.challenger-final-page .actions,
+.challenger-feedback-page .actions,
+.challenger-decision-page .actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.challenger-final-page .actions .btn,
+.challenger-feedback-page .actions .btn {
+  flex: 1;
+}
+
+@media (max-width: 480px) {
+  .challenger-state-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .challenger-option .option-tag {
+    display: none;
+  }
+}
