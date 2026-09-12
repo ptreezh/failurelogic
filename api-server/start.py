@@ -394,6 +394,34 @@ async def get_scenario(scenario_id: str):
     return scenario
 
 
+@app.get("/scenarios/{scenario_id}/step/{turn_number}")
+async def get_scenario_step(scenario_id: str, turn_number: int):
+    """Get step data for a given turn (frontend prefetch helper).
+
+    Returns the step dict for scenarios loaded from data/scenarios/*.json.
+    Falls back to BASE_SCENARIOS for legacy scenarios that only define
+    phase-level content.
+    """
+    # Verify the scenario exists at all (404 on unknown scenario_id,
+    # regardless of which step data source would serve it).
+    scenario = next((s for s in SCENARIOS if s["id"] == scenario_id), None)
+    if not scenario:
+        raise HTTPException(status_code=404, detail="场景未找到")
+    # Challenger-style scenarios: deep JSON content per turn.
+    try:
+        from logic.challenger_scenario import get_step
+        step = get_step(turn_number)
+        if step is not None:
+            return step
+    except Exception:
+        pass
+    # No step data for this scenario + turn.
+    raise HTTPException(
+        status_code=404,
+        detail=f"step data not available for {scenario_id} turn {turn_number}",
+    )
+
+
 @app.post("/scenarios/create_game_session")
 @limiter.limit(_SESSION_LIMIT)
 async def create_game_session(
