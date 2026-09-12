@@ -398,3 +398,33 @@ A user can play Challenger end-to-end when:
 9. At T10, sees outcome narrative (launch_disaster OR infinite_delay OR
    last_minute_evaluation) with full styling
 10. Mid-game page refresh: returns to last completed turn, "继续?" prompt
+
+
+### G16: ApiService.configManager.request() — how does it work?
+- app.js line 90: `ApiService.configManager.request(url, opts)` is the
+  wrapper around fetch(). Need to confirm: does it auto-include content
+  type? Does it parse JSON? Does it handle errors as exceptions?
+- Mitigation: before writing ChallengerRouter, read ApiService to know
+  exact contract. TDD against actual fetch behavior.
+
+### G17: Are scenarios rendered server-side or client-side?
+- index.html line 945 has `<div id="scenarios-grid">` populated by JS.
+- Loading flow: AppState.scenarios = await fetch /scenarios/.
+- After loading, ScenariosPage.renderScenarios() builds cards.
+- For Challenger, the card click should set currentScenario and route
+  to the challenger page.
+
+### G18: How are page transitions handled?
+- NavigationManager.navigateTo('page-name') is the entry point.
+- We need a 'challenger-game' page registered.
+- Existing routers use router.scenarios['challenger-launch'].handle(turn).
+- New router must follow the same interface: pages[turn_N] -> render fn.
+
+### G19: Where does CSS go?
+- assets/css/ has scenario-specific CSS files. Create assets/css/challenger.css.
+- Existing assets/css/scenarios/relationship-time-delay.css shows the pattern.
+
+### G20: Multi-language support
+- Existing UI is mostly Chinese with some English. Challenger scenario
+  is fully bilingual (Chinese situation + Boisjoly English quotes).
+- No special handling needed beyond what's already there.
