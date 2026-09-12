@@ -7,7 +7,7 @@
 
 import os
 import sys
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional, Dict, Any, List
 import uvicorn
@@ -29,6 +29,9 @@ cross_scenario_analyzer = CrossScenarioAnalyzer()
 
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 
 # 静态资源挂载（R6.3: 从 feedback_real.py 移回 start.py）
 _project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,6 +41,15 @@ app = FastAPI(
     description="提供决策思维训练场景、游戏会话和分析服务，使用真实的逻辑实现（增强版）",
     version="2.0.0",
 )
+
+# 配置速率限制中间件（P2-3 audit: prevent abuse / cost amplification）
+# Default: 30 turns/min + 10 session creations/min per remote IP.
+# Override with RATE_LIMIT_TURNS / RATE_LIMIT_SESSIONS env vars.
+_TURN_LIMIT = os.getenv("RATE_LIMIT_TURNS", "30/minute")
+_SESSION_LIMIT = os.getenv("RATE_LIMIT_SESSIONS", "10/minute")
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # 配置 CORS 中间件（从 ALLOWED_ORIGINS 环境变量读取，逗号分隔）
 # 默认允许 GitHub Pages（生产）和 localhost（开发）
@@ -383,7 +395,9 @@ async def get_scenario(scenario_id: str):
 
 
 @app.post("/scenarios/create_game_session")
+@limiter.limit(_SESSION_LIMIT)
 async def create_game_session(
+    request: Request,  # required by slowapi
     scenario_id: str = Query(..., alias="scenario_id"),
     difficulty: str = Query(
         "auto", description="难度级别: beginner, intermediate, advanced, 或 auto"
