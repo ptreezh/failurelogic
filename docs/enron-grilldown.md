@@ -58,3 +58,22 @@
 1. **数据修复**: enron_collapse.json T8-T10 掩盖选项加股价崩塌效果;T5/T7 掩盖选项加 board 惩罚
 2. **引擎修复**: F5 改用 weight 信号;F3 evidence 补 f-string;F4 evidence 汉化变量名
 3. **回归**: 重跑策略扫描,8/8 检测器必须全部可达;239 后端 + 11 E2E 必须全过
+
+## 修复验证 (2026-09-13 同日完成)
+
+数据补丁:T5-C/T7-C/T8-C/T8-D/T9-C/T10-C/T10-D 加 board -10~-15 与股价 -20~-30;
+引擎:F5 改 weight 信号(risky/extreme_risk ≥3 且 cashflow<0),F3 补 f-string,F4 汉化。
+
+策略扫描复测:
+
+| 策略 | 修复前 | 修复后 |
+|------|--------|--------|
+| all extreme_risk | F2,F4,F7 | **F1-F8 全部 8 个** |
+| all risky | F2,F6 | F1,F2,F3,F5,F6,F7,F8 |
+| early_risk_late_safe | F2 | F2,F4,F5,F7 |
+| 可达检测器 | 5/8 | **8/8** |
+
+结局路由不变:honest→orderly_resolution(股价$50,board 100),coverup→total_collapse(股价$0,board 5),mixed→partial_collapse。
+掩盖路径终态股价 $0、董事会监督 5——与史实(2001-10 $33→$0.26)一致。
+
+回归:239 后端 + 11 Playwright 全过。

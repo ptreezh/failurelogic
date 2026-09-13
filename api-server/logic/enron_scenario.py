@@ -248,13 +248,14 @@ def _detect_F3_self_reference(state) -> Optional[Dict[str, Any]]:
     silenced = state.get("whistleblower_silenced_count", 0)
     board = state.get("board_oversight_strength", 60)
     initial_board = _load_scenario()["initialState"]["board_oversight_strength"]
-    if silenced >= 2 and board < initial_board - 10:
+    delta = initial_board - board
+    if silenced >= 2 and delta > 10:
         return {
             "pattern_type": "F3_self_reference",
             "dorner_concept": "自反性陷阱",
             "evidence": (
-                "你的'创造市场'叙事让 {silenced} 位举报者被压制，"
-                "董事会监督强度下降 {delta}%。"
+                f"你的'创造市场'叙事让 {silenced} 位举报者被压制，"
+                f"董事会监督强度下降 {delta}。"
                 "今天的解决方案成了明天的问题。"
             ),
             "reflection_questions": [
@@ -276,7 +277,7 @@ def _detect_F4_side_effects(state) -> Optional[Dict[str, Any]]:
             "pattern_type": "F4_side_effects",
             "dorner_concept": "副作用忽视",
             "evidence": (
-                f"你的决策让 off_balance_sheet 暴露 ${obs}M,"
+                f"你的决策让隐性负债升至 ${obs}M，"
                 f"{silenced} 位举报者被压制。"
                 "安然员工 401k 损失约 $13亿——他们承担了管理层的风险。"
             ),
@@ -294,33 +295,27 @@ def _detect_F5_single_target(state) -> Optional[Dict[str, Any]]:
     choices = _choices(state)
     if len(choices) < 3:
         return None
-    # Count "report-profit-focused" choices
-    profit_focused = 0
-    for c in choices:
-        step = get_step(c["turn"])
-        if not step:
-            continue
-        for opt in step.get("options", []):
-            if opt["id"] == c["option"]:
-                if "share_price" in opt.get("consequences_for_player", "").lower() and "+" in opt.get("consequences_for_player", ""):
-                    profit_focused += 1
-                break
-    if profit_focused >= len(choices) * 0.5:
-        cf = state.get("actual_cashflow_usd_m", -150)
-        if cf < 0:
-            return {
-                "pattern_type": "F5_single_target",
-                "dorner_concept": "单目标优化",
-                "evidence": (
-                    f"你的 {profit_focused}/{len(choices)} 个决策聚焦股价/利润，"
-                    f"但实际现金流 ${cf}M——亏损。"
-                ),
-                "reflection_questions": [
-                    "你是不是只盯着'买入'评级?",
-                    "现金流 vs 报告利润——你选哪个?",
-                    "哪个数字你最不愿意面对?"
-                ],
-            }
+    # Weight-signal heuristic: risky/extreme_risk picks chase reported
+    # earnings while cashflow bleeds (text-matching proved too brittle —
+    # only 7/40 options mention "share_price +").
+    profit_focused = sum(
+        1 for c in choices if c.get("weight") in ("risky", "extreme_risk")
+    )
+    cf = state.get("actual_cashflow_usd_m", -150)
+    if profit_focused >= 3 and cf < 0:
+        return {
+            "pattern_type": "F5_single_target",
+            "dorner_concept": "单目标优化",
+            "evidence": (
+                f"你的 {profit_focused}/{len(choices)} 个决策追逐股价/账面利润，"
+                f"但实际现金流 ${cf}M——亏损。"
+            ),
+            "reflection_questions": [
+                "你是不是只盯着'买入'评级?",
+                "现金流 vs 报告利润——你选哪个?",
+                "哪个数字你最不愿意面对?"
+            ],
+        }
     return None
 
 

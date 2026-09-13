@@ -462,7 +462,11 @@
           "share_price_usd": -10,
           "media_skepticism_index": -5
         },
-        "C": {},
+        "C": {
+          "board_oversight_strength": -15,
+          "media_skepticism_index": 10,
+          "whistleblower_silenced_count": 2
+        },
         "D": {
           "board_oversight_strength": 25,
           "whistleblower_silenced_count": -1
@@ -609,7 +613,8 @@
         },
         "C": {
           "credit_rating": -10,
-          "share_price_usd": -30
+          "share_price_usd": -30,
+          "board_oversight_strength": -10
         },
         "D": {
           "credit_rating": -3,
@@ -682,8 +687,16 @@
           "media_skepticism_index": -30,
           "credit_rating": -2
         },
-        "C": {},
-        "D": {}
+        "C": {
+          "share_price_usd": -20,
+          "board_oversight_strength": -10,
+          "media_skepticism_index": 15
+        },
+        "D": {
+          "share_price_usd": -25,
+          "off_balance_sheet_exposure_usd_m": 500,
+          "board_oversight_strength": -10
+        }
       },
       "character_reactions": {
         "A": "员工：'感谢'；Lay：'我的责任'",
@@ -734,7 +747,11 @@
           "media_skepticism_index": -20
         },
         "B": {},
-        "C": {},
+        "C": {
+          "share_price_usd": -30,
+          "board_oversight_strength": -10,
+          "analyst_confidence_index": -20
+        },
         "D": {
           "media_skepticism_index": 5
         }
@@ -782,7 +799,17 @@
           "expected_concerns_addressed": []
         }
       ],
-      "expected_effects": {},
+      "expected_effects": {
+        "C": {
+          "share_price_usd": -25,
+          "board_oversight_strength": -10
+        },
+        "D": {
+          "share_price_usd": -25,
+          "board_oversight_strength": -10,
+          "media_skepticism_index": 10
+        }
+      },
       "character_reactions": {},
       "temperature_forecast_f_marker": "OUTCOME_TRIGGER"
     }
