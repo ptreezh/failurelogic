@@ -260,6 +260,31 @@ class NavigationManager {
           tipping_point_proximity: 27,
           turn: 1
         }
+      },
+      {
+        id: "enron-collapse",
+        name: "安然帝国崩塌",
+        description: "2000-2002年，作为安然CFO，在表外融资、举报人、分析师、SEC调查的10个关键决策点中抉择。基于Watkins备忘录、LJM Partnerships、$49.8B破产案真实史料。专攻 F4(副作用忽视) + F7(自我批评缺失)。",
+        fullDescription: "10回合多状态模拟。9个状态变量(股价/信用评级/报告利润/实际现金流/隐性负债/分析师信心/被压制举报人/董事会监督/媒体怀疑度)，3 个结局分支(有序整改/部分崩塌/全面崩塌)。",
+        difficulty: "advanced",
+        estimatedDuration: 30,
+        targetPatterns: ["F4_side_effects", "F7_self_criticism", "F2_time_delay", "F5_single_target", "F6_confirmation", "F8_regulation_lag"],
+        decisionPattern: "Dörner 8 模式·公司治理",
+        duration: "30-45分钟",
+        category: "历史案例·深度",
+        thumbnail: "/assets/images/enron.jpg",
+        initialState: {
+          share_price_usd: 90,
+          credit_rating: "BBB+",
+          reported_earnings_usd_m: 979,
+          actual_cashflow_usd_m: -150,
+          off_balance_sheet_exposure_usd_m: 7000,
+          analyst_confidence_index: 85,
+          whistleblower_silenced_count: 0,
+          board_oversight_strength: 60,
+          media_skepticism_index: 20,
+          turn: 1
+        }
       }
     ];
   }
@@ -8584,6 +8609,9 @@ class GameManager {
     } else if (scenarioId === 'climate-change-policy') {
       this.startClimateChangeGame();
       return;
+    } else if (scenarioId === 'enron-collapse') {
+      this.startEnronGame();
+      return;
     }
 
     // Get the selected difficulty from user preferences
@@ -8751,6 +8779,9 @@ class GameManager {
       return;
     } else if (scenarioId === 'financial-crisis-response') {
       GameManager.startFinancialCrisisGame();
+      return;
+    } else if (scenarioId === 'enron-collapse') {
+      GameManager.startEnronGame();
       return;
     }
 
@@ -11789,6 +11820,42 @@ class GameManager {
       Log.log('✅ Climate Change game initialized, gameId=', gameId);
     } catch (e) {
       Log.error('[climate-change] session create failed:', e);
+      this.displayError('会话创建失败，请稍后重试');
+    }
+  }
+
+  // Enron collapse: data-driven 10-turn Dörner deep dive. Reuses
+  // ChallengerRouter via the scenario registry in challenger-router.js.
+  static async startEnronGame() {
+    Log.log('🏛️ Starting Enron Collapse game...');
+    this.showGameModal();
+
+    try {
+      const sessionData = await ApiService.scenarios.createGameSession('enron-collapse', 'beginner');
+      const gameId = sessionData.gameId || sessionData.game_id;
+      AppState.gameSession = {
+        gameId: gameId,
+        scenarioId: 'enron-collapse',
+        difficulty: 'beginner',
+        status: 'active',
+        gameState: sessionData.gameState || sessionData.game_state || {},
+        currentTurn: 1,
+        decision_history: []
+      };
+
+      const router = new ChallengerRouter(
+        AppState.gameSession.gameState || {},
+        { gameId: gameId, scenarioId: 'enron-collapse' }
+      );
+      window.challengerRouter = router;
+
+      const container = document.getElementById('game-container');
+      if (container) {
+        container.innerHTML = await router.renderStartPage();
+      }
+      Log.log('✅ Enron game initialized, gameId=', gameId);
+    } catch (e) {
+      Log.error('[enron-collapse] session create failed:', e);
       this.displayError('会话创建失败，请稍后重试');
     }
   }

@@ -51,6 +51,22 @@
         { id: 'state-tipping', key: 'tipping_point_proximity', label: '⏰ 临界点距离 (%)' },
       ],
     },
+    'enron-collapse': {
+      id: 'enron-collapse',
+      label: '安然帝国崩塌',
+      totalTurns: 10,
+      stateFields: [
+        { id: 'state-share-price', key: 'share_price_usd', label: '💵 股价 ($)' },
+        { id: 'state-credit', key: 'credit_rating', label: '🏦 信用评级' },
+        { id: 'state-earnings', key: 'reported_earnings_usd_m', label: '📊 报告利润 ($M)' },
+        { id: 'state-cashflow', key: 'actual_cashflow_usd_m', label: '💰 实际现金流 ($M)' },
+        { id: 'state-offbalance', key: 'off_balance_sheet_exposure_usd_m', label: '⚠️ 隐性负债 ($M)' },
+        { id: 'state-analyst', key: 'analyst_confidence_index', label: '📈 分析师信心' },
+        { id: 'state-silenced', key: 'whistleblower_silenced_count', label: '🔇 被压制举报人' },
+        { id: 'state-board', key: 'board_oversight_strength', label: '👁️ 董事会监督' },
+        { id: 'state-media', key: 'media_skepticism_index', label: '📺 媒体怀疑度' },
+      ],
+    },
   };
 
   const DEFAULT_SCENARIO_ID = 'challenger-launch';

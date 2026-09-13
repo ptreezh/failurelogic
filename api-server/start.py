@@ -118,9 +118,24 @@ BASE_SCENARIOS = [
         "advancedChallenges": [],
         "scenario_file": "scenarios/climate_change.json"
     },
+    {
+        "id": "enron-collapse",
+        "name": "安然帝国崩塌",
+        "description": "2000-2001，作为安然公司CFO副手，在10个关键决策点中处理LJM关联交易、宽带投资、Watkins举报、Powers听证等。F4副作用忽视+F7自我批评缺失的经典案例。",
+        "fullDescription": "10回合多状态模拟。9个状态变量(股价/信用评级/报告利润/实际现金流/隐性负债/分析师信心/被压制举报人/董事会监督/媒体怀疑度),Dörner F1-F8 全覆盖,3 个结局分支(有序清算/部分崩塌/完全崩溃)。",
+        "difficulty": "advanced",
+        "estimatedDuration": 45,
+        "targetPatterns": ["F1_nonlinear", "F2_time_delay", "F3_self_reference", "F4_side_effects", "F5_single_target", "F6_confirmation", "F7_self_criticism", "F8_regulation_lag"],
+        "decisionPattern": "Dörner 8 模式·安然",
+        "duration": "30-45分钟",
+        "category": "企业决策失败·深度",
+        "thumbnail": "/assets/images/enron.jpg",
+        "advancedChallenges": [],
+        "scenario_file": "scenarios/enron_collapse.json"
+    },
 ]
 # 合并所有场景
-# 仅保留对齐 Dörner 教育目标的 2 个深度场景:challenger-launch + climate-change-policy
+# 3 个对齐 Dörner 教育目标的深度场景:challenger-launch + climate-change-policy + enron-collapse
 # 其余 30 个场景数据文件已归档到 archived-scenarios/data-files/
 SCENARIOS = BASE_SCENARIOS
 print(f"🎯 场景总数: {len(SCENARIOS)}")
@@ -497,6 +512,9 @@ async def execute_turn(game_id: str, decisions: Dict[str, Any]):
     elif scenario_id == "climate-change-policy":
         from logic.climate_scenario import generate_feedback_for_turn as _climate_fb
         feedback = _climate_fb(new_state, turn_number)
+    elif scenario_id == "enron-collapse":
+        from logic.enron_scenario import generate_feedback_for_turn as _enron_fb
+        feedback = _enron_fb(new_state, turn_number)
     elif turn_number <= 2:
         # 早期回合：制造困惑时刻
         feedback = generate_confusion_feedback(

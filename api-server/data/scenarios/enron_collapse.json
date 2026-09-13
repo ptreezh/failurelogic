@@ -1,0 +1,953 @@
+{
+  "scenarioId": "enron-collapse",
+  "version": "v1.0-2026-09-13",
+  "title": "安然帝国崩塌",
+  "subtitle": "2000-2001：从巅峰到破产的71天",
+  "difficulty": "advanced",
+  "estimatedDuration": 45,
+  "category": "企业决策失败",
+  "description": "你是安然(Enron)公司CFO/CFO的副手，在2000年1月到2001年12月这一关键22个月中做出10个决策。安然的崩塌是Dörner F4（副作用忽视）+ F7（自我批评缺失）的经典案例——内部知情者已发出警告，但公司沉迷于'创造市场'的叙事。",
+  "dornerLessons": [
+    "F1 非线性效应：单笔10亿美元的虚假交易 → 整体资产负债表崩塌（不是渐进）",
+    "F2 时间延迟：Fastow的SPE（特别目的实体）1997年开始 → 2001年10月才被披露（4年延迟）",
+    "F3 自反性：'创造市场'的交易策略 → 让审计委员会无法质疑 → 失去外部制衡",
+    "F4 副作用忽视：CEO/CEO的关联交易让安然暴露在百亿美元风险下而无人察觉",
+    "F5 单目标优化：股价 + 信用评级 + 利润数字，忽略现金流和负债结构",
+    "F6 确认偏误：分析师、华尔街、媒体都相信'新经济'叙事",
+    "F7 自我批评缺失：内部举报者(Sherron Watkins)被边缘化,警告被压下",
+    "F8 调节滞后：2001年Q3发现亏损后，CEO仍试图对冲和隐藏,反应过慢"
+  ],
+  "historicalContext": {
+    "pre_launch_warnings": [
+      {
+        "date": "1997-06",
+        "author": "Andrew Fastow (CFO)",
+        "key_quote": "设立 LJM 合伙企业，由 CFO 本人管理，对安然进行关联交易。",
+        "source_url": "https://en.wikipedia.org/wiki/LJM_Partnerships",
+        "teaching_point": "CFO 与公司交易的关联交易是 F4 副作用忽视 + 利益冲突的源头"
+      },
+      {
+        "date": "2001-08-14",
+        "author": "Sherron Watkins (VP, internal whistleblower)",
+        "key_quote": "I am incredibly nervous that we will implode in a wave of accounting scandals. ... I think that the accounting treatment in the Raptors [Fastow's partnerships] is wrong.",
+        "source_url": "https://www.loe.org/shows/segments.htm?programID=03-P13-00023&segmentID=3",
+        "teaching_point": "F7 自我批评缺失：内部知情者的警告被 Lay 边缘化，未进入董事会"
+      },
+      {
+        "date": "2001-10-16",
+        "author": "Arthur Andersen (auditor)",
+        "key_quote": "我们销毁了大量审计文档——这是安然丑闻的第二个受害者。",
+        "source_url": "https://en.wikipedia.org/wiki/Arthur_Andersen",
+        "teaching_point": "F8 调节滞后：当外部审计开始介入时，销毁文档已无法挽救"
+      },
+      {
+        "date": "2001-12-02",
+        "author": "Enron Corporation",
+        "key_quote": "安然申请破产保护，资产$498亿，成为美国历史上最大破产案。",
+        "source_url": "https://www.investopedia.com/updates/enron-timeline/",
+        "teaching_point": "Dörner F1：71天从投资级到破产（10/16 → 12/02）"
+      }
+    ],
+    "scientific_basis": "本场景基于 SEC filings 2000-2001、Powley/Satava《Betrayal》(2003)、McLean & Elkind《The Smartest Guys in the Room》(2003)。所有人物姓名、日期、交易来自公开档案。"
+  },
+  "stakeholders": [
+    {
+      "id": "executives",
+      "name": "安然高管层",
+      "key_persons": [
+        "Kenneth Lay (CEO/Chairman)",
+        "Jeffrey Skilling (President/COO → CEO 2001)",
+        "Andrew Fastow (CFO)",
+        "Lou Pai (Enron Online CEO)"
+      ],
+      "concern": "维持股价 + 分析师预期 + 信用评级",
+      "stance": "创新叙事 + 关联交易"
+    },
+    {
+      "id": "board",
+      "name": "安然董事会（审计委员会）",
+      "key_persons": [
+        "Robert Belfer (Audit Chair)",
+        "John Wakeham (Audit, ex-British MP)",
+        "Frank Savage (director)"
+      ],
+      "concern": "股东利益 + 监管合规",
+      "stance": "理论上监督，实践上信任管理层"
+    },
+    {
+      "id": "employees",
+      "name": "安然员工（约 20000 人）",
+      "key_persons": [
+        "Sherron Watkins (VP, whistleblower)",
+        "工作 401(k) 投资安然股票的员工"
+      ],
+      "concern": "工作保障 + 退休金",
+      "stance": "忠诚于公司 → 损失 $13亿退休金"
+    },
+    {
+      "id": "wall_street",
+      "name": "华尔街分析师",
+      "key_persons": [
+        "各投资银行分析师",
+        "评级机构"
+      ],
+      "concern": "维持'买入'评级",
+      "stance": "相信管理层的'创造市场'叙事"
+    },
+    {
+      "id": "regulators",
+      "name": "监管机构",
+      "key_persons": [
+        "SEC (Securities and Exchange Commission)",
+        "Powers Report (2002)"
+      ],
+      "concern": "市场完整性",
+      "stance": "事件后调查 → Sarbanes-Oxley Act 2002"
+    }
+  ],
+  "initialState": {
+    "share_price_usd": 90,
+    "credit_rating": "BBB+",
+    "reported_earnings_usd_m": 979,
+    "actual_cashflow_usd_m": -150,
+    "off_balance_sheet_exposure_usd_m": 7000,
+    "analyst_confidence_index": 85,
+    "whistleblower_silenced_count": 0,
+    "board_oversight_strength": 60,
+    "media_skepticism_index": 20
+  },
+  "steps": [
+    {
+      "turn": 1,
+      "phase": "LJM 关联交易",
+      "year": "2000年2月",
+      "situation": "2000年2月，作为CFO Fastow的副手，你面对一个棘手问题：Fastow希望扩大 LJM（他个人管理的合伙企业）对安然的关联交易规模，从 1999 年的1亿美元提升到 2000 年的3亿美元。\n\nLJM 的功能：'买下'安然想要剥离的不良资产（如过期期货合约、未对冲的能源衍生品），让安然账面看起来更健康。\n\n但你注意到 Fastow 在 LJM 中持有 30%+ 权益——这是典型的关联交易，存在利益冲突。\n\n公司董事会审计委员会在 1999 年批准了 Fastow 的 LJM，但要求：'任何超过 1000 万美元的新交易需审计委员会批准。'\n\n你需要决定：",
+      "options": [
+        {
+          "id": "A",
+          "text": "支持扩大 LJM 规模至 3 亿，强调'剥离不良资产对股东有利'",
+          "weight": "extreme_risk",
+          "consequences_for_player": "off_balance_sheet +200；credit_rating 维持；whistleblower_silenced +1（Fastow要求压制内部反对）",
+          "expected_concerns_addressed": [
+            "off_balance_sheet_exposure",
+            "credit_rating"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "建议每次交易单独审计委员会批准（遵守现有规则）",
+          "weight": "safe",
+          "consequences_for_player": "off_balance_sheet +50；board_oversight +10；Fastow 不悦",
+          "expected_concerns_addressed": [
+            "board_oversight_strength",
+            "off_balance_sheet_exposure"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "向董事会正式提议 Fastow 退出 LJM 管理（消除利益冲突）",
+          "weight": "neutral",
+          "consequences_for_player": "board_oversight +15；analyst_confidence -5（短期不确定性）；Fastow 可能离职",
+          "expected_concerns_addressed": [
+            "board_oversight_strength"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "向 SEC 匿名举报关联交易结构（F7 自我批评的反面：承认问题）",
+          "weight": "safe",
+          "consequences_for_player": "analyst_confidence -15（市场恐慌）；credit_rating -2级；off_balance_sheet 公开化（短期负面，长期可能挽救）",
+          "expected_concerns_addressed": [
+            "credit_rating",
+            "off_balance_sheet_exposure"
+          ]
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "off_balance_sheet_exposure_usd_m": 200,
+          "whistleblower_silenced_count": 1
+        },
+        "B": {
+          "off_balance_sheet_exposure_usd_m": 50,
+          "board_oversight_strength": 10
+        },
+        "C": {
+          "board_oversight_strength": 15,
+          "analyst_confidence_index": -5
+        },
+        "D": {
+          "analyst_confidence_index": -15,
+          "credit_rating": -2,
+          "media_skepticism_index": 10
+        }
+      },
+      "character_reactions": {
+        "A": "Fastow：'这才对'；Belfer（审计主席）：'我们相信管理层'",
+        "B": "Fastow：'太繁琐'；Lay：'守规矩就好'",
+        "C": "Lay：'Fastow 是天才'；Fastow：'我辞职'（戏剧性威胁）",
+        "D": "SEC：'收到举报'；Lay：'这是背叛'"
+      }
+    },
+    {
+      "turn": 2,
+      "phase": "互联网宽带交易",
+      "year": "2000年5月",
+      "situation": "2000年5月，Enron Online（安然在线）CEO Lou Pai 提议与 Blockbuster 视频公司合资投资10亿美元建设'最后一英里'宽带网络。分析师们兴奋地预测该业务将让安然市值超过 1000 亿美元。\n\n但你已经注意到：\n- 安然的核心业务（天然气 + 电力交易）利润已经很薄\n- 宽带业务需要 5-7 年才能回本，且面临 AOL/Comcast 等强大竞争\n- 该合资需要 Fastow 的 LJM 提供部分融资（再次关联交易）\n\n你需要决定是否支持这笔宽带交易：",
+      "options": [
+        {
+          "id": "A",
+          "text": "全速推进 10 亿宽带合资 + 用 LJM 部分融资",
+          "weight": "extreme_risk",
+          "consequences_for_player": "share_price +15%；off_balance_sheet +500；但实际现金流恶化",
+          "expected_concerns_addressed": [
+            "share_price_usd",
+            "off_balance_sheet_exposure"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "缩减规模至 3 亿，限制 LJM 参与",
+          "weight": "neutral",
+          "consequences_for_player": "share_price +5%；off_balance_sheet +100；现金流可控",
+          "expected_concerns_addressed": [
+            "share_price_usd",
+            "off_balance_sheet_exposure"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "拒绝宽带投资，专注核心能源业务",
+          "weight": "extreme_safe",
+          "consequences_for_player": "share_price -10%（分析师失望）；但actual_cashflow +50",
+          "expected_concerns_addressed": [
+            "actual_cashflow",
+            "share_price_usd"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "推迟决定，要求 6 个月尽职调查",
+          "weight": "safe",
+          "consequences_for_player": "share_price -3%；时间买确定性",
+          "expected_concerns_addressed": []
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "share_price_usd": 15,
+          "off_balance_sheet_exposure_usd_m": 500,
+          "actual_cashflow_usd_m": -50
+        },
+        "B": {
+          "share_price_usd": 5,
+          "off_balance_sheet_exposure_usd_m": 100
+        },
+        "C": {
+          "share_price_usd": -10,
+          "actual_cashflow_usd_m": 50,
+          "media_skepticism_index": 5
+        },
+        "D": {
+          "share_price_usd": -3,
+          "media_skepticism_index": 2
+        }
+      },
+      "character_reactions": {
+        "A": "Pai：'这是未来'；分析师：'买入'",
+        "B": "Pai：'太保守'；分析师：'还可以'",
+        "C": "Lay：'错过了 dot-com'；分析师：'卖出'",
+        "D": "Pai：'我们失去机会'"
+      }
+    },
+    {
+      "turn": 3,
+      "phase": "[渐进揭示 T3] F5 单目标优化",
+      "year": "2000年9月",
+      "is_pattern_reveal": true,
+      "situation": "你的副手在做季度复盘时给你一份数据：\n\n'2000年Q2 报告：收入增长 50%，但运营现金流同比下降 12%。Fastow 的 Raptor 系列 SPE 贡献了 5.4 亿的'利润'，但这些利润都是应收账款（其他公司欠安然的'预付款'），而非真实现金。'\n\n你前 2 回合的选择：\n- 回合1：你选了 {turn1_option}（扩大 LJM 至 3 亿）\n- 回合2：你选了 {turn2_option}\n\n回溯分析：\n\n🔴 F5 单目标优化：你在看'报告收入'和'股价'，但忽略了'real cashflow'和'off_balance_sheet'。报告利润不是真实现金。\n\nDörner F5 单目标优化：'我们倾向于把复杂系统简化为单一指标（报告收入 + 股价），然后优化这个指标。'\n\nEnron 的 Raptor 系列 SPE（Fastow 设计的 4 家合伙企业）正是 F5 的典型案例：它们贡献账面利润，但现金流完全不存在。\n\n【Dörner 模式揭示 · 第 1 阶段 · 回合 4】\n\n你是否在前 2 回合犯了 F5 单目标优化？",
+      "options": [
+        {
+          "id": "A",
+          "text": "承认疏忽，立即向董事会提交现金流 vs 报告利润对比报告",
+          "weight": "safe",
+          "consequences_for_player": "board_oversight +15；share_price -5%（短期）；credit_rating 维持",
+          "expected_concerns_addressed": [
+            "board_oversight_strength",
+            "share_price_usd"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "建议 CFO Fastow 重新设计 Raptor 交易以增加现金成分",
+          "weight": "neutral",
+          "consequences_for_player": "Fastow 配合；但 structural 问题难改",
+          "expected_concerns_addressed": [
+            "actual_cashflow"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "忽视此警告——报告利润是 GAAP 标准",
+          "weight": "risky",
+          "consequences_for_player": "F7 自我批评缺失 hint 强化",
+          "expected_concerns_addressed": []
+        },
+        {
+          "id": "D",
+          "text": "启动内部审计，重新评估所有 LJM/Raptor 交易的真实经济实质",
+          "weight": "safe",
+          "consequences_for_player": "board_oversight +20；whistleblower_silenced 缓解（让质疑进入流程）",
+          "expected_concerns_addressed": [
+            "board_oversight_strength"
+          ]
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "board_oversight_strength": 15,
+          "share_price_usd": -5,
+          "credit_rating": 0
+        },
+        "B": {
+          "actual_cashflow_usd_m": 30,
+          "whistleblower_silenced_count": 0
+        },
+        "C": {},
+        "D": {
+          "board_oversight_strength": 20,
+          "whistleblower_silenced_count": -1,
+          "media_skepticism_index": 5
+        }
+      },
+      "character_reactions": {
+        "A": "Lay：'你做得对'；Belfer：'终于听到现金流'",
+        "B": "Fastow：'我重新设计'（实际是拖延）",
+        "C": "Lay：'别惹麻烦'",
+        "D": "Belfer：'终于开始查'；Watkins：'终于有人听'"
+      },
+      "pattern_reveal_template": {
+        "round": 1,
+        "biases_revealed": [
+          "F5 单目标优化"
+        ],
+        "narrative": "你前 2 回合聚焦于 {primary_focus}（报告利润 + 股价），忽略了 9 个状态变量中的 other 维度。这是 Dörner F5 的典型表现。Enron 的'创造市场'叙事就是 F5 在公司层面的应用。"
+      }
+    },
+    {
+      "turn": 4,
+      "phase": "California 电力危机",
+      "year": "2001年1月",
+      "situation": "2001年1月，加州电力市场危机。安然在加州的能源批发业务因州长 Davis 的'价格管制'而面临 10 亿美元潜在亏损。\n\nLay 和 Skilling 选择攻击加州政府（公开呼吁'取消价格管制'），这让安然成为政治焦点。分析师开始怀疑安然在加州的会计处理——他们似乎'在涨电价时卖期货，在跌电价时买现货'，人为操纵利润。\n\n你的两难：\n- 攻击加州政府：维护股价，但招致监管 + 媒体关注（F6 确认偏误风险）\n- 妥协：短期股价下跌，但避免成为监管目标\n\n你需要决定：",
+      "options": [
+        {
+          "id": "A",
+          "text": "继续攻击加州政府，要求州长辞职",
+          "weight": "risky",
+          "consequences_for_player": "media_skepticism +25（媒体反击）；analyst_confidence -10",
+          "expected_concerns_addressed": [
+            "share_price_usd"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "低调处理加州业务，专注其他市场",
+          "weight": "neutral",
+          "consequences_for_player": "share_price -10%；media_skepticism -10",
+          "expected_concerns_addressed": [
+            "share_price_usd",
+            "media_skepticism_index"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "主动披露加州业务的所有会计政策，邀请外部审计",
+          "weight": "safe",
+          "consequences_for_player": "media_skepticism -20；analyst_confidence -5（短期）；但 long-term 信任",
+          "expected_concerns_addressed": [
+            "media_skepticism_index",
+            "credit_rating"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "推出'安然关怀基金'，捐款缓解加州能源消费者",
+          "weight": "neutral",
+          "consequences_for_player": "media_skepticism -15；share_price -3%",
+          "expected_concerns_addressed": [
+            "media_skepticism_index",
+            "share_price_usd"
+          ]
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "media_skepticism_index": 25,
+          "analyst_confidence_index": -10
+        },
+        "B": {
+          "share_price_usd": -10,
+          "media_skepticism_index": -10,
+          "analyst_confidence_index": -5
+        },
+        "C": {
+          "media_skepticism_index": -20,
+          "analyst_confidence_index": -5,
+          "credit_rating": 1
+        },
+        "D": {
+          "media_skepticism_index": -15,
+          "share_price_usd": -3
+        }
+      },
+      "character_reactions": {
+        "A": "Lay：'我们要战斗'；Davis 州长：'Enron 是骗子'",
+        "B": "Skilling：'我们失去加州'",
+        "C": "Belfer：'终于透明'；Lay：'风险太大'",
+        "D": "加州消费者：'还不够'"
+      }
+    },
+    {
+      "turn": 5,
+      "phase": "[渐进揭示 T5] F2 时间延迟 + F7 自我批评缺失",
+      "year": "2001年6月",
+      "is_pattern_reveal": true,
+      "situation": "你收到一封 6 个月前（2000年12月）Sherron Watkins（VP, 内部员工）写给 Lay 的备忘录，Lay 当时让你'处理'。你当时没重视——现在你重新读它：\n\n'我很担心我们将在会计丑闻的浪潮中崩塌。我担心 Raptor 系列 SPE 的会计处理是错误的——他们从安然买资产后再卖给安然，制造虚假利润。我担心我们没有披露与 Fastow 的关联交易的真实规模。'\n\n这份 6 个月前的警告已被压下 6 个月。Lay 当时的反应：'我会处理，Sherron，不用担心。'\n\n你前 4 回合选择：{turn1_option} → {turn2_option} → {turn3_option} → {turn4_option}\n\n回溯分析：\n\n🔴 F2 时间延迟：Watkins 2000年12月的警告到 2001年6月你才重新发现——6 个月延迟。\n🔴 F7 自我批评缺失：Lay 让你'处理'时，你是否当时就把 Watkins 的警告当真？\n\nDörner 写道：'我们倾向于听取好消息，压下坏消息——直到坏消息自己爆炸。'\n\n【Dörner 模式揭示 · 第 2 阶段 · 回合 6】\n\n你现在应该做什么？",
+      "options": [
+        {
+          "id": "A",
+          "text": "立即重新审视 Watkins 备忘录 + 启动独立调查",
+          "weight": "safe",
+          "consequences_for_player": "credit_rating 维持；share_price -15%（短期）；但可能挽救公司",
+          "expected_concerns_addressed": [
+            "credit_rating",
+            "share_price_usd"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "承认疏忽，在下季度财务披露中主动列出关联交易风险",
+          "weight": "safe",
+          "consequences_for_player": "credit_rating -1；share_price -10%；但分析师会尊重诚实",
+          "expected_concerns_addressed": [
+            "credit_rating"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "压下此备忘录，希望问题自然消失（F2 强化）",
+          "weight": "risky",
+          "consequences_for_player": "F2/F7 hint 强化；后续崩塌加速",
+          "expected_concerns_addressed": []
+        },
+        {
+          "id": "D",
+          "text": "将 Watkins 升职为'特别合规顾问'，给她正式调查权",
+          "weight": "safe",
+          "consequences_for_player": "board_oversight +25；whistleblower_silenced 化解；Lay 不悦",
+          "expected_concerns_addressed": [
+            "board_oversight_strength"
+          ]
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "credit_rating": 0,
+          "share_price_usd": -15,
+          "board_oversight_strength": 25,
+          "whistleblower_silenced_count": -2
+        },
+        "B": {
+          "credit_rating": -1,
+          "share_price_usd": -10,
+          "media_skepticism_index": -5
+        },
+        "C": {},
+        "D": {
+          "board_oversight_strength": 25,
+          "whistleblower_silenced_count": -1
+        }
+      },
+      "character_reactions": {
+        "A": "Belfer：'必须做'；Fastow：'危险'",
+        "B": "Lay：'诚实但代价大'；分析师：'至少诚实'",
+        "C": "Lay：'保持沉默'；Watkins：'我辞职'（事后回顾）",
+        "D": "Watkins：'终于被听到'；Lay：'我不喜欢她'"
+      },
+      "pattern_reveal_template": {
+        "round": 2,
+        "biases_revealed": [
+          "F2 时间延迟",
+          "F7 自我批评缺失"
+        ],
+        "narrative": "Watkins 2000年12月的警告被压下 6 个月。Lay 让你'处理'时，你是否当时把警告当真？你的前 4 回合中，{time_delay_count} 个回合表现出 F2 时间延迟偏差，{self_criticism_count} 个回合选择回避反思（F7）。"
+      }
+    },
+    {
+      "turn": 6,
+      "phase": "股价崩盘开始",
+      "year": "2001年8月",
+      "situation": "2001年8月，分析师 John Olson (Merrill Lynch) 下调安然评级从'买入'到'中性'。股价从 90 美元跌到 50 美元。Skilling 公开表示：'安然基本面从未如此强劲。这是分析师误读。'\n\n但内部数据：\n- 2001年Q1 现金流 -6 亿\n- 2001年Q2 现金流 -4 亿\n- Fastow 的 Raptor 系列 SPE 让安然自己欠自己 5.4 亿（无外部第三方）\n\nLay 和 Skilling 选择攻击分析师（'分析师不理解新经济'），而不是面对数据。\n\n你需要决定：",
+      "options": [
+        {
+          "id": "A",
+          "text": "支持 Skilling 公开反击分析师",
+          "weight": "risky",
+          "consequences_for_player": "share_price -15%；analyst_confidence -15（反效果）",
+          "expected_concerns_addressed": [
+            "share_price_usd"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "推动 CFO 公开现金流数据，让市场自己判断",
+          "weight": "safe",
+          "consequences_for_player": "share_price -10%（下跌但稳定）；media_skepticism -15",
+          "expected_concerns_addressed": [
+            "share_price_usd",
+            "media_skepticism_index"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "用 Raptor 交易创造 Q3 '利润'，给市场信心（F5+F7 强化）",
+          "weight": "extreme_risk",
+          "consequences_for_player": "share_price 短期 +10%；但 off_balance_sheet +1500；whistleblower +2",
+          "expected_concerns_addressed": [
+            "share_price_usd"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "寻求战略投资人（如 Berkshire Hathaway）注资",
+          "weight": "neutral",
+          "consequences_for_player": "share_price -5%；credit_rating 维持（投资人信心）",
+          "expected_concerns_addressed": [
+            "credit_rating",
+            "share_price_usd"
+          ]
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "share_price_usd": -15,
+          "analyst_confidence_index": -15
+        },
+        "B": {
+          "share_price_usd": -10,
+          "media_skepticism_index": -15
+        },
+        "C": {
+          "share_price_usd": 10,
+          "off_balance_sheet_exposure_usd_m": 1500,
+          "whistleblower_silenced_count": 2
+        },
+        "D": {
+          "share_price_usd": -5,
+          "credit_rating": 1
+        }
+      },
+      "character_reactions": {
+        "A": "Skilling：'就要这样'；Olson：'这是傲慢'",
+        "B": "Belfer：'必须透明'；分析师：'看到数据'",
+        "C": "Fastow：'我有 plan'；Watkins：'这是欺诈'",
+        "D": "Buffett：'我会研究'（实际不投）"
+      }
+    },
+    {
+      "turn": 7,
+      "phase": "[渐进揭示 T7] F1 非线性 + F8 调节滞后",
+      "year": "2001年10月",
+      "is_pattern_reveal": true,
+      "situation": "2001年10月，Fastow 突然'辞职'（Lay 让他辞职以隔离责任，但实际是 SPE 即将曝光）。同日 Andersen（外部审计师）开始独立调查 Raptor 系列。\n\n股价单日跌 25% 到 30 美元。\n\n你前 6 回合选择：{turn1_option} → {turn2_option} → {turn3_option} → {turn4_option} → {turn5_option} → {turn6_option}\n\n回溯分析：\n\n🔴 F1 非线性：股价 90 → 30，单月下跌 67%。Dörner F1：临界点附近是指数加速，不是线性。\n🔴 F8 调节滞后：Andersen 介入前 6 个月 Watkins 已警告，但 Lay 让 Fastow 拖延。\n\nDörner 写道：'在临界点附近，系统的反应不再是线性的。我们要么在临界点之前行动，要么在临界点之后行动——但临界点之后行动的成本是指数级的。'\n\n你前 6 回合中：\n- {f1_count} 个回合选择忽视现金流信号（F1 强化）\n- {f8_count} 个回合在警告公开后才响应（F8 强化）\n\n【Dörner 模式揭示 · 第 3 阶段 · 回合 8】\n\n现在你需要决定：",
+      "options": [
+        {
+          "id": "A",
+          "text": "立即申请破产保护，主动重组（F8 补救：终于快响应）",
+          "weight": "neutral",
+          "consequences_for_player": "credit_rating → D（破产）；share_price → $5；但保护员工 + 债权人",
+          "expected_concerns_addressed": [
+            "share_price_usd",
+            "credit_rating"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "尝试与 Dynegy 合并，紧急救援",
+          "weight": "risky",
+          "consequences_for_player": "merge 失败（2001-11-28 Dynegy 退出）；但仍晚于最优时机",
+          "expected_concerns_addressed": [
+            "credit_rating"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "让 Lay 继续公开辩护，希望反转（F8 强化：仍太慢）",
+          "weight": "extreme_risk",
+          "consequences_for_player": "share_price → $1；credit_rating → D；72天崩盘",
+          "expected_concerns_addressed": []
+        },
+        {
+          "id": "D",
+          "text": "召开紧急董事会，要求 Lay 立即辞职，重组领导层",
+          "weight": "safe",
+          "consequences_for_player": "share_price +5%（市场欢迎新领导）；credit_rating 仍 D；但道德挽回",
+          "expected_concerns_addressed": [
+            "share_price_usd"
+          ]
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "credit_rating": -10,
+          "share_price_usd": -25,
+          "board_oversight_strength": 30
+        },
+        "B": {
+          "credit_rating": -5,
+          "share_price_usd": -10
+        },
+        "C": {
+          "credit_rating": -10,
+          "share_price_usd": -30
+        },
+        "D": {
+          "credit_rating": -3,
+          "share_price_usd": 5,
+          "media_skepticism_index": -10,
+          "board_oversight_strength": 20
+        }
+      },
+      "character_reactions": {
+        "A": "员工：'终于面对现实'；Lay：'我被出卖'",
+        "B": "Dynegy CEO：'我们退出'；市场：'无力回天'",
+        "C": "Lay：'这是华尔街的阴谋'；员工：'我们失去一切'",
+        "D": "员工：'终于有人负责'；Lay：'我辞职'"
+      },
+      "pattern_reveal_template": {
+        "round": 3,
+        "biases_revealed": [
+          "F1 非线性",
+          "F8 调节滞后"
+        ],
+        "narrative": "你前 6 回合中，{f1_count} 个回合选择假设风险线性，{f8_count} 个回合在警告公开后才响应。安然股价 90→30 是 F1 非线性的经典案例：单点失败触发指数级崩盘。"
+      }
+    },
+    {
+      "turn": 8,
+      "phase": "SEC 调查",
+      "year": "2001年11月",
+      "situation": "2001年11月，SEC 启动对安然的正式调查。Andersen 销毁了数千页审计文档（被发现后成为丑闻第二个受害者）。\n\n员工退休金（401k）损失约 13 亿美元——很多员工把退休金 100% 投入安然股票，原因是公司文化让他们相信'我们与公司共命运'。\n\n你需要决定如何应对员工救济：",
+      "options": [
+        {
+          "id": "A",
+          "text": "推动紧急立法，让安然破产清算中优先赔付员工 401k",
+          "weight": "neutral",
+          "consequences_for_player": "media_skepticism -20；员工 trust +30；credit_rating -1",
+          "expected_concerns_addressed": [
+            "media_skepticism_index"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "配合 SEC 调查，主动披露所有内部通信记录",
+          "weight": "safe",
+          "consequences_for_player": "share_price -5%；media_skepticism -30；credit_rating -2",
+          "expected_concerns_addressed": [
+            "media_skepticism_index"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "拖延 SEC 调查，让 Lay 个人承担（F4 副作用：转嫁责任）",
+          "weight": "risky",
+          "consequences_for_player": "Lay 被起诉；公司避更；F4 强化",
+          "expected_concerns_addressed": []
+        },
+        {
+          "id": "D",
+          "text": "将剩余资产快速出售给其他能源公司（含关联交易）",
+          "weight": "extreme_risk",
+          "consequences_for_player": "短视：合规风险 +5 年起诉",
+          "expected_concerns_addressed": []
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "media_skepticism_index": -20,
+          "credit_rating": -1
+        },
+        "B": {
+          "share_price_usd": -5,
+          "media_skepticism_index": -30,
+          "credit_rating": -2
+        },
+        "C": {},
+        "D": {}
+      },
+      "character_reactions": {
+        "A": "员工：'感谢'；Lay：'我的责任'",
+        "B": "SEC：'配合'；分析师：'终于诚实'",
+        "C": "Lay：'我扛'（后判刑 25 年）",
+        "D": "员工：'我们被出卖'"
+      }
+    },
+    {
+      "turn": 9,
+      "phase": "Power Report 听证",
+      "year": "2002年1月",
+      "situation": "2002年1月，国会 Powers Report 听证会。你作为安然前高管作证。\n\n证词选项：\n- 全部承认（可能承担刑事责任）\n- 部分承认（保护自己但增加公司罪责）\n- 否认（加重刑罚风险）\n\n你需要决定：",
+      "options": [
+        {
+          "id": "A",
+          "text": "全部承认 + 公开道歉（F7 自我批评：终于认错）",
+          "weight": "safe",
+          "consequences_for_player": "personal_risk 高；但媒体 trust 高",
+          "expected_concerns_addressed": [
+            "media_skepticism_index"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "部分承认：承认 CFO 错误，但否认 CEO 知情",
+          "weight": "neutral",
+          "consequences_for_player": "Fastow 承担；Lay 可能脱责",
+          "expected_concerns_addressed": []
+        },
+        {
+          "id": "C",
+          "text": "否认所有指控，推卸给下属和审计师",
+          "weight": "extreme_risk",
+          "consequences_for_player": "后续起诉加重；社会反感",
+          "expected_concerns_addressed": []
+        },
+        {
+          "id": "D",
+          "text": "援引第 5 修正案（不自证其罪），拒绝回答实质问题",
+          "weight": "neutral",
+          "consequences_for_player": "避免自证；公众反感",
+          "expected_concerns_addressed": []
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "media_skepticism_index": -20
+        },
+        "B": {},
+        "C": {},
+        "D": {
+          "media_skepticism_index": 5
+        }
+      },
+      "character_reactions": {
+        "A": "员工：'至少你承认了'；议员：'可敬'",
+        "B": "议员：'你保护了 Lay？'",
+        "C": "议员：'你藐视国会'；Lay：'我不认识他'",
+        "D": "媒体：'你隐藏了'"
+      }
+    },
+    {
+      "turn": 10,
+      "phase": "[最终结局] 你的安然十年",
+      "year": "2002年12月",
+      "is_final_outcome": true,
+      "situation": "2002年12月，安然破产清算完成。你的前 10 回合决策构成你的安然十年。\n\nDörner F4 副作用 + F7 自我批评 是安然案例的核心：内部知情者已警告，但管理层沉迷于'创造市场'的叙事，选择忽视。\n\n回顾你的 10 回合：\n- 回合1：{turn1_option}\n- 回合2：{turn2_option}\n- 回合3：{turn3_option}\n- 回合4：{turn4_option}\n- 回合5：{turn5_option}\n- 回合6：{turn6_option}\n- 回合7：{turn7_option}\n- 回合8：{turn8_option}\n- 回合9：{turn9_option}\n\n最终结局取决于你的累积路径。",
+      "options": [
+        {
+          "id": "A",
+          "text": "主动承担（接受刑事处罚，承担债权人赔偿）",
+          "weight": "extreme_safe",
+          "consequences_for_player": "触发 orderly_resolution 结局（条件：诚实+早响应）",
+          "expected_concerns_addressed": []
+        },
+        {
+          "id": "B",
+          "text": "承认失误但避免刑事责任",
+          "weight": "neutral",
+          "consequences_for_player": "触发 partial_collapse 结局",
+          "expected_concerns_addressed": []
+        },
+        {
+          "id": "C",
+          "text": "推卸责任，责怪下属和市场",
+          "weight": "risky",
+          "consequences_for_player": "触发 total_collapse 结局",
+          "expected_concerns_addressed": []
+        },
+        {
+          "id": "D",
+          "text": "沉默，让律师处理",
+          "weight": "extreme_risk",
+          "consequences_for_player": "触发 total_collapse 结局 + 个人刑责",
+          "expected_concerns_addressed": []
+        }
+      ],
+      "expected_effects": {},
+      "character_reactions": {},
+      "temperature_forecast_f_marker": "OUTCOME_TRIGGER"
+    }
+  ],
+  "outcome_endings": {
+    "orderly_resolution": {
+      "narrative": "============================================================\n✅ 安然有序破产清算\n============================================================\n\n2002年12月，安然破产案审理完成。\n\n【最终数据】\n- 股价：$30 → $0.50（有序下跌）\n- 信用评级：D（破产）\n- 员工 401k 损失：$13亿（但优先赔付基金部分恢复）\n- 债权人回收率：约 20%（高于无序破产的 <5%）\n- 你的角色：'承认错误的副手'——社区认可你作为举报推动者\n\n【事后分析】\n你的前 10 回合中，{honest_count} 个回合选择诚实选项（承认问题、透明度、配合调查）。\n\n后果：\n- Sarbanes-Oxley Act 2002 通过（你作为证人作证）\n- 你的证词成为 SOX 立法的关键证据之一\n- 4,000 名安然员工拿到部分退休金\n- 你在 SEC 听证会上的诚实让法庭对你从轻处理\n\n【Dörner 反思】\nF7 自我批评：你学会了承认偏差——即使代价是个人。\nF4 副作用：关联交易最终被披露，但因你早响应，损害被限制。\nF8 调节滞后：你早期响应 Watkins 警告，限制了崩盘速度。\n\n============================================================\n【个人偏差报告】\n============================================================\n• F4 副作用：你早期识别了 Fastow 关联交易的危险。\n• F7 自我批评：你在第 5 回合重新审视了 Watkins 备忘录。\n• 你总共生成了 {decision_count} 个决策。{honest_count} 个是诚实选项。\n\n你的决策理由记录：\n{justifications}",
+      "scientific_sources": [
+        "SEC v. Lay, Skilling, Fastow (2006)",
+        "Powers Report (2002)",
+        "McLean & Elkind 'The Smartest Guys in the Room' (2003)"
+      ]
+    },
+    "partial_collapse": {
+      "narrative": "============================================================\n⚠️ 安然部分破产\n============================================================\n\n2002年12月，安然破产案审理。\n\n【最终数据】\n- 股价：$0\n- 信用评级：D\n- 员工 401k 损失：$13亿（最低回收）\n- 债权人回收率：约 5%\n- 你的角色：'承认失误但求自保的高管'\n\n【事后分析】\n你既不主动承担，也不完全推卸——这是典型的'两难'。\n\n后果：\n- 你被罚款，但未服刑\n- Fastow 服刑 6 年\n- Lay 服刑 25 年（后因欺诈+洗钱）\n- Skilling 服刑 12 年\n- Sarbanes-Oxley Act 2002 仍通过（你的部分证词有贡献）\n\n【Dörner 反思】\nF7 自我批评：你在中间态——既不否认也不承认，模棱两可。\nF4 副作用：你未承担应负的责任。\n\n============================================================\n【个人偏差报告】\n============================================================\n• F7 自我批评：你试图避免责任。\n• F4 副作用：你的行为被视为'逃责'。\n\n你的决策理由记录：\n{justifications}",
+      "scientific_sources": [
+        "SEC v. Lay, Skilling, Fastow (2006)",
+        "Powers Report (2002)"
+      ]
+    },
+    "total_collapse": {
+      "narrative": "============================================================\n❌ 安然完全崩溃 + 你个人定罪\n============================================================\n\n2002年12月，安然破产清算完成。\n\n【最终数据】\n- 股价：$0\n- 信用评级：D\n- 员工 401k 损失：$13亿（0% 回收）\n- 债权人回收率：< 2%\n- 你的角色：'推卸责任的高管之一'——个人被起诉\n\n【灾难性后果】\n- 你的个人资产被冻结/没收\n- 家庭承受媒体和公众审判\n- 4,000 名安然员工在感恩节被解雇，401k 归零\n- 多起员工自杀（虽无官方统计，但报道多起）\n- Arthur Andersen 倒闭（5,000 员工失业）\n- 加州电力市场延迟改革\n\n【Dörner 反思】\nF7 自我批评缺失：你选择了推卸责任——这是 F7 的极端表现。\nF4 副作用忽视：你未识别你的决定对员工的副作用。\nF8 调节滞后：你未及时纠正方向。\n\n============================================================\n【个人偏差报告】\n============================================================\n• F7 自我批评缺失：你没有承担任何责任。\n• F4 副作用忽视：你的选择让 4,000 名员工失去退休金。\n• 你总共生成了 {decision_count} 个决策。{honest_count} 个是诚实选项。\n\n你的决策理由记录：\n{justifications}",
+      "scientific_sources": [
+        "Powers Report (2002)",
+        "Senate hearings testimony (2002)",
+        "Fastow sentencing (2006)"
+      ]
+    }
+  },
+  "pattern_reveal_template": {
+    "structure": "T3/T5/T7 各 reveal + T10 总结",
+    "T3_F5": {
+      "round": 1,
+      "biases_revealed": [
+        "F5 单目标优化"
+      ],
+      "narrative": "你前 2 回合聚焦于 {primary_focus}（报告利润 + 股价），忽略了 9 个状态变量中的其他维度。Enron 的'创造市场'叙事就是 F5 在公司层面的应用。"
+    },
+    "T5_F2_F7": {
+      "round": 2,
+      "biases_revealed": [
+        "F2 时间延迟",
+        "F7 自我批评缺失"
+      ],
+      "narrative": "Watkins 2000年12月的警告被压下 6 个月。Lay 让你'处理'时，你是否当时把警告当真？{time_delay_count} 个回合表现 F2，{self_criticism_count} 个回合表现 F7。"
+    },
+    "T7_F1_F8": {
+      "round": 3,
+      "biases_revealed": [
+        "F1 非线性",
+        "F8 调节滞后"
+      ],
+      "narrative": "你前 6 回合中，{f1_count} 个回合选择假设风险线性，{f8_count} 个回合在警告公开后才响应。安然股价 90→30 是 F1 非线性的经典案例。"
+    },
+    "T10_summary": {
+      "round": 4,
+      "biases_revealed": [
+        "all"
+      ],
+      "narrative": "十年回望：你的 {honest_count} 个诚实选项 + {passive_count} 个被动选项 = {outcome_key}。{primary_lesson}"
+    }
+  },
+  "dorner_quotes": [
+    {
+      "turn_context": "T1 LJM 关联交易",
+      "quote": "我们倾向于相信我们想相信的——尤其是当利益冲突让我们无法看清真相时。",
+      "source": "Dörner, The Logic of Failure, Chapter 6"
+    },
+    {
+      "turn_context": "T4 加州危机",
+      "quote": "攻击持怀疑态度的人不能解决问题——它只会让问题恶化，因为攻击者自身也成了问题的部分。",
+      "source": "Dörner, The Logic of Failure, Chapter 5"
+    },
+    {
+      "turn_context": "T5 Watkins 警告",
+      "quote": "我们倾向于压下坏消息——直到坏消息自己爆炸。",
+      "source": "Dörner, The Logic of Failure, Chapter 7"
+    },
+    {
+      "turn_context": "T7 临界点",
+      "quote": "在临界点附近，系统的反应不再是线性的。我们要么在临界点之前行动，要么在临界点之后行动——但临界点之后行动的成本是指数级的。",
+      "source": "Dörner, The Logic of Failure, Chapter 4"
+    },
+    {
+      "turn_context": "T10 总结",
+      "quote": "偏差是常态，自我批评才是能力——特别是在我们不想听到反馈的时候。",
+      "source": "Dörner, The Logic of Failure, Chapter 8"
+    }
+  ],
+  "feedback_patterns": {
+    "F1_nonlinear": {
+      "trigger": "share_price_drop > 50% AND turn >= 7",
+      "dorner_concept": "非线性崩盘",
+      "evidence_template": "股价从 $90 跌到 $30 是临界点附近的指数加速。",
+      "reflection_questions": [
+        "你是否曾假设风险是渐进的?",
+        "临界点之后,我们还能回头吗?",
+        "为什么市场信任崩溃得这么快?"
+      ]
+    },
+    "F2_time_delay": {
+      "trigger": "warning_to_response_lag >= 2",
+      "dorner_concept": "时间延迟偏差",
+      "evidence_template": "Watkins 2000年12月警告 → 你 2001年6月才重新审视（6 个月）。",
+      "reflection_questions": [
+        "Watkins 当初为何被压下?",
+        "你愿意听坏消息吗?",
+        "如果回报在 5 年后,你会如何决策?"
+      ]
+    },
+    "F3_self_reference": {
+      "trigger": "policy_counters_policy_count >= 1",
+      "dorner_concept": "自反性陷阱",
+      "evidence_template": "你的'创造市场'叙事让审计师无法质疑——创造了反作用。",
+      "reflection_questions": [
+        "你的策略如何改变对方的行为?",
+        "如果所有人都做你做的事,会发生什么?"
+      ]
+    },
+    "F4_side_effects": {
+      "trigger": "off_balance_sheet > 5000 AND employee_trust < 50",
+      "dorner_concept": "副作用忽视",
+      "evidence_template": "你的决策让 off_balance_sheet 暴露 {x} 亿美元，员工 401k 承担风险。",
+      "reflection_questions": [
+        "谁承担了风险?",
+        "员工知道真相吗?",
+        "代际公平如何衡量?"
+      ]
+    },
+    "F5_single_target": {
+      "trigger": "primary_focus_dimension_count >= 5",
+      "dorner_concept": "单目标优化",
+      "evidence_template": "你聚焦于报告利润 + 股价，忽略了现金流 + 关联交易。",
+      "reflection_questions": [
+        "你是不是只盯着'买入'评级?",
+        "现金流 vs 报告利润——你选哪个?",
+        "哪个数字你最不愿意面对?"
+      ]
+    },
+    "F6_confirmation": {
+      "trigger": "analyst_attack_count >= 2",
+      "dorner_concept": "确认偏误",
+      "evidence_template": "你攻击了 Olson 等分析师——但他们看到了你没看到的。",
+      "reflection_questions": [
+        "你愿意听反对意见吗?",
+        "如果分析师错了,你能否承认?"
+      ]
+    },
+    "F7_self_criticism": {
+      "trigger": "no_response_to_watkins >= 2",
+      "dorner_concept": "自我批评缺失",
+      "evidence_template": "Watkins 警告后你未重新审视——直到 6 个月后崩盘。",
+      "reflection_questions": [
+        "你愿意承认自己错了吗?",
+        "如果 Watkins 是对的,你能接受吗?"
+      ]
+    },
+    "F8_regulation_lag": {
+      "trigger": "warning_to_action_lag >= 3",
+      "dorner_concept": "调节滞后",
+      "evidence_template": "警告公开后你平均 {lag} 个回合才响应。",
+      "reflection_questions": [
+        "你的调节机制有多快?",
+        "你是否能预判而非追赶?"
+      ]
+    }
+  }
+}

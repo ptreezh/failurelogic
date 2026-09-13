@@ -362,6 +362,54 @@ def execute_real_logic(
             }
         # Climate carries its own state shape — no legacy key drop needed
 
+    elif scenario_id == "enron-collapse":
+        # Dörner-style 10-turn Enron scenario (v1.0): see
+        # api-server/logic/enron_scenario.py and
+        # api-server/data/scenarios/enron_collapse.json. Each turn the player
+        # picks option A/B/C/D; the engine applies that turn's effects from
+        # the JSON and tracks 9 state variables (share_price/credit_rating/
+        # reported_earnings/actual_cashflow/off_balance_sheet/analyst_confidence/
+        # whistleblower_silenced/board_oversight/media_skepticism).
+        from logic.enron_scenario import (
+            apply_turn as _apply_enron,
+            get_initial_state as _enron_init,
+            get_step as _enron_get_step,
+        )
+        if "share_price_usd" not in new_state:
+            init = _enron_init()
+            for k, v in init.items():
+                new_state.setdefault(k, v)
+        chosen_option = decisions.get("option") or decisions.get("choice") or decisions.get("action") or ""
+        decision_justification = decisions.get("justification") or decisions.get("reason")
+        _apply_enron(new_state, chosen_option, decision_justification=decision_justification)
+        new_state["last_chosen_option"] = chosen_option
+        step_now = _enron_get_step(new_state["turn_number"] - 1)
+        if step_now is None:
+            step_now = _enron_get_step(new_state["turn_number"])
+        chosen_option_full = None
+        if step_now is not None:
+            for opt in step_now.get("options", []):
+                if opt["id"] == chosen_option:
+                    chosen_option_full = opt
+                    break
+        if chosen_option_full is not None:
+            new_state["_last_option_context"] = {
+                "option_id": chosen_option,
+                "option_text": chosen_option_full.get("text", ""),
+                "option_consequences_for_player": chosen_option_full.get(
+                    "consequences_for_player", ""
+                ),
+                "option_weight": chosen_option_full.get("weight", "neutral"),
+                "expected_concerns_addressed": chosen_option_full.get(
+                    "expected_concerns_addressed", []
+                ),
+                "applied_effects": step_now.get("expected_effects", {}).get(
+                    chosen_option, {}
+                ),
+                "justification": decision_justification,
+            }
+        # Enron carries its own state shape — no legacy key drop needed
+
     elif scenario_id in ("investment-confirmation-bias", "investment-information-processing"):
         # 投资场景：确认偏误
         action = decisions.get("action", "")

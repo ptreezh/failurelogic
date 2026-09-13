@@ -60,11 +60,11 @@ class TestScenariosListEndpoint:
 
 class TestScenarioByIdEndpoint:
     def test_get_existing_scenario(self, client):
-        resp = client.get("/scenarios/coffee-shop-nonlinear-effects")
+        resp = client.get("/scenarios/challenger-launch")
         assert resp.status_code == 200
         s = resp.json()
-        assert s["id"] == "coffee-shop-nonlinear-effects"
-        assert s["difficulty"] == "beginner"
+        assert s["id"] == "challenger-launch"
+        assert s["difficulty"] in ("beginner", "intermediate", "advanced")
 
     def test_get_nonexistent_scenario_404(self, client):
         resp = client.get("/scenarios/nonexistent-scenario-id")

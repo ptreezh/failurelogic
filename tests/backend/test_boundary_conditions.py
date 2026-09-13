@@ -87,16 +87,16 @@ def test_health_endpoint_responds():
             _stop(proc)
 
 
-def test_scenarios_list_returns_two_deep_scenarios():
-    """Only challenger-launch + climate-change-policy are served."""
+def test_scenarios_list_returns_three_deep_scenarios():
+    """Only the 3 deep scenarios (challenger/climate/enron) are served."""
     with tempfile.TemporaryDirectory() as disk:
         proc, port = _run_server(disk)
         try:
             data = _get(port, "/scenarios/")
             scenarios = data["scenarios"]
             ids = {s["id"] for s in scenarios}
-            assert ids == {"challenger-launch", "climate-change-policy"}, \
-                f"Expected only the 2 deep scenarios, got: {ids}"
+            assert ids == {"challenger-launch", "climate-change-policy", "enron-collapse"}, \
+                f"Expected only the 3 deep scenarios, got: {ids}"
             # Each scenario has required fields
             for s in scenarios:
                 assert "name" in s and "description" in s
@@ -220,7 +220,7 @@ def test_justification_with_sql_chars_stored_safely():
             assert status == 200
             # Server should still work (table not dropped)
             scenarios = _get(port, "/scenarios/")
-            assert len(scenarios["scenarios"]) == 2
+            assert len(scenarios["scenarios"]) == 3
         finally:
             _stop(proc)
 
