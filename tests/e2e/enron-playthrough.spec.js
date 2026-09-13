@@ -120,5 +120,43 @@ test.describe('Enron-Collapse - Full Playthrough', () => {
     expect(gridIds).not.toContain('state-engineer-confidence');
     expect(gridIds).not.toContain('state-co2');
     expect(gridIds).not.toContain('state-tipping');
+
+    // GUARD: state values must NOT all be "—" (the offline fallback bug
+    // that masked the per-scenario step dispatch failure until 2026-09-13).
+    const gridValues = await page.locator('.challenger-state-grid .state-value').evaluateAll(
+      (els) => els.map((e) => e.textContent.trim())
+    );
+    const allEmpty = gridValues.every((v) => v === '—' || v === '');
+    expect(allEmpty).toBe(false);
+    // Spot-check specific seeded values
+    const share = await page.locator('#state-share-price').textContent();
+    expect(share.trim()).toBe('90');
+    const credit = await page.locator('#state-credit').textContent();
+    expect(credit.trim()).toBe('BBB+');
+  });
+
+  test('decision page title shows "安然帝国崩塌" (not hard-coded Challenger)', async ({ page }) => {
+    test.setTimeout(60000);
+    await page.goto(BASE_URL);
+    await page.locator('.nav-item[data-page="scenarios"]').click();
+    await page.waitForSelector('#scenarios-grid', { timeout: 5000 });
+    const enronCard = page.locator('.scenario-card', { hasText: '安然帝国崩塌' }).first();
+    await enronCard.locator('button', { hasText: '开始挑战' }).click();
+    await page.waitForSelector('.challenger-decision-page', { timeout: 15000 });
+
+    const title = (await page.locator('.challenger-decision-page h2').textContent()) || '';
+    expect(title).toContain('安然帝国崩塌');
+    expect(title).not.toContain('挑战者号');
+  });
+
+  test('card button has no difficulty suffix for deep scenarios', async ({ page }) => {
+    test.setTimeout(60000);
+    await page.goto(BASE_URL);
+    await page.locator('.nav-item[data-page="scenarios"]').click();
+    await page.waitForSelector('#scenarios-grid', { timeout: 5000 });
+    const enronCard = page.locator('.scenario-card', { hasText: '安然帝国崩塌' }).first();
+    const btnText = (await enronCard.locator('button').first().textContent()) || '';
+    expect(btnText.trim()).toBe('开始挑战');
+    expect(btnText).not.toContain('难度');
   });
 });

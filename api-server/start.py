@@ -320,14 +320,24 @@ async def get_scenario_step(scenario_id: str, turn_number: int):
     scenario = next((s for s in SCENARIOS if s["id"] == scenario_id), None)
     if not scenario:
         raise HTTPException(status_code=404, detail="场景未找到")
-    # Challenger-style scenarios: deep JSON content per turn.
-    try:
-        from logic.challenger_scenario import get_step
-        step = get_step(turn_number)
-        if step is not None:
-            return step
-    except Exception:
-        pass
+    # Dispatch to the correct deep-scenario engine based on scenario_id.
+    # (Previously hard-coded to challenger_scenario, so enron/climate
+    # /step/1 returned Challenger content — a latent P0 bug.)
+    engine_map = {
+        "challenger-launch": ("logic.challenger_scenario", "get_step"),
+        "climate-change-policy": ("logic.climate_scenario", "get_step"),
+        "enron-collapse": ("logic.enron_scenario", "get_step"),
+    }
+    target = engine_map.get(scenario_id)
+    if target:
+        module_name, fn_name = target
+        try:
+            mod = __import__(module_name, fromlist=[fn_name])
+            step = getattr(mod, fn_name)(turn_number)
+            if step is not None:
+                return step
+        except Exception:
+            pass
     # No step data for this scenario + turn.
     raise HTTPException(
         status_code=404,

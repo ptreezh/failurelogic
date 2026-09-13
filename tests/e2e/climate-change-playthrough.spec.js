@@ -114,5 +114,40 @@ test.describe('Climate-Change - Full Playthrough', () => {
     // No Challenger-specific vars should leak through
     expect(gridIds).not.toContain('state-engineer-confidence');
     expect(gridIds).not.toContain('state-morale');
+
+    // GUARD: state values must NOT all be "—" (would indicate the
+    // per-scenario step dispatch failed and we're seeing fallback).
+    const gridValues = await page.locator('.challenger-state-grid .state-value').evaluateAll(
+      (els) => els.map((e) => e.textContent.trim())
+    );
+    const allEmpty = gridValues.every((v) => v === '—' || v === '');
+    expect(allEmpty).toBe(false);
+    const temp = await page.locator('#state-temperature').textContent();
+    expect(temp.trim()).toBe('1.55');
+  });
+
+  test('decision page title shows "全球气候政策十年"', async ({ page }) => {
+    test.setTimeout(60000);
+    await page.goto(BASE_URL);
+    await page.locator('.nav-item[data-page="scenarios"]').click();
+    await page.waitForSelector('#scenarios-grid', { timeout: 5000 });
+    const climateCard = page.locator('.scenario-card', { hasText: '全球气候政策' }).first();
+    await climateCard.locator('button', { hasText: '开始挑战' }).click();
+    await page.waitForSelector('.challenger-decision-page', { timeout: 15000 });
+
+    const title = (await page.locator('.challenger-decision-page h2').textContent()) || '';
+    expect(title).toContain('全球气候政策十年');
+    expect(title).not.toContain('挑战者号');
+  });
+
+  test('card button has no difficulty suffix for deep scenarios', async ({ page }) => {
+    test.setTimeout(60000);
+    await page.goto(BASE_URL);
+    await page.locator('.nav-item[data-page="scenarios"]').click();
+    await page.waitForSelector('#scenarios-grid', { timeout: 5000 });
+    const climateCard = page.locator('.scenario-card', { hasText: '全球气候政策' }).first();
+    const btnText = (await climateCard.locator('button').first().textContent()) || '';
+    expect(btnText.trim()).toBe('开始挑战');
+    expect(btnText).not.toContain('难度');
   });
 });

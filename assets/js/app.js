@@ -5,32 +5,32 @@
 
 // Application Configuration
 const APP_CONFIG = {
-  // 智能API端点选择
+  // 智能API端点选择 — 与 api-config-manager.js 保持一致
   apiBaseUrl: (() => {
     const hostname = window.location.hostname;
 
-    // GitHub Pages环境 - 使用部署的Railway后端API
-    if (hostname.includes('github.io')) {
-      return 'https://insightful-enthusiasm-production.up.railway.app';
+    // 本地开发环境 — 后端默认 8000 端口 (Dockerfile + start.py 已统一)
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return 'http://localhost:8000';
     }
 
-    // 本地开发环境
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      return 'http://localhost:8082';
+    // GitHub Pages生产环境 — Render 主, fallback 由 configManager 处理
+    if (hostname.includes('github.io')) {
+      return 'https://failure-logic-api.onrender.com';
     }
 
     // Railway部署环境
     if (hostname.includes('railway.app')) {
-      return 'https://' + hostname; // 使用相同域名
+      return 'https://' + hostname;
     }
 
     // Vercel部署环境
     if (hostname.includes('vercel.app')) {
-      return 'https://' + hostname.replace('frontend', 'api'); // 假设API在api子域名
+      return 'https://' + hostname.replace('frontend', 'api');
     }
 
-    // 默认回退到当前主机的API端口
-    return window.location.protocol + '//' + window.location.host + ':8082';
+    // 默认回退到当前主机的 API 端口
+    return window.location.protocol + '//' + window.location.hostname + ':8000';
   })(),
 
   version: '2.0.0',
@@ -426,6 +426,11 @@ class NavigationManager {
     // Check if the scenario has advanced challenges
     const hasAdvancedChallenges = scenario.advancedChallenges && scenario.advancedChallenges.length > 0;
 
+    // The 3 deep Dörner-aligned scenarios are all 'advanced' — hide the
+    // difficulty badge to reduce visual noise (no choice for the player).
+    const DEEP_SCENARIOS = ['challenger-launch', 'climate-change-policy', 'enron-collapse'];
+    const isDeep = DEEP_SCENARIOS.includes(scenario.id);
+
     // Build the card based on difficulty
     let cardContent = '';
     if (hasAdvancedChallenges) {
@@ -436,7 +441,7 @@ class NavigationManager {
           <h3 class="card-title">${scenario.name} - ${advancedChallenge.title}</h3>
           <p class="card-subtitle">${advancedChallenge.description}</p>
           <div class="scenario-meta">
-            <span class="badge ${currentDifficulty}">${currentDifficulty}</span>
+            ${isDeep ? '' : `<span class="badge ${currentDifficulty}">${currentDifficulty}</span>`}
             <span class="scenario-duration">${scenario.estimatedDuration}分钟</span>
           </div>
           <p class="scenario-description">${scenario.fullDescription}</p>
@@ -447,7 +452,7 @@ class NavigationManager {
           <h3 class="card-title">${scenario.name}</h3>
           <p class="card-subtitle">${scenario.description}</p>
           <div class="scenario-meta">
-            <span class="badge ${scenario.difficulty}">${scenario.difficulty}</span>
+            ${isDeep ? '' : `<span class="badge ${scenario.difficulty}">${scenario.difficulty}</span>`}
             <span class="scenario-duration">${scenario.estimatedDuration}分钟</span>
           </div>
           <p class="scenario-description">${scenario.fullDescription}</p>
@@ -459,7 +464,7 @@ class NavigationManager {
         <h3 class="card-title">${scenario.name}</h3>
         <p class="card-subtitle">${scenario.description}</p>
         <div class="scenario-meta">
-          <span class="badge ${scenario.difficulty}">${scenario.difficulty}</span>
+          ${isDeep ? '' : `<span class="badge ${scenario.difficulty}">${scenario.difficulty}</span>`}
           <span class="scenario-duration">${scenario.estimatedDuration}分钟</span>
         </div>
         <p class="scenario-description">${scenario.fullDescription}</p>
@@ -488,7 +493,7 @@ class NavigationManager {
         <div class="scenario-card-content">
         ${cardContent}
         <button class="btn btn-primary" onclick="event.stopPropagation(); GameManager.startScenario('${scenario.id}')">
-          开始挑战 (${currentDifficulty}难度)
+          ${isDeep ? '开始挑战' : `开始挑战 (${currentDifficulty}难度)`}
         </button>
         ${hasAdvancedChallenges ? `
           <div class="advanced-options">
@@ -11793,35 +11798,7 @@ class GameManager {
   static async startClimateChangeGame() {
     Log.log('🌍 Starting Climate Change game...');
     this.showGameModal();
-
-    try {
-      const sessionData = await ApiService.scenarios.createGameSession('climate-change-policy', 'beginner');
-      const gameId = sessionData.gameId || sessionData.game_id;
-      AppState.gameSession = {
-        gameId: gameId,
-        scenarioId: 'climate-change-policy',
-        difficulty: 'beginner',
-        status: 'active',
-        gameState: sessionData.gameState || sessionData.game_state || {},
-        currentTurn: 1,
-        decision_history: []
-      };
-
-      const router = new ChallengerRouter(
-        AppState.gameSession.gameState || {},
-        { gameId: gameId, scenarioId: 'climate-change-policy' }
-      );
-      window.challengerRouter = router;
-
-      const container = document.getElementById('game-container');
-      if (container) {
-        container.innerHTML = await router.renderStartPage();
-      }
-      Log.log('✅ Climate Change game initialized, gameId=', gameId);
-    } catch (e) {
-      Log.error('[climate-change] session create failed:', e);
-      this.displayError('会话创建失败，请稍后重试');
-    }
+    await this._startDeepScenario('climate-change-policy');
   }
 
   // Enron collapse: data-driven 10-turn Dörner deep dive. Reuses
@@ -11829,35 +11806,77 @@ class GameManager {
   static async startEnronGame() {
     Log.log('🏛️ Starting Enron Collapse game...');
     this.showGameModal();
+    await this._startDeepScenario('enron-collapse');
+  }
 
-    try {
-      const sessionData = await ApiService.scenarios.createGameSession('enron-collapse', 'beginner');
-      const gameId = sessionData.gameId || sessionData.game_id;
-      AppState.gameSession = {
-        gameId: gameId,
-        scenarioId: 'enron-collapse',
-        difficulty: 'beginner',
-        status: 'active',
-        gameState: sessionData.gameState || sessionData.game_state || {},
-        currentTurn: 1,
-        decision_history: []
-      };
+  // Shared helper for the 3 deep-scenario entry points. Tries the backend
+  // session-create API; on failure falls back to the mock scenario entry so
+  // the player still sees the decision UI (with an offline banner from the
+  // router). The 3 deep scenarios are all 'advanced' so no difficulty choice
+  // is shown.
+  static async _startDeepScenario(scenarioId) {
+    const labels = {
+      'challenger-launch': '挑战者号发射决策',
+      'climate-change-policy': '全球气候政策十年',
+      'enron-collapse': '安然帝国崩塌',
+    };
+    const gameId = (AppState.gameSession && AppState.gameSession.gameId)
+      || window.__challengerResumeGameId;
+    let initialState = null;
+    let useMock = false;
 
-      const router = new ChallengerRouter(
-        AppState.gameSession.gameState || {},
-        { gameId: gameId, scenarioId: 'enron-collapse' }
-      );
-      window.challengerRouter = router;
-
-      const container = document.getElementById('game-container');
-      if (container) {
-        container.innerHTML = await router.renderStartPage();
+    if (!gameId) {
+      try {
+        const sessionData = await ApiService.scenarios.createGameSession(scenarioId, 'advanced');
+        const gid = sessionData.gameId || sessionData.game_id;
+        AppState.gameSession = {
+          gameId: gid,
+          scenarioId,
+          difficulty: 'advanced',
+          status: 'active',
+          gameState: sessionData.gameState || sessionData.game_state || {},
+          currentTurn: 1,
+          decision_history: [],
+        };
+        initialState = AppState.gameSession.gameState;
+      } catch (e) {
+        Log.warn(`[${scenarioId}] session create failed, falling back to mock:`, e);
+        useMock = true;
       }
-      Log.log('✅ Enron game initialized, gameId=', gameId);
-    } catch (e) {
-      Log.error('[enron-collapse] session create failed:', e);
-      this.displayError('会话创建失败，请稍后重试');
     }
+
+    if (useMock) {
+      const mock = NavigationManager.getMockScenarios().find(s => s.id === scenarioId);
+      const gid = 'mock-' + Date.now();
+      AppState.gameSession = {
+        gameId: gid,
+        scenarioId,
+        difficulty: 'advanced',
+        status: 'active-offline',
+        gameState: (mock && mock.initialState) || {},
+        currentTurn: 1,
+        decision_history: [],
+      };
+      initialState = AppState.gameSession.gameState;
+      Log.log(`[${scenarioId}] using mock initialState for ${labels[scenarioId] || scenarioId}`);
+    }
+
+    if (!AppState.gameSession.gameId) {
+      this.displayError('未能获取会话 ID');
+      return;
+    }
+
+    const router = new ChallengerRouter(
+      initialState || {},
+      { gameId: AppState.gameSession.gameId, scenarioId }
+    );
+    window.challengerRouter = router;
+
+    const container = document.getElementById('game-container');
+    if (container) {
+      container.innerHTML = await router.renderStartPage();
+    }
+    Log.log(`✅ ${labels[scenarioId] || scenarioId} initialized, gameId=`, AppState.gameSession.gameId);
   }
 
   static startPersonalFinanceGame() {

@@ -18,11 +18,25 @@
   'use strict';
 
   // Registry of supported scenarios — add new deep scenarios here.
+  // defaultState seeds the state grid when the backend API is unreachable,
+  // so the player still sees initial values (not "—") even offline.
   const SCENARIOS = {
     'challenger-launch': {
       id: 'challenger-launch',
       label: '挑战者号发射决策',
       totalTurns: 10,
+      defaultState: {
+        temperature_forecast_f: 36,
+        engineer_confidence: 75,
+        schedule_pressure: 60,
+        budget_used_pct: 87,
+        public_attention: 85,
+        team_morale: 50,
+        accepted_risks_count: 0,
+        ignored_warnings_count: 0,
+        risk_acknowledged_unresolved: 0,
+        turn: 1,
+      },
       stateFields: [
         { id: 'state-temperature', key: 'temperature_forecast_f', label: '🌡️ 预报温度 (°F)' },
         { id: 'state-engineer-confidence', key: 'engineer_confidence', label: '👷 工程师信心' },
@@ -39,6 +53,18 @@
       id: 'climate-change-policy',
       label: '全球气候政策十年',
       totalTurns: 10,
+      defaultState: {
+        global_avg_temp_c: 1.55,
+        co2_ppm: 424,
+        gdp_growth_pct: 3.2,
+        renewable_share_pct: 30,
+        climate_justice_index: 45,
+        public_support_pct: 62,
+        whistleblower_silenced_count: 0,
+        international_trust: 55,
+        tipping_point_proximity: 27,
+        turn: 1,
+      },
       stateFields: [
         { id: 'state-temperature', key: 'global_avg_temp_c', label: '🌡️ 全球升温 (°C)' },
         { id: 'state-co2', key: 'co2_ppm', label: '💨 CO2浓度 (ppm)' },
@@ -55,6 +81,18 @@
       id: 'enron-collapse',
       label: '安然帝国崩塌',
       totalTurns: 10,
+      defaultState: {
+        share_price_usd: 90,
+        credit_rating: 'BBB+',
+        reported_earnings_usd_m: 979,
+        actual_cashflow_usd_m: -150,
+        off_balance_sheet_exposure_usd_m: 7000,
+        analyst_confidence_index: 85,
+        whistleblower_silenced_count: 0,
+        board_oversight_strength: 60,
+        media_skepticism_index: 20,
+        turn: 1,
+      },
       stateFields: [
         { id: 'state-share-price', key: 'share_price_usd', label: '💵 股价 ($)' },
         { id: 'state-credit', key: 'credit_rating', label: '🏦 信用评级' },
@@ -75,8 +113,6 @@
 
   class ChallengerRouter {
     constructor(gameState, options) {
-      this.gameState = gameState || {};
-      this.gameId = (options && options.gameId) || null;
       // Allow override via options.scenarioId; default to challenger.
       this.scenarioId = (options && options.scenarioId) || DEFAULT_SCENARIO_ID;
       if (!SCENARIOS[this.scenarioId]) {
@@ -85,6 +121,11 @@
       }
       this.scenarioConfig = SCENARIOS[this.scenarioId];
       this.totalTurns = this.scenarioConfig.totalTurns;
+      // Seed gameState from defaultState so the grid never shows "—" for a
+      // fresh offline session; API response (if any) overrides defaults.
+      const defaults = this.scenarioConfig.defaultState || {};
+      this.gameState = Object.assign({}, defaults, gameState || {});
+      this.gameId = (options && options.gameId) || null;
       this.currentStep = null;          // latest fetched step (next turn to play)
       this.previousState = null;        // for change-detection flash
       this.selectedOption = null;       // 'A'|'B'|'C'|'D'
@@ -123,9 +164,13 @@
       try {
         const step = await ApiService.configManager.request(url);
         this.currentStep = step;
+        this._lastLoadError = null;
       } catch (err) {
         console.error('[challenger] failed to load step', turnNumber, err);
         this.currentStep = null;
+        // Remember the error so _renderDecisionView can show a banner
+        // explaining why the situation/options are placeholders.
+        this._lastLoadError = err && err.message ? err.message : String(err);
       }
     }
 
@@ -244,16 +289,24 @@
         </button>
       `).join('');
 
+      const offlineBanner = this._lastLoadError
+        ? `<div class="offline-banner">⚠️ 后端 API 无法连接 — 选项已禁用。请确认 API 服务已启动 (端口 8000) 或检查 Render 部署。<br><small>${this._escape(this._lastLoadError)}</small></div>`
+        : '';
+
+      const submitDisabled = options.length === 0 ? 'disabled' : 'disabled';
+
       return `
         <div class="game-page challenger-decision-page">
           <div class="page-header">
-            <h2>🚀 挑战者号发射决策 · 第 ${turnNumber} 回合</h2>
-            <div class="progress">回合 ${turnNumber} / ${this.totalTurns} · 阶段: ${phase}</div>
+            <h2>${this._escape(this.scenarioConfig.label)} · 第 ${turnNumber} 回合</h2>
+            <div class="progress">回合 ${turnNumber} / ${this.totalTurns} · 阶段: ${this._escape(phase)}</div>
           </div>
 
           <div class="challenger-state-grid" id="challenger-state-grid" style="display: grid;">
             ${this._renderStateGrid()}
           </div>
+
+          ${offlineBanner}
 
           <div class="situation-card">
             <h3>📖 情境</h3>
@@ -331,8 +384,8 @@
       return `
         <div class="game-page challenger-final-page">
           <div class="page-header">
-            <h2>🚀 挑战者号发射决策 · 终局</h2>
-            <div class="progress">10 / 10 回合完成</div>
+            <h2>${this._escape(this.scenarioConfig.label)} · 终局</h2>
+            <div class="progress">${this.totalTurns} / ${this.totalTurns} 回合完成</div>
           </div>
           <div class="outcome-card outcome-final">
             <pre class="feedback-pre">${this._escape(this.lastFeedback || '游戏结束 — 请查看上方完整反馈。')}</pre>
