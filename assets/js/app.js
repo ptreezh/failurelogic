@@ -718,6 +718,32 @@ class NavigationManager {
           reputation: 50,
           turn: 1
         }
+      },
+      // Challenger 10-turn scenario (added for offline/fallback use)
+      {
+        id: "challenger-launch",
+        name: "挑战者号发射决策",
+        description: "1986年1月，挑战者号航天飞机计划发射。工程师们对低温下O型密封圈的性能提出严重担忧，但发射日期面临巨大压力：在10回合内平衡工程安全、预算、媒体关注和政治承诺。",
+        fullDescription: "10回合多状态模拟。每个决定都影响后续的信息流、信任度和风险敞口。第6回合会基于你的决策模式揭示认知偏差。",
+        difficulty: "advanced",
+        estimatedDuration: 30,
+        targetPatterns: ["confirmation_bias", "time_delay_blindness", "single_target_optimization", "side_effect_neglect", "lack_of_self_criticism"],
+        decisionPattern: "Dörner 8种失败模式",
+        duration: "30-45分钟",
+        category: "历史案例·深度",
+        thumbnail: "/assets/images/challenger.jpg",
+        initialState: {
+          temperature_forecast_f: 36,
+          engineer_confidence: 75,
+          schedule_pressure: 60,
+          budget_used_pct: 87,
+          public_attention: 85,
+          team_morale: 50,
+          accepted_risks_count: 0,
+          ignored_warnings_count: 0,
+          risk_acknowledged_unresolved: 0,
+          turn: 1
+        }
       }
     ];
   }

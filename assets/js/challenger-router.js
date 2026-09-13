@@ -402,11 +402,15 @@
     async continueToNextTurn() {
       const container = document.getElementById('game-container');
       if (!container) return;
-      const nextTurn = Math.min(this.lastTurnNumber + 1, TOTAL_TURNS);
-      if (nextTurn > TOTAL_TURNS) {
+      // After T10 (turnNumber=10), show final page directly — there is no T11.
+      // The outcome feedback shown above is rendered inside the decision page;
+      // clicking "继续 →" takes the player to the final outcome view.
+      if (this.lastTurnNumber >= TOTAL_TURNS) {
         container.innerHTML = this._renderFinalPage();
+        ChallengerRouter.clearSnapshot(this.gameId);
         return;
       }
+      const nextTurn = this.lastTurnNumber + 1;
       this.selectedOption = null;
       await this._loadStep(nextTurn);
       container.innerHTML = this._renderDecisionView(nextTurn);
