@@ -210,7 +210,7 @@ class NavigationManager {
 
   static getMockScenarios() {
     return [
-      // Challenger 10-turn scenario (only Dörner-aligned deep scenario)
+      // 2 Dörner-aligned deep scenarios
       {
         id: "challenger-launch",
         name: "挑战者号发射决策",
@@ -233,6 +233,31 @@ class NavigationManager {
           accepted_risks_count: 0,
           ignored_warnings_count: 0,
           risk_acknowledged_unresolved: 0,
+          turn: 1
+        }
+      },
+      {
+        id: "climate-change-policy",
+        name: "全球气候政策十年",
+        description: "2025-2035年，作为IPCC执行主任，在10个关键决策点中平衡经济增速、公众支持、国际信任与代际气候正义。基于IPCC AR6 (2023)、Keeling曲线、Paris Accord真实数据。",
+        fullDescription: "10回合多状态模拟。9个状态变量(升温/CO2/GDP/可再生/气候正义/公众支持/被压制科学家/国际信任/临界点距离)，Dörner F1-F8 全覆盖，4 个结局分支(1.5°C/2°C/3°C/协调崩溃)。",
+        difficulty: "advanced",
+        estimatedDuration: 30,
+        targetPatterns: ["F1_nonlinear", "F2_time_delay", "F3_self_reference", "F4_side_effects", "F5_single_target", "F6_confirmation", "F7_self_criticism", "F8_regulation_lag"],
+        decisionPattern: "Dörner 8 模式·气候治理",
+        duration: "30-45分钟",
+        category: "重大公共决策·深度",
+        thumbnail: "/assets/images/climate.jpg",
+        initialState: {
+          global_avg_temp_c: 1.55,
+          co2_ppm: 424,
+          gdp_growth_pct: 3.2,
+          renewable_share_pct: 30,
+          climate_justice_index: 45,
+          public_support_pct: 62,
+          whistleblower_silenced_count: 0,
+          international_trust: 55,
+          tipping_point_proximity: 27,
           turn: 1
         }
       }
@@ -8556,6 +8581,9 @@ class GameManager {
     } else if (scenarioId === 'challenger-launch') {
       this.startChallengerGame();
       return;
+    } else if (scenarioId === 'climate-change-policy') {
+      this.startClimateChangeGame();
+      return;
     }
 
     // Get the selected difficulty from user preferences
@@ -11728,51 +11756,41 @@ class GameManager {
     Log.log('✅ Challenger game initialized, gameId=', gameId);
   }
 
-  static startClimateChangeGame() {
+  // Climate-change: data-driven 10-turn Dörner deep dive (v1.0). Reuses
+  // ChallengerRouter via the scenario registry in challenger-router.js.
+  // Mirrors startChallengerGame() but routes to the climate scenario.
+  static async startClimateChangeGame() {
     Log.log('🌍 Starting Climate Change game...');
-
-    // Initialize game state for climate change scenario
-    const initialState = {
-      satisfaction: 50,
-      resources: 100000,
-      reputation: 50,
-      emission_reduction: 10,
-      international_cooperation: 30,
-      technological_advancement: 25,
-      climate_risk: 70,
-      week_number: 1,
-      turn_number: 1,
-      decision_history: [],
-      pending_effects: []
-    };
-
-    // Create page router
-    const router = new ClimateChangePageRouter(initialState);
-
-    // Store router in global scope for page interactions
-    window.climateChangeRouter = router;
-
-    // Store session
-    AppState.gameSession = {
-      gameId: 'climate-change-' + Date.now(),
-      scenarioId: 'climate-change-policy',
-      difficulty: 'advanced',
-      status: 'active',
-      gameState: initialState,
-      currentTurn: 1,
-      decision_history: [],
-      patterns: []
-    };
-
     this.showGameModal();
 
-    // Render the start page
-    const container = document.getElementById('game-container');
-    if (container) {
-      container.innerHTML = router.renderPage();
-    }
+    try {
+      const sessionData = await ApiService.scenarios.createGameSession('climate-change-policy', 'beginner');
+      const gameId = sessionData.gameId || sessionData.game_id;
+      AppState.gameSession = {
+        gameId: gameId,
+        scenarioId: 'climate-change-policy',
+        difficulty: 'beginner',
+        status: 'active',
+        gameState: sessionData.gameState || sessionData.game_state || {},
+        currentTurn: 1,
+        decision_history: []
+      };
 
-    Log.log('✅ Climate Change game initialized');
+      const router = new ChallengerRouter(
+        AppState.gameSession.gameState || {},
+        { gameId: gameId, scenarioId: 'climate-change-policy' }
+      );
+      window.challengerRouter = router;
+
+      const container = document.getElementById('game-container');
+      if (container) {
+        container.innerHTML = await router.renderStartPage();
+      }
+      Log.log('✅ Climate Change game initialized, gameId=', gameId);
+    } catch (e) {
+      Log.error('[climate-change] session create failed:', e);
+      this.displayError('会话创建失败，请稍后重试');
+    }
   }
 
   static startPersonalFinanceGame() {

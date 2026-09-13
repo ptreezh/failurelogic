@@ -1,5 +1,5 @@
 // Service Worker for Failure Logic Application
-const CACHE_NAME = 'failure-logic-v1.0.2';
+const CACHE_NAME = 'failure-logic-v1.0.3';
 const urlsToCache = [
   '/',
   '/index.html',

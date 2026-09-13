@@ -103,9 +103,24 @@ BASE_SCENARIOS = [
         "advancedChallenges": [],
         "scenario_file": "scenarios/challenger_launch.json"
     },
+    {
+        "id": "climate-change-policy",
+        "name": "全球气候政策十年",
+        "description": "2025-2035年，作为IPCC执行主任，在10个关键决策点中平衡经济增速、公众支持、国际信任与代际气候正义。基于IPCC AR6 (2023)、Keeling曲线、Paris Accord真实数据。",
+        "fullDescription": "10回合多状态模拟。9个状态变量(升温/CO2/GDP/可再生/气候正义/公众支持/被压制科学家/国际信任/临界点距离),Dörner F1-F8 全覆盖,4 个结局分支(1.5°C/2°C/3°C/协调崩溃)。",
+        "difficulty": "advanced",
+        "estimatedDuration": 45,
+        "targetPatterns": ["F1_nonlinear", "F2_time_delay", "F3_self_reference", "F4_side_effects", "F5_single_target", "F6_confirmation", "F7_self_criticism", "F8_regulation_lag"],
+        "decisionPattern": "Dörner 8 模式·气候治理",
+        "duration": "30-45分钟",
+        "category": "重大公共决策",
+        "thumbnail": "/assets/images/climate.jpg",
+        "advancedChallenges": [],
+        "scenario_file": "scenarios/climate_change.json"
+    },
 ]
 # 合并所有场景
-# 仅保留 challenger-launch(对齐 Dörner 教育目标的深度场景)
+# 仅保留对齐 Dörner 教育目标的 2 个深度场景:challenger-launch + climate-change-policy
 # 其余 30 个场景数据文件已归档到 archived-scenarios/data-files/
 SCENARIOS = BASE_SCENARIOS
 print(f"🎯 场景总数: {len(SCENARIOS)}")
@@ -479,6 +494,9 @@ async def execute_turn(game_id: str, decisions: Dict[str, Any]):
     if scenario_id == "challenger-launch":
         from logic.challenger_scenario import generate_feedback_for_turn as _chal_fb
         feedback = _chal_fb(new_state, turn_number)
+    elif scenario_id == "climate-change-policy":
+        from logic.climate_scenario import generate_feedback_for_turn as _climate_fb
+        feedback = _climate_fb(new_state, turn_number)
     elif turn_number <= 2:
         # 早期回合：制造困惑时刻
         feedback = generate_confusion_feedback(

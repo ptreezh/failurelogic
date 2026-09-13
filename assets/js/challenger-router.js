@@ -1,28 +1,74 @@
-/* challenger-router.js — Challenger scenario UI (10-turn Dörner deep dive).
+/* challenger-router.js — Dörner-style scenario UI (10-turn deep dive).
  *
- * Wires GameManager.startChallengerGame() into the existing app:
- *   - startScenario('challenger-launch') → startChallengerGame (wired in app.js)
- *   - get step from GET /scenarios/{scenario_id}/step/{turn}
- *   - submit turn to POST /scenarios/{game_id}/turn with {option, justification}
- *   - render state grid + feedback + reveal/outcome cards
- *   - localStorage snapshot after every turn (crash recovery)
+ * Single router handles BOTH deep-aligned scenarios:
+ *   - challenger-launch  (challenger-router.js handles via SCENARIO_ID)
+ *   - climate-change-policy  (also routed here via startChallengerGame)
  *
- * Per docs/challenger-frontend-spec.md (B1/B2/B3 done; this is steps 1-9).
+ * State variable mapping is parameterized per-scenario so the same UI
+ * renders different fields:
+ *   - challenger: engineer_confidence, schedule_pressure, ...
+ *   - climate:   global_avg_temp_c, co2_ppm, renewable_share_pct, ...
+ *
+ * Per docs/challenger-retrospective.md §3.3: ChallengerRouter is reused;
+ * only the SCENARIO_ID and state-field mapping vary. So we use a small
+ * registry instead of two separate router classes.
  */
 
 (function () {
   'use strict';
 
-  const SCENARIO_ID = 'challenger-launch';
+  // Registry of supported scenarios — add new deep scenarios here.
+  const SCENARIOS = {
+    'challenger-launch': {
+      id: 'challenger-launch',
+      label: '挑战者号发射决策',
+      totalTurns: 10,
+      stateFields: [
+        { id: 'state-temperature', key: 'temperature_forecast_f', label: '🌡️ 预报温度 (°F)' },
+        { id: 'state-engineer-confidence', key: 'engineer_confidence', label: '👷 工程师信心' },
+        { id: 'state-schedule-pressure', key: 'schedule_pressure', label: '📅 进度压力' },
+        { id: 'state-budget', key: 'budget_used_pct', label: '💰 预算占比 %' },
+        { id: 'state-attention', key: 'public_attention', label: '📺 公众关注' },
+        { id: 'state-morale', key: 'team_morale', label: '🤝 团队士气' },
+        { id: 'state-accepted-risks', key: 'accepted_risks_count', label: '⚠️ 接受风险' },
+        { id: 'state-ignored-warnings', key: 'ignored_warnings_count', label: '🔇 忽视警告' },
+        { id: 'state-unresolved', key: 'risk_acknowledged_unresolved', label: '❓ 未解决风险' },
+      ],
+    },
+    'climate-change-policy': {
+      id: 'climate-change-policy',
+      label: '全球气候政策十年',
+      totalTurns: 10,
+      stateFields: [
+        { id: 'state-temperature', key: 'global_avg_temp_c', label: '🌡️ 全球升温 (°C)' },
+        { id: 'state-co2', key: 'co2_ppm', label: '💨 CO2浓度 (ppm)' },
+        { id: 'state-gdp', key: 'gdp_growth_pct', label: '📈 GDP增长 (%)' },
+        { id: 'state-renewable', key: 'renewable_share_pct', label: '⚡ 可再生 (%)' },
+        { id: 'state-justice', key: 'climate_justice_index', label: '⚖️ 气候正义' },
+        { id: 'state-support', key: 'public_support_pct', label: '👥 公众支持 (%)' },
+        { id: 'state-silenced', key: 'whistleblower_silenced_count', label: '🔇 被压制科学家' },
+        { id: 'state-trust', key: 'international_trust', label: '🤝 国际信任' },
+        { id: 'state-tipping', key: 'tipping_point_proximity', label: '⏰ 临界点距离 (%)' },
+      ],
+    },
+  };
+
+  const DEFAULT_SCENARIO_ID = 'challenger-launch';
   const SNAPSHOT_PREFIX = 'challenge-snapshot-';
-  const TOTAL_TURNS = 10;
   const JUSTIFICATION_MAX = 200;
 
   class ChallengerRouter {
     constructor(gameState, options) {
       this.gameState = gameState || {};
       this.gameId = (options && options.gameId) || null;
-      this.scenarioId = SCENARIO_ID;
+      // Allow override via options.scenarioId; default to challenger.
+      this.scenarioId = (options && options.scenarioId) || DEFAULT_SCENARIO_ID;
+      if (!SCENARIOS[this.scenarioId]) {
+        console.warn(`Unknown scenario "${this.scenarioId}", falling back to default`);
+        this.scenarioId = DEFAULT_SCENARIO_ID;
+      }
+      this.scenarioConfig = SCENARIOS[this.scenarioId];
+      this.totalTurns = this.scenarioConfig.totalTurns;
       this.currentStep = null;          // latest fetched step (next turn to play)
       this.previousState = null;        // for change-detection flash
       this.selectedOption = null;       // 'A'|'B'|'C'|'D'
@@ -39,8 +85,8 @@
 
     async renderAfterTurn() {
       // After a turn submission, load the next step and render decision view.
-      const nextTurn = Math.min(this.lastTurnNumber + 1, TOTAL_TURNS);
-      if (nextTurn > TOTAL_TURNS) {
+      const nextTurn = Math.min(this.lastTurnNumber + 1, this.totalTurns);
+      if (nextTurn > this.totalTurns) {
         return this._renderFinalPage();
       }
       await this._loadStep(nextTurn);
@@ -125,7 +171,7 @@
         if (key && key.startsWith(SNAPSHOT_PREFIX)) {
           try {
             const snap = JSON.parse(localStorage.getItem(key));
-            if (snap && snap.scenarioId === SCENARIO_ID && snap.turn > 0) {
+            if (snap && snap.scenarioId === this.scenarioId && snap.turn > 0) {
               out.push(snap);
             }
           } catch (e) {}
@@ -136,18 +182,10 @@
 
     // ===== Rendering =====
     _stateKeyMap() {
-      // JS state grid id ↔ game_state key. State grid lives in app.js HTML.
-      return {
-        'state-temperature': 'temperature_forecast_f',
-        'state-engineer-confidence': 'engineer_confidence',
-        'state-schedule-pressure': 'schedule_pressure',
-        'state-budget': 'budget_used_pct',
-        'state-attention': 'public_attention',
-        'state-morale': 'team_morale',
-        'state-accepted-risks': 'accepted_risks_count',
-        'state-ignored-warnings': 'ignored_warnings_count',
-        'state-unresolved': 'risk_acknowledged_unresolved'
-      };
+      // Built from this.scenarioConfig.stateFields (parameterized per scenario).
+      const map = {};
+      this.scenarioConfig.stateFields.forEach((f) => { map[f.id] = f.key; });
+      return map;
     }
 
     _applyStateChangeFlash(prev, next) {
@@ -194,7 +232,7 @@
         <div class="game-page challenger-decision-page">
           <div class="page-header">
             <h2>🚀 挑战者号发射决策 · 第 ${turnNumber} 回合</h2>
-            <div class="progress">回合 ${turnNumber} / ${TOTAL_TURNS} · 阶段: ${phase}</div>
+            <div class="progress">回合 ${turnNumber} / ${this.totalTurns} · 阶段: ${phase}</div>
           </div>
 
           <div class="challenger-state-grid" id="challenger-state-grid" style="display: grid;">
@@ -238,26 +276,16 @@
     }
 
     _renderStateGrid() {
-      const map = this._stateKeyMap();
       const state = this.gameState || {};
-      const items = [
-        { id: 'state-temperature', label: '🌡️ 预报温度 (°F)', val: state.temperature_forecast_f, hint: '历史最低: 53°F' },
-        { id: 'state-engineer-confidence', label: '👷 工程师信心', val: state.engineer_confidence },
-        { id: 'state-schedule-pressure', label: '📅 进度压力', val: state.schedule_pressure },
-        { id: 'state-budget', label: '💰 预算占比 %', val: state.budget_used_pct },
-        { id: 'state-attention', label: '📺 公众关注', val: state.public_attention },
-        { id: 'state-morale', label: '🤝 团队士气', val: state.team_morale },
-        { id: 'state-accepted-risks', label: '⚠️ 接受风险', val: state.accepted_risks_count },
-        { id: 'state-ignored-warnings', label: '🔇 忽视警告', val: state.ignored_warnings_count },
-        { id: 'state-unresolved', label: '❓ 未解决风险', val: state.risk_acknowledged_unresolved }
-      ];
+      const items = this.scenarioConfig.stateFields.map((f) => ({
+        id: f.id, label: f.label, val: state[f.key]
+      }));
       return items.map((it) => {
         const val = (it.val === undefined || it.val === null) ? '—' : it.val;
         return `
           <div class="state-item">
             <span class="state-label">${it.label}</span>
             <span class="state-value" id="${it.id}">${val}</span>
-            ${it.hint ? `<span class="state-hint">${it.hint}</span>` : ''}
           </div>
         `;
       }).join('');
@@ -405,7 +433,7 @@
       // After T10 (turnNumber=10), show final page directly — there is no T11.
       // The outcome feedback shown above is rendered inside the decision page;
       // clicking "继续 →" takes the player to the final outcome view.
-      if (this.lastTurnNumber >= TOTAL_TURNS) {
+      if (this.lastTurnNumber >= this.totalTurns) {
         container.innerHTML = this._renderFinalPage();
         ChallengerRouter.clearSnapshot(this.gameId);
         return;
