@@ -80,103 +80,14 @@ import json
 # 基础场景定义
 # - 3 shallow stubs from earlier (kept for backward compat — see audit)
 # - 1 deep scenario: Challenger launch decision (Dörner-style, 10 turns)
+# 基础场景定义
+# Per audit 2026-09-13: 30 prior scenarios did not align with Dörner's
+# "Logic of Failure" educational goals (shallow stubs, no Dörner mode
+# detection, no progressive reveal, no multi-outcome branches). Only
+# challenger-launch has the deep data-driven structure to teach all 8
+# failure modes. Prior data files archived under
+# archived-scenarios/data-files/ for reference.
 BASE_SCENARIOS = [
-    {
-        "id": "coffee-shop-nonlinear-effects",
-        "name": "咖啡店非线性效应",
-        "description": "非线性效应体验场景",
-        "fullDescription": "在这个场景中，您将管理一家咖啡店，体验非线性效应在复杂商业环境中的影响。在复杂的系统中，原因和结果之间往往不是简单的线性关系，而是存在非线性效应，这需要我们采用更复杂的思维模式来理解和应对。",
-        "difficulty": "beginner",
-        "estimatedDuration": 15,
-        "targetPatterns": ["nonlinear_effects"],
-        "decisionPattern": "非线性效应",
-        "duration": "15-20分钟",
-        "category": "商业决策",
-        "thumbnail": "/assets/images/coffee-shop.jpg",
-        "advancedChallenges": [
-            {
-                "title": "供应链网络效应",
-                "description": "处理供应商网络扩展中的复杂效应",
-                "difficulty": "intermediate",
-                "decisionPatterns": ["exponential_misconception", "nonlinear_effects"],
-            },
-            {
-                "title": "复杂系统管理",
-                "description": "管理多变量商业生态系统的复杂性",
-                "difficulty": "advanced",
-                "decisionPatterns": [
-                    "complex_system_misunderstanding",
-                    "cascading_effect_blindness",
-                ],
-            },
-        ],
-    },
-    {
-        "id": "relationship-time-delay",
-        "name": "恋爱关系时间延迟",
-        "description": "时间延迟效应场景",
-        "fullDescription": "在恋爱关系中体验时间延迟对决策的影响。每个决策的效果会在几回合后显现。在复杂关系中，行动和结果之间往往存在时间差，这需要我们有耐心和长远视角。",
-        "difficulty": "intermediate",
-        "estimatedDuration": 20,
-        "targetPatterns": ["time_delay_pattern"],
-        "decisionPattern": "时间延迟",
-        "duration": "20-25分钟",
-        "category": "人际关系",
-        "thumbnail": "/assets/images/relationship.jpg",
-        "advancedChallenges": [
-            {
-                "title": "长期关系复利效应",
-                "description": "理解关系投资的长期复利增长模式",
-                "difficulty": "intermediate",
-                "decisionPatterns": [
-                    "compound_interest_misunderstanding",
-                    "short_term_bias",
-                ],
-            },
-            {
-                "title": "复杂关系网络",
-                "description": "处理家庭和社交网络的复杂动态",
-                "difficulty": "advanced",
-                "decisionPatterns": [
-                    "complex_system_misunderstanding",
-                    "network_effect_blindness",
-                ],
-            },
-        ],
-    },
-    {
-        "id": "investment-information-processing",
-        "name": "投资信息处理",
-        "description": "信息处理模式场景",
-        "fullDescription": "在投资决策中体验如何处理不同类型的信息，以及信息处理方式如何影响我们的风险判断。在复杂决策中，我们需要学会平衡不同来源的信息，避免只关注支持我们预设观点的信息。",
-        "difficulty": "advanced",
-        "estimatedDuration": 25,
-        "targetPatterns": ["information_processing"],
-        "decisionPattern": "信息处理模式",
-        "duration": "25-30分钟",
-        "category": "金融决策",
-        "thumbnail": "/assets/images/investment.jpg",
-        "advancedChallenges": [
-            {
-                "title": "通胀调整投资",
-                "description": "考虑通胀影响的长期投资复利效应",
-                "difficulty": "intermediate",
-                "decisionPatterns": [
-                    "inflation_adjustment",
-                    "compound_interest_understanding",
-                ],
-            },
-            {
-                "title": "复杂金融系统",
-                "description": "处理多变量金融市场系统风险",
-                "difficulty": "advanced",
-                "decisionPatterns": [
-                    "financial_system_complexity",
-                    "correlation_analysis",
-                ],
-            },
-        ],
-    },
     {
         "id": "challenger-launch",
         "name": "挑战者号发射决策",
@@ -193,92 +104,10 @@ BASE_SCENARIOS = [
         "scenario_file": "scenarios/challenger_launch.json"
     },
 ]
-
-def load_additional_scenarios():
-    """加载额外的游戏场景、高级游戏和历史案例"""
-    data_dir = os.path.join(os.path.dirname(__file__), 'data')
-    additional = []
-
-    # 加载游戏场景
-    try:
-        game_file = os.path.join(data_dir, 'game_scenarios.json')
-        if os.path.exists(game_file):
-            with open(game_file, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                for scenario in data.get('game_scenarios', []):
-                    additional.append({
-                        "id": scenario.get("scenarioId"),
-                        "name": scenario.get("title"),
-                        "description": scenario.get("description"),
-                        "fullDescription": scenario.get("description"),
-                        "difficulty": "intermediate",
-                        "estimatedDuration": 30,
-                        "targetPatterns": scenario.get("analysis", {}).get("decisionPatternsTested", []),
-                        "decisionPattern": ",".join(scenario.get("analysis", {}).get("decisionPatternsTested", [])),
-                        "duration": "30-45分钟",
-                        "category": "商业决策",
-                        "thumbnail": "",
-                        "advancedChallenges": []
-                    })
-            print(f"✅ 加载了 {len(data.get('game_scenarios', []))} 个游戏场景")
-    except Exception as e:
-        print(f"❌ 加载游戏场景失败: {e}")
-
-    # 加载高级游戏场景
-    try:
-        advanced_file = os.path.join(data_dir, 'advanced_game_scenarios.json')
-        if os.path.exists(advanced_file):
-            with open(advanced_file, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                for scenario in data.get('game_scenarios', []):
-                    additional.append({
-                        "id": scenario.get("scenarioId"),
-                        "name": scenario.get("title"),
-                        "description": scenario.get("description"),
-                        "fullDescription": scenario.get("description"),
-                        "difficulty": "advanced",
-                        "estimatedDuration": 60,
-                        "targetPatterns": scenario.get("analysis", {}).get("decisionPatternsTested", []),
-                        "decisionPattern": ",".join(scenario.get("analysis", {}).get("decisionPatternsTested", [])),
-                        "duration": "60-90分钟",
-                        "category": "高级决策",
-                        "thumbnail": "",
-                        "advancedChallenges": []
-                    })
-            print(f"✅ 加载了 {len(data.get('game_scenarios', []))} 个高级游戏场景")
-    except Exception as e:
-        print(f"❌ 加载高级游戏场景失败: {e}")
-
-    # 加载历史案例
-    try:
-        historical_file = os.path.join(data_dir, 'historical_cases.json')
-        if os.path.exists(historical_file):
-            with open(historical_file, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                for case in data.get('historical_cases', []):
-                    additional.append({
-                        "id": case.get("scenarioId"),
-                        "name": case.get("title"),
-                        "description": case.get("description"),
-                        "fullDescription": case.get("description"),
-                        "difficulty": "historical",
-                        "estimatedDuration": 20,
-                        "targetBiases": [],
-                        "cognitiveBias": "历史案例分析",
-                        "duration": "20-30分钟",
-                        "category": "历史案例",
-                        "thumbnail": "",
-                        "advancedChallenges": []
-                    })
-            print(f"✅ 加载了 {len(data.get('historical_cases', []))} 个历史案例")
-    except Exception as e:
-        print(f"❌ 加载历史案例失败: {e}")
-
-    print(f"📊 总共加载了 {len(additional)} 个额外场景")
-    return additional
-
 # 合并所有场景
-SCENARIOS = BASE_SCENARIOS + load_additional_scenarios()
+# 仅保留 challenger-launch(对齐 Dörner 教育目标的深度场景)
+# 其余 30 个场景数据文件已归档到 archived-scenarios/data-files/
+SCENARIOS = BASE_SCENARIOS
 print(f"🎯 场景总数: {len(SCENARIOS)}")
 
 # 游戏会话存储
