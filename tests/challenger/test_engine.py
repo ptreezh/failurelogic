@@ -458,3 +458,83 @@ def state_with_d_choice():
     s = get_initial_state()
     s["turn_number"] = 1
     return s
+
+
+# ============================================================================
+# Coverage matrix — added 2026-09-14 with deep-scenario coverage sweep.
+#
+# Challenger has NO F1_nonlinear detector (F1 is narrative-only in
+# challenger_launch.json). All other F-numbers ARE reachable. Outcome routing
+# is DATA-DRIVEN via T10 options' trigger_outcome field — there is no
+# get_outcome_key() helper, so _read_outcome() reconstructs the result.
+# ============================================================================
+
+
+def _read_outcome(state):
+    """Return the outcome key Challenger would render, by reading state."""
+    last_opt = state.get("last_chosen_option")
+    if not last_opt:
+        return None
+    step = get_step(10)
+    if not step:
+        return None
+    for opt in step.get("options", []):
+        if opt.get("id") == last_opt:
+            return opt.get("trigger_outcome")
+    return None
+
+
+def test_F1_nonlinear_unreachable(fresh_state):
+    """Documents known engine gap: no F1 detector in challenger_scenario.py."""
+    # 10-turn risky playthrough that triggers everything else
+    for c in ["A"] * 9 + ["A"]:
+        apply_turn(fresh_state, c)
+        fresh_state["turn_number"] += 1
+    patterns = {p["pattern_type"] for p in detect_patterns(fresh_state)}
+    assert "F1_nonlinear" not in patterns, (
+        f"F1 unexpectedly fires — gap closed? patterns={patterns}"
+    )
+
+
+@pytest.mark.parametrize(
+    "t10_choice,expected_outcome",
+    [
+        pytest.param("A", "launch_disaster", id="launch_disaster"),
+        pytest.param("B", "launch_dodged", id="launch_dodged"),
+        pytest.param("C", "last_minute_evaluation", id="last_minute_evaluation"),
+        pytest.param("D", "infinite_delay", id="infinite_delay"),
+    ],
+)
+def test_each_outcome_reachable(t10_choice, expected_outcome, fresh_state):
+    """Verify all 4 Challenger outcomes can be reached via T10 option.
+
+    Note: Challenger's get_summary() does NOT include an `outcome` key (unlike
+    Climate/Enron). The outcome is rendered by _generate_final_outcome_feedback
+    via state.last_chosen_option. We rely on _read_outcome() for the assertion.
+    """
+    for c in ["A"] * 9:  # T1..T9 — choice here is irrelevant for outcome
+        apply_turn(fresh_state, c)
+        fresh_state["turn_number"] += 1
+    apply_turn(fresh_state, t10_choice)
+    fresh_state["turn_number"] += 1
+    assert _read_outcome(fresh_state) == expected_outcome
+    # Sanity: summary is non-empty and has canonical keys
+    summary = get_summary(fresh_state)
+    assert {"scenario_id", "title", "dorner_lessons"} <= summary.keys(), (
+        f"summary keys={list(summary.keys())}"
+    )
+
+
+def test_existing_detectors_still_reachable(fresh_state):
+    """Regression: at least one of the 7 detectors already wired into Challenger
+    fires on a homogeneous 10-turn playthrough.
+
+    Note: F8 regulation_lag requires decision_history populated by turn_executor
+    (not by apply_turn alone) — already covered by the existing
+    test_F8_regulation_lag_triggers_on_oscillation synthetic-state test.
+    """
+    for c in ["B"] * 10:
+        apply_turn(fresh_state, c)
+        fresh_state["turn_number"] += 1
+    fired = {p["pattern_type"] for p in detect_patterns(fresh_state)}
+    assert "confirmation_bias" in fired, f"F6 confirmation_bias not fired; fired={fired}"
