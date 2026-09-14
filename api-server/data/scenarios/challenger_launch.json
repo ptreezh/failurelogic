@@ -1062,6 +1062,36 @@
         "如果你不能让自己的行为改变，知道这些有什么用？",
         "你今天的选择，会让明天的你成为更好的决策者吗？"
       ]
+    },
+    "nonlinear_threshold": {
+      "dorner_concept": "非线性阈值",
+      "evidence_template": "预报温度 {temperature}°F 已进入 O 型环临界区（≤32°F）。你仍忽视 {ignored_warnings} 条工程警告。Boisjoly 1985 备忘录:温度每下降 10°F,失效概率不是×2,而是指数级放大。",
+      "reflection_questions": [
+        "如果风险不是线性增长,而是临界点之后指数级爆发,你的模型对吗?",
+        "在临界点附近做\"安全边际\"评估,1°F 的差距代表多少额外风险?",
+        "如果科学家无法证明非线性,你会推迟还是按时发射?"
+      ],
+      "trigger": "temperature_forecast_f <= 32 AND ignored_warnings_count >= 1"
+    },
+    "self_reference": {
+      "dorner_concept": "自指反馈",
+      "evidence_template": "你的每一个公开声明都反过来影响了 NASA 管理层的姿态:{public_attention}% 公众关注 + {schedule_pressure}% 进度压力,系统响应了 {reactions} 次,但没有稳定。",
+      "reflection_questions": [
+        "你的声明会如何改变对方的行为?",
+        "如果你公开\"推迟\",媒体会怎么解读?反过来呢?",
+        "你是在告诉科学家\"我在听\",还是在真正更新你的模型?"
+      ],
+      "trigger": "public_attention >= 80 AND (schedule_pressure >= 50 OR engineer_confidence <= 50)"
+    },
+    "regulation_lag": {
+      "dorner_concept": "调节滞后",
+      "evidence_template": "你在最近 {recent_turns} 个决策中切换了 {oscillations} 次方向,从\"安全优先\"到\"按时发射\"反复振荡,但系统真实状态没有改变。Dörner:振荡的控制者比一致的保守者表现更差,因为系统来不及稳定。",
+      "reflection_questions": [
+        "你的最近几个决策是在\"修正\"前一个,还是在\"回应\"新信息?",
+        "如果系统对你的每次纠正都反应滞后 2-3 回合,你怎么避免过冲?",
+        "你的控制是\"前瞻\"的,还是\"追着系统跑\"的?"
+      ],
+      "trigger": "decision_history 最近 5 个中 ≥3 个 safe<->risk 方向切换,且 ≥4 个非中性权重"
     }
   },
   "dorner_quotes": {

@@ -463,10 +463,11 @@ def state_with_d_choice():
 # ============================================================================
 # Coverage matrix — added 2026-09-14 with deep-scenario coverage sweep.
 #
-# Challenger has NO F1_nonlinear detector (F1 is narrative-only in
-# challenger_launch.json). All other F-numbers ARE reachable. Outcome routing
-# is DATA-DRIVEN via T10 options' trigger_outcome field — there is no
-# get_outcome_key() helper, so _read_outcome() reconstructs the result.
+# Challenger F1_nonlinear detector is implemented as _detect_nonlinear_threshold:
+# fires when temperature_forecast_f <= 32 AND ignored_warnings_count >= 1.
+# All 7 other F-numbers are also reachable. Outcome routing is DATA-DRIVEN via
+# T10 options' trigger_outcome field — there is no get_outcome_key() helper,
+# so _read_outcome() reconstructs the result.
 # ============================================================================
 
 
@@ -484,15 +485,17 @@ def _read_outcome(state):
     return None
 
 
-def test_F1_nonlinear_unreachable(fresh_state):
-    """Documents known engine gap: no F1 detector in challenger_scenario.py."""
-    # 10-turn risky playthrough that triggers everything else
-    for c in ["A"] * 9 + ["A"]:
+def test_F1_nonlinear_reachable(fresh_state):
+    """F1 fires on a 10-turn all-D sequence: temperature drops to 26°F (≤32)
+    AND ignored_warnings_count reaches 5 (≥1)."""
+    for c in ["D"] * 10:
         apply_turn(fresh_state, c)
         fresh_state["turn_number"] += 1
     patterns = {p["pattern_type"] for p in detect_patterns(fresh_state)}
-    assert "F1_nonlinear" not in patterns, (
-        f"F1 unexpectedly fires — gap closed? patterns={patterns}"
+    assert "nonlinear_threshold" in patterns, (
+        f"F1 nonlinear_threshold not fired; fired={patterns}; "
+        f"temp={fresh_state.get('temperature_forecast_f')}, "
+        f"ignored={fresh_state.get('ignored_warnings_count')}"
     )
 
 

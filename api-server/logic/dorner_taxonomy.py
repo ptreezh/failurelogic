@@ -15,7 +15,8 @@ from typing import Dict, Set
 
 
 PATTERN_TO_FNUMBER: Dict[str, int] = {
-    # Challenger descriptive names (api-server/logic/challenger_scenario.py:229-236)
+    # Challenger descriptive names (api-server/logic/challenger_scenario.py)
+    "nonlinear_threshold": 1,
     "time_delay_blindness": 2,
     "self_reference": 3,
     "side_effect_neglect": 4,

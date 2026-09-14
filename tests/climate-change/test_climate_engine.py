@@ -62,10 +62,13 @@ def fired_fnumbers(state: Dict[str, Any]) -> Set[int]:
     return patterns_to_fnumbers(detect_patterns(state))
 
 
-# Empirical sequences (validated by probing — see commit message for derivation)
+# Empirical sequences (validated by probing — thresholds F1/F5 lowered to 40
+# in api-server/logic/climate_scenario.py to match F8 — see commit log)
+SEQ_F1_NONLINEAR = ["C"] * 10  # tipping=42 (T7C +15), threshold ≥ 40
 SEQ_F2_TIME_DELAY = ["D"] * 10  # neutral weight chain → F2
 SEQ_F3_SELF_REFERENCE = ["B", "A", "C", "D", "B", "C", "D", "B", "C", "D"]  # trust drop
 SEQ_F4_SIDE_EFFECTS = ["C"] * 10  # cj drops to 20
+SEQ_F5_SINGLE_TARGET = ["B", "A", "B", "A", "B", "A", "C", "B", "A", "B"]  # 6/10 GDP-focused + tipping=42
 SEQ_F6_CONFIRMATION = ["A"] * 10  # streak of 10
 SEQ_F7_SELF_CRITICISM = ["A"] * 10  # silenced → 3
 SEQ_F8_REGULATION_LAG = ["B", "A", "C", "D", "B", "A", "C", "D", "B", "A"]  # tipping=42 + low first 3
@@ -122,9 +125,11 @@ def test_escape_justification_handles_html_and_length() -> None:
 @pytest.mark.parametrize(
     "seq,target_f",
     [
+        pytest.param(SEQ_F1_NONLINEAR, 1, id="F1_nonlinear"),
         pytest.param(SEQ_F2_TIME_DELAY, 2, id="F2_time_delay"),
         pytest.param(SEQ_F3_SELF_REFERENCE, 3, id="F3_self_reference"),
         pytest.param(SEQ_F4_SIDE_EFFECTS, 4, id="F4_side_effects"),
+        pytest.param(SEQ_F5_SINGLE_TARGET, 5, id="F5_single_target"),
         pytest.param(SEQ_F6_CONFIRMATION, 6, id="F6_confirmation"),
         pytest.param(SEQ_F7_SELF_CRITICISM, 7, id="F7_self_criticism"),
         pytest.param(SEQ_F8_REGULATION_LAG, 8, id="F8_regulation_lag"),
@@ -138,30 +143,6 @@ def test_detector_reachable(seq: List[str], target_f: int, fresh_state: Dict[str
         f"cj={fresh_state.get('climate_justice_index')} silenced={fresh_state.get('whistleblower_silenced_count')} "
         f"| fired={sorted(fired)}"
     )
-
-
-@pytest.mark.parametrize(
-    "target_f,reason",
-    [
-        pytest.param(
-            1,
-            "F1_nonlinear threshold requires tipping_point_proximity>=50, but no choice "
-            "in this scenario raises tipping above 42 (verified by 5000-sample random search).",
-            id="F1_nonlinear",
-        ),
-        pytest.param(
-            5,
-            "F5_single_target threshold requires tipping_point_proximity>50 AND >=50% GDP-focused "
-            "choices; same root cause as F1 (tipping ceiling at 42).",
-            id="F5_single_target",
-        ),
-    ],
-)
-def test_detector_unreachable_f1_f5(target_f: int, reason: str, fresh_state: Dict[str, Any]) -> None:
-    """Documents known engine gaps. Should be removed once the engine is fixed."""
-    play_through(fresh_state, ["A"] * 10)
-    fired = fired_fnumbers(fresh_state)
-    assert target_f not in fired, f"F{target_f} unexpectedly fires — gap closed? {reason}"
 
 
 # ============================================================================
@@ -220,14 +201,16 @@ def test_summary_patterns_use_F_numbers(fresh_state: Dict[str, Any]) -> None:
 # ============================================================================
 
 
-def test_at_least_six_of_eight_F_numbers_reachable(fresh_state: Dict[str, Any]) -> None:
-    """F1 & F5 are documented unreachable. The remaining 6 must all fire across
-    the parameterised set."""
+def test_all_eight_F_numbers_reachable() -> None:
+    """After lowering F1/F5 thresholds to 40 (matching F8), all 8 Dörner
+    modes are reachable in climate scenario."""
     seen: Set[int] = set()
     for seq in [
+        SEQ_F1_NONLINEAR,
         SEQ_F2_TIME_DELAY,
         SEQ_F3_SELF_REFERENCE,
         SEQ_F4_SIDE_EFFECTS,
+        SEQ_F5_SINGLE_TARGET,
         SEQ_F6_CONFIRMATION,
         SEQ_F7_SELF_CRITICISM,
         SEQ_F8_REGULATION_LAG,
@@ -236,5 +219,5 @@ def test_at_least_six_of_eight_F_numbers_reachable(fresh_state: Dict[str, Any]) 
         s["turn_number"] = 1
         play_through(s, seq)
         seen |= fired_fnumbers(s)
-    missing = ALL_FNUMBERS - seen - {1, 5}
-    assert not missing, f"reachable F-numbers gap: missing {sorted(missing)}; fired={sorted(seen)}"
+    missing = ALL_FNUMBERS - seen
+    assert not missing, f"Climate should cover all 8 F-modes; missing {sorted(missing)}; fired={sorted(seen)}"

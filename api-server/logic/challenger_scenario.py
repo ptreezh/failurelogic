@@ -234,6 +234,7 @@ def detect_patterns(state: Dict[str, Any]) -> List[Dict[str, Any]]:
     patterns.append(_detect_lack_of_self_criticism(state))
     patterns.append(_detect_self_reference(state))
     patterns.append(_detect_regulation_lag(state))
+    patterns.append(_detect_nonlinear_threshold(state))
 
     # Filter out None results
     return [p for p in patterns if p is not None]
@@ -533,6 +534,43 @@ def _detect_regulation_lag(state: Dict[str, Any]) -> Optional[Dict[str, Any]]:
             ],
         }
     return None
+
+
+def _detect_nonlinear_threshold(state: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """F1 非线性阈值：低温下O型环失效概率是指数级而非线性放大。
+
+    Dörner 论点：操作员假设'风险随温度线性增长'，但 O-ring 在 ≤32°F
+    临界点附近是指数级失效。当玩家在临界点以下仍忽视工程警告、继续
+    按线性思维推进发射时，触发本 detector。
+
+    Detection rule:
+      temperature_forecast_f <= 32  AND  ignored_warnings_count >= 1
+        → 模型未更新到非线性
+    """
+    temp = state.get("temperature_forecast_f")
+    if temp is None:
+        return None
+    if temp > 32:
+        return None  # 还没进非线性区间
+
+    ignored = state.get("ignored_warnings_count", 0)
+    if ignored < 1:
+        return None  # 模型没被挑战过不算
+
+    return {
+        "pattern_type": "nonlinear_threshold",
+        "dorner_concept": "非线性阈值",
+        "evidence": (
+            f"预报温度 {temp}°F 已进入 O 型环临界区(≤32°F)。"
+            f"Boisjoly 1985 备忘录警告:温度每下降 10°F,失效概率不是×2,而是指数级放大。"
+            f"你仍忽视 {ignored} 条工程警告。"
+        ),
+        "reflection_questions": [
+            "如果风险不是线性增长,而是临界点之后指数级爆发,你的模型对吗?",
+            "在临界点附近做'安全边际'评估,1°F 的差距代表多少额外风险?",
+            "如果科学家无法证明非线性,你会推迟还是按时发射?",
+        ],
+    }
 
 
 # Backward compat: old name was detect_pattern
