@@ -110,6 +110,9 @@ Thumbs.db
 tests/test-results.json
 tests/test-results.xml
 tests/test-results/
+tests/test-results-deep/
+tests/frames/
+tests/e2e/deep-coverage-results.json
 
 # Dev process docs
 .qwen/
