@@ -100,12 +100,18 @@ The application uses a **multi-source API fallback system** for reliability:
 
 1. **Development**: `http://localhost:8000`
 2. **Production** (in priority order):
-   - Primary: `https://failure-logic-api.onrender.com` (Render)
-   - Backup: Railway (token expired) → Codespaces (legacy)
+   - Primary: `https://failurelogic.vercel.app` (Vercel — current live backend as of 2026-09-15)
+   - Previously listed: Render (`failure-logic-api.onrender.com` — **suspended**, returns `x-render-routing: no-server`)
+   - Previously listed: Railway (token expired 2026-08)
+   - Previously listed: Codespaces (session-bound, unreliable)
+
+Vercel auto-deploys from `main` via GitHub App integration. Backend entrypoint is `api-server.start:app` (configured in `pyproject.toml` `[tool.vercel]`).
 
 **Key Files:**
 - `assets/js/api-config-manager.js` - API source management with health checks and automatic failover
 - `assets/js/app.js` - Main frontend application logic
+- `pyproject.toml` - `[tool.vercel] entrypoint = "api-server.start:app"` (Vercel entrypoint config)
+- `vercel.json` - `installCommand` points at `api-server/requirements.txt`
 
 ### Backend Structure
 
@@ -213,10 +219,16 @@ The Playwright config starts both:
 - PWA manifest: `manifest.json`
 - Service worker: `sw.js` (for offline support)
 
-### Backend (Render)
+### Backend (Vercel)
 
-- Primary: Render.com at `https://failure-logic-api.onrender.com` (since 2026-08-15)
-- Migrated from Railway (token expired) → Render Blueprint
+- Primary: Vercel at `https://failurelogic.vercel.app` (since 2026-09-15)
+- Auto-deploys from `main` via Vercel GitHub App integration
+- Entrypoint: `api-server.start:app` (configured in `pyproject.toml` `[tool.vercel]`)
+
+History:
+- 2026-08: Render (free tier) — **service suspended** (DNS resolves, `x-render-routing: no-server`); originally mentioned in CLAUDE.md as primary but is dead.
+- Earlier: Railway (token expired 2026-08) — dead.
+- Earlier: Codespaces (session-bound) — unreliable.
 
 The frontend automatically routes API requests via `assets/js/api-config-manager.js`.
 

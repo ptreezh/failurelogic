@@ -48,13 +48,17 @@ class APIConfigManager {
       return ['http://localhost:8000'];
     }
 
-    // Production environment - Render as primary, with fallbacks.
-    // (2026-08-15: Railway 试用期过期，token 失效；切换到 Render Blueprint。)
+    // Production environment — Vercel is the actual live backend as of
+    // 2026-09-15. Render service at failure-logic-api.onrender.com returns
+    // `x-render-routing: no-server` (suspended). Railway backup is dead
+    // (token expired). Codespaces URLs are session-bound and unreliable.
     return [
-      'https://failure-logic-api.onrender.com', // Primary: Render (new home)
-      'https://failure-logic-api-production.up.railway.app', // Backup: Railway (may be dead — token expired)
-      'https://psychic-meme-rvq4v7pqwx3xxrr-8000.app.github.dev', // Backup: Codespaces (port 8000)
-      'https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev',  // Legacy: Old Codespaces
+      'https://failurelogic.vercel.app', // Primary: Vercel (current deploy)
+      // 'https://failure-logic-api.onrender.com', // SUSPENDED — Render free-tier service gone
+      // 'https://failure-logic-api-production.up.railway.app', // DEAD — Railway token expired 2026-08
+      // Codespaces fallbacks: commented — they only work while a dev session is running.
+      // 'https://psychic-meme-rvq4v7pqwx3xxrr-8000.app.github.dev',
+      // 'https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev',
     ];
   }
 
