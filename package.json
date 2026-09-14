@@ -5,6 +5,10 @@
   "scripts": {
     "start": "node static-server.js",
     "test:e2e": "npx playwright test --config=tests/playwright.config.js tests/e2e --reporter=list",
+    "test:deep:frames": "npx playwright test --config=tests/e2e/playwright.video-on.config.cjs",
+    "test:deep:copy": "node tests/e2e/copy-videos.js",
+    "test:deep:extract": "node tests/e2e/extract-frames.js",
+    "test:deep": "npm run test:deep:frames && npm run test:deep:copy && npm run test:deep:extract",
     "wrappers:help": "echo \"Use 'make help' on Linux/macOS/WSL, or one of:\" && echo \"  npm run wrappers:test      - all 6 test suites\" && echo \"  npm run wrappers:lint      - syntax check all wrappers\" && echo \"  npm run wrappers:security  - scan for accidentally committed tokens\" && echo \"  npm run wrappers:info      - show repo info (git-platform-ops)\" && echo \"  npm run wrappers:auth      - show loaded tokens (git-platform-ops)\" && echo \"  npm run wrappers:notes     - show commits since last tag (release-ops)\"",
     "wrappers:test": "bash tests/git-platform-ops/test.sh && bash tests/publish-ops/test.sh && bash tests/release-ops/test.sh && pwsh tests/git-platform-ops/test.ps1 && pwsh tests/publish-ops/test.ps1 && pwsh tests/release-ops/test.ps1",
     "wrappers:test:bash": "bash tests/git-platform-ops/test.sh && bash tests/publish-ops/test.sh && bash tests/release-ops/test.sh",
@@ -16,6 +20,7 @@
     "wrappers:notes": "bash scripts/release-ops.sh notes"
   },
   "devDependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@playwright/test": "^1.40.0",
     "express": "^4.22.1",
     "playwright": "^1.40.0",

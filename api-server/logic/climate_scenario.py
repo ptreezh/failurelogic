@@ -216,7 +216,7 @@ def _count_weight(weight: str) -> int:
 def _detect_F1_nonlinear(state) -> Optional[Dict[str, Any]]:
     """F1 非线性：玩家假设升温是线性过程,即使接近临界点仍按线性思维行动。"""
     tipping = state.get("tipping_point_proximity", 0)
-    if tipping < 50:
+    if tipping < 40:
         return None  # 还没到临界点附近
     # Look at last 3 choices — if any 'risky' or 'extreme_risk' happened after tipping crossed 50
     choices = _choices(state)
@@ -331,7 +331,7 @@ def _detect_F5_single_target(state) -> Optional[Dict[str, Any]]:
     # If GDP-focused >= 50% of choices AND tipping or temp got worse
     if gdp_focused >= len(choices) * 0.5:
         tipping = state.get("tipping_point_proximity", 0)
-        if tipping > 50:
+        if tipping > 40:
             return {
                 "pattern_type": "F5_single_target",
                 "dorner_concept": "单目标优化",
