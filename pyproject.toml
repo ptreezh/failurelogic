@@ -1,0 +1,14 @@
+[project]
+name = "failure-logic-api"
+version = "1.0.0"
+description = "FastAPI backend for Failure Logic cognitive-bias training game"
+requires-python = ">=3.11"
+
+[tool.vercel]
+# Vercel autodetects FastAPI but expects `app` at api/index.py or app.py at
+# the project root. Our entrypoint is api-server/start.py:app — tell Vercel.
+entrypoint = "api-server.start:app"
+
+[tool.vercel.deploy]
+# Don't override — Vercel auto-builds from requirements.txt at api-server/
+# (vercel.json is checked first if present; this section is fallback).

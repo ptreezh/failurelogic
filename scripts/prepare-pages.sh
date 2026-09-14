@@ -6,7 +6,9 @@
 set -euo pipefail
 
 TMP=$(mktemp -d)
-trap 'rm -rf "$TMP"' EXIT
+# NOTE: no `trap ... EXIT` here — the GitHub Actions workflow reads
+# ARTIFACT_DIR after this script returns and needs the directory intact.
+# The runner's /tmp is wiped between jobs anyway.
 
 # Copy into temp dir, excluding everything that shouldn't ship to Pages.
 rsync -a \
