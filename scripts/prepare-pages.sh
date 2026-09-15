@@ -61,4 +61,30 @@ rsync -a \
     --exclude='favicon.ico' \
     ./ "$TMP/"
 
+# Inject <base href="/failurelogic/"> into deployed index.html so the SPA's
+# relative URLs (window.history.pushState('/scenarios'), asset paths, etc.)
+# resolve correctly under the GitHub Pages subpath. Source index.html is
+# untouched — local dev (served at /) is unaffected.
+#
+# Detect subpath from git remote if available; fall back to hardcoded value.
+SUBPATH="/failurelogic/"
+if command -v git >/dev/null 2>&1; then
+    REMOTE_REPO=$(git -C "$(dirname "$0")/.." remote get-url origin 2>/dev/null | sed -E 's|.*[:/]([^/]+)/([^/]+)(\.git)?$|\2|')
+    if [ -n "$REMOTE_REPO" ]; then
+        SUBPATH="/$(echo "$REMOTE_REPO" | tr '[:upper:]' '[:lower:]')/"
+    fi
+fi
+echo "GitHub Pages base href: $SUBPATH" >&2
+
+if [ -f "$TMP/index.html" ]; then
+    # Idempotent: replace existing <base> or inject after <title>
+    if grep -q '<base id="gh-pages-base"' "$TMP/index.html"; then
+        sed -i "s|<base id=\"gh-pages-base\"[^>]*>|<base id=\"gh-pages-base\" href=\"$SUBPATH\">|" "$TMP/index.html"
+    elif grep -q '</title>' "$TMP/index.html"; then
+        sed -i "s|</title>|</title>\n    <base id=\"gh-pages-base\" href=\"$SUBPATH\">|" "$TMP/index.html"
+    else
+        sed -i "s|<head>|<head>\n    <base id=\"gh-pages-base\" href=\"$SUBPATH\">|" "$TMP/index.html"
+    fi
+fi
+
 echo "$TMP"
