@@ -1,5 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "echo 'using Vercel Python build'",
-  "installCommand": "pip install --upgrade pip && pip install -r api-server/requirements.txt"
+  "builds": [
+    {
+      "src": "api-server/start.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "api-server/start.py" }
+  ]
 }
