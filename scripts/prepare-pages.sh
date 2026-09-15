@@ -67,6 +67,9 @@ rsync -a \
 # untouched — local dev (served at /) is unaffected.
 #
 # Detect subpath from git remote if available; fall back to hardcoded value.
+# Use python instead of sed because source index.html has CRLF line endings
+# (Windows-authored), and GNU sed's CRLF handling across platforms is
+# unreliable. python reads/writes bytes correctly.
 SUBPATH="/failurelogic/"
 if command -v git >/dev/null 2>&1; then
     REMOTE_REPO=$(git -C "$(dirname "$0")/.." remote get-url origin 2>/dev/null | sed -E 's|.*[:/]([^/]+)/([^/]+)(\.git)?$|\2|')
@@ -77,14 +80,37 @@ fi
 echo "GitHub Pages base href: $SUBPATH" >&2
 
 if [ -f "$TMP/index.html" ]; then
-    # Idempotent: replace existing <base> or inject after <title>
-    if grep -q '<base id="gh-pages-base"' "$TMP/index.html"; then
-        sed -i "s|<base id=\"gh-pages-base\"[^>]*>|<base id=\"gh-pages-base\" href=\"$SUBPATH\">|" "$TMP/index.html"
-    elif grep -q '</title>' "$TMP/index.html"; then
-        sed -i "s|</title>|</title>\n    <base id=\"gh-pages-base\" href=\"$SUBPATH\">|" "$TMP/index.html"
-    else
-        sed -i "s|<head>|<head>\n    <base id=\"gh-pages-base\" href=\"$SUBPATH\">|" "$TMP/index.html"
-    fi
+    python3 - "$TMP/index.html" "$SUBPATH" <<'PYEOF'
+import re, sys
+path, subpath = sys.argv[1], sys.argv[2]
+with open(path, 'rb') as f:
+    content = f.read()
+new_tag = f'<base id="gh-pages-base" href="{subpath}">'.encode('utf-8')
+if b'<base id="gh-pages-base"' in content:
+    content = re.sub(rb'<base id="gh-pages-base"[^>]*>', new_tag, content)
+elif b'</title>' in content:
+    content = content.replace(b'</title>', b'</title>\n    ' + new_tag, 1)
+elif b'<head>' in content:
+    content = content.replace(b'<head>', b'<head>\n    ' + new_tag, 1)
+else:
+    print(f'WARN: {path} has no <head> tag; cannot inject base href', file=sys.stderr)
+    sys.exit(0)
+with open(path, 'wb') as f:
+    f.write(content)
+print(f'  Injected <base href="{subpath}"> into {path}', file=sys.stderr)
+PYEOF
 fi
+
+# SPA fallback: GitHub Pages serves 404.html for any path that doesn't
+# match a static file. Replace 404.html with a copy of index.html so the
+# SPA can bootstrap from any URL. The <base> tag injected above makes the
+# relative URLs resolve correctly.
+if [ -f "$TMP/index.html" ]; then
+    cp "$TMP/index.html" "$TMP/404.html"
+    echo "  SPA fallback: 404.html replaced with index.html copy" >&2
+fi
+
+# Also rewrite any links to the bare 404.html (e.g., manifest references)
+# that might point to the now-overwritten file. Skip — Pages doesn't care.
 
 echo "$TMP"
