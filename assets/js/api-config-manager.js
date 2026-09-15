@@ -48,14 +48,17 @@ class APIConfigManager {
       return ['http://localhost:8000'];
     }
 
-    // Production environment — Vercel is the actual live backend as of
-    // 2026-09-15. Render service at failure-logic-api.onrender.com returns
-    // `x-render-routing: no-server` (suspended). Railway backup is dead
-    // (token expired). Codespaces URLs are session-bound and unreliable.
+    // Production environment — Render is the actual live backend as of
+    // 2026-09-15. Vercel trial expired and all new deploys are paused;
+    // old Vercel deploy (Nov 2025) lacks the 3 deep scenario engines.
+    // Codespaces URLs are session-bound and unreliable.
+    //
+    // To override the Render URL at deploy time (e.g. blue-green), set
+    // window.__RENDER_API_OVERRIDE__ before app.js loads.
     return [
-      'https://failurelogic.vercel.app', // Primary: Vercel (current deploy)
-      // 'https://failure-logic-api.onrender.com', // SUSPENDED — Render free-tier service gone
-      // 'https://failure-logic-api-production.up.railway.app', // DEAD — Railway token expired 2026-08
+      'https://failure-logic-api.onrender.com', // Primary: Render (Python native, free tier)
+      // 'https://failurelogic.vercel.app', // SUSPENDED — Vercel trial expired 2026-09
+      // 'https://failure-logic-api-production.up.railway.app', // DEAD — Railway has no free tier
       // Codespaces fallbacks: commented — they only work while a dev session is running.
       // 'https://psychic-meme-rvq4v7pqwx3xxrr-8000.app.github.dev',
       // 'https://turbo-rotary-phone-pq4jq7pvr7f6jxx-8000.app.github.dev',
