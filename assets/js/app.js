@@ -11856,8 +11856,9 @@ class GameManager {
     const container = document.getElementById('game-container');
     console.log('[debug] startChallengerGame container=', container);
     if (!container) {
-      console.error('[debug] startChallengerGame game-container not found');
-      this.displayError('游戏容器未找到，请刷新页面重试');
+      const errMsg = '游戏容器未找到，请刷新页面重试';
+      console.error('[debug] startChallengerGame', errMsg);
+      this.displayError(errMsg);
       return;
     }
     try {
@@ -11865,8 +11866,13 @@ class GameManager {
       console.log('[debug] startChallengerGame renderStartPage result length=', html && html.length);
       container.innerHTML = html || '';
     } catch (renderError) {
+      const errMsg = '场景渲染失败: ' + (renderError && renderError.message ? renderError.message : String(renderError));
       console.error('[debug] startChallengerGame render failed:', renderError);
-      this.displayError('场景渲染失败: ' + (renderError && renderError.message ? renderError.message : String(renderError)));
+      const errDiv = document.createElement('div');
+      errDiv.className = 'error-message';
+      errDiv.textContent = errMsg;
+      container.innerHTML = '';
+      container.appendChild(errDiv);
       return;
     }
     Log.log('✅ Challenger game initialized, gameId=', gameId);
@@ -11943,7 +11949,15 @@ class GameManager {
     }
 
     if (!AppState.gameSession.gameId) {
-      this.displayError('未能获取会话 ID');
+      const errMsg = '未能获取会话 ID';
+      const container = document.getElementById('game-container');
+      if (container) {
+        const errDiv = document.createElement('div');
+        errDiv.className = 'error-message';
+        errDiv.textContent = errMsg;
+        container.innerHTML = '';
+        container.appendChild(errDiv);
+      }
       return;
     }
 
@@ -11955,14 +11969,22 @@ class GameManager {
 
     const container = document.getElementById('game-container');
     if (!container) {
-      this.displayError('游戏容器未找到，请刷新页面重试');
+      const errMsg = '游戏容器未找到，请刷新页面重试';
+      const errDiv = document.createElement('div');
+      errDiv.className = 'error-message';
+      errDiv.textContent = errMsg;
       return;
     }
     try {
       container.innerHTML = await router.renderStartPage();
     } catch (renderError) {
+      const errMsg = '场景渲染失败: ' + (renderError && renderError.message ? renderError.message : String(renderError));
       console.error(`[${scenarioId}] render failed:`, renderError);
-      this.displayError('场景渲染失败: ' + (renderError && renderError.message ? renderError.message : String(renderError)));
+      const errDiv = document.createElement('div');
+      errDiv.className = 'error-message';
+      errDiv.textContent = errMsg;
+      container.innerHTML = '';
+      container.appendChild(errDiv);
       return;
     }
     Log.log(`✅ ${labels[scenarioId] || scenarioId} initialized, gameId=`, AppState.gameSession.gameId);
