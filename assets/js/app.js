@@ -11815,13 +11815,29 @@ class GameManager {
     } catch (e) {
       console.error('[debug] startChallengerGame session create failed:', e);
       Log.error('[challenger] session create failed:', e);
-      this.displayError('会话创建失败，请稍后重试');
+      const errMsg = '会话创建失败: ' + (e && e.message ? e.message : String(e));
+      const errDiv = document.createElement('div');
+      errDiv.className = 'error-message';
+      errDiv.textContent = errMsg;
+      const modalBody = document.querySelector('#game-modal .modal-body');
+      if (modalBody) {
+        modalBody.innerHTML = '';
+        modalBody.appendChild(errDiv);
+      }
       return;
     }
 
     if (!gameId) {
       console.error('[debug] startChallengerGame missing gameId');
-      this.displayError('未能获取会话 ID');
+      const errMsg = '未能获取会话 ID';
+      const errDiv = document.createElement('div');
+      errDiv.className = 'error-message';
+      errDiv.textContent = errMsg;
+      const modalBody = document.querySelector('#game-modal .modal-body');
+      if (modalBody) {
+        modalBody.innerHTML = '';
+        modalBody.appendChild(errDiv);
+      }
       return;
     }
 
@@ -11858,7 +11874,14 @@ class GameManager {
     if (!container) {
       const errMsg = '游戏容器未找到，请刷新页面重试';
       console.error('[debug] startChallengerGame', errMsg);
-      this.displayError(errMsg);
+      const errDiv = document.createElement('div');
+      errDiv.className = 'error-message';
+      errDiv.textContent = errMsg;
+      const modalBody = document.querySelector('#game-modal .modal-body');
+      if (modalBody) {
+        modalBody.innerHTML = '';
+        modalBody.appendChild(errDiv);
+      }
       return;
     }
     try {
