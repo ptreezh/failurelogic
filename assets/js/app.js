@@ -11855,10 +11855,19 @@ class GameManager {
     console.log('[debug] startChallengerGame rendering start page');
     const container = document.getElementById('game-container');
     console.log('[debug] startChallengerGame container=', container);
-    if (container) {
+    if (!container) {
+      console.error('[debug] startChallengerGame game-container not found');
+      this.displayError('游戏容器未找到，请刷新页面重试');
+      return;
+    }
+    try {
       const html = await router.renderStartPage();
       console.log('[debug] startChallengerGame renderStartPage result length=', html && html.length);
       container.innerHTML = html || '';
+    } catch (renderError) {
+      console.error('[debug] startChallengerGame render failed:', renderError);
+      this.displayError('场景渲染失败: ' + (renderError && renderError.message ? renderError.message : String(renderError)));
+      return;
     }
     Log.log('✅ Challenger game initialized, gameId=', gameId);
     console.log('[debug] startChallengerGame done');
