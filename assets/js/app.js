@@ -280,7 +280,7 @@ class NavigationManager {
         decisionPattern: "Dörner 8种失败模式",
         duration: "30-45分钟",
         category: "历史案例·深度",
-        thumbnail: "/assets/images/challenger.jpg",
+        thumbnail: "assets/images/challenger.jpg",
         initialState: {
           temperature_forecast_f: 36,
           engineer_confidence: 75,
@@ -305,7 +305,7 @@ class NavigationManager {
         decisionPattern: "Dörner 8 模式·气候治理",
         duration: "30-45分钟",
         category: "重大公共决策·深度",
-        thumbnail: "/assets/images/climate.jpg",
+        thumbnail: "assets/images/climate.jpg",
         initialState: {
           global_avg_temp_c: 1.55,
           co2_ppm: 424,
@@ -330,7 +330,7 @@ class NavigationManager {
         decisionPattern: "Dörner 8 模式·公司治理",
         duration: "30-45分钟",
         category: "历史案例·深度",
-        thumbnail: "/assets/images/enron.jpg",
+        thumbnail: "assets/images/enron.jpg",
         initialState: {
           share_price_usd: 90,
           credit_rating: "BBB+",

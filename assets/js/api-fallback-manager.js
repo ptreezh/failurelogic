@@ -147,7 +147,7 @@ class APIFallbackManager {
                         cognitiveBias: "线性思维",
                         duration: "15-20分钟",
                         category: "商业决策",
-                        thumbnail: "/assets/images/coffee-shop.jpg",
+                        thumbnail: "assets/images/coffee-shop.jpg",
                         advancedChallenges: []
                     },
                     {
@@ -161,7 +161,7 @@ class APIFallbackManager {
                         cognitiveBias: "时间延迟",
                         duration: "20-25分钟",
                         category: "人际关系",
-                        thumbnail: "/assets/images/relationship.jpg",
+                        thumbnail: "assets/images/relationship.jpg",
                         advancedChallenges: []
                     }
                 ]
