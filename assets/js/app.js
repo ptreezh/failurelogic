@@ -355,16 +355,22 @@ class NavigationManager {
     }
 
     // Try to load from API first with timeout, fallback to mock data
+    const API_TIMEOUT = 5000;
     try {
       Log.log('Attempting to load scenarios from API...');
-      
-      // Direct fetch to bypass potential service issues
-      const response = await fetch(`${APP_CONFIG.apiBaseUrl}/scenarios/`, {
+
+      const apiPromise = fetch(`${APP_CONFIG.apiBaseUrl}/scenarios/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json; charset=utf-8'
         }
       });
+
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('API timeout after ' + API_TIMEOUT + 'ms')), API_TIMEOUT)
+      );
+
+      const response = await Promise.race([apiPromise, timeoutPromise]);
 
       if (response.ok) {
         const data = await response.json();
