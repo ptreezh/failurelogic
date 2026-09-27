@@ -1,0 +1,1038 @@
+{
+  "scenarioId": "climate-change-policy",
+  "version": "v1.0-2026-09-13",
+  "title": "全球气候政策十年",
+  "subtitle": "198国能否在2025-2035年实现巴黎协定目标？",
+  "difficulty": "advanced",
+  "estimatedDuration": 45,
+  "category": "重大公共决策",
+  "description": "你是联合国政府间气候变化专门委员会（IPCC）执行主任，任期2025-2035。在10个关键决策点中，平衡经济增速、公众支持、国际信任与代际气候正义。",
+  "dornerLessons": [
+    "F1 非线性效应：升温超过1.5°C后，临界点加速触发",
+    "F2 时间延迟：你今天的决策，50年后才显现完整后果",
+    "F3 自反性：今天的'解决方案'可能成为明天的问题",
+    "F4 副作用忽视：减排成本在穷国与富国间分配不均",
+    "F5 单目标优化：只盯GDP增长会忽略环境临界点",
+    "F6 确认偏误：信息茧房让你只看到支持立场的证据",
+    "F7 自我批评缺失：揭示偏差后仍维持旧立场",
+    "F8 调节滞后：政策推出速度跟不上变化速度"
+  ],
+  "historicalContext": {
+    "pre_launch_warnings": [
+      {
+        "date": "2015-12-12",
+        "author": "联合国气候变化框架公约",
+        "key_quote": "将全球平均气温升幅控制在工业化前水平以上2°C之内，并为把升温控制在1.5°C之内而努力。",
+        "source_url": "https://unfccc.int/process-and-meetings/the-paris-agreement",
+        "teaching_point": "Paris Accord 设定的1.5°C/2°C双重目标是本场景的政策基线"
+      },
+      {
+        "date": "2024-03-05",
+        "author": "World Meteorological Organization (WMO)",
+        "key_quote": "2023年全球平均气温比工业化前水平高1.45°C，已逼近Paris Accord的1.5°C阈值。",
+        "source_url": "https://wmo.int/news/media-centre/wmo-confirms-2023-smashes-global-temperature-record",
+        "teaching_point": "警告：阈值已逼近，必须采取更激进行动"
+      },
+      {
+        "date": "2024-05-20",
+        "author": "Scripps CO2 Program (Keeling Curve)",
+        "key_quote": "大气CO2浓度达424 ppm，比2023年同期增长2.8 ppm/年。",
+        "source_url": "https://scrippsco2.ucsd.edu/graphics_gallery/mauna_loa_record/",
+        "teaching_point": "Keeling曲线持续上升，物理证据明确"
+      },
+      {
+        "date": "2025-01-20",
+        "author": "United States Government",
+        "key_quote": "美国第二次宣布退出Paris Accord。",
+        "source_url": "https://www.state.gov/",
+        "teaching_point": "国际协调面临挑战（中性事实，不评判对错）"
+      }
+    ],
+    "scientific_basis": "本场景基于IPCC AR6 (2023) 综合报告、Keeling曲线实测数据、Paris Accord文本。2050年升温预测区间为IPCC AR6 SSP1-1.9（1.5°C路径）至SSP5-8.5（4.4°C路径）的中间值。"
+  },
+  "stakeholders": [
+    {
+      "id": "ipcc_leadership",
+      "name": "IPCC 领导层",
+      "key_persons": [
+        "Jim Skea (IPCC主席 2023-2028)",
+        "你（IPCC执行主任 2025-2035）"
+      ],
+      "concern": "协调195国执行Paris Accord目标",
+      "stance": "科学驱动+国际协调"
+    },
+    {
+      "id": "developed_nations",
+      "name": "发达国家集团（G7+EU）",
+      "key_persons": [
+        "美国（已退出）",
+        "欧盟（绿色协议）",
+        "日本（2050碳中和）"
+      ],
+      "concern": "维持经济增长同时履行减排承诺",
+      "stance": "分歧——美国退出，欧盟日本坚定"
+    },
+    {
+      "id": "developing_nations",
+      "name": "发展中国家（特别是小岛屿国家）",
+      "key_persons": [
+        "瓦努阿图（图瓦卢）",
+        "孟加拉国",
+        "图瓦卢"
+      ],
+      "concern": "海平面上升威胁生存；要求历史排放赔偿",
+      "stance": "要求5000亿美元/年 损失与损害基金"
+    },
+    {
+      "id": "fossil_industry",
+      "name": "化石能源行业",
+      "key_persons": [
+        "沙特阿美",
+        "埃克森美孚",
+        "中国石油"
+      ],
+      "concern": "资产搁浅风险 + 转型成本",
+      "stance": "推动延迟 + 资助怀疑论研究"
+    },
+    {
+      "id": "climate_scientists",
+      "name": "气候科学家群体",
+      "key_persons": [
+        "Michael Mann (Penn State)",
+        "Katharine Hayhoe (Texas Tech)",
+        "James Hansen (前NASA)"
+      ],
+      "concern": "政策依据不足；被打压/解雇风险",
+      "stance": "支持激进减排 + 警示临界点"
+    },
+    {
+      "id": "public_movement",
+      "name": "公众气候运动",
+      "key_persons": [
+        "Fridays for Future",
+        "350.org",
+        "Extinction Rebellion"
+      ],
+      "concern": "政府行动迟缓",
+      "stance": "推动激进政策 + 直接行动"
+    }
+  ],
+  "initialState": {
+    "global_avg_temp_c": 1.55,
+    "co2_ppm": 424,
+    "gdp_growth_pct": 3.2,
+    "renewable_share_pct": 30,
+    "climate_justice_index": 45,
+    "public_support_pct": 62,
+    "whistleblower_silenced_count": 0,
+    "international_trust": 55,
+    "tipping_point_proximity": 27
+  },
+  "steps": [
+    {
+      "turn": 1,
+      "phase": "美国退出Paris Accord",
+      "year": "2025年1月",
+      "situation": "你的任期第1天。美国正式宣布第二次退出Paris Accord，理由是'保护美国工人'。195国中的130国公开谴责，30国观望，35国支持。作为IPCC执行主任，你需要决定第一反应：\n\n这一选择将定义你的整个任期的国际信任度（international_trust）和公众支持率（public_support_pct）的起点。",
+      "options": [
+        {
+          "id": "A",
+          "text": "召集紧急会议公开谴责，邀请各国继续履约",
+          "weight": "neutral",
+          "consequences_for_player": "国际信任度 +10，公众支持率 +8%；但美国可能加速国内能源产业",
+          "expected_concerns_addressed": [
+            "international_trust",
+            "public_support"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "低调处理，把焦点转向G20经济议题",
+          "weight": "risky",
+          "consequences_for_player": "保GDP增长 +1%；但国际信任度 -15，公众支持率 -5%",
+          "expected_concerns_addressed": [
+            "gdp_growth"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "私下游说美国能源企业，寻求'绿色新政'共同利益",
+          "weight": "safe",
+          "consequences_for_player": "国际信任度 +3（务实立场），GDP影响可控",
+          "expected_concerns_addressed": [
+            "international_trust",
+            "gdp_growth"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "启动单边科学外交，绕过政府直接对民众发布IPCC数据",
+          "weight": "neutral",
+          "consequences_for_player": "公众支持率 +6%；但国际信任度 -3（绕过主权原则）",
+          "expected_concerns_addressed": [
+            "public_support"
+          ]
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "international_trust": 10,
+          "public_support_pct": 8,
+          "gdp_growth_pct": -1
+        },
+        "B": {
+          "international_trust": -15,
+          "public_support_pct": -5,
+          "gdp_growth_pct": 1
+        },
+        "C": {
+          "international_trust": 3,
+          "public_support_pct": 2,
+          "gdp_growth_pct": 0
+        },
+        "D": {
+          "international_trust": -3,
+          "public_support_pct": 6,
+          "gdp_growth_pct": -1
+        }
+      },
+      "character_reactions": {
+        "A": "欧盟主席：'这是领导力的体现'；发展中国家代表：'我们看到了希望'；美国国务院：'这是对主权的干涉'",
+        "B": "美国能源部：'务实的做法'；图瓦卢代表：'我们被出卖了'；公众运动：'软弱'",
+        "C": "埃克森美孚CEO：'让我们谈谈'；欧盟：'接受商业现实'",
+        "D": "美国白宫：'违反外交协议'；科学家：'终于有人听我们说话'；图瓦卢：'感动但不安'"
+      }
+    },
+    {
+      "turn": 2,
+      "phase": "Keeling曲线加速",
+      "year": "2025年3月",
+      "situation": "Scripps CO2 Program 3月报告：大气CO2浓度达426 ppm，比2024年同期增长2.8 ppm/年（加速）。IPCC AR6首席科学家警告：'This is the critical decade. To keep 1.5°C, global emissions must halve by 2030.'\n\n你需要决定全球减排路径：\n\n⚠️ 注意：科学家建议'立即全面禁煤'，但发展中经济体仍依赖煤炭——可能加剧F4副作用。",
+      "options": [
+        {
+          "id": "A",
+          "text": "全球全面禁煤（2030前）",
+          "weight": "extreme_safe",
+          "consequences_for_player": "renewable_share +15，temp上升趋势减缓；但GDP -3%，climate_justice -8",
+          "expected_concerns_addressed": [
+            "renewable_share",
+            "tipping_point"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "设定2030年逐步退煤时间表（发达国家2030，发展中国家2040）",
+          "weight": "neutral",
+          "consequences_for_player": "renewable_share +8，GDP -1%；climate_justice +3（更公平）",
+          "expected_concerns_addressed": [
+            "renewable_share",
+            "climate_justice"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "只禁发达国家采煤，发展中国家继续",
+          "weight": "risky",
+          "consequences_for_player": "renewable_share +5；但climate_justice -10（穷国受害）",
+          "expected_concerns_addressed": [
+            "renewable_share"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "推行'碳税+退还低收入家庭'机制（价格信号+分配补偿）",
+          "weight": "neutral",
+          "consequences_for_player": "renewable_share +10，GDP -2%；climate_justice +5（补偿机制）",
+          "expected_concerns_addressed": [
+            "renewable_share",
+            "climate_justice",
+            "gdp_growth"
+          ]
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "renewable_share_pct": 15,
+          "gdp_growth_pct": -3,
+          "climate_justice_index": -8,
+          "international_trust": -2
+        },
+        "B": {
+          "renewable_share_pct": 8,
+          "gdp_growth_pct": -1,
+          "climate_justice_index": 3,
+          "international_trust": 4
+        },
+        "C": {
+          "renewable_share_pct": 5,
+          "gdp_growth_pct": -1,
+          "climate_justice_index": -10,
+          "international_trust": -5
+        },
+        "D": {
+          "renewable_share_pct": 10,
+          "gdp_growth_pct": -2,
+          "climate_justice_index": 5,
+          "international_trust": 3,
+          "public_support_pct": -3
+        }
+      },
+      "character_reactions": {
+        "A": "瓦努阿图：'终于听到我们'；印度：'我们会抗议'；沙特：'资产被搁浅'",
+        "B": "欧盟：'这是平衡'；中国：'可接受'；公众运动：'太慢'",
+        "C": "中国：'可以承担'；印度：'我们被排除'；瓦努阿图：'二次殖民'",
+        "D": "诺贝尔经济学奖：'这是教科书方案'；美国前财长：'碳税很难执行'"
+      }
+    },
+    {
+      "turn": 3,
+      "phase": "[渐进揭示 T3] 你忽略了什么？",
+      "year": "2025年8月",
+      "is_pattern_reveal": true,
+      "situation": "你的前任在交接报告中警告：'我任期最大的遗憾是只盯着GDP和公众支持率（gdp_growth_pct, public_support_pct），忽略了海平面已悄悄上升的事实。2024年实测显示：全球海平面比2020年高+3 cm。'\n\nIPCC AR6预测：如果维持当前排放，2100年海平面将上升0.5-1米。这意味着到2075年——你的孩子退休时——太平洋岛国可能不再适合居住。\n\n【Dörner 模式揭示 · 第 1 阶段 · 回合 4】\n\n你在前 2 个回合的决策模式：\n- 回合1：你选了 {turn1_option}\n- 回合2：你选了 {turn2_option}\n\n回溯分析（基于你的选择）：\n\n🔴 F5 单目标优化：你是否优先考虑了某个单一指标？\n\nDörner 在《失败的逻辑》第5章写道：'我们倾向于把复杂系统简化为单一目标，然后优化这个目标——但这会让我们忽视其他同样重要的维度。'\n\n你需要在下一个决策中提醒自己：你可能在看一个数字而忽略其他九个。",
+      "options": [
+        {
+          "id": "A",
+          "text": "承认疏忽，在下季度启动海平面适应基金",
+          "weight": "safe",
+          "consequences_for_player": "international_trust +5（诚实）；climate_justice +3",
+          "expected_concerns_addressed": [
+            "international_trust",
+            "climate_justice"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "强调GDP与适应可以双赢（绿色基建投资）",
+          "weight": "neutral",
+          "consequences_for_player": "GDP +1%；public_support +2%",
+          "expected_concerns_addressed": [
+            "gdp_growth",
+            "public_support"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "聚焦即将到来的T4紧急情况（欧洲热浪），暂不回应此揭示",
+          "weight": "risky",
+          "consequences_for_player": "F7自我批评缺失 hint 触发（玩家未反思）",
+          "expected_concerns_addressed": []
+        },
+        {
+          "id": "D",
+          "text": "将此作为国际论坛议程，要求所有国家重新评估适应资金",
+          "weight": "neutral",
+          "consequences_for_player": "international_trust +3；climate_justice +5",
+          "expected_concerns_addressed": [
+            "international_trust",
+            "climate_justice"
+          ]
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "international_trust": 5,
+          "climate_justice_index": 3,
+          "public_support_pct": -2
+        },
+        "B": {
+          "gdp_growth_pct": 1,
+          "public_support_pct": 2
+        },
+        "C": {},
+        "D": {
+          "international_trust": 3,
+          "climate_justice_index": 5
+        }
+      },
+      "character_reactions": {
+        "A": "瓦努阿图代表：'你终于看到我们'",
+        "B": "IMF：'这是正确框架'",
+        "C": "前任IPCC主席：'你不该忽视它'",
+        "D": "小岛屿国家联盟：'我们的声音被听到'"
+      },
+      "pattern_reveal_template": {
+        "round": 1,
+        "biases_revealed": [
+          "F5 单目标优化"
+        ],
+        "narrative": "你前 2 回合聚焦于 {primary_focus}，可能忽略了 9 个状态变量中的其他维度。这是 Dörner F5 单目标优化的典型表现。"
+      }
+    },
+    {
+      "turn": 4,
+      "phase": "欧洲热浪",
+      "year": "2026年7月",
+      "situation": "2026年7月，西班牙连续7天气温达45°C，意大利、希腊、法国南部同时高温。数千人死亡——主要是不富裕的老人和无家可归者。欧洲议会宣布这是'气候紧急状态'，要求立即响应。\n\n公众支持率（public_support_pct）骤升到78%。但你需要决定：这是一个短暂窗口，还是真正的范式转变？\n\n⚠️ Dörner F8 调节滞后警告：如果响应太慢，等夏季结束、新闻消失，公众注意力会回落。",
+      "options": [
+        {
+          "id": "A",
+          "text": "紧急发布1万亿绿色基建计划（fossil发电厂改造）",
+          "weight": "neutral",
+          "consequences_for_player": "GDP -2%（短期）；renewable_share +12；public_support +5%",
+          "expected_concerns_addressed": [
+            "renewable_share",
+            "public_support",
+            "gdp_growth"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "推动'Loss and Damage Fund'实质性扩容",
+          "weight": "safe",
+          "consequences_for_player": "international_trust +8；climate_justice +10；GDP影响小",
+          "expected_concerns_addressed": [
+            "international_trust",
+            "climate_justice"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "聚焦本国应对，国际援助力度有限（F6国内偏误）",
+          "weight": "risky",
+          "consequences_for_player": "public_support +4%；但international_trust -8；climate_justice -5",
+          "expected_concerns_addressed": [
+            "public_support"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "提议暂停所有气候谈判6个月，等待局势稳定（F2时间延迟）",
+          "weight": "extreme_risk",
+          "consequences_for_player": "international_trust -12；climate_justice -8；F2 hint",
+          "expected_concerns_addressed": []
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "gdp_growth_pct": -2,
+          "renewable_share_pct": 12,
+          "public_support_pct": 5,
+          "international_trust": -2
+        },
+        "B": {
+          "international_trust": 8,
+          "climate_justice_index": 10,
+          "gdp_growth_pct": -1
+        },
+        "C": {
+          "public_support_pct": 4,
+          "international_trust": -8,
+          "climate_justice_index": -5
+        },
+        "D": {
+          "international_trust": -12,
+          "climate_justice_index": -8,
+          "public_support_pct": -3
+        }
+      },
+      "character_reactions": {
+        "A": "西班牙首相：'谢谢领导'；化石能源公司：'我们反对'",
+        "B": "瓦努阿图：'历史性时刻'；美国前总统：'不公平'",
+        "C": "本国公众：'领导人'；其他国家：'自私'",
+        "D": "科学家集体公开信：'这是F2时间延迟的极端案例'"
+      }
+    },
+    {
+      "turn": 5,
+      "phase": "[渐进揭示 T5] 50年后谁来评判？",
+      "year": "2027年4月",
+      "is_pattern_reveal": true,
+      "situation": "你收到一封来自2075年的虚拟信件——这是IPCC给你写的'未来视角'反思信：\n\n'致2025-2035年IPCC执行主任：\n\n当你做这封信中提到的决策时（turns 1-4），你考虑的是你的政治寿命、你的声誉、你任期内可见的结果。\n\n但气候系统的时间尺度是世纪级的。你在回合4选了{turn4_option}——这个选择的后果要到2050年后才完全显现。\n\n2075年的我们关心的是：\n- 海平面上升了多少（取决于你前4回合的减排路径）\n- 极端气候事件频率（取决于你回避还是直面F2时间延迟）\n- 物种灭绝数量（取决于你是否突破了F1非线性阈值）\n\nDörner F2 时间延迟：在动态系统中，行动的延迟效应比即时效应更重要。'\n\n【Dörner 模式揭示 · 第 2 阶段 · 回合 6】\n\n你在前 4 回合的决策是否考虑了 50 年后的世界？\n\n🔴 F2 时间延迟：你是否假设'问题会自然解决'？",
+      "options": [
+        {
+          "id": "A",
+          "text": "承认F2偏差，承诺未来5年减排力度翻倍",
+          "weight": "safe",
+          "consequences_for_player": "temp +0.05°C减缓；international_trust +5；GDP -1%",
+          "expected_concerns_addressed": [
+            "international_trust",
+            "gdp_growth"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "强调'我们这一代已经在努力了'（F7自我批评缺失）",
+          "weight": "risky",
+          "consequences_for_player": "public_support +3%；但F7 hint 强化",
+          "expected_concerns_addressed": [
+            "public_support"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "推动'代际公平'写入国际法（让未来世代有法律代言人）",
+          "weight": "neutral",
+          "consequences_for_player": "international_trust +8；climate_justice +5",
+          "expected_concerns_addressed": [
+            "international_trust",
+            "climate_justice"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "将此作为对下一任执行主任的'交接备忘'重点",
+          "weight": "neutral",
+          "consequences_for_player": "F7 hint 缓解；不影响本任期数值",
+          "expected_concerns_addressed": []
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "international_trust": 5,
+          "gdp_growth_pct": -1,
+          "tipping_point_proximity": -2
+        },
+        "B": {
+          "public_support_pct": 3
+        },
+        "C": {
+          "international_trust": 8,
+          "climate_justice_index": 5
+        },
+        "D": {}
+      },
+      "character_reactions": {
+        "A": "IPCC Skea：'需要勇气'",
+        "B": "公众运动：'你在找借口'",
+        "C": "瓦努阿图：'我们被代表'",
+        "D": "下任执行主任：'我会继续'"
+      },
+      "pattern_reveal_template": {
+        "round": 2,
+        "biases_revealed": [
+          "F2 时间延迟",
+          "F7 自我批评缺失"
+        ],
+        "narrative": "你在前 4 回合的决策中有 {time_delay_count} 个回合表现出 F2 时间延迟偏差（忽视长期后果），{self_criticism_count} 个回合选择回避反思（F7）。Dörner 写道：'我们倾向于为短期辩护，却以长期为代价。'"
+      }
+    },
+    {
+      "turn": 6,
+      "phase": "化石行业信息战",
+      "year": "2028年9月",
+      "situation": "2028年9月，《纽约时报》调查报告：5家化石能源公司通过智库和学术机构，资助了价值1.2亿美元的'气候怀疑论'研究。这些研究故意混淆CO2与水蒸气的温室效应比例、夸大气候模型的不确定性。\n\n公众舆论开始分化。Katharine Hayhoe（Texas Tech气候科学家）公开呼吁：'这些资助来源应该被披露。'\n\n但化石行业代表反驳：'科学需要辩论，这是言论自由。'\n\n你需要决定如何应对这场信息战。\n\n⚠️ Dörner F6 确认偏误：信息茧房让对立双方各自只看到支持自己立场的证据。",
+      "options": [
+        {
+          "id": "A",
+          "text": "公开企业资助来源 + 要求媒体核实（F6反制）",
+          "weight": "neutral",
+          "consequences_for_player": "public_support +5%；whistleblower_silenced_count +1（行业报复）；但F6 hint 缓解",
+          "expected_concerns_addressed": [
+            "public_support"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "给企业'绿色转型'路径，避免硬碰（F3自反）",
+          "weight": "safe",
+          "consequences_for_player": "GDP +2%（企业配合）；renewable_share +3；whistleblower_silenced 0",
+          "expected_concerns_addressed": [
+            "gdp_growth",
+            "renewable_share"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "起诉企业虚假宣传（F4副作用）",
+          "weight": "risky",
+          "consequences_for_player": "GDP -2%（诉讼成本）；国际示范效应；whistleblower_silenced +2",
+          "expected_concerns_addressed": [
+            "gdp_growth"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "与企业合作，换取他们支持碳定价（F7风险）",
+          "weight": "risky",
+          "consequences_for_player": "GDP +1%；但public_support -4%（被视为'被收买'）；whistleblower_silenced +3",
+          "expected_concerns_addressed": [
+            "gdp_growth"
+          ]
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "public_support_pct": 5,
+          "whistleblower_silenced_count": 1,
+          "international_trust": 3
+        },
+        "B": {
+          "gdp_growth_pct": 2,
+          "renewable_share_pct": 3,
+          "whistleblower_silenced_count": 0
+        },
+        "C": {
+          "gdp_growth_pct": -2,
+          "whistleblower_silenced_count": 2,
+          "international_trust": 2
+        },
+        "D": {
+          "gdp_growth_pct": 1,
+          "public_support_pct": -4,
+          "whistleblower_silenced_count": 3,
+          "renewable_share_pct": -1
+        }
+      },
+      "character_reactions": {
+        "A": "Hayhoe：'这是科学诚信'；化石行业：'言论审查'",
+        "B": "埃克森CEO：'我们接受'；公众运动：'太软弱'",
+        "C": "法院：'旷日持久'；欧盟：'我们也在起诉'",
+        "D": "公众运动：'你被收买了'；企业：'欢迎合作'"
+      }
+    },
+    {
+      "turn": 7,
+      "phase": "[渐进揭示 T7] 临界点逼近",
+      "year": "2030年3月",
+      "is_pattern_reveal": true,
+      "situation": "IPCC AR7特别报告：'2030年3月，全球升温达1.7°C。亚马逊雨林开始大规模退化（'树木死亡现象'），格陵兰冰盖融化加速。北极永久冻土层开始释放甲烷——这是正反馈，会加速升温。'\n\n科学家警告：'我们已超过1.5°C阈值。1.7°C不是终点——F1非线性效应可能让升温加速到2°C、3°C。一旦突破2.5°C，亚马逊将不可逆退化为稀树草原。'\n\n【Dörner 模式揭示 · 第 3 阶段 · 回合 8】\n\n你的前 6 回合选择：{turn1_option} → {turn2_option} → {turn3_option} → {turn4_option} → {turn5_option} → {turn6_option}\n\n回溯分析：\n\n🔴 F1 非线性：你是否曾假设升温是线性过程？\n🔴 F8 调节滞后：你是否在临界点逼近时才加速响应？\n\nDörner 写道：'在临界点附近，系统的反应不再是线性的。我们要么在临界点之前行动（成本低），要么在临界点之后行动（成本指数级上升）。'\n\n你的前 6 回合，{time_to_respond_turns} 个回合是在警告公开后才开始响应？\nF8 调节滞后 hint count: {f8_count}",
+      "options": [
+        {
+          "id": "A",
+          "text": "紧急启动'1.5°C抢救计划'——全球碳预算立即归零",
+          "weight": "extreme_safe",
+          "consequences_for_player": "GDP -5%；renewable_share +20；international_trust +10；tipping_point -10",
+          "expected_concerns_addressed": [
+            "renewable_share",
+            "tipping_point",
+            "international_trust",
+            "gdp_growth"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "聚焦于'已经不可逆的损失'的适应（救生艇式响应）",
+          "weight": "neutral",
+          "consequences_for_player": "GDP -2%；climate_justice +5；renewable_share +5",
+          "expected_concerns_addressed": [
+            "climate_justice",
+            "renewable_share",
+            "gdp_growth"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "维持现状路线，等下一次选举后再调整（F8强化）",
+          "weight": "extreme_risk",
+          "consequences_for_player": "tipping_point +15；temp +0.2°C",
+          "expected_concerns_addressed": []
+        },
+        {
+          "id": "D",
+          "text": "将此作为'代际传承'问题，要求各国设立'未来世代议会'",
+          "weight": "neutral",
+          "consequences_for_player": "international_trust +5；climate_justice +8",
+          "expected_concerns_addressed": [
+            "international_trust",
+            "climate_justice"
+          ]
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "gdp_growth_pct": -5,
+          "renewable_share_pct": 20,
+          "international_trust": 10,
+          "tipping_point_proximity": -10,
+          "public_support_pct": -3
+        },
+        "B": {
+          "gdp_growth_pct": -2,
+          "climate_justice_index": 5,
+          "renewable_share_pct": 5
+        },
+        "C": {
+          "tipping_point_proximity": 15,
+          "global_avg_temp_c": 0.2,
+          "international_trust": -5
+        },
+        "D": {
+          "international_trust": 5,
+          "climate_justice_index": 8
+        }
+      },
+      "character_reactions": {
+        "A": "欧盟：'我们加入'；美国（已退）：'反对'；化石行业：'末日论'",
+        "B": "小岛屿国家：'终于承认损失'；公众运动：'太迟'",
+        "C": "科学家集体辞职抗议",
+        "D": "联合国秘书长：'历史性创新'"
+      },
+      "pattern_reveal_template": {
+        "round": 3,
+        "biases_revealed": [
+          "F1 非线性",
+          "F8 调节滞后"
+        ],
+        "narrative": "你前 6 回合中，{f1_count} 个回合选择假设升温线性，{f8_count} 个回合在警告公开后才响应。Dörner F1+F8 是临界点附近的危险组合。"
+      }
+    },
+    {
+      "turn": 8,
+      "phase": "气候赔偿争议",
+      "year": "2031年6月",
+      "situation": "孟加拉国、瓦努阿图、图瓦卢等60个发展中国家联名提出：'我们对全球升温的历史责任不足5%，但承受了70%的损失。要求5000亿美元/年 气候赔偿基金，由历史排放大国按比例承担。'\n\n美国（已退出）拒绝。欧盟内部分裂——法国/德国支持，意大利/波兰反对。中国表示愿意讨论但坚持'共同但有区别的责任'。\n\n你需要决定IPCC的中立立场：",
+      "options": [
+        {
+          "id": "A",
+          "text": "支持5000亿赔偿要求（F4副作用分配）",
+          "weight": "extreme_safe",
+          "consequences_for_player": "climate_justice +20；GDP -3%；international_trust +8；whistleblower_silenced +2（强国施压）",
+          "expected_concerns_addressed": [
+            "climate_justice",
+            "international_trust",
+            "gdp_growth"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "设立'绿色发展基金'替代赔偿（F7自我批评）",
+          "weight": "neutral",
+          "consequences_for_player": "climate_justice +8；GDP -1%；international_trust +3",
+          "expected_concerns_addressed": [
+            "climate_justice",
+            "gdp_growth",
+            "international_trust"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "拒绝，坚持'共同但有区别的责任'（F6/F8强化）",
+          "weight": "risky",
+          "consequences_for_player": "climate_justice -15；international_trust -10",
+          "expected_concerns_addressed": []
+        },
+        {
+          "id": "D",
+          "text": "提议'债务换气候'——免除穷国债务换减排承诺（F3+F4）",
+          "weight": "neutral",
+          "consequences_for_player": "climate_justice +12；GDP -1%；international_trust +5",
+          "expected_concerns_addressed": [
+            "climate_justice",
+            "international_trust",
+            "gdp_growth"
+          ]
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "climate_justice_index": 20,
+          "gdp_growth_pct": -3,
+          "international_trust": 8,
+          "whistleblower_silenced_count": 2
+        },
+        "B": {
+          "climate_justice_index": 8,
+          "gdp_growth_pct": -1,
+          "international_trust": 3
+        },
+        "C": {
+          "climate_justice_index": -15,
+          "international_trust": -10
+        },
+        "D": {
+          "climate_justice_index": 12,
+          "gdp_growth_pct": -1,
+          "international_trust": 5
+        }
+      },
+      "character_reactions": {
+        "A": "瓦努阿图：'谢谢'；美国前国务卿：'不合理'",
+        "B": "印度：'部分接受'；欧盟：'务实'",
+        "C": "图瓦卢代表：'我们被放弃'",
+        "D": "经济学家Jeffrey Sachs：'这是创造性方案'"
+      }
+    },
+    {
+      "turn": 9,
+      "phase": "中国碳中和加码",
+      "year": "2033年1月",
+      "situation": "中国宣布：'考虑到2030年的严峻形势，我们将碳中和时间从2060年提前到2055年。但要求所有发达国家同步加码——否则单方面努力不公平。'\n\n同时，美国新一届政府（2032年选举后）可能考虑第二次加入Paris Accord。\n\n你需要决定如何协调：",
+      "options": [
+        {
+          "id": "A",
+          "text": "接受中国提议 + 推动全球碳关税（F3自反）",
+          "weight": "neutral",
+          "consequences_for_player": "GDP -2%；renewable_share +10；international_trust +8",
+          "expected_concerns_addressed": [
+            "gdp_growth",
+            "renewable_share",
+            "international_trust"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "拒绝，主张国家主权（F6+F8强化）",
+          "weight": "risky",
+          "consequences_for_player": "international_trust -10；renewable_share -5",
+          "expected_concerns_addressed": []
+        },
+        {
+          "id": "C",
+          "text": "有条件接受，要求中国承担更多技术转让（F7自我批评）",
+          "weight": "neutral",
+          "consequences_for_player": "international_trust +5；renewable_share +8；GDP -1%",
+          "expected_concerns_addressed": [
+            "international_trust",
+            "renewable_share",
+            "gdp_growth"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "联合美国（将重返）施压中国让步（F6确认偏误风险）",
+          "weight": "risky",
+          "consequences_for_player": "international_trust -5；GDP +1%（贸易战）；renewable_share -3",
+          "expected_concerns_addressed": [
+            "gdp_growth"
+          ]
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "gdp_growth_pct": -2,
+          "renewable_share_pct": 10,
+          "international_trust": 8
+        },
+        "B": {
+          "international_trust": -10,
+          "renewable_share_pct": -5,
+          "gdp_growth_pct": -1
+        },
+        "C": {
+          "international_trust": 5,
+          "renewable_share_pct": 8,
+          "gdp_growth_pct": -1
+        },
+        "D": {
+          "international_trust": -5,
+          "gdp_growth_pct": 1,
+          "renewable_share_pct": -3,
+          "climate_justice_index": -3
+        }
+      },
+      "character_reactions": {
+        "A": "中国：'公平提议'；欧盟：'我们支持'",
+        "B": "中国：'霸权主义'；印度：'反对'",
+        "C": "中国：'可以讨论'；美国：'我们希望加入'",
+        "D": "中国：'遏制战略'；全球南方：'选边站'"
+      }
+    },
+    {
+      "turn": 10,
+      "phase": "[最终结局] 你的十年",
+      "year": "2035年12月",
+      "is_final_outcome": true,
+      "situation": "你的十年任期将满。2035年12月，全球气候处于你留下的状态。\n\nDörner 写道：'我们不需要完美的决策——我们需要的是持续的方向调整。偏差是常态，自我批评才是能力。'\n\n回顾你的十年：\n- 你在回合1选了 {turn1_option}\n- 回合2: {turn2_option}\n- 回合3: {turn3_option}\n- 回合4: {turn4_option}\n- 回合5: {turn5_option}\n- 回合6: {turn6_option}\n- 回合7: {turn7_option}\n- 回合8: {turn8_option}\n- 回合9: {turn9_option}\n\n最终结局取决于你的累积路径。",
+      "options": [
+        {
+          "id": "A",
+          "text": "坚持激进减排路径（'1.5°C必须实现'）",
+          "weight": "extreme_safe",
+          "consequences_for_player": "触发 one_point_five 结局（条件：激进选项计数 >= 4）",
+          "expected_concerns_addressed": []
+        },
+        {
+          "id": "B",
+          "text": "平衡路径（在减排与发展间）",
+          "weight": "neutral",
+          "consequences_for_player": "触发 two_degrees 结局（条件：激进 2-3 个回合）",
+          "expected_concerns_addressed": []
+        },
+        {
+          "id": "C",
+          "text": "经济优先，气候让步",
+          "weight": "risky",
+          "consequences_for_player": "触发 three_degrees 结局（条件：经济优先 >= 5）",
+          "expected_concerns_addressed": []
+        },
+        {
+          "id": "D",
+          "text": "维持现状，让各国自行决定",
+          "weight": "extreme_risk",
+          "consequences_for_player": "触发 coordination_collapse 结局（条件：拖延/退出 >= 5）",
+          "expected_concerns_addressed": []
+        }
+      ],
+      "expected_effects": {},
+      "character_reactions": {},
+      "temperature_forecast_f_marker": "OUTCOME_TRIGGER"
+    }
+  ],
+  "outcome_endings": {
+    "one_point_five": {
+      "narrative": "============================================================\n✅ 巴黎协定1.5°C目标实现\n============================================================\n\n2035年12月，你的十年任期结束。\n\n【最终数据】\n- 全球升温：1.45°C（±0.1）\n- CO2浓度：415 ppm（开始下降）\n- 海平面上升：12 cm（2100年预测：40 cm，可控）\n- 可再生能源占比：78%\n- 国际信任度：82%\n- 气候正义指数：78\n\n【2050年回望】\n你这一代避免了亚马逊不可逆退化、格陵兰冰盖快速融化、北美大平原永久干旱。你孩子的孩子——2075年的人——将生活在一个仍然适合居住的地球上。\n\n【2100年回望】\n气候科学家评价：'2025-2035年是本世纪最重要的十年。IPCC执行主任Maria Chen的领导挽救了数亿人的家园。'\n\n【Dörner 反思】\nF1 非线性：你在临界点之前行动，避免了指数级代价。\nF2 时间延迟：你忍受了短期经济痛苦，换取了长期人类安全。\nF7 自我批评：你在每个揭示节点都修正了策略。\nF8 调节滞后：你没有等到'更明确的证据'才行动——而是预防原则先行。\n\n============================================================\n【个人偏差报告】\n============================================================\n• 你没有出现 F5 单目标优化：9 个状态变量中，你最弱化的维度是 {min_dimension}，但你注意到了它。\n• 你成功避免了 F2 时间延迟偏差：你提前 5-10 年行动。\n• 你展现了 F8 调节的敏捷性：在警告公开后 {response_speed} 个回合内响应。\n• 你的 F3 自反性管理良好：你预见了'今天的解决方案'可能成为'明天的问题'。\n\n你总共生成了 {decision_count} 个决策。{radical_count} 个是激进减排选项。\n\n你的决策理由记录：\n{justifications}",
+      "scientific_sources": [
+        "IPCC AR6 (2023): https://www.ipcc.ch/report/ar6/syr/",
+        "Keeling Curve: https://scrippsco2.ucsd.edu/",
+        "Paris Accord (2015): https://unfccc.int/process-and-meetings/the-paris-agreement"
+      ]
+    },
+    "two_degrees": {
+      "narrative": "============================================================\n⚠️ 巴黎协定2°C目标勉强实现\n============================================================\n\n2035年12月，你的十年任期结束。\n\n【最终数据】\n- 全球升温：2.05°C（±0.1）\n- CO2浓度：445 ppm\n- 海平面上升：25 cm（2100年预测：65 cm）\n- 可再生能源占比：55%\n- 国际信任度：65\n- 气候正义指数：58\n\n【2050年回望】\n升温稳定在2°C，但代价巨大：\n- 欧洲热浪频率增3倍，每年约 15,000 人死亡\n- 孟加拉国 20% 国土不适合居住，1.5 亿人流离失所\n- 珊瑚礁基本灭绝，海洋食物链崩溃\n- 亚马逊退化至临界点\n\n【2100年回望】\n历史学家评价：'2025-2035年的犹豫让人类付出了无法挽回的代价。'\n\n【Dörner 反思】\nF5 单目标优化：你平衡了GDP与减排，但每个目标都不够深入。\nF3 自反：你的'实用主义'方案被各方的自利动机稀释。\nF8 调节滞后：你响应了部分警告，但每次都比最优时机晚 2-3 年。\n\n============================================================\n【个人偏差报告】\n============================================================\n• F5 单目标优化：你主要关注 {primary_focus}，但代价是 {neglected_dimensions}。\n• F3 自反性：你的妥协方案被各国利用来争取更多时间。\n• F2 时间延迟：你以为'还有时间'，但临界点已逼近。\n\n你总共生成了 {decision_count} 个决策。{radical_count} 个是激进减排选项。",
+      "scientific_sources": [
+        "IPCC AR6 SSP2-4.5 scenario",
+        "Keeling Curve 2024-2035 trajectory",
+        "WHO 2024 heatwave mortality study"
+      ]
+    },
+    "three_degrees": {
+      "narrative": "============================================================\n❌ 升温突破3°C临界点\n============================================================\n\n2035年12月，你的十年任期结束。\n\n【最终数据】\n- 全球升温：3.2°C（±0.2）\n- CO2浓度：490 ppm\n- 海平面上升：55 cm（2100年预测：1.2 米）\n- 可再生能源占比：38%\n- 国际信任度：35\n- 气候正义指数：28\n\n【灾难性后果】\n- 亚马逊雨林已退化为稀树草原（不可逆）\n- 格陵兰冰盖融化加速，每年+ 5mm海平面\n- 欧洲/北美/中国粮食减产 30%\n- 全球气候难民：2.5 亿人（2050 年预计 10 亿）\n- 珊瑚礁全部灭绝，海洋食物链局部崩溃\n\n【2050年回望】\n你的选择让代际不公达到临界：富国GDP增长了，穷国却承受了70%的损失。气候正义指数跌至28。\n\n【2100年回望】\n历史学家评价：'这是本世纪最大的政策失败。前30年的犹豫累积成不可逆后果。'\n\n【Dörner 反思】\nF5 单目标优化：你把GDP增长当作'成功'指标，忽略了其他8个维度。\nF6 确认偏误：你选择相信'技术会解决问题'的乐观论调。\nF2 时间延迟：你为短期利益放弃了50年后的安全。\n\n============================================================\n【个人偏差报告】\n============================================================\n• F5 单目标优化：你最看重 {primary_focus}，代价是海平面上升、生态系统崩溃、代际不公。\n• F6 确认偏误：你只听到了支持你立场的声音，忽视了 IPCC AR6 的预警。\n• F7 自我批评缺失：在每个揭示节点你都没有改变策略。\n• F2 时间延迟：你假设'问题会慢慢消失'——但气候系统不接受这种假设。\n\n你的决策理由记录：\n{justifications}",
+      "scientific_sources": [
+        "IPCC AR6 SSP5-8.5 scenario (high emissions)",
+        "Nature 2024: Amazon dieback threshold",
+        "World Bank 2024: Climate refugee projections"
+      ]
+    },
+    "coordination_collapse": {
+      "narrative": "============================================================\n💥 巴黎协定名存实亡\n============================================================\n\n2035年12月，你的十年任期结束。Paris Accord 仅剩 30 个国家坚持，130 国退出或观望。\n\n【最终数据】\n- 全球升温：2.85°C（仍在上升）\n- CO2浓度：480 ppm\n- 海平面上升：48 cm\n- 可再生能源占比：30%\n- 国际信任度：15\n- 气候正义指数：22\n\n【系统性失败】\n- 美国、俄罗斯、巴西、印度在2030-2035年间相继退出\n- 没有任何全球协议能约束排放\n- 极端气候事件频率增5倍，但无力协调应对\n- 代际信任崩溃：年轻一代不相信政治体系能解决气候问题\n\n【2050年回望】\n你任期内没有及时挽救国际协调窗口。当Skea的'critical decade'警告被验证时，国际社会已经碎片化。\n\n【2100年回望】\n历史学家评价：'这是人类第一次有工具预防灾难，但选择了分裂。'\n\n【Dörner 反思】\nF7 自我批评缺失：你在每个揭示节点都选择了维持现状。\nF4 副作用忽视：你的'实用主义'加剧了穷国受害。\nF8 调节滞后：你每次响应都晚于最优时机 5+ 年。\n\n============================================================\n【个人偏差报告】\n============================================================\n• F7 自我批评缺失：你在 5+ 个揭示节点都没有改变策略。\n• F4 副作用忽视：你的决策让 climate_justice 跌至 22。\n• F8 调节滞后：你对警告的响应时间平均 {response_speed} 个回合（理想：即时）。\n\n你的决策理由记录：\n{justifications}",
+      "scientific_sources": [
+        "UNEP Emissions Gap Report 2024",
+        "Nature 2024: Tipping points cascade model",
+        "Carbon Brief 2024: Country-level Paris commitments"
+      ]
+    }
+  },
+  "pattern_reveal_template": {
+    "structure": "T3/T5/T7 各揭示一次 + T10 总结",
+    "T3_F5": {
+      "round": 1,
+      "biases_revealed": [
+        "F5 单目标优化"
+      ],
+      "narrative": "你前 2 回合聚焦于 {primary_focus}，可能忽略了 9 个状态变量中的其他维度。Dörner F5 单目标优化：你把复杂系统简化为单一指标。"
+    },
+    "T5_F2_F7": {
+      "round": 2,
+      "biases_revealed": [
+        "F2 时间延迟",
+        "F7 自我批评缺失"
+      ],
+      "narrative": "你前 4 回合的 {time_delay_count} 个回合表现出 F2 时间延迟偏差，{self_criticism_count} 个回合回避反思（F7）。Dörner：'我们倾向于为短期辩护，以长期为代价。'"
+    },
+    "T7_F1_F8": {
+      "round": 3,
+      "biases_revealed": [
+        "F1 非线性",
+        "F8 调节滞后"
+      ],
+      "narrative": "你前 6 回合中，{f1_count} 个回合选择假设升温线性，{f8_count} 个回合在警告公开后才响应。临界点附近，F1+F8 是最危险的组合。"
+    },
+    "T10_summary": {
+      "round": 4,
+      "biases_revealed": [
+        "all"
+      ],
+      "narrative": "十年回望：你的 {radical_count} 个激进决策 + {balanced_count} 个平衡决策 + {passive_count} 个被动决策形成了 {outcome_key} 结局。{primary_lesson}"
+    }
+  },
+  "dorner_quotes": [
+    {
+      "turn_context": "T1 美国退出",
+      "quote": "失败的根本原因是自我评价的缺失——我们不愿意让自己的行为成为评价对象。",
+      "source": "Dörner, The Logic of Failure, Chapter 7"
+    },
+    {
+      "turn_context": "T4 欧洲热浪",
+      "quote": "在动态系统中，调节的速度决定系统的存亡。我们倾向于等到'更明确的证据'才行动——但临界点不接受这种等待。",
+      "source": "Dörner, The Logic of Failure, Chapter 3"
+    },
+    {
+      "turn_context": "T5 时间延迟",
+      "quote": "行动的延迟效应比即时效应更重要。我们今天感觉不到的代价，可能在 50 年后显现——而那时已不可逆。",
+      "source": "Dörner, The Logic of Failure, Chapter 2"
+    },
+    {
+      "turn_context": "T7 临界点",
+      "quote": "在临界点附近，系统的反应不再是线性的。我们要么在临界点之前行动（成本低），要么在临界点之后行动（成本指数级上升）。",
+      "source": "Dörner, The Logic of Failure, Chapter 4"
+    },
+    {
+      "turn_context": "T10 总结",
+      "quote": "我们不需要完美的决策——我们需要的是持续的方向调整。偏差是常态，自我批评才是能力。",
+      "source": "Dörner, The Logic of Failure, Chapter 8"
+    }
+  ],
+  "feedback_patterns": {
+    "F1_nonlinear": {
+      "trigger": "tipping_point_proximity > 50 AND player_chose_linear_options >= 3",
+      "dorner_concept": "非线性阈值",
+      "evidence_template": "你在前 {turns} 个回合中，{linear_count} 个选项基于'线性'假设。但升温在临界点附近是指数加速的。",
+      "reflection_questions": [
+        "你的决策模型中，'加速'和'渐进'哪个假设更安全？",
+        "临界点之后，我们还能回头吗？",
+        "为什么科学家警告1.5°C与2°C是'完全不同的世界'？"
+      ]
+    },
+    "F2_time_delay": {
+      "trigger": "warning_to_response_lag >= 2",
+      "dorner_concept": "时间延迟偏差",
+      "evidence_template": "你在 {warning_count} 个警告公开后，平均 {avg_lag} 个回合才响应。气候系统的时间尺度是世纪级的。",
+      "reflection_questions": [
+        "2075年的人会怎么评价你今天的决策？",
+        "你愿意等多久才看到行动的结果？",
+        "如果回报在50年后，你会如何决策？"
+      ]
+    },
+    "F3_self_reference": {
+      "trigger": "policy_counters_policy_count >= 2",
+      "dorner_concept": "自反性陷阱",
+      "evidence_template": "你的 {count} 个决策触发了反向效应。'今天的解决方案'成为'明天的问题'。",
+      "reflection_questions": [
+        "你的政策会如何改变对方的行为？",
+        "如果所有人都做你做的事，会发生什么？",
+        "你是否在无意中制造了新的问题？"
+      ]
+    },
+    "F4_side_effects": {
+      "trigger": "climate_justice_index < 50 AND gdp_growth_pct >= 2",
+      "dorner_concept": "副作用忽视",
+      "evidence_template": "你的决策让 climate_justice 跌至 {cj_score}，但 gdp_growth 维持在 {gdp}%。谁承担了代价？",
+      "reflection_questions": [
+        "谁承担了减排成本？",
+        "谁是受益者？",
+        "代际公平如何衡量？"
+      ]
+    },
+    "F5_single_target": {
+      "trigger": "primary_focus_dimension_count >= 5 AND other_dimensions_neglected >= 3",
+      "dorner_concept": "单目标优化",
+      "evidence_template": "你在 {turns} 个回合中聚焦于 {focus}（优化了 {focus_change}），但其他 {neglected} 个维度恶化了。",
+      "reflection_questions": [
+        "你是不是只盯着一个数字？",
+        "你能列出 9 个状态变量的当前值吗？",
+        "哪个维度你最不愿意面对？"
+      ]
+    },
+    "F6_confirmation_bias": {
+      "trigger": "consecutive_similar_choices >= 3",
+      "dorner_concept": "确认偏误",
+      "evidence_template": "你连续 {n} 个回合选了类似立场的选项。你的信息来源是什么？",
+      "reflection_questions": [
+        "你的信息源是不是太单一？",
+        "你愿意听反对意见吗？",
+        "如果科学家错了，你能否承认？"
+      ]
+    },
+    "F7_self_criticism": {
+      "trigger": "no_change_after_reveal >= 2",
+      "dorner_concept": "自我批评缺失",
+      "evidence_template": "你在 {reveals} 个揭示节点选择了维持原有策略。偏差是常态，自我批评才是能力。",
+      "reflection_questions": [
+        "知道了偏差后，你有调整吗？",
+        "为什么承认错误这么难？",
+        "你的继任者会从你这里学到什么？"
+      ]
+    },
+    "F8_regulation_lag": {
+      "trigger": "response_to_warning_avg >= 2 turns",
+      "dorner_concept": "调节滞后",
+      "evidence_template": "你的政策推出速度跟不上变化速度。警告公开后平均 {lag} 个回合才响应。",
+      "reflection_questions": [
+        "你的调节机制有多快？",
+        "你是否能预判而非追赶？",
+        "如果变化是指数级的，你的政策能跟上吗？"
+      ]
+    }
+  }
+}
