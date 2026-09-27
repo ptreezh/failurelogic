@@ -11954,8 +11954,16 @@ class GameManager {
     window.challengerRouter = router;
 
     const container = document.getElementById('game-container');
-    if (container) {
+    if (!container) {
+      this.displayError('游戏容器未找到，请刷新页面重试');
+      return;
+    }
+    try {
       container.innerHTML = await router.renderStartPage();
+    } catch (renderError) {
+      console.error(`[${scenarioId}] render failed:`, renderError);
+      this.displayError('场景渲染失败: ' + (renderError && renderError.message ? renderError.message : String(renderError)));
+      return;
     }
     Log.log(`✅ ${labels[scenarioId] || scenarioId} initialized, gameId=`, AppState.gameSession.gameId);
   }
