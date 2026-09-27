@@ -12,7 +12,7 @@
  *   POST /analysis/thinking-traps
  *
  * All deep scenarios are data-driven from the same JSON files used by the
- * backend, loaded via fetch from /assets/data/scenarios/*.json.
+  * backend, loaded via fetch from assets/data/scenarios/*.json.
  */
 
 (function () {
@@ -22,9 +22,9 @@
   // Data loader
   // =========================================================================
   const SCENARIO_FILES = {
-    'challenger-launch': '/assets/data/scenarios/challenger_launch.json',
-    'climate-change-policy': '/assets/data/scenarios/climate_change.json',
-    'enron-collapse': '/assets/data/scenarios/enron_collapse.json',
+    'challenger-launch': 'assets/data/scenarios/challenger_launch.json',
+    'climate-change-policy': 'assets/data/scenarios/climate_change.json',
+    'enron-collapse': 'assets/data/scenarios/enron_collapse.json',
   };
 
   const _loaded = {};
@@ -704,7 +704,7 @@
           decisionPattern: 'Dörner 8 模式·航天决策',
           duration: '30-45分钟',
           category: data.category || '重大工程决策',
-          thumbnail: '/assets/images/challenger.jpg',
+          thumbnail: 'assets/images/challenger.jpg',
           advancedChallenges: [],
           scenario_file: 'scenarios/challenger_launch.json',
         },
@@ -719,7 +719,7 @@
           decisionPattern: 'Dörner 8 模式·气候治理',
           duration: '30-45分钟',
           category: '重大公共决策',
-          thumbnail: '/assets/images/climate.jpg',
+          thumbnail: 'assets/images/climate.jpg',
           advancedChallenges: [],
           scenario_file: 'scenarios/climate_change.json',
         },
@@ -734,7 +734,7 @@
           decisionPattern: 'Dörner 8 模式·企业崩塌',
           duration: '30-45分钟',
           category: '企业决策失败·深度',
-          thumbnail: '/assets/images/enron.jpg',
+          thumbnail: 'assets/images/enron.jpg',
           advancedChallenges: [],
           scenario_file: 'scenarios/enron_collapse.json',
         },
