@@ -8729,7 +8729,7 @@ class GameManager {
         // Handle both snake_case (API) and camelCase (JS) property names
         if (sessionData) {
           AppState.gameSession = {
-            gameId: sessionData.gameId || sessionData.game_id || AppState.gameSession.gameId,
+            gameId: sessionData.gameId || sessionData.game_id || sessionData.session_id || AppState.gameSession.gameId,
             scenarioId: sessionData.scenarioId || sessionData.scenario_id || scenarioId,
             difficulty: sessionData.difficulty || difficulty,
             status: 'active',
@@ -11800,7 +11800,7 @@ class GameManager {
         console.log('[debug] startChallengerGame creating session');
         const sessionData = await ApiService.scenarios.createGameSession('challenger-launch', 'beginner');
         console.log('[debug] startChallengerGame sessionData=', sessionData);
-        gameId = sessionData.gameId || sessionData.game_id;
+        gameId = sessionData.gameId || sessionData.game_id || sessionData.session_id;
         AppState.gameSession = {
           gameId: gameId,
           scenarioId: 'challenger-launch',
@@ -11900,7 +11900,7 @@ class GameManager {
     if (!gameId) {
       try {
         const sessionData = await ApiService.scenarios.createGameSession(scenarioId, 'advanced');
-        const gid = sessionData.gameId || sessionData.game_id;
+        const gid = sessionData.gameId || sessionData.game_id || sessionData.session_id;
         AppState.gameSession = {
           gameId: gid,
           scenarioId,
