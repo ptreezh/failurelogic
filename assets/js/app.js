@@ -73,25 +73,62 @@ const ApiService = {
     maxRetries: 3
   }),
 
+  offline: false,
+
+  async _withOfflineFallback(endpoint, options, offlineFn) {
+    let apiDone = false;
+    let apiResult;
+    let apiError;
+    const apiPromise = ApiService.configManager.request(endpoint, options)
+      .then(result => {
+        apiDone = true;
+        apiResult = result;
+        return result;
+      })
+      .catch(error => {
+        apiDone = true;
+        apiError = error;
+        throw error;
+      });
+    const timeoutMs = 4000;
+    const startTime = Date.now();
+    while (!apiDone && Date.now() - startTime < timeoutMs) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    if (apiDone && !apiError) {
+      ApiService.offline = false;
+      return apiResult;
+    }
+    if (!offlineFn) throw apiError;
+    ApiService.offline = true;
+    const fallbackResult = await offlineFn();
+    return fallbackResult;
+  },
+
   // Updated endpoints to support difficulty
   scenarios: {
-    getAll: () => ApiService.configManager.request('/scenarios/'),
-    getById: (id) => ApiService.configManager.request(`/scenarios/${id}`),
+    getAll: () => ApiService._withOfflineFallback('/scenarios/', {}, () => window.OfflineEngine.getScenarios()),
+    getById: (id) => ApiService._withOfflineFallback(`/scenarios/${id}`, {}, () => window.OfflineEngine.getScenario(id)),
     create: (data) => ApiService.configManager.request('/scenarios/', { method: 'POST', body: JSON.stringify(data) }),
     createGameSession: (scenarioId, difficulty = 'beginner') => {
-      // Updated to include difficulty parameter
-      return ApiService.configManager.request(`/scenarios/create_game_session?scenario_id=${scenarioId}&difficulty=${difficulty}`, {
-        method: 'POST'
-      });
+      return ApiService._withOfflineFallback(
+        `/scenarios/create_game_session?scenario_id=${scenarioId}&difficulty=${difficulty}`,
+        { method: 'POST' },
+        () => window.OfflineEngine.createGameSession(scenarioId, difficulty)
+      );
     },
   },
 
   games: {
     executeTurn: (gameId, decisions) =>
-      ApiService.configManager.request(`/scenarios/${gameId}/turn`, {
-        method: 'POST',
-        body: JSON.stringify({ user_id: 1, decisions })
-      }),
+      ApiService._withOfflineFallback(
+        `/scenarios/${gameId}/turn`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ user_id: 1, decisions })
+        },
+        () => window.OfflineEngine.executeTurn(gameId, decisions)
+      ),
   },
 
   // Interactive endpoints
@@ -117,6 +154,19 @@ const ApiService = {
       })
   },
 
+  // Analysis endpoints
+  analysis: {
+    thinkingTraps: (data) =>
+      ApiService._withOfflineFallback(
+        '/analysis/thinking-traps',
+        {
+          method: 'POST',
+          body: JSON.stringify(data)
+        },
+        () => window.OfflineEngine.analyzeThinkingTraps(data)
+      ),
+  },
+
   async healthCheck() {
     try {
       const response = await ApiService.configManager.request('/');
@@ -140,9 +190,17 @@ class NavigationManager {
     '/contact': 'contact'
   };
 
+  static getBasePath() {
+    const path = window.location.pathname;
+    const match = path.match(/^(\/[^\/]+\/)/);
+    return match ? match[1] : '/';
+  }
+
   static navigateTo(page) {
     AppState.currentPage = page;
-    window.history.pushState({ page }, '', `/${page}`);
+    const basePath = this.getBasePath();
+    const targetPath = page === 'home' ? basePath : `${basePath}${page}`;
+    window.history.pushState({ page }, '', targetPath);
     this.renderPage(page);
     
     // Hide game modal when navigating away
@@ -11727,18 +11785,21 @@ class GameManager {
   // so resume-on-load (localStorage) can locate the snapshot.
   static async startChallengerGame() {
     Log.log('🚀 Starting Challenger game...');
+    console.log('[debug] startChallengerGame begin');
     this.showGameModal();
 
     // Reuse session if user just clicked resume, otherwise create fresh.
     let gameId = (AppState.gameSession && AppState.gameSession.gameId)
       || window.__challengerResumeGameId;
+    console.log('[debug] startChallengerGame gameId=', gameId);
 
     try {
       if (gameId) {
-        // Try restoring: GET scenario step 1 should succeed if session is alive.
-        // If server-side restart wiped it, fall through to fresh create.
+        console.log('[debug] startChallengerGame reusing existing gameId');
       } else {
+        console.log('[debug] startChallengerGame creating session');
         const sessionData = await ApiService.scenarios.createGameSession('challenger-launch', 'beginner');
+        console.log('[debug] startChallengerGame sessionData=', sessionData);
         gameId = sessionData.gameId || sessionData.game_id;
         AppState.gameSession = {
           gameId: gameId,
@@ -11749,26 +11810,32 @@ class GameManager {
           currentTurn: 1,
           decision_history: []
         };
+        console.log('[debug] startChallengerGame created session gameId=', gameId);
       }
     } catch (e) {
+      console.error('[debug] startChallengerGame session create failed:', e);
       Log.error('[challenger] session create failed:', e);
       this.displayError('会话创建失败，请稍后重试');
       return;
     }
 
     if (!gameId) {
+      console.error('[debug] startChallengerGame missing gameId');
       this.displayError('未能获取会话 ID');
       return;
     }
 
+    console.log('[debug] startChallengerGame creating router');
     const router = new ChallengerRouter(
       (AppState.gameSession && AppState.gameSession.gameState) || {},
       { gameId: gameId }
     );
     window.challengerRouter = router;
+    console.log('[debug] startChallengerGame router created');
 
     // Check for resumable localStorage snapshot
     const snap = ChallengerRouter.loadSnapshot(gameId);
+    console.log('[debug] startChallengerGame snap=', snap && { turn: snap.turn, gameState: !!snap.gameState });
     if (snap && snap.turn > 0) {
       const ok = window.confirm(
         `检测到上次未完成的对局（第 ${snap.turn} 回合）。\n点"确定"从该回合继续，点"取消"从头开始。`
@@ -11785,11 +11852,16 @@ class GameManager {
     }
     window.__challengerResumeGameId = null;
 
+    console.log('[debug] startChallengerGame rendering start page');
     const container = document.getElementById('game-container');
+    console.log('[debug] startChallengerGame container=', container);
     if (container) {
-      container.innerHTML = await router.renderStartPage();
+      const html = await router.renderStartPage();
+      console.log('[debug] startChallengerGame renderStartPage result length=', html && html.length);
+      container.innerHTML = html || '';
     }
     Log.log('✅ Challenger game initialized, gameId=', gameId);
+    console.log('[debug] startChallengerGame done');
   }
 
   // Climate-change: data-driven 10-turn Dörner deep dive (v1.0). Reuses
