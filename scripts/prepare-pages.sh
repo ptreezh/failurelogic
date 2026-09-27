@@ -32,6 +32,10 @@ rsync -a \
     --exclude='api-server' \
     --exclude='auto-deploy-system' \
     --exclude='cloudflare-worker' \
+    --exclude='SemIf' \
+    --exclude='tmp' \
+    --exclude='test-results' \
+    --exclude='workbuddy-package' \
     --exclude='tests' \
     --exclude='scripts' \
     --exclude='research' \
