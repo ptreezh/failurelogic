@@ -1,27 +1,32 @@
 // Service Worker for Failure Logic Application
 const CACHE_NAME = 'failure-logic-v1.0.6';
+const BASE_PATH = (() => {
+  const path = self.location.pathname;
+  const m = path.match(/^(\/[^\/]+\/)/);
+  return m ? m[1] : '/';
+})();
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/404.html',
-  '/assets/css/normalize.css',
-  '/assets/css/main.css',
-  '/assets/css/components.css',
-  '/assets/css/game-styles.css',
-  '/assets/css/turn-based-game.css',
-  '/assets/css/enhanced-interaction-styles.css',
-  '/assets/js/api-config-manager.js',
-  '/assets/js/app.js',
-  '/assets/js/event-bus.js',
-  '/assets/js/app-core.js',
-  '/assets/js/html-sanitizer.js',
-  '/assets/js/console-wrapper.js',
-  '/assets/js/page-router-base.js',
-  '/assets/js/training-stage-tracker.js',
-  '/assets/js/historical-cases-data.js',
-  '/assets/icons/icon-144x144.svg',
-  '/assets/icons/icon-192x192.svg'
+  BASE_PATH,
+  BASE_PATH + 'index.html',
+  BASE_PATH + 'manifest.json',
+  BASE_PATH + '404.html',
+  BASE_PATH + 'assets/css/normalize.css',
+  BASE_PATH + 'assets/css/main.css',
+  BASE_PATH + 'assets/css/components.css',
+  BASE_PATH + 'assets/css/game-styles.css',
+  BASE_PATH + 'assets/css/turn-based-game.css',
+  BASE_PATH + 'assets/css/enhanced-interaction-styles.css',
+  BASE_PATH + 'assets/js/api-config-manager.js',
+  BASE_PATH + 'assets/js/app.js',
+  BASE_PATH + 'assets/js/event-bus.js',
+  BASE_PATH + 'assets/js/app-core.js',
+  BASE_PATH + 'assets/js/html-sanitizer.js',
+  BASE_PATH + 'assets/js/console-wrapper.js',
+  BASE_PATH + 'assets/js/page-router-base.js',
+  BASE_PATH + 'assets/js/training-stage-tracker.js',
+  BASE_PATH + 'assets/js/historical-cases-data.js',
+  BASE_PATH + 'assets/icons/icon-144x144.svg',
+  BASE_PATH + 'assets/icons/icon-192x192.svg'
 ];
 
 // Install event - cache resources
@@ -64,7 +69,7 @@ self.addEventListener('fetch', event => {
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, clonedResponse));
           return response;
         })
-        .catch(() => caches.match(event.request).then(r => r || caches.match('/index.html')))
+        .catch(() => caches.match(event.request).then(r => r || caches.match(BASE_PATH + 'index.html')))
     );
     return;
   }
