@@ -26,8 +26,12 @@ rsync -a \
     --exclude='.planning' \
     --exclude='.pytest_cache' \
     --exclude='.ruff_cache' \
+    --exclude='.claude' \
+    --exclude='.specify' \
     --exclude='archived-scenarios' \
     --exclude='api-server' \
+    --exclude='auto-deploy-system' \
+    --exclude='cloudflare-worker' \
     --exclude='tests' \
     --exclude='scripts' \
     --exclude='research' \
@@ -40,7 +44,6 @@ rsync -a \
     --exclude='*.toml' \
     --exclude='*.yaml' \
     --exclude='*.yml' \
-    --exclude='*.json' \
     --exclude='*.log' \
     --exclude='*.md' \
     --exclude='*.txt' \
