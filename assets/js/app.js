@@ -11798,7 +11798,16 @@ class GameManager {
         console.log('[debug] startChallengerGame reusing existing gameId');
       } else {
         console.log('[debug] startChallengerGame creating session');
-        const sessionData = await ApiService.scenarios.createGameSession('challenger-launch', 'beginner');
+        console.log('[debug] ApiService=', typeof ApiService !== 'undefined' ? ApiService : 'undefined');
+        console.log('[debug] ApiService.scenarios=', typeof ApiService !== 'undefined' && ApiService.scenarios ? 'defined' : 'undefined');
+        let sessionData;
+        if (typeof ApiService !== 'undefined' && ApiService.scenarios && typeof ApiService.scenarios.createGameSession === 'function') {
+          sessionData = await ApiService.scenarios.createGameSession('challenger-launch', 'beginner');
+        } else if (typeof window.OfflineEngine !== 'undefined' && typeof window.OfflineEngine.createGameSession === 'function') {
+          sessionData = await window.OfflineEngine.createGameSession('challenger-launch', 'beginner');
+        } else {
+          throw new Error('No session source available');
+        }
         console.log('[debug] startChallengerGame sessionData=', sessionData);
         gameId = sessionData.gameId || sessionData.game_id || sessionData.session_id;
         AppState.gameSession = {
