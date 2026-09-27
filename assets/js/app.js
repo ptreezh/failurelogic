@@ -11946,7 +11946,14 @@ class GameManager {
 
     if (!gameId) {
       try {
-        const sessionData = await ApiService.scenarios.createGameSession(scenarioId, 'advanced');
+        let sessionData;
+        if (typeof ApiService !== 'undefined' && ApiService.scenarios && typeof ApiService.scenarios.createGameSession === 'function') {
+          sessionData = await ApiService.scenarios.createGameSession(scenarioId, 'advanced');
+        } else if (typeof window.OfflineEngine !== 'undefined' && typeof window.OfflineEngine.createGameSession === 'function') {
+          sessionData = await window.OfflineEngine.createGameSession(scenarioId, 'advanced');
+        } else {
+          throw new Error('No session source available');
+        }
         const gid = sessionData.gameId || sessionData.game_id || sessionData.session_id;
         AppState.gameSession = {
           gameId: gid,
