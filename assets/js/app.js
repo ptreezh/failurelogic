@@ -11850,6 +11850,20 @@ class GameManager {
       return;
     }
 
+    if (typeof ChallengerRouter === 'undefined') {
+      const errMsg = '场景组件尚未加载完成，请刷新页面重试';
+      console.error('[debug] startChallengerGame ChallengerRouter is undefined');
+      const errDiv = document.createElement('div');
+      errDiv.className = 'error-message';
+      errDiv.textContent = errMsg;
+      const modalBody = document.querySelector('#game-modal .modal-body');
+      if (modalBody) {
+        modalBody.innerHTML = '';
+        modalBody.appendChild(errDiv);
+      }
+      return;
+    }
+
     console.log('[debug] startChallengerGame creating router');
     const router = new ChallengerRouter(
       (AppState.gameSession && AppState.gameSession.gameState) || {},
