@@ -179,67 +179,176 @@ async def call_llm_service(user_input: str, context: Dict[str, Any], test_type: 
         return None
 
 
-@router.post("/interactive/analyze-decision", response_model=InteractiveResponse)
-async def analyze_decision(user_input: str = Query(..., description="用户描述的决策情况")):
+from logic.semif_client import score_decision as semif_score_decision
+
+
+class DecisionScoreRequest(BaseModel):
+    """决策评分请求模型"""
+    id: Optional[str] = None
+    state: str
+    question: str
+    options: List[Dict[str, str]]
+
+
+class DecisionScoreResponse(BaseModel):
+    """决策评分响应模型"""
+    id: str
+    option_ids: List[str]
+    probabilities: List[float]
+    option_logits: List[float]
+    winner: str
+    winner_probability: float
+    forward_seconds: float
+    total_seconds: float
+    model: Optional[Dict[str, Any]] = None
+    probability_status: str = "conditional option score; uncalibrated as decision confidence"
+
+
+@router.post("/interactive/score-decision", response_model=DecisionScoreResponse)
+async def score_decision_endpoint(request: DecisionScoreRequest):
     """
-    分析用户描述的决策情况
-    识别可能的认知偏差并提供建议
+     使用本地 SemIf 模型对结构化决策进行评分。
+
+    输入：
+    - state: 当前状态描述
+    - question: 决策问题
+    - options: [{"id": "a", "description": "选项A"}, ...]
+
+    输出：
+    - 各选项概率、logits、winner 及置信度
     """
     try:
-        # 简单的关键词分析来识别可能的认知偏差
-        lower_input = user_input.lower()
-        detected_biases = []
-        
-        # 检测各种认知偏差的关键词
-        if any(keyword in lower_input for keyword in ["第一个", "一开始", "最初", "first", "initial", "original"]):
-            detected_biases.append("anchoring_bias - 锚定效应")
-            
-        if any(keyword in lower_input for keyword in ["大家都", "所有人", "普遍认为", "everyone", "all", "most believe"]):
-            detected_biases.append("social_proof_bias - 社会认同偏差")
-            
-        if any(keyword in lower_input for keyword in ["过去如此", "以前都是", "一直这样", "past", "before", "always"]):
-            detected_biases.append("status_quo_bias - 现状偏差")
-            
-        if any(keyword in lower_input for keyword in ["专家说", "权威认为", "名人推荐", "expert", "authority", "famous"]):
-            detected_biases.append("authority_bias - 权威偏差")
-        
-        # 生成分析结果
-        if detected_biases:
-            response_text = f"根据您的描述，可能涉及以下认知偏差：{', '.join(detected_biases)}。建议您从多个角度审视决策，收集不同来源的信息，并考虑反面观点。"
-            suggestions_list = [
-                "收集更多信息来验证初步判断",
-                "寻求与您观点相反的证据",
-                "考虑决策的长期后果",
-                "咨询不受相关偏误影响的第三方意见"
+        decision_id = request.id or f"api-{abs(hash(request.question + request.state)) % 100000}"
+        result = semif_score_decision(
+            decision_id=decision_id,
+            state=request.state,
+            question=request.question,
+            options=request.options,
+        )
+        return DecisionScoreResponse(**result)
+    except ValueError as ve:
+        logger.error("SemIf 输入校验失败: %s", str(ve))
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        logger.error("SemIf 评分失败: %s", str(e))
+        raise HTTPException(status_code=500, detail=f"SemIf 决策评分失败: {str(e)}")
+
+
+@router.post("/interactive/analyze-decision", response_model=InteractiveResponse)
+async def analyze_decision(
+    user_input: str = Query(..., description="用户描述的决策情况"),
+    state: Optional[str] = Query(None, description="可选：当前状态"),
+    option_a: Optional[str] = Query(None, description="可选：选项A"),
+    option_b: Optional[str] = Query(None, description="可选：选项B"),
+    option_c: Optional[str] = Query(None, description="可选：选项C"),
+):
+    """
+    分析用户描述的决策情况。
+    当提供 option_a/option_b/option_c 时，使用 SemIf 模型评分；
+    否则回退到关键词偏差检测。
+    """
+    try:
+        if option_a and option_b:
+            options = [
+                {"id": "A", "description": option_a},
+                {"id": "B", "description": option_b},
             ]
+            if option_c:
+                options.append({"id": "C", "description": option_c})
+
+            try:
+                result = semif_score_decision(
+                    decision_id=f"analyze-{abs(hash(user_input)) % 100000}",
+                    state=state or user_input[:200],
+                    question=user_input[:500],
+                    options=options,
+                )
+                winner_id = result["winner"]
+                winner_prob = result["winner_probability"]
+                winner_desc = next(o["description"] for o in options if o["id"] == winner_id)
+
+                response_text = (
+                    f"基于本地决策模型评分，建议选项 [{winner_id}] {winner_desc} "
+                    f"（置信度 {winner_prob*100:.1f}%）。"
+                )
+                suggestions_list = [
+                    "回顾该选项的风险与收益",
+                    "考虑是否有未列出的第三选项",
+                    "将决策结果记录到决策日志中",
+                ]
+                analysis_data = {
+                    "input_summary": user_input[:100] + ("..." if len(user_input) > 100 else ""),
+                    "semif_result": {
+                        "option_ids": result["option_ids"],
+                        "probabilities": [round(p, 6) for p in result["probabilities"]],
+                        "winner": winner_id,
+                        "winner_probability": round(winner_prob, 6),
+                        "forward_seconds": round(result["forward_seconds"], 3),
+                    },
+                    "detected_biases": [],
+                    "confidence_level": "model_scored",
+                    "scoring_backend": "semif-local",
+                }
+                confidence = winner_prob
+            except Exception as sem_err:
+                logger.warning("SemIf 评分失败，回退到关键词分析: %s", str(sem_err))
+                response_text, suggestions_list, analysis_data, confidence = (
+                    _keyword_bias_analysis(user_input)
+                )
+                analysis_data["semif_error"] = str(sem_err)
         else:
-            response_text = f"根据您的描述，暂时未检测到明显的认知偏差模式。您的决策过程似乎较为理性。不过，仍建议您保持反思和自我审查的习惯。"
-            suggestions_list = [
-                "继续保持批判性思维",
-                "定期回顾决策结果",
-                "学习新的决策框架和工具"
-            ]
-        
-        analysis_data = {
-            "input_summary": user_input[:100] + "..." if len(user_input) > 100 else user_input,
-            "detected_biases": detected_biases,
-            "confidence_level": "medium"
-        }
-        
-        response = InteractiveResponse(
+            response_text, suggestions_list, analysis_data, confidence = _keyword_bias_analysis(user_input)
+
+        return InteractiveResponse(
             response=response_text,
             analysis=analysis_data,
             suggestions=suggestions_list,
-            confidence=0.75
+            confidence=confidence,
         )
-        
-        logger.info(f"Decision analyzed for input: {user_input[:50]}...")
-        
-        return response
-        
+    except HTTPException:
+        raise
     except Exception as e:
-        logger.error(f"Error in decision analysis: {str(e)}")
+        logger.error("Error in decision analysis: %s", str(e))
         raise HTTPException(status_code=500, detail=f"分析决策时出错: {str(e)}")
+
+
+def _keyword_bias_analysis(user_input: str):
+    lower_input = user_input.lower()
+    detected_biases = []
+
+    if any(k in lower_input for k in ["第一个", "一开始", "最初", "first", "initial", "original"]):
+        detected_biases.append("anchoring_bias - 锚定效应")
+    if any(k in lower_input for k in ["大家都", "所有人", "普遍认为", "everyone", "all", "most believe"]):
+        detected_biases.append("social_proof_bias - 社会认同偏差")
+    if any(k in lower_input for k in ["过去如此", "以前都是", "一直这样", "past", "before", "always"]):
+        detected_biases.append("status_quo_bias - 现状偏差")
+    if any(k in lower_input for k in ["专家说", "权威认为", "名人推荐", "expert", "authority", "famous"]):
+        detected_biases.append("authority_bias - 权威偏差")
+
+    if detected_biases:
+        response_text = f"根据您的描述，可能涉及以下认知偏差：{', '.join(detected_biases)}。建议您从多个角度审视决策，收集不同来源的信息，并考虑反面观点。"
+        suggestions_list = [
+            "收集更多信息来验证初步判断",
+            "寻求与您观点相反的证据",
+            "考虑决策的长期后果",
+            "咨询不受相关偏误影响的第三方意见",
+        ]
+    else:
+        response_text = f"根据您的描述，暂时未检测到明显的认知偏差模式。您的决策过程似乎较为理性。不过，仍建议您保持反思和自我审查的习惯。"
+        suggestions_list = [
+            "继续保持批判性思维",
+            "定期回顾决策结果",
+            "学习新的决策框架和工具",
+        ]
+
+    analysis_data = {
+        "input_summary": user_input[:100] + ("..." if len(user_input) > 100 else user_input),
+        "detected_biases": detected_biases,
+        "confidence_level": "medium",
+        "scoring_backend": "keyword-fallback",
+    }
+
+    return response_text, suggestions_list, analysis_data, 0.75
 
 
 @router.get("/interactive/guided-tour")

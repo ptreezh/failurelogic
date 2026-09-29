@@ -162,20 +162,30 @@
     async _loadStep(turnNumber) {
       const url = `/scenarios/${this.scenarioId}/step/${turnNumber}`;
       try {
-        const step = await ApiService.configManager.request(url);
-        this.currentStep = step;
-        this._lastLoadError = null;
+        const step = await ApiService._withOfflineFallback(
+          url,
+          {},
+          () => OfflineEngine.getScenarioStep(this.scenarioId, turnNumber)
+        );
+        if (step && !step.error) {
+          this.currentStep = step;
+          this._lastLoadError = null;
+          console.log('[challenger] loaded step', turnNumber, 'from', ApiService.offline ? 'offline' : 'api');
+        } else {
+          this.currentStep = null;
+          this._lastLoadError = (step && step.error) ? step.error : 'Failed to load step';
+        }
       } catch (err) {
         console.error('[challenger] failed to load step', turnNumber, err);
         this.currentStep = null;
-        // Remember the error so _renderDecisionView can show a banner
-        // explaining why the situation/options are placeholders.
         this._lastLoadError = err && err.message ? err.message : String(err);
       }
     }
 
     async _submitTurn(optionId, justification) {
-      if (this.submitting) return null;
+      if (this.submitting) {
+        return null;
+      }
       this.submitting = true;
       try {
         const resp = await ApiService.games.executeTurn(this.gameId, {
@@ -185,9 +195,15 @@
         this.previousState = this.gameState ? Object.assign({}, this.gameState) : null;
         this.gameState = resp.game_state || resp.gameState || this.gameState;
         this.lastFeedback = resp.feedback || '';
-        this.lastTurnNumber = resp.turnNumber || resp.turn_number || (this.lastTurnNumber + 1);
+        this.lastTurnNumber = (resp.turnNumber || resp.turn_number || (this.lastTurnNumber + 1)) - 1;
         this._saveSnapshot();
         return resp;
+      } catch (err) {
+        console.error('[challenger] submit failed', err);
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = '提交决定';
+        }
       } finally {
         this.submitting = false;
       }
@@ -206,7 +222,8 @@
           lastFeedback: this.lastFeedback,
           ts: Date.now()
         };
-        localStorage.setItem(SNAPSHOT_PREFIX + this.gameId, JSON.stringify(snap));
+        const key = SNAPSHOT_PREFIX + this.gameId;
+        localStorage.setItem(key, JSON.stringify(snap));
       } catch (e) {
         console.warn('[challenger] snapshot save failed', e);
       }
@@ -225,14 +242,14 @@
       try { localStorage.removeItem(SNAPSHOT_PREFIX + gameId); } catch (e) {}
     }
 
-    static findResumableSnapshots() {
+    static findResumableSnapshots(scenarioId) {
       const out = [];
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (key && key.startsWith(SNAPSHOT_PREFIX)) {
           try {
             const snap = JSON.parse(localStorage.getItem(key));
-            if (snap && snap.scenarioId === this.scenarioId && snap.turn > 0) {
+            if (snap && snap.scenarioId === scenarioId && snap.turn > 0) {
               out.push(snap);
             }
           } catch (e) {}
@@ -464,6 +481,7 @@
     }
 
     async submit() {
+      this._submitCount = (this._submitCount || 0) + 1;
       if (!this.selectedOption) return;
       const ta = document.getElementById('challenger-justification');
       const justification = ta ? ta.value.trim() : '';
@@ -475,7 +493,6 @@
       try {
         const resp = await this._submitTurn(this.selectedOption, justification);
         if (!resp) return;
-        // Show feedback inline, then user clicks "继续 →"
         const fbEl = document.getElementById('challenger-feedback-display');
         if (fbEl) {
           fbEl.className = this._feedbackClassForTurn(this.lastTurnNumber);
@@ -484,12 +501,11 @@
               <button class="btn btn-primary" onclick="window.challengerRouter.continueToNextTurn()">继续 →</button>
             </div>`;
           fbEl.style.display = 'block';
-          // Apply state change flash on the just-updated grid
           this._applyStateChangeFlash(this.previousState, this.gameState);
         }
       } catch (err) {
         console.error('[challenger] submit failed', err);
-        if (fbEl_safe(submitBtn)) {
+        if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.textContent = '提交决定';
         }
@@ -499,9 +515,6 @@
     async continueToNextTurn() {
       const container = document.getElementById('game-container');
       if (!container) return;
-      // After T10 (turnNumber=10), show final page directly — there is no T11.
-      // The outcome feedback shown above is rendered inside the decision page;
-      // clicking "继续 →" takes the player to the final outcome view.
       if (this.lastTurnNumber >= this.totalTurns) {
         container.innerHTML = this._renderFinalPage();
         ChallengerRouter.clearSnapshot(this.gameId);
@@ -521,8 +534,6 @@
       setTimeout(() => GameManager.startChallengerGame(), 250);
     }
   }
-
-  function fbEl_safe() { return true; }  // no-op for readability in catch block
 
   // ===== Expose globally so inline onclick can reach it =====
   window.ChallengerRouter = ChallengerRouter;

@@ -19,7 +19,7 @@ const { defineConfig, devices } = require('@playwright/test');
 
 module.exports = defineConfig({
   testDir: '.',
-  testMatch: /deep-scenarios-coverage\.spec\.js$/,
+  testMatch: /deep-scenarios-(coverage|dual-agent)\.spec\.js$/,
 
   // Serial — videos and ports must not contend
   fullyParallel: false,
@@ -66,4 +66,11 @@ module.exports = defineConfig({
   timeout: 180000, // 3 min per scenario playthrough (10 turns × ~10s + buffer)
 
   outputDir: '../test-results-deep',
+
+  webServer: {
+    command: 'npm start',
+    port: 3000,
+    reuseExistingServer: true,
+    timeout: 30000,
+  },
 });

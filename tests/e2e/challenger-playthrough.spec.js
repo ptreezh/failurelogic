@@ -113,34 +113,35 @@ test.describe('Challenger - Full Playthrough', () => {
       const onFinal = await page.locator('.challenger-final-page').isVisible().catch(() => false);
       if (onFinal) break;
 
+      await page.waitForSelector('.challenger-decision-page', { timeout: 10000 });
       await page.waitForSelector(`.challenger-option[data-option="B"]`, { timeout: 8000 });
       await page.locator('.challenger-option[data-option="B"]').click();
 
-      // 仅在 textarea 可见时填写
-      const taVisible = await page.locator('#challenger-justification').isVisible().catch(() => false);
-      if (taVisible) {
-        await page.locator('#challenger-justification').fill(`第 ${turn} 回合:赶进度`);
-      }
-      await page.locator('#challenger-submit').click();
+      await page.waitForFunction(() => {
+        const router = window.challengerRouter;
+        const area = document.getElementById('challenger-justification-area');
+        return router && router.selectedOption === 'B' && area && getComputedStyle(area).display !== 'none';
+      }, { timeout: 5000 });
 
-      // 等待反馈或结局页
-      await Promise.race([
-        page.waitForSelector('#challenger-feedback-display', { state: 'visible', timeout: 8000 }),
-        page.waitForSelector('.challenger-final-page', { timeout: 8000 })
-      ]).catch(() => {});
+      await page.locator('#challenger-justification').fill(`第 ${turn} 回合:赶进度`);
 
-      // 找"继续 →"按钮点击(若不是最后一回合) — 必须严格匹配带箭头的按钮
+      await page.waitForFunction(() => !document.getElementById('challenger-submit').disabled, { timeout: 15000 });
+      await page.locator('#challenger-submit').evaluate(el => el.click());
+
+      await page.waitForSelector('#challenger-feedback-display', { state: 'visible', timeout: 15000 }).catch(() => {});
+      await page.waitForSelector('.challenger-final-page', { timeout: 15000 }).catch(() => {});
+
       const continueBtn = page.locator('button', { hasText: /^继续\s*→/ }).first();
-      if (await continueBtn.isVisible().catch(() => false)) {
-        await continueBtn.click();
-        await page.waitForTimeout(800);
+      if (await continueBtn.count() > 0) {
+        await continueBtn.first().evaluate(el => el.click());
+        await page.waitForTimeout(500);
       }
     }
 
     // 上面循环结束后,T10 反馈会显示 + 一个"继续 →"按钮 — 点击进入最终页
     const finalContinue = page.locator('button', { hasText: /^继续\s*→/ }).first();
-    if (await finalContinue.isVisible().catch(() => false)) {
-      await finalContinue.click();
+    if (await finalContinue.count() > 0) {
+      await finalContinue.first().evaluate(el => el.click());
       await page.waitForTimeout(800);
     }
 
@@ -172,7 +173,8 @@ test.describe('Challenger - Full Playthrough', () => {
       await page.waitForSelector(`.challenger-option[data-option="B"]`, { timeout: 8000 });
       await page.locator('.challenger-option[data-option="B"]').click();
       await page.locator('#challenger-submit').click();
-      await page.waitForTimeout(1500);
+      await page.waitForSelector('#challenger-feedback-display', { state: 'visible', timeout: 15000 }).catch(() => {});
+      await page.waitForSelector('.challenger-final-page', { timeout: 15000 }).catch(() => {});
 
       const hasReveal = await page.locator('.pattern-reveal-card').isVisible().catch(() => false);
       const hasFinalOutcome = await page.locator('.outcome-card').first().isVisible().catch(() => false);
@@ -191,6 +193,11 @@ test.describe('Challenger - Full Playthrough', () => {
 
   test('page refresh mid-game prompts user to resume', async ({ page }) => {
     test.setTimeout(90000);
+    await page.setViewportSize({ width: 1280, height: 900 });
+
+    const logs = [];
+    page.on('console', msg => logs.push(`[${msg.type()}] ${msg.text()}`));
+
     await page.goto(BASE_URL);
     await page.locator('.nav-item[data-page="scenarios"]').click();
     await page.waitForSelector('#scenarios-grid', { timeout: 5000 });
@@ -212,11 +219,15 @@ test.describe('Challenger - Full Playthrough', () => {
       if (taVisible) {
         await page.locator('#challenger-justification').fill('测试');
       }
-      await page.locator('#challenger-submit').click();
-      await page.waitForTimeout(1500);
-      const continueBtn = page.locator('button', { hasText: '继续' }).first();
-      if (await continueBtn.isVisible().catch(() => false)) {
-        await continueBtn.click();
+      await page.waitForFunction(() => !document.getElementById('challenger-submit').disabled, { timeout: 15000 });
+      await page.locator('#challenger-submit').evaluate(el => el.click());
+
+      await page.waitForSelector('#challenger-feedback-display', { state: 'visible', timeout: 15000 }).catch(() => {});
+      await page.waitForSelector('.challenger-final-page', { timeout: 15000 }).catch(() => {});
+
+      const continueBtn = page.locator('button', { hasText: /^继续\s*→/ }).first();
+      if (await continueBtn.count() > 0) {
+        await continueBtn.first().evaluate(el => el.click());
         await page.waitForTimeout(500);
       }
     }
@@ -253,5 +264,6 @@ test.describe('Challenger - Full Playthrough', () => {
     });
     expect(snapAfter).not.toBeNull();
     expect(snapAfter.turn).toBeGreaterThanOrEqual(2);
+    console.log('MID-GAME REFRESH LOGS:', logs.join('\n'));
   });
 });

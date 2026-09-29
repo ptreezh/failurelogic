@@ -1166,6 +1166,20 @@
                 });
         });
     }
+
+    // Initialize page based on current URL
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof NavigationManager !== 'undefined') {
+            const path = window.location.pathname;
+            const baseMatch = path.match(/^(\/[^\/]+\/)(.+)$/);
+            if (baseMatch) {
+                const pageName = baseMatch[2];
+                if (NavigationManager.routes['/' + pageName]) {
+                    NavigationManager.renderPage(pageName);
+                }
+            }
+        }
+    });
     </script>
 </body>
 </html>

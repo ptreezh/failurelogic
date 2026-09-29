@@ -187,7 +187,7 @@ for (const sc of SCENARIOS) {
       .filter((f) => /T\d+-(pre|post)-submit\.png$/.test(f));
     expect(checkpoints.length, 'checkpoint screenshot count').toBeGreaterThanOrEqual(20);
   });
-});
+}
 
 // Note: video file copy happens AFTER the whole test run completes, via
 // `npm run test:deep:copy-videos` (chained in `npm run test:deep`). Playwright

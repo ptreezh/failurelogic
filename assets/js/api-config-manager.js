@@ -106,7 +106,7 @@ class APIConfigManager {
       let lastError;
       let attempt = 0;
 
-      while (attempt <= this.options.maxRetries) {
+      while (attempt < this.options.maxRetries) {
         try {
           const response = await fetch(url, {
             ...config,
