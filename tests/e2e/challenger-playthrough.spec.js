@@ -131,15 +131,15 @@ test.describe('Challenger - Full Playthrough', () => {
       await page.waitForSelector('#challenger-feedback-display', { state: 'visible', timeout: 15000 }).catch(() => {});
       await page.waitForSelector('.challenger-final-page', { timeout: 15000 }).catch(() => {});
 
-      const continueBtn = page.locator('button', { hasText: /^继续\s*→/ }).first();
+      const continueBtn = page.locator('button', { hasText: /继续.*→/ }).first();
       if (await continueBtn.count() > 0) {
         await continueBtn.first().evaluate(el => el.click());
         await page.waitForTimeout(500);
       }
     }
 
-    // 上面循环结束后,T10 反馈会显示 + 一个"继续 →"按钮 — 点击进入最终页
-    const finalContinue = page.locator('button', { hasText: /^继续\s*→/ }).first();
+    // 上面循环结束后,T10 反馈会显示 + 一个"下一回合 →"按钮 — 点击进入最终页
+    const finalContinue = page.locator('button', { hasText: /继续.*→/ }).first();
     if (await finalContinue.count() > 0) {
       await finalContinue.first().evaluate(el => el.click());
       await page.waitForTimeout(800);
@@ -182,7 +182,7 @@ test.describe('Challenger - Full Playthrough', () => {
         revealFound = true;
         break;
       }
-      const continueBtn = page.locator('button', { hasText: '继续' }).first();
+      const continueBtn = page.locator('button', { hasText: /继续/ }).first();
       if (await continueBtn.isVisible().catch(() => false)) {
         await continueBtn.click();
         await page.waitForTimeout(500);
@@ -225,7 +225,7 @@ test.describe('Challenger - Full Playthrough', () => {
       await page.waitForSelector('#challenger-feedback-display', { state: 'visible', timeout: 15000 }).catch(() => {});
       await page.waitForSelector('.challenger-final-page', { timeout: 15000 }).catch(() => {});
 
-      const continueBtn = page.locator('button', { hasText: /^继续\s*→/ }).first();
+      const continueBtn = page.locator('button', { hasText: /继续/ }).first();
       if (await continueBtn.count() > 0) {
         await continueBtn.first().evaluate(el => el.click());
         await page.waitForTimeout(500);
