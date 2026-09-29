@@ -871,7 +871,7 @@
       "phase": "T-0:30 — 最后时刻",
       "is_pattern_reveal": true,
       "reveal_phase": 4,
-      "is_final_outcome": true,
+      "is_final_outcome": false,
       "temperature_forecast_f": 26,
       "situation": "1 月 28 日 11:37:30 EST。距离发射 30 秒。\n\n【时间线——真实历史 vs 你现在的处境】\n\n11:38:00 — 挑战者号发射升空（真实历史）\n  你现在站在控制室里。你的决定是：\n\n【最终决策 — 不可撤回】",
       "options": [
