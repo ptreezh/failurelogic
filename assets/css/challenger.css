@@ -2,47 +2,57 @@
  * Loaded via <link> in index.html. Namespace: .challenger-* selectors.
  */
 
+:root {
+  --challenger-gap: 4px;
+  --challenger-card-padding: 10px;
+}
+
+/* Make the modal body scrollable but keep the page compact */
+.game-modal-body {
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.challenger-decision-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--challenger-gap);
+}
+
 .challenger-state-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-  margin: 16px 0;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  margin: 0;
 }
 
 .challenger-state-grid .state-item {
   background: var(--bg-secondary, #f5f5f5);
-  padding: 10px 14px;
-  border-radius: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 1px;
 }
 
 .challenger-state-grid .state-label {
-  font-size: 12px;
+  font-size: 10px;
   color: var(--text-secondary, #666);
 }
 
 .challenger-state-grid .state-value {
-  font-size: 22px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text-primary, #222);
   transition: background-color 0.4s ease, color 0.4s ease;
-  padding: 2px 6px;
-  border-radius: 4px;
+  padding: 1px 4px;
+  border-radius: 3px;
   align-self: flex-start;
 }
 
-.challenger-state-grid .state-value.state-increased {
-  animation: challenger-flash-green 0.7s ease;
-}
-
-.challenger-state-grid .state-value.state-decreased {
-  animation: challenger-flash-red 0.7s ease;
-}
-
 .challenger-state-grid .state-hint {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-secondary, #888);
 }
 
@@ -59,36 +69,43 @@
 .challenger-decision-page .situation-card,
 .challenger-decision-page .decision-card {
   background: var(--bg-card, #fff);
-  padding: 18px;
-  border-radius: 10px;
-  margin: 16px 0;
+  padding: var(--challenger-card-padding);
+  border-radius: 6px;
+  margin: 0;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.challenger-decision-page .situation-card h3,
+.challenger-decision-page .decision-card h3 {
+  margin: 0 0 4px 0;
+  font-size: 13px;
 }
 
 .challenger-decision-page .reveal-banner {
   background: rgba(255, 193, 7, 0.15);
   color: #b88600;
   border-left: 4px solid #ffc107;
-  padding: 8px 12px;
-  margin-top: 12px;
+  padding: 6px 10px;
+  margin-top: 6px;
   font-weight: 600;
   border-radius: 4px;
+  font-size: 12px;
 }
 
 .challenger-options {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin: 12px 0;
+  gap: 4px;
+  margin: 0;
 }
 
 .challenger-option {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+  gap: 8px;
+  padding: 8px 10px;
   border: 2px solid var(--border, #ddd);
-  border-radius: 8px;
+  border-radius: 6px;
   background: var(--bg-card, #fff);
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s, transform 0.1s;
@@ -109,15 +126,15 @@
 
 .challenger-option .option-letter {
   font-weight: 700;
-  font-size: 18px;
-  min-width: 24px;
+  font-size: 14px;
+  min-width: 18px;
   color: var(--primary, #4a90e2);
 }
 
 .challenger-option .option-tag {
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 12px;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
   white-space: nowrap;
 }
 
@@ -138,38 +155,37 @@
 
 .challenger-option .option-text {
   flex: 1;
-  line-height: 1.4;
+  line-height: 1.3;
+  font-size: 13px;
 }
 
 .challenger-decision-page .justification-area {
-  margin-top: 12px;
-}
-
-.challenger-decision-page .justification-area label {
+  margin-top: 6px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 6px;
+  gap: 8px;
 }
 
 .challenger-decision-page .justification-area .char-counter {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-secondary, #666);
+  white-space: nowrap;
 }
 
-.challenger-decision-page textarea {
-  width: 100%;
-  min-height: 80px;
-  padding: 10px;
+.challenger-decision-page input[type="text"] {
+  flex: 1;
+  padding: 6px 8px;
   border: 1px solid var(--border, #ddd);
-  border-radius: 6px;
+  border-radius: 4px;
   font: inherit;
-  resize: vertical;
+  font-size: 13px;
 }
 
 .challenger-submit {
-  margin-top: 14px;
+  margin-top: 8px;
   width: 100%;
+  padding: 8px;
+  font-size: 14px;
 }
 
 .challenger-submit:disabled {
@@ -181,26 +197,27 @@
 .pattern-reveal-card,
 .outcome-card {
   background: var(--bg-card, #fff);
-  padding: 18px;
-  border-radius: 10px;
-  margin: 16px 0;
+  padding: var(--challenger-card-padding);
+  border-radius: 6px;
+  margin: 0;
   white-space: pre-wrap;
   font-family: inherit;
-  line-height: 1.6;
+  line-height: 1.5;
+  font-size: 13px;
 }
 
 .pattern-reveal-card {
-  border-left: 5px solid #ffc107;
+  border-left: 4px solid #ffc107;
   background: rgba(255, 193, 7, 0.05);
 }
 
 .outcome-card.outcome-critical {
-  border-left: 5px solid #fd7e14;
+  border-left: 4px solid #fd7e14;
   background: rgba(253, 126, 20, 0.05);
 }
 
 .outcome-card.outcome-final {
-  border-left: 5px solid #dc3545;
+  border-left: 4px solid #dc3545;
   background: rgba(220, 53, 69, 0.05);
 }
 
@@ -209,19 +226,22 @@
   word-wrap: break-word;
   font-family: inherit;
   margin: 0;
+  font-size: 13px;
 }
 
 .challenger-final-page .actions,
 .challenger-feedback-page .actions,
 .challenger-decision-page .actions {
   display: flex;
-  gap: 12px;
-  margin-top: 18px;
+  gap: 8px;
+  margin-top: 10px;
 }
 
 .challenger-final-page .actions .btn,
 .challenger-feedback-page .actions .btn {
   flex: 1;
+  padding: 8px;
+  font-size: 14px;
 }
 
 @media (max-width: 480px) {

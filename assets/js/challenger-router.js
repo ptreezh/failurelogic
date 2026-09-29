@@ -300,6 +300,56 @@
         <button class="challenger-option"
                 data-option="${o.id}"
                 onclick="window.challengerRouter.selectOption('${o.id}')">
+          <span class="option-letter">${o.id}</span>
+          <span class="option-text">${this._escape(o.text)}</span>
+        </button>
+      `).join('');
+
+      const offlineBanner = this._lastLoadError
+        ? `<div class="offline-banner">离线模式：${this._escape(this._lastLoadError)}</div>`
+        : '';
+
+      return `
+        <div class="game-page challenger-decision-page">
+          <div class="page-header">
+            <h2>${this._escape(this.scenarioConfig.label)} · 第 ${turnNumber} 回合</h2>
+            <div class="progress">回合 ${turnNumber} / ${this.totalTurns} · ${this._escape(phase)}</div>
+          </div>
+
+          <div class="challenger-state-grid" id="challenger-state-grid">
+            ${this._renderStateGrid()}
+          </div>
+
+          ${offlineBanner}
+
+          <div class="situation-card">
+            <div class="situation-text">${this._formatSituation(situation)}</div>
+          </div>
+
+          <div class="decision-card">
+            <div class="challenger-options" id="challenger-options">
+              ${optionHtml}
+            </div>
+
+            <div class="justification-area" id="challenger-justification-area">
+              <input id="challenger-justification" type="text" maxlength="120" placeholder="可选：1句理由" oninput="window.challengerRouter.updateCharCount()">
+              <span class="char-counter"><span id="challenger-char-count">0</span>/120</span>
+            </div>
+
+            <button class="btn btn-primary challenger-submit" id="challenger-submit" disabled onclick="window.challengerRouter.submit()">
+              提交决定
+            </button>
+          </div>
+
+          <div id="challenger-feedback-display" class="feedback-section" style="display:none;"></div>
+        </div>
+      `;
+    }
+
+      const optionHtml = options.map((o) => `
+        <button class="challenger-option"
+                data-option="${o.id}"
+                onclick="window.challengerRouter.selectOption('${o.id}')">
           <span class="option-tag option-${this._weightClass(o.weight)}">${this._weightLabel(o.weight)}</span>
           <span class="option-letter">${o.id}</span>
           <span class="option-text">${this._escape(o.text)}</span>
@@ -310,7 +360,7 @@
         ? `<div class="offline-banner">⚠️ 后端 API 无法连接 — 选项已禁用。请确认 API 服务已启动 (端口 8000) 或检查 Render 部署。<br><small>${this._escape(this._lastLoadError)}</small></div>`
         : '';
 
-      const submitDisabled = options.length === 0 ? 'disabled' : 'disabled';
+      const submitDisabled = options.length === 0 ? 'disabled' : '';
 
       return `
         <div class="game-page challenger-decision-page">
@@ -469,7 +519,6 @@
       document.querySelectorAll('.challenger-option').forEach((el) => {
         el.classList.toggle('selected', el.getAttribute('data-option') === optionId);
       });
-      document.getElementById('challenger-justification-area').style.display = 'block';
       const submitBtn = document.getElementById('challenger-submit');
       if (submitBtn) submitBtn.disabled = false;
     }
@@ -498,10 +547,13 @@
           fbEl.className = this._feedbackClassForTurn(this.lastTurnNumber);
           fbEl.innerHTML = `<pre class="feedback-pre">${this._escape(this.lastFeedback)}</pre>
             <div class="actions">
-              <button class="btn btn-primary" onclick="window.challengerRouter.continueToNextTurn()">继续 →</button>
+              <button class="btn btn-primary" onclick="window.challengerRouter.continueToNextTurn()">下一回合 →</button>
             </div>`;
           fbEl.style.display = 'block';
           this._applyStateChangeFlash(this.previousState, this.gameState);
+        }
+        if (submitBtn) {
+          submitBtn.style.display = 'none';
         }
       } catch (err) {
         console.error('[challenger] submit failed', err);

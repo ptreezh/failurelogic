@@ -6,10 +6,11 @@
 }
 
 .modal.game-modal .modal-content {
-  max-width: 95vw;
-  max-height: 92vh;
-  width: 900px;
+  max-width: 98vw;
+  max-height: 96vh;
+  width: 1000px;
   height: auto;
+  padding: 8px;
 }
 
 /* Game Header */
@@ -17,20 +18,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--space-sm) var(--space-md);
+  padding: 6px 10px;
   border-bottom: 1px solid var(--border-light);
   background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
 }
 
 .game-header h2 {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--primary-700);
   margin: 0;
 }
 
 .game-header p {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--primary-600);
   margin: 0;
   font-weight: 500;
@@ -38,7 +39,7 @@
 
 /* Game Content */
 .game-content {
-  padding: var(--space-sm);
+  padding: 8px;
   overflow-y: visible;
 }
 
