@@ -1,59 +1,60 @@
-/* challenger.css — scoped styles for Challenger scenario UI.
- * Loaded via <link> in index.html. Namespace: .challenger-* selectors.
- */
+/* challenger.css — compact one-screen layout for deep scenarios. */
 
 :root {
   --challenger-gap: 4px;
-  --challenger-card-padding: 10px;
+  --challenger-card-padding: 8px;
 }
 
-/* Make the modal body scrollable but keep the page compact */
+/* Modal adjustments */
+.modal.game-modal .modal-content {
+  width: 98vw;
+  max-width: 1100px;
+  max-height: 96vh;
+  padding: 6px;
+}
+
 .game-modal-body {
-  max-height: calc(100vh - 100px);
+  max-height: calc(100vh - 40px);
   overflow-y: auto;
-  padding: 10px;
+  padding: 6px;
 }
 
 .challenger-decision-page {
   display: flex;
   flex-direction: column;
-  gap: var(--challenger-gap);
+  gap: 6px;
 }
 
+/* Compact state chips: single horizontal row */
 .challenger-state-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 4px;
   margin: 0;
 }
 
-.challenger-state-grid .state-item {
+.challenger-state-grid .state-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   background: var(--bg-secondary, #f5f5f5);
-  padding: 4px 8px;
+  padding: 2px 6px;
   border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
+  font-size: 11px;
+  line-height: 1.2;
 }
 
-.challenger-state-grid .state-label {
-  font-size: 10px;
+.challenger-state-grid .state-chip-label {
   color: var(--text-secondary, #666);
+  font-size: 10px;
 }
 
-.challenger-state-grid .state-value {
-  font-size: 16px;
+.challenger-state-grid .state-chip-value {
   font-weight: 600;
   color: var(--text-primary, #222);
   transition: background-color 0.4s ease, color 0.4s ease;
-  padding: 1px 4px;
-  border-radius: 3px;
-  align-self: flex-start;
-}
-
-.challenger-state-grid .state-hint {
-  font-size: 10px;
-  color: var(--text-secondary, #888);
+  padding: 0 2px;
+  border-radius: 2px;
 }
 
 @keyframes challenger-flash-green {
@@ -66,6 +67,7 @@
   100% { background-color: transparent; }
 }
 
+/* Compact cards */
 .challenger-decision-page .situation-card,
 .challenger-decision-page .decision-card {
   background: var(--bg-card, #fff);
@@ -77,38 +79,38 @@
 
 .challenger-decision-page .situation-card h3,
 .challenger-decision-page .decision-card h3 {
-  margin: 0 0 4px 0;
-  font-size: 13px;
+  margin: 0 0 3px 0;
+  font-size: 12px;
 }
 
 .challenger-decision-page .reveal-banner {
   background: rgba(255, 193, 7, 0.15);
   color: #b88600;
-  border-left: 4px solid #ffc107;
-  padding: 6px 10px;
-  margin-top: 6px;
+  border-left: 3px solid #ffc107;
+  padding: 4px 8px;
+  margin-top: 4px;
   font-weight: 600;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .challenger-options {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   margin: 0;
 }
 
 .challenger-option {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  border: 2px solid var(--border, #ddd);
-  border-radius: 6px;
+  gap: 6px;
+  padding: 5px 8px;
+  border: 1.5px solid var(--border, #ddd);
+  border-radius: 4px;
   background: var(--bg-card, #fff);
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s, transform 0.1s;
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
   text-align: left;
   font: inherit;
   color: inherit;
@@ -116,7 +118,7 @@
 
 .challenger-option:hover {
   border-color: var(--primary, #4a90e2);
-  transform: translateX(2px);
+  transform: translateX(1px);
 }
 
 .challenger-option.selected {
@@ -126,15 +128,15 @@
 
 .challenger-option .option-letter {
   font-weight: 700;
-  font-size: 14px;
-  min-width: 18px;
+  font-size: 12px;
+  min-width: 14px;
   color: var(--primary, #4a90e2);
 }
 
 .challenger-option .option-tag {
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 10px;
+  font-size: 9px;
+  padding: 1px 4px;
+  border-radius: 8px;
   white-space: nowrap;
 }
 
@@ -155,42 +157,12 @@
 
 .challenger-option .option-text {
   flex: 1;
-  line-height: 1.3;
-  font-size: 13px;
-}
-
-.challenger-decision-page .justification-area {
-  margin-top: 6px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.challenger-decision-page .justification-area .char-counter {
-  font-size: 11px;
-  color: var(--text-secondary, #666);
-  white-space: nowrap;
-}
-
-.challenger-decision-page input[type="text"] {
-  flex: 1;
-  padding: 6px 8px;
-  border: 1px solid var(--border, #ddd);
-  border-radius: 4px;
-  font: inherit;
-  font-size: 13px;
+  line-height: 1.25;
+  font-size: 12px;
 }
 
 .challenger-submit {
-  margin-top: 8px;
-  width: 100%;
-  padding: 8px;
-  font-size: 14px;
-}
-
-.challenger-submit:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  display: none;
 }
 
 /* Feedback / outcome cards */
@@ -202,22 +174,22 @@
   margin: 0;
   white-space: pre-wrap;
   font-family: inherit;
-  line-height: 1.5;
-  font-size: 13px;
+  line-height: 1.4;
+  font-size: 12px;
 }
 
 .pattern-reveal-card {
-  border-left: 4px solid #ffc107;
+  border-left: 3px solid #ffc107;
   background: rgba(255, 193, 7, 0.05);
 }
 
 .outcome-card.outcome-critical {
-  border-left: 4px solid #fd7e14;
+  border-left: 3px solid #fd7e14;
   background: rgba(253, 126, 20, 0.05);
 }
 
 .outcome-card.outcome-final {
-  border-left: 4px solid #dc3545;
+  border-left: 3px solid #dc3545;
   background: rgba(220, 53, 69, 0.05);
 }
 
@@ -226,27 +198,27 @@
   word-wrap: break-word;
   font-family: inherit;
   margin: 0;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .challenger-final-page .actions,
 .challenger-feedback-page .actions,
 .challenger-decision-page .actions {
   display: flex;
-  gap: 8px;
-  margin-top: 10px;
+  gap: 6px;
+  margin-top: 6px;
 }
 
 .challenger-final-page .actions .btn,
 .challenger-feedback-page .actions .btn {
   flex: 1;
-  padding: 8px;
-  font-size: 14px;
+  padding: 6px;
+  font-size: 12px;
 }
 
 @media (max-width: 480px) {
   .challenger-state-grid {
-    grid-template-columns: 1fr 1fr;
+    flex-wrap: wrap;
   }
   .challenger-option .option-tag {
     display: none;

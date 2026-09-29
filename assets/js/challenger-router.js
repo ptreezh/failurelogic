@@ -330,15 +330,6 @@
             <div class="challenger-options" id="challenger-options">
               ${optionHtml}
             </div>
-
-            <div class="justification-area" id="challenger-justification-area">
-              <input id="challenger-justification" type="text" maxlength="120" placeholder="可选：1句理由" oninput="window.challengerRouter.updateCharCount()">
-              <span class="char-counter"><span id="challenger-char-count">0</span>/120</span>
-            </div>
-
-            <button class="btn btn-primary challenger-submit" id="challenger-submit" disabled onclick="window.challengerRouter.submit()">
-              提交决定
-            </button>
           </div>
 
           <div id="challenger-feedback-display" class="feedback-section" style="display:none;"></div>
@@ -351,15 +342,11 @@
       const items = this.scenarioConfig.stateFields.map((f) => ({
         id: f.id, label: f.label, val: state[f.key]
       }));
-      return items.map((it) => {
+      const chips = items.map((it) => {
         const val = (it.val === undefined || it.val === null) ? '—' : it.val;
-        return `
-          <div class="state-item">
-            <span class="state-label">${it.label}</span>
-            <span class="state-value" id="${it.id}">${val}</span>
-          </div>
-        `;
+        return `<span class="state-chip" id="${it.id}"><span class="state-chip-label">${it.label}</span><span class="state-chip-value">${val}</span></span>`;
       }).join('');
+      return `<div class="state-chips">${chips}</div>`;
     }
 
     _renderFeedbackView() {
@@ -454,8 +441,43 @@
       document.querySelectorAll('.challenger-option').forEach((el) => {
         el.classList.toggle('selected', el.getAttribute('data-option') === optionId);
       });
-      const submitBtn = document.getElementById('challenger-submit');
-      if (submitBtn) submitBtn.disabled = false;
+      const ta = document.getElementById('challenger-justification');
+      const justification = ta ? ta.value.trim() : '';
+      if (this.submitting) return;
+      this._submitTurn(optionId, justification).then((resp) => {
+        if (!resp) {
+          return;
+        }
+        const container = document.getElementById('game-container');
+        if (this.lastTurnNumber >= this.totalTurns) {
+          if (container) {
+            container.innerHTML = this._renderFinalPage();
+          }
+          ChallengerRouter.clearSnapshot(this.gameId);
+          return;
+        }
+        const fbEl = document.getElementById('challenger-feedback-display');
+        if (fbEl) {
+          fbEl.className = this._feedbackClassForTurn(this.lastTurnNumber);
+          fbEl.innerHTML = `<pre class="feedback-pre">${this._escape(this.lastFeedback)}</pre>
+            <div class="actions">
+              <button class="btn btn-primary" onclick="window.challengerRouter.continueToNextTurn()">继续 →</button>
+            </div>`;
+          fbEl.style.display = 'block';
+          this._applyStateChangeFlash(this.previousState, this.gameState);
+        }
+        const submitBtn = document.getElementById('challenger-submit');
+        if (submitBtn) {
+          submitBtn.style.display = 'none';
+        }
+      }).catch((err) => {
+        console.error('[challenger] auto-submit failed', err);
+        const submitBtn = document.getElementById('challenger-submit');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = '提交决定';
+        }
+      });
     }
 
     updateCharCount() {
@@ -465,7 +487,6 @@
     }
 
     async submit() {
-      this._submitCount = (this._submitCount || 0) + 1;
       if (!this.selectedOption) return;
       const ta = document.getElementById('challenger-justification');
       const justification = ta ? ta.value.trim() : '';
@@ -482,7 +503,7 @@
           fbEl.className = this._feedbackClassForTurn(this.lastTurnNumber);
           fbEl.innerHTML = `<pre class="feedback-pre">${this._escape(this.lastFeedback)}</pre>
             <div class="actions">
-              <button class="btn btn-primary" onclick="window.challengerRouter.continueToNextTurn()">下一回合 →</button>
+              <button class="btn btn-primary" onclick="window.challengerRouter.continueToNextTurn()">继续 →</button>
             </div>`;
           fbEl.style.display = 'block';
           this._applyStateChangeFlash(this.previousState, this.gameState);
