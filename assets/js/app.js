@@ -11860,7 +11860,7 @@ class GameManager {
       return;
     }
 
-    if (typeof ChallengerRouter === 'undefined') {
+    if (typeof window.ChallengerRouter === 'undefined') {
       const errMsg = '场景组件尚未加载完成，请刷新页面重试';
       console.error('[debug] startChallengerGame ChallengerRouter is undefined');
       const errDiv = document.createElement('div');
@@ -11875,7 +11875,7 @@ class GameManager {
     }
 
     console.log('[debug] startChallengerGame creating router');
-    const router = new ChallengerRouter(
+    const router = new window.ChallengerRouter(
       (AppState.gameSession && AppState.gameSession.gameState) || {},
       { gameId: gameId }
     );
@@ -11883,7 +11883,7 @@ class GameManager {
     console.log('[debug] startChallengerGame router created');
 
     // Check for resumable localStorage snapshot
-    const snap = ChallengerRouter.loadSnapshot(gameId);
+    const snap = window.ChallengerRouter.loadSnapshot(gameId);
     console.log('[debug] startChallengerGame snap=', snap && { turn: snap.turn, gameState: !!snap.gameState });
     if (snap && snap.turn > 0) {
       const ok = window.confirm(
@@ -11896,7 +11896,7 @@ class GameManager {
         window.__challengerResumeGameId = null;
         return;
       } else {
-        ChallengerRouter.clearSnapshot(gameId);
+        window.ChallengerRouter.clearSnapshot(gameId);
       }
     }
     window.__challengerResumeGameId = null;
@@ -12024,7 +12024,7 @@ class GameManager {
       return;
     }
 
-    const router = new ChallengerRouter(
+    const router = new window.ChallengerRouter(
       initialState || {},
       { gameId: AppState.gameSession.gameId, scenarioId }
     );
