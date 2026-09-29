@@ -822,7 +822,7 @@
       "turn": 10,
       "phase": "[最终结局] 你的十年",
       "year": "2035年12月",
-      "is_final_outcome": true,
+      "is_final_outcome": false,
       "situation": "你的十年任期将满。2035年12月，全球气候处于你留下的状态。\n\nDörner 写道：'我们不需要完美的决策——我们需要的是持续的方向调整。偏差是常态，自我批评才是能力。'\n\n回顾你的十年：\n- 你在回合1选了 {turn1_option}\n- 回合2: {turn2_option}\n- 回合3: {turn3_option}\n- 回合4: {turn4_option}\n- 回合5: {turn5_option}\n- 回合6: {turn6_option}\n- 回合7: {turn7_option}\n- 回合8: {turn8_option}\n- 回合9: {turn9_option}\n\n最终结局取决于你的累积路径。",
       "options": [
         {
