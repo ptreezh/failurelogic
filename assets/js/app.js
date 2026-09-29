@@ -76,6 +76,10 @@ const ApiService = {
   offline: false,
 
   async _withOfflineFallback(endpoint, options, offlineFn) {
+    if (ApiService.offline) {
+      if (!offlineFn) throw new Error('offline mode and no fallback');
+      return offlineFn();
+    }
     let apiDone = false;
     let apiResult;
     let apiError;
@@ -90,10 +94,10 @@ const ApiService = {
         apiError = error;
         throw error;
       });
-    const timeoutMs = 4000;
+    const timeoutMs = 1200;
     const startTime = Date.now();
     while (!apiDone && Date.now() - startTime < timeoutMs) {
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 50));
     }
     if (apiDone && !apiError) {
       ApiService.offline = false;
