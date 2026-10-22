@@ -157,6 +157,13 @@ validation_report.json
 /types/
 # scripts/ is fully tracked. Add local-only scripts by name (e.g. scripts/agent-*.sh)
 # rather than reintroducing the directory-level ignore.
+
+# 一次性诊断探针：留在磁盘上供回溯，但不入库。
+# 这些文件是排查过程中现写的，生命周期只有一次运行，入库存量只会让 scripts/ 变成垃圾场
+#（历史已有 69 个未跟踪文件，其中绝大多数是这类）。
+scripts/_tmp_*
+# 验收脚本的带时间戳副本（如 acceptance-climate_20261022_075736_587.mjs）同理。
+scripts/*_[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]_[0-9]*.mjs
 assets/js/adaptive-learning-system.js
 assets/js/advanced-data-analytics.js
 assets/js/advanced-scenario-interaction.js
