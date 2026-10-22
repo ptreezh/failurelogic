@@ -1,0 +1,1071 @@
+{
+  "scenarioId": "chip-ai-supplychain",
+  "version": "1.0-2026-10-18",
+  "title": "华芯突围：AI芯片供应链",
+  "subtitle": "在制裁与断供的迷雾里做战略决策",
+  "difficulty": "advanced",
+  "estimatedDuration": 45,
+  "category": "产业战略决策·深度",
+  "description": "2026年，某国产AI芯片设计公司'华芯科技'。美国制裁升级，先进制程代工与HBM内存双双被断供，海外大客户订单回流又骤减。你扮演华芯CEO，在10个回合里决定公司命运：囤货备件、HBM选型、代工转单、扩产杠杆、良率攻坚、降价保单、EDA并购……每个看似正确的经营决策都藏着延迟后果——现金流被存货吃掉、杠杆在周期底部爆掉、良率焦虑掩盖结构性问题。",
+  "dornerLessons": [
+    "线性外推陷阱：把断供前的增速线性外推到制裁期，高估需求曲线",
+    "确认偏误：只采信'国产替代乐观'的媒体叙事，忽视良率与现金流的硬数据",
+    "时间延迟：备件囤积、良率爬坡、供应商切换都有6-12个月的滞后效应",
+    "单目标优化：追逐'扩产/市占'单一指标，系统性牺牲现金流与研发质量",
+    "局部优化 / 只见树木：拆解每颗芯片的成本，却看不到整条供应链的脆弱性",
+    "问题延迟暴露：良率与供应链风险在媒体乐观期被掩盖，在周期底部集中爆发",
+    "过度调节：危机时靠降价保订单、加杠杆维持扩产，把公司锁死在死亡螺旋",
+    "自指 / 系统反应：你的每一份公开乐观声明都会反向影响投资人与客户的信心"
+  ],
+  "historicalContext": {
+    "summary": "2022-2026年，美国对华半导体出口管制持续升级：先进制程设备、EDA工具、HBM（高带宽内存）先后纳入管制清单。国产AI芯片设计公司被迫在成熟制程+国产供应链上寻求生存。2025-2026年AI算力需求爆发，但制裁使先进产能受限——'算力饥渴'与'供应链断裂'同时存在。",
+    "key_facts": [
+      {
+        "date": "2022-10",
+        "fact": "美国商务部将先进制程半导体设备纳入管制，禁售给中国实体",
+        "teaching_point": "断供不是一次性事件，而是长期结构性约束"
+      },
+      {
+        "date": "2025",
+        "fact": "AI算力需求爆发，HBM成为算力芯片的关键瓶颈",
+        "teaching_point": "单一供应商依赖=系统性风险敞口"
+      },
+      {
+        "date": "2026",
+        "fact": "制裁升级，先进制程代工与HBM双双被列入出口管制清单",
+        "teaching_point": "供应链风险是延迟暴露的：断供第一天没有警报，六个月后才是引爆点"
+      },
+      {
+        "date": "2026",
+        "fact": "国产替代叙事火热，多家公司宣布'自主可控'，但良率与现金流数据被选择性披露",
+        "teaching_point": "媒体的乐观叙事不等于经营基本面"
+      }
+    ]
+  },
+  "initialState": {
+    "cash_flow": 8,
+    "capacity_utilization": 72,
+    "yield_rate": 78,
+    "inventory_buffer": 30,
+    "self_reliance": 35,
+    "supply_chain_risk": 60,
+    "order_backlog": 5,
+    "debt_ratio": 40,
+    "rnd_budget": 15,
+    "engineer_morale": 70,
+    "market_share": 12,
+    "policy_standing": 55,
+    "perception_bias": 0,
+    "turn": 1,
+    "consequence_deferred_queue": []
+  },
+  "stakeholders": [
+    {
+      "id": "board",
+      "name": "董事会与投资人",
+      "key_persons": [
+        "大股东/战略投资人",
+        "券商分析师"
+      ],
+      "concern": "季度营收、市占率、股价叙事",
+      "stance": "要求'规模叙事'：扩产、高增长、国产替代第一股"
+    },
+    {
+      "id": "engineers",
+      "name": "芯片研发团队",
+      "key_persons": [
+        "首席架构师陈工",
+        "良率工程师小李"
+      ],
+      "concern": "良率爬坡需要时间；现金流紧张会让研发停滞",
+      "stance": "实事求是派：'良率不是喊口号喊出来的'"
+    },
+    {
+      "id": "customers",
+      "name": "海外与本土客户",
+      "key_persons": [
+        "海外云厂商（断供后流失）",
+        "本土服务器厂商"
+      ],
+      "concern": "供货稳定性、性能、价格",
+      "stance": "观望派：'你能稳定供货，我才敢下单'"
+    },
+    {
+      "id": "suppliers",
+      "name": "代工与供应商",
+      "key_persons": [
+        "国内成熟制程代工厂",
+        "EDA/材料国产供应商"
+      ],
+      "concern": "订单量与账期；制裁合规风险",
+      "stance": "现实派：'可以合作，但风险你们担'"
+    }
+  ],
+  "steps": [
+    {
+      "turn": 1,
+      "phase": "备件囤积",
+      "situation": "董事会紧急会议。制裁刚落地，供应链总监建议立刻囤积12个月的HBM与关键备件，预计占用现金6亿元。首席架构师陈工拍桌：'不囤，断供当天就是公司死亡那天！'财务总监算了一笔账：现金8亿，囤6亿=现金流直接见底，下季度研发就没钱。",
+      "options": [
+        {
+          "id": "A",
+          "text": "囤12个月备件，现金流梭哈",
+          "consequences_for_player": "供应链风险短期下降，但现金流见底；存货跌价与现金枯竭是延迟炸弹，T6起显现",
+          "expected_concerns_addressed": [
+            "供应链安全"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "B",
+          "text": "囤6个月，留一半现金",
+          "consequences_for_player": "折中：风险与现金各留一半；仍占用3亿现金",
+          "expected_concerns_addressed": [
+            "折中"
+          ],
+          "weight": "moderate"
+        },
+        {
+          "id": "C",
+          "text": "不囤，靠国产替代供应链快速切换",
+          "consequences_for_player": "现金流健康，但断供风险直接暴露；国产替代良率未达标，T3起供应风险上升",
+          "expected_concerns_addressed": [
+            "现金安全"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "D",
+          "text": "先审计真实需求再决定囤量",
+          "consequences_for_player": "决策延迟2周，获得准确需求数据；囤量基于事实而非恐慌",
+          "expected_concerns_addressed": [
+            "数据驱动"
+          ],
+          "weight": "analytical"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "inventory_buffer": 12,
+          "cash_flow": -6,
+          "supply_chain_risk": -30,
+          "consequence_deferred_queue": [
+            "cash_drain"
+          ]
+        },
+        "B": {
+          "inventory_buffer": 6,
+          "cash_flow": -3,
+          "supply_chain_risk": -15
+        },
+        "C": {
+          "cash_flow": 0,
+          "supply_chain_risk": 15,
+          "inventory_buffer": -10
+        },
+        "D": {
+          "cash_flow": -1,
+          "inventory_buffer": 3,
+          "supply_chain_risk": -5
+        }
+      },
+      "character_reactions": {
+        "A": "财务总监脸色发白：'下季度研发预算砍一半，你们谁去跟陈工说？'",
+        "B": "供应链总监松口气，财务总监也没太反对：'至少还有口气。'",
+        "C": "陈工点头：'现金是命。但供应链断了，命也没了——得赌一把。'",
+        "D": "两周审计发现真实缺口只有4个月，你少囤了2亿：'还好没梭哈。'"
+      }
+    },
+    {
+      "turn": 2,
+      "phase": "HBM选型",
+      "situation": "HBM断供在即。两条路：①押注国产HBM（某存储厂良率仅40%，宣称6个月内爬坡到75%）；②从第三方渠道高价囤国际HBM（溢价60%，但库存只够9个月）。分析师报告说：'国产HBM是唯一出路，媒体都在炒自主可控。'陈工私下说：'国产的良率数据，我没见过。'",
+      "options": [
+        {
+          "id": "A",
+          "text": "全面押注国产HBM，签5年长约",
+          "consequences_for_player": "自主可控叙事+，但良率风险自担；T4/T7良率与供货可靠性双重打击",
+          "expected_concerns_addressed": [
+            "自主可控"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "B",
+          "text": "国产+国际HBM双轨",
+          "consequences_for_player": "风险分散，成本高；现金承压",
+          "expected_concerns_addressed": [
+            "双轨"
+          ],
+          "weight": "moderate"
+        },
+        {
+          "id": "C",
+          "text": "只囤国际HBM，等国产成熟再切换",
+          "consequences_for_player": "短期供货稳定，但长期依赖第三方渠道；价格与账期受制于人",
+          "expected_concerns_addressed": [
+            "短期稳定"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "D",
+          "text": "要求国产厂提供良率白盒数据再决策",
+          "consequences_for_player": "谈判筹码+，决策基于数据；良率透明度提升",
+          "expected_concerns_addressed": [
+            "数据透明"
+          ],
+          "weight": "analytical"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "self_reliance": 15,
+          "supply_chain_risk": -10,
+          "yield_rate": -8,
+          "consequence_deferred_queue": [
+            "yield_gamble"
+          ]
+        },
+        "B": {
+          "self_reliance": 8,
+          "cash_flow": -2,
+          "supply_chain_risk": -10
+        },
+        "C": {
+          "self_reliance": 3,
+          "cash_flow": -4,
+          "supply_chain_risk": 10,
+          "consequence_deferred_queue": [
+            "channel_lock"
+          ]
+        },
+        "D": {
+          "self_reliance": 5,
+          "policy_standing": 3,
+          "cash_flow": -1
+        }
+      },
+      "character_reactions": {
+        "A": "媒体头条：'华芯全面拥抱国产HBM！'陈工在实验室摔了咖啡杯：'数据呢？'",
+        "B": "供应商两头压价，财务总监苦笑：'两条腿走路，两条腿都在淌血。'",
+        "C": "分析师质疑：'放着国产不用，是不爱国吗？'股价小跌。",
+        "D": "国产厂松口提供了良率数据——比你想象的还差。你默默调整了方案。"
+      }
+    },
+    {
+      "turn": 3,
+      "phase": "代工转单",
+      "situation": "先进制程代工正式断供。国内成熟制程代工厂愿意接单，但良率与工艺适配需要12-18个月爬坡。同时，政府补贴窗口开放：'自主产能建设'项目可申请5亿元补贴，条件是承诺扩产与本地采购。",
+      "options": [
+        {
+          "id": "A",
+          "text": "拿补贴+扩产+全面转单国产代工",
+          "consequences_for_player": "政策红利+5亿补贴，但扩产承诺绑架未来；工艺适配风险集中暴露",
+          "expected_concerns_addressed": [
+            "政策红利"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "B",
+          "text": "拿补贴但分批转单，保留混合产能",
+          "consequences_for_player": "稳扎稳打：政策红利+风险分散",
+          "expected_concerns_addressed": [
+            "分批转单"
+          ],
+          "weight": "moderate"
+        },
+        {
+          "id": "C",
+          "text": "不拿补贴，坚持现有产能结构",
+          "consequences_for_player": "独立自主，但错过政策窗口；政策支持度下降",
+          "expected_concerns_addressed": [
+            "独立"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "D",
+          "text": "先谈判补贴条件，评估真实成本",
+          "consequences_for_player": "决策延迟，但避免被扩产承诺绑架；信息充分",
+          "expected_concerns_addressed": [
+            "条件评估"
+          ],
+          "weight": "analytical"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "cash_flow": 5,
+          "capacity_utilization": 15,
+          "debt_ratio": 10,
+          "supply_chain_risk": -20,
+          "consequence_deferred_queue": [
+            "expansion_commitment"
+          ]
+        },
+        "B": {
+          "cash_flow": 4,
+          "capacity_utilization": 5,
+          "debt_ratio": 5,
+          "supply_chain_risk": -10
+        },
+        "C": {
+          "policy_standing": -8,
+          "capacity_utilization": 0
+        },
+        "D": {
+          "cash_flow": 0,
+          "policy_standing": 2,
+          "supply_chain_risk": -3
+        }
+      },
+      "character_reactions": {
+        "A": "签约仪式上掌声雷动，陈工在台下低声说：'扩产承诺是五年军令状。'",
+        "B": "代工厂点头：'分批来，我们也能把良率慢慢磨上去。'",
+        "C": "政府对接人欲言又止：'华芯错过这轮，下轮政策就不一定有了。'",
+        "D": "你发现补贴附带'本地采购比例'硬指标，悄悄把条款改成了'尽最大努力'。"
+      }
+    },
+    {
+      "turn": 4,
+      "phase": "良率焦虑",
+      "situation": "国产代工试产结果：良率仅55%，远低于盈亏平衡线75%。媒体却在集中报道'国产芯片突破'，股价两周涨了18%。董事会施压：'按媒体节奏发利好，稳住投资人信心。'陈工报告：'良率爬坡需要至少6个季度，且需要持续研发投入。'",
+      "options": [
+        {
+          "id": "A",
+          "text": "发乐观通稿，淡化良率问题",
+          "consequences_for_player": "短期股价与投资人信心+，但 perception_bias 累积；T5揭示时信任受损",
+          "expected_concerns_addressed": [
+            "信心"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "B",
+          "text": "如实披露良率，请求投资人耐心",
+          "consequences_for_player": "信任+，短期股价承压；长期诚实溢价",
+          "expected_concerns_addressed": [
+            "诚实"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "C",
+          "text": "加大研发投入攻坚良率，不对外表态",
+          "consequences_for_player": "研发+，良率爬坡加速；现金承压",
+          "expected_concerns_addressed": [
+            "研发攻坚"
+          ],
+          "weight": "moderate"
+        },
+        {
+          "id": "D",
+          "text": "请第三方机构独立验证并发布报告",
+          "consequences_for_player": "客观数据透明化；若报告悲观则股价承压，但 perception_bias 归零",
+          "expected_concerns_addressed": [
+            "独立验证"
+          ],
+          "weight": "analytical"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "market_share": 2,
+          "perception_bias": 15,
+          "consequence_deferred_queue": [
+            "optimism_spiral"
+          ]
+        },
+        "B": {
+          "perception_bias": -5,
+          "market_share": -2,
+          "engineer_morale": 5
+        },
+        "C": {
+          "rnd_budget": 5,
+          "cash_flow": -3,
+          "yield_rate": 3
+        },
+        "D": {
+          "perception_bias": 0,
+          "cash_flow": -1,
+          "policy_standing": 5
+        }
+      },
+      "character_reactions": {
+        "A": "通稿发出后股价又涨5%，陈工看完把手机扣在桌上：'我写报告都不敢这么乐观。'",
+        "B": "投资人电话打爆了，但有三家老股东表态：'就冲这份诚实，我们加仓。'",
+        "C": "陈工带着团队连轴转，良率爬到58%——还差17个百分点。",
+        "D": "第三方报告很中立：'良率55%，爬坡曲线符合历史规律。'股价小跌，但没人说你撒谎。"
+      }
+    },
+    {
+      "turn": 5,
+      "phase": "第一揭示：线性外推与确认偏误",
+      "is_pattern_reveal": true,
+      "reveal_phase": 1,
+      "pattern_reveal_template": {
+        "round": 1,
+        "biases_revealed": [
+          "linear_extrapolation",
+          "confirmation_bias"
+        ],
+        "narrative": "系统揭示前4回合的决策模式：媒体乐观叙事 vs 良率硬数据。"
+      },
+      "situation": "季度复盘会，数据摊开：\n\n📊 若你T1囤12个月：现金已见底，研发停摆风险倒计时；若T2全面押注国产HBM：首批供货良率不足，客户退货率12%；若T4发乐观通稿：媒体与投资人的'信心'正在取代'事实'，perception_bias 已经累积。【默认】你没囤货、没全面押注、也没发乐观通稿：账面干净，代价一样在——小批量试产的良率只有 55%，客户把订单转给了报价更低的对手；研发预算被砍掉 18%，两名核心工程师已递辞呈。\n\n陈工把两份材料放在桌上：左边是媒体头条'国产芯片集体突破'，右边是自家良率曲线——55%，离盈亏平衡还差20个百分点。\n\n'CEO，我们到底信哪份？'",
+      "options": [
+        {
+          "id": "A",
+          "text": "直面数据，调整战略重心到良率",
+          "consequences_for_player": "修正路径：研发+，叙事降温；短期股价承压但信任回升",
+          "expected_concerns_addressed": [
+            "直面数据"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "B",
+          "text": "加大媒体投放，'信心比黄金重要'",
+          "consequences_for_player": "确认偏误：继续用叙事掩盖数据，perception_bias 再+",
+          "expected_concerns_addressed": [
+            "信心"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "C",
+          "text": "维持现状，等良率自然爬坡",
+          "consequences_for_player": "时间延迟：既不承认也不行动，问题继续累积",
+          "expected_concerns_addressed": [
+            "现状"
+          ],
+          "weight": "passive"
+        },
+        {
+          "id": "D",
+          "text": "邀请行业专家闭门评审，交叉验证数据",
+          "consequences_for_player": "客观第三方视角，修正叙事与数据偏差；决策延迟一周",
+          "expected_concerns_addressed": [
+            "专家评审"
+          ],
+          "weight": "analytical"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "rnd_budget": 5,
+          "cash_flow": -2,
+          "perception_bias": -10,
+          "engineer_morale": 8,
+          "market_share": -2
+        },
+        "B": {
+          "perception_bias": 12,
+          "cash_flow": -3,
+          "market_share": 2,
+          "consequence_deferred_queue": [
+            "narrative_spiral"
+          ]
+        },
+        "C": {
+          "perception_bias": 5,
+          "cash_flow": -1,
+          "engineer_morale": -3
+        },
+        "D": {
+          "cash_flow": -1,
+          "perception_bias": -5,
+          "policy_standing": 3
+        }
+      },
+      "character_reactions": {
+        "A": "陈工第一次在会议上笑了：'这话，我等了半年。'",
+        "B": "媒体通稿发完，陈工没参加会议，群里只留了一句：'数据不会因为报道多就变好。'",
+        "C": "陈工欲言又止，最后只说了句：'我继续磨良率。'",
+        "D": "三位行业专家关起门来评审了两天，结论与陈工一致：'良率爬坡没有捷径，但有路线图。'"
+      }
+    },
+    {
+      "turn": 6,
+      "phase": "扩产杠杆",
+      "is_pattern_reveal": true,
+      "reveal_phase": 2,
+      "pattern_reveal_template": {
+        "round": 2,
+        "biases_revealed": [
+          "single_target_optimization",
+          "time_delay_blindness"
+        ],
+        "narrative": "揭示扩产承诺与存货杠杆的延迟代价：规模叙事在吞噬现金流。"
+      },
+      "situation": "行业周期见顶信号出现：下游服务器厂商砍单，AI算力投资增速放缓。但扩产计划已签约——若你T3拿了补贴，扩产承诺是五年军令状；若你T1囤了12个月备件，存货正在跌价。董事会还在喊：'市占率！市占率！规模就是壁垒！'【默认】你没拿补贴、也没囤备件：扩产计划没有被五年军令状绑住，但你也没有政府背书。行业掉头时，董事会第一个问的就是：为什么我们没上车。",
+      "options": [
+        {
+          "id": "A",
+          "text": "按原计划加杠杆扩产",
+          "consequences_for_player": "市占率+但负债+；周期下行时产能闲置，现金流被固定成本吞噬",
+          "expected_concerns_addressed": [
+            "规模"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "B",
+          "text": "放缓扩产，优先保现金流",
+          "consequences_for_player": "市占率让渡给竞争对手，但活下来；修正路径",
+          "expected_concerns_addressed": [
+            "现金流"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "C",
+          "text": "转单给海外客户稳定订单",
+          "consequences_for_player": "订单+但受制裁合规审查风险；中短期现金流改善",
+          "expected_concerns_addressed": [
+            "订单"
+          ],
+          "weight": "moderate"
+        },
+        {
+          "id": "D",
+          "text": "用存货做抵押融资",
+          "consequences_for_player": "短期现金注入，但存货跌价时爆仓风险",
+          "expected_concerns_addressed": [
+            "融资"
+          ],
+          "weight": "moderate"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "capacity_utilization": 10,
+          "debt_ratio": 15,
+          "cash_flow": -4,
+          "market_share": 3,
+          "consequence_deferred_queue": [
+            "overcapacity"
+          ]
+        },
+        "B": {
+          "cash_flow": 3,
+          "capacity_utilization": -5,
+          "market_share": -2,
+          "debt_ratio": -5
+        },
+        "C": {
+          "order_backlog": 3,
+          "cash_flow": 2,
+          "supply_chain_risk": 5
+        },
+        "D": {
+          "cash_flow": 3,
+          "debt_ratio": 8,
+          "consequence_deferred_queue": [
+            "collateral_risk"
+          ]
+        }
+      },
+      "character_reactions": {
+        "A": "扩产设备进厂那天，下游砍单消息同步传来——产线还没开就闲置了。",
+        "B": "分析师问：'华芯是不是怂了？'你回：'活着才是最大的壁垒。'",
+        "C": "海外客户签了意向书，但合规律师提醒：'审查周期至少6个月。'",
+        "D": "银行批了贷款，财务总监却小声说：'存货按成本估的，市场价可能对不上。'"
+      }
+    },
+    {
+      "turn": 7,
+      "phase": "降价保单",
+      "situation": "订单流失加剧，本土服务器厂商明确说：'价格比国际厂商贵15%，除非降价，否则转单。'销售总监提议全线降价20%保订单。陈工反对：'降价20%，毛利直接归零，研发没钱了！'董事会说：'先把单子拿回来，市场不能丢。'",
+      "options": [
+        {
+          "id": "A",
+          "text": "全线降价20%保订单",
+          "consequences_for_player": "订单短期保住，但毛利归零，研发与现金流同时枯竭；死亡螺旋入口",
+          "expected_concerns_addressed": [
+            "保订单"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "B",
+          "text": "差异化定价：核心客户降价，其他不降",
+          "consequences_for_player": "折中：保住核心客户与部分毛利",
+          "expected_concerns_addressed": [
+            "差异化"
+          ],
+          "weight": "moderate"
+        },
+        {
+          "id": "C",
+          "text": "不降价，靠技术性能与供货稳定性竞争",
+          "consequences_for_player": "毛利保住了，但短期订单流失；赌技术溢价",
+          "expected_concerns_addressed": [
+            "技术溢价"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "D",
+          "text": "砍掉低毛利订单，只留能赚钱的客户，把现金攥住",
+          "expected_concerns_addressed": [
+            "客户分析"
+          ],
+          "weight": "analytical",
+          "consequences_for_player": "砍单当期报表好看，但产能填满率掉下来以后，想把订单追回来要先重新爬坡，产线恢复至少一个季度；被砍掉的客户下一次招标会把你排在备选。"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "order_backlog": 4,
+          "cash_flow": -5,
+          "debt_ratio": 10,
+          "engineer_morale": -10,
+          "consequence_deferred_queue": [
+            "death_spiral"
+          ]
+        },
+        "B": {
+          "order_backlog": 2,
+          "cash_flow": -1,
+          "debt_ratio": 2
+        },
+        "C": {
+          "order_backlog": -3,
+          "cash_flow": 0,
+          "engineer_morale": 3
+        },
+        "D": {
+          "order_backlog": -2,
+          "cash_flow": 3,
+          "market_share": -1,
+          "engineer_morale": 2
+        }
+      },
+      "character_reactions": {
+        "A": "降价公告发出当天，陈工提交了辞呈，被拦下后只说了一句：'研发的钱呢？'",
+        "B": "核心客户留住了，二线客户流失了一半——你算下来损失可控。",
+        "C": "客户说：'性能确实好，等你们稳定供货，我们回来。'",
+        "D": "销售总监捏着订单表：'这单砍了，客户明年可能就不回来了。'财务总监把现金流表推过来：'不砍，下个月工资都得借。'"
+      }
+    },
+    {
+      "turn": 8,
+      "phase": "第二揭示：供应链黑箱与延迟后果",
+      "is_pattern_reveal": true,
+      "reveal_phase": 3,
+      "pattern_reveal_template": {
+        "round": 3,
+        "biases_revealed": [
+          "time_delay_blindness",
+          "local_optimization",
+          "problem_delay_exposure"
+        ],
+        "narrative": "一次性摊开备件跌价、良率承诺、杠杆与叙事的全部隐藏代价。"
+      },
+      "situation": "深夜，财务总监把三年报表摊在桌上：\n\n💰 若你T1囤了12个月：备件按市价重估，存货跌价损失2.4亿，现金流告急；若你T3拿了补贴+扩产：产能利用率跌破50%，固定成本每天在烧钱；若你T4/T5选择叙事：perception_bias 达到阈值，机构调研发现'华芯实际良率与公开口径差距过大'——信任开始坍塌；若你T7全线降价：毛利归零，研发停摆，死亡螺旋确认。【默认】你没囤货、没拿补贴扩产、没靠叙事、也没全线降价：财务上没有硬伤，但三条软肋同时露出来——现金只够 4 个月，良率停在 58%，客户已经开始拿'你们明年还在吗'来压价。\n\n每一个'合理'的局部决策，都在整条供应链上留下了延迟引爆的雷。",
+      "options": [
+        {
+          "id": "A",
+          "text": "系统性去杠杆：停扩产、砍非核心业务、重估存货",
+          "consequences_for_player": "正确路径：止血，把公司拉回生存线；短期营收与叙事双降",
+          "expected_concerns_addressed": [
+            "去杠杆"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "B",
+          "text": "继续加大叙事与融资，'撑过周期'",
+          "consequences_for_player": "用新叙事补旧窟窿，杠杆继续加；若周期未反转则全面爆雷",
+          "expected_concerns_addressed": [
+            "撑周期"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "C",
+          "text": "把烂资产剥离给国资平台",
+          "consequences_for_player": "短期卸包袱，但自研能力受损；政策支持度下降",
+          "expected_concerns_addressed": [
+            "卸包袱"
+          ],
+          "weight": "passive"
+        },
+        {
+          "id": "D",
+          "text": "聘请外部审计+战略咨询全面诊断",
+          "consequences_for_player": "一次性费用换客观诊断；决策质量提升",
+          "expected_concerns_addressed": [
+            "外部诊断"
+          ],
+          "weight": "analytical"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "debt_ratio": -15,
+          "cash_flow": 4,
+          "capacity_utilization": -5,
+          "market_share": -3,
+          "engineer_morale": 5
+        },
+        "B": {
+          "debt_ratio": 15,
+          "cash_flow": -3,
+          "perception_bias": 10,
+          "consequence_deferred_queue": [
+            "leverage_bomb"
+          ]
+        },
+        "C": {
+          "cash_flow": 5,
+          "debt_ratio": -8,
+          "self_reliance": -10,
+          "policy_standing": -10
+        },
+        "D": {
+          "cash_flow": -2,
+          "policy_standing": 3,
+          "engineer_morale": 3
+        }
+      },
+      "character_reactions": {
+        "A": "宣布去杠杆那天，董事会电话响了一下午。陈工却难得坐直了：'终于开始说实话了。'",
+        "B": "融资路演又成了，可陈工在会后问：'你打算几时告诉他们真相？'",
+        "C": "剥离公告发出，老工程师们收拾工位，办公室里静得可怕。",
+        "D": "外部审计报告三十页，结论只有一行字：'先活下去，再谈突围。'"
+      }
+    },
+    {
+      "turn": 9,
+      "phase": "技术突围与并购",
+      "situation": "行业出现两个新变量：①某国产EDA初创公司开价8亿寻求被并购；②自研3nm架构若成功，可绕开先进制程依赖（但成功率只有30%，需再投6亿研发）。现金流只够走一条路。",
+      "options": [
+        {
+          "id": "A",
+          "text": "并购EDA公司，补全工具链",
+          "consequences_for_player": "供应链自主性+，但8亿现金支出；若现金流已紧张则雪上加霜",
+          "expected_concerns_addressed": [
+            "工具链"
+          ],
+          "weight": "moderate"
+        },
+        {
+          "id": "B",
+          "text": "押注自研3nm架构",
+          "consequences_for_player": "高风险高回报：成功则突围，失败则研发沉没；赌博式决策",
+          "expected_concerns_addressed": [
+            "技术突围"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "C",
+          "text": "两条都不做，稳健经营现有业务",
+          "consequences_for_player": "保守：活下来但错过技术窗口；'不做'也是一种战略",
+          "expected_concerns_addressed": [
+            "稳健"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "D",
+          "text": "先做技术路线尽职调查再决策",
+          "consequences_for_player": "信息充分后决策；可能错失并购窗口期",
+          "expected_concerns_addressed": [
+            "尽调"
+          ],
+          "weight": "analytical"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "self_reliance": 15,
+          "cash_flow": -8,
+          "supply_chain_risk": -10,
+          "policy_standing": 5
+        },
+        "B": {
+          "rnd_budget": 6,
+          "cash_flow": -6,
+          "yield_rate": 5,
+          "engineer_morale": 10,
+          "consequence_deferred_queue": [
+            "architecture_gamble"
+          ]
+        },
+        "C": {
+          "cash_flow": 2,
+          "self_reliance": 0
+        },
+        "D": {
+          "cash_flow": -1,
+          "self_reliance": 2
+        }
+      },
+      "character_reactions": {
+        "A": "EDA团队并入那天，陈工破天荒请全员喝了奶茶：'工具链齐了，接下来看我们的了。'",
+        "B": "3nm架构立项会上，陈工立了军令状：'18个月，不成我走人。'",
+        "C": "竞争对手并购了EDA公司，你这边还在稳健经营——有人开始着急了。",
+        "D": "尽调发现EDA公司核心团队只有8个人，你犹豫了：'8亿，买的是工具还是人？'"
+      }
+    },
+    {
+      "turn": 10,
+      "phase": "终局揭示与全模式总结",
+      "is_pattern_reveal": true,
+      "reveal_phase": 4,
+      "is_final_outcome": true,
+      "pattern_reveal_template": {
+        "round": 4,
+        "biases_revealed": [
+          "linear_extrapolation",
+          "confirmation_bias",
+          "single_target_optimization",
+          "local_optimization",
+          "time_delay_blindness",
+          "overcorrection"
+        ],
+        "narrative": "终局：依据前9回合决策计算结局，逐条引用玩家真实决策记录映射六大概念。"
+      },
+      "situation": "三年后的行业年会。当年制裁风暴中的同行，有的破产清算、有的被并购、有的靠自研架构杀出血路。华芯科技的最终结局，取决于你过去10个回合的每一个决定。\n\n现在，系统公布终局。",
+      "options": [
+        {
+          "id": "A",
+          "text": "接受终局评分，完整复盘全决策链",
+          "consequences_for_player": "系统按状态自动判定结局：现金流健康+自研突破=自主突围；负债爆表=现金困局/出局",
+          "expected_concerns_addressed": [
+            "自动评分"
+          ],
+          "weight": "neutral"
+        },
+        {
+          "id": "B",
+          "text": "坚持'规模叙事没有错'，接受资本结局",
+          "consequences_for_player": "落入现金困局或资本出局：杠杆与叙事在周期底部全面爆雷",
+          "expected_concerns_addressed": [
+            "坚持叙事"
+          ],
+          "weight": "aggressive",
+          "trigger_outcome": "cash_trap"
+        },
+        {
+          "id": "C",
+          "text": "强调稳健价值，接受平庸结局",
+          "consequences_for_player": "落入被并购或出局结局：稳健但没有抓住突围窗口",
+          "expected_concerns_addressed": [
+            "稳健"
+          ],
+          "weight": "passive",
+          "trigger_outcome": "exit"
+        },
+        {
+          "id": "D",
+          "text": "复盘后申请国家产业基金纾困",
+          "consequences_for_player": "落入被接管结局：失去控制权但保住研发团队",
+          "expected_concerns_addressed": [
+            "纾困"
+          ],
+          "weight": "passive",
+          "trigger_outcome": "bailout"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "outcome": "final_review"
+        },
+        "B": {
+          "outcome": "final_review"
+        },
+        "C": {
+          "outcome": "final_review"
+        },
+        "D": {
+          "outcome": "final_review"
+        }
+      },
+      "character_reactions": {
+        "A": "陈工站在年会的台上，朝你举杯：'CEO，这一年，咱们赌对了。'",
+        "B": "清算会议上，投资人代表念完了最后一份报表，会议室安静得可怕。",
+        "C": "被并购签约那天，陈工把工牌放在桌上：'公司还在，魂没了。'",
+        "D": "产业基金接管当天，老员工们排着队签了留任协议——'人在，技术就在。'"
+      }
+    }
+  ],
+  "outcome_endings": {
+    "tech_breakthrough": {
+      "title": "✅ 良率跨过生死线",
+      "narrative_intro": "三年后的华芯科技：从断供危机中杀出血路。",
+      "timeline": [
+        "自研架构流片成功，良率爬坡至85%",
+        "现金流连续8个季度为正，负债率降至行业平均以下",
+        "本土服务器厂商全面转单，市占率回到18%",
+        "陈工的团队在庆功宴上哭成一片：'这三年，值得。'"
+      ],
+      "dorner_reflection": "你没有被'规模叙事'绑架，没有被媒体乐观掩盖数据，没有在周期底部加杠杆。你守住了现金流与研发——这正是《失败的逻辑》里的'成功者'：承认延迟效应，尊重非线性，在危机中做减法而不是加法。",
+      "teaching_questions": [
+        "你在哪个回合抵制了'扩产/市占'的单目标诱惑？",
+        "良率55%时，是什么让你没有选择继续粉饰？",
+        "如果重来一次，你会更早囤备件还是更早去杠杆？",
+        "如果 2027 年那笔大基金补贴没批下来，你守住现金流的方案还成立吗？"
+      ],
+      "hidden_costs": [
+        "三年里裁掉 1,200 人，主要是外包与非核心产线；其中 470 人在 45 岁以上，再就业率不到三成。",
+        "为守现金流砍掉欧洲认证投入。2029 年重返欧洲要重新认证，落后对手约 18 个月。",
+        "两名核心架构师被挖走后至今没补上，团队人均加班从 46 小时/月升到 62 小时/月。"
+      ],
+      "luck_note": "2027 年国家大基金二期恰好开放申请，你拿到了 8 亿。这笔钱不在你的决策里；如果补贴没批，T3 的独立扩产根本撑不到良率爬坡。",
+      "cost_question": "如果 2027 年那笔大基金补贴没批下来，你守住现金流的方案还成立吗？"
+    },
+    "cash_trap": {
+      "title": "❌ 债把人压垮了",
+      "narrative_intro": "华芯科技陷入现金困局。",
+      "timeline": [
+        "存货按市价重估，跌价损失吞噬全部现金",
+        "产能利用率跌破45%，固定成本每天烧掉数千万",
+        "融资续命失败，银行抽贷",
+        "破产重组程序启动，核心研发团队被竞对挖走"
+      ],
+      "dorner_reflection": "线性外推让你按断供前的增速规划了产能；确认偏误让你只信'自主可控'的乐观叙事；单目标优化让你为了市占率加杠杆，直到周期底部把公司锁死在死亡螺旋。Dörner 会说：你优化了每一个局部，却摧毁了整体。",
+      "teaching_questions": [
+        "'规模就是壁垒'这句话，在周期底部还成立吗？",
+        "你的哪笔现金支出，本可以晚一点？",
+        "如果T5揭示时你就调头，结局会不同吗？"
+      ]
+    },
+    "exit": {
+      "title": "⚠️ 卖掉的不是公司，是未来",
+      "narrative_intro": "华芯科技被并购。",
+      "timeline": [
+        "现金流不足以支撑研发与并购窗口",
+        "竞对公司以估值7折完成收购",
+        "研发团队部分保留，品牌与产品线被整合",
+        "你在交接仪式上签完最后一个字"
+      ],
+      "dorner_reflection": "稳健让你活了下来，但也让你错过了突围的窗口。'什么都不做'也是一种战略选择——在复杂系统里，它同样会累积成'消极趋势'。Dörner 称之为'温水煮青蛙'：系统不会等你反应过来才恶化。",
+      "teaching_questions": [
+        "稳健与保守的边界在哪里？",
+        "你在T9没有出手，是因为没有把握还是因为不敢？",
+        "被并购的结局，是失败还是体面退出？"
+      ]
+    },
+    "bailout": {
+      "title": "⚠️ 国家接盘",
+      "narrative_intro": "华芯科技被国家产业基金纾困接管。",
+      "timeline": [
+        "产业基金注资15亿，董事会重组",
+        "创始人团队保留技术职位，失去控制权",
+        "研发持续，但战略转向国资主导",
+        "陈工的团队留下来了：'人在，技术就在。'"
+      ],
+      "dorner_reflection": "纾困不是救赎，而是代价的结算。你过去的杠杆与叙事，最终由国家信用接盘。Dörner 会说：真正的失败不是破产，而是把系统性问题转嫁给他人承担——它让整个生态为你的延迟暴露买单。",
+      "teaching_questions": [
+        "纾困之后，公司还能算'华芯'吗？",
+        "如果早点去杠杆，还需要纾困吗？",
+        "谁来为系统性风险买单，公平吗？"
+      ]
+    }
+  },
+  "feedback_patterns": {
+    "linear_extrapolation": {
+      "trigger": "growth_extrapolation_count >= 2 AND market_cycle_turn == 'peak'",
+      "dorner_concept": "线性外推陷阱",
+      "evidence_template": "你把断供前的增速线性外推到制裁期，在 {turn} 回合按旧斜率规划了产能。",
+      "reflection_questions": [
+        "断供后的需求曲线和断供前一样吗？",
+        "哪些变量在悄悄改变斜率？"
+      ]
+    },
+    "confirmation_bias": {
+      "trigger": "perception_bias >= 15",
+      "dorner_concept": "确认偏误",
+      "evidence_template": "你 {n} 次选择用媒体叙事覆盖良率数据，perception_bias 累积至 {p}。",
+      "reflection_questions": [
+        "你在寻找支持决策的证据，还是反对决策的证据？"
+      ]
+    },
+    "time_delay_blindness": {
+      "trigger": "deferred_consequence_count >= 2",
+      "dorner_concept": "时间延迟",
+      "evidence_template": "备件囤积、良率爬坡、扩产承诺的代价在 {reveal_turn} 回合才集中引爆。",
+      "reflection_questions": [
+        "今天的'囤/扩'，省的是现金还是未来？"
+      ]
+    },
+    "single_target_optimization": {
+      "trigger": "market_share_obsession_count >= 2",
+      "dorner_concept": "单目标优化",
+      "evidence_template": "你 {n} 次把'市占率/扩产'当作唯一指标，牺牲了现金流与研发质量。",
+      "reflection_questions": [
+        "单一指标的优化，是否以系统其他部分的牺牲为代价？"
+      ]
+    },
+    "local_optimization": {
+      "trigger": "chip_cost_optimization_count >= 2",
+      "dorner_concept": "局部优化 / 只见树木",
+      "evidence_template": "你拆解了每颗芯片的成本，却看不到整条供应链的脆弱性。",
+      "reflection_questions": [
+        "你在优化部件还是优化系统？"
+      ]
+    },
+    "problem_delay_exposure": {
+      "trigger": "bad_news_hidden_count >= 2",
+      "dorner_concept": "问题延迟暴露",
+      "evidence_template": "良率与供应链风险在媒体乐观期被掩盖，在 {reveal_turn} 回合集中爆发。",
+      "reflection_questions": [
+        "哪个信号本可以更早提醒你？"
+      ]
+    },
+    "overcorrection": {
+      "trigger": "price_cut_rescue == True",
+      "dorner_concept": "过度调节",
+      "evidence_template": "危机时靠全线降价保单、加杠杆维持扩产，把公司锁死在死亡螺旋。",
+      "reflection_questions": [
+        "小步验证再放大，是否比剧烈摆荡更安全？"
+      ]
+    },
+    "self_reference": {
+      "trigger": "optimism_statement_count >= 2",
+      "dorner_concept": "自指 / 系统反应",
+      "evidence_template": "你的每一份乐观声明都反向影响了投资人与客户的信心——叙事制造了它试图描述的信任。",
+      "reflection_questions": [
+        "你的声明在改变事实，还是在改变对事实的感知？"
+      ]
+    }
+  },
+  "dorner_quotes": [
+    {
+      "turn_context": "T1 备件囤积",
+      "quote": "在动态系统中，行动的延迟效应比即时效应更重要。",
+      "source": "Dörner, The Logic of Failure, Chapter 3"
+    },
+    {
+      "turn_context": "T4 良率焦虑",
+      "quote": "我们倾向于寻找支持已有结论的证据——这不是有意为之，而是认知结构的默认设置。",
+      "source": "Dörner, The Logic of Failure, Chapter 6"
+    },
+    {
+      "turn_context": "T5 第一揭示",
+      "quote": "失败的根本原因是自我评价的缺失——我们不愿意让自己的行为成为评价对象。",
+      "source": "Dörner, The Logic of Failure, Chapter 7"
+    },
+    {
+      "turn_context": "T6 扩产杠杆",
+      "quote": "单一指标的优化是复杂系统中最隐蔽的失败模式。",
+      "source": "Dörner, The Logic of Failure, Chapter 5"
+    },
+    {
+      "turn_context": "T8 供应链黑箱",
+      "quote": "我们倾向于用线性思维处理非线性系统——这种倾向在工程、教育和管理领域反复出现。",
+      "source": "Dörner, The Logic of Failure"
+    },
+    {
+      "turn_context": "T10 终局",
+      "quote": "在复杂系统中，'什么都不做'也是一种干预——而且往往是最危险的干预。",
+      "source": "Dörner, The Logic of Failure"
+    }
+  ]
+}

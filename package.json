@@ -4,6 +4,12 @@
   "private": true,
   "scripts": {
     "start": "node static-server.js",
+    "verify": "node scripts/verify-all.mjs",
+    "build": "node scripts/build-standalone.mjs",
+    "build:standalone": "node scripts/build-standalone.mjs",
+    "accept:climate": "node scripts/acceptance-climate.mjs 100",
+    "accept:climate:dist": "node scripts/acceptance-climate.mjs 100 --dist",
+    "verify:climate": "node scripts/gold-climate.mjs && node scripts/acceptance-climate.mjs 100",
     "test:e2e": "npx playwright test --config=tests/playwright.config.js tests/e2e --reporter=list",
     "test:deep:frames": "npx playwright test --config=tests/e2e/playwright.video-on.config.cjs",
     "test:deep:copy": "node tests/e2e/copy-videos.js",

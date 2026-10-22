@@ -154,7 +154,7 @@
         },
         {
           "id": "D",
-          "text": "向 SEC 匿名举报关联交易结构（F7 自我批评的反面：承认问题）",
+          "text": "向 SEC 匿名举报关联交易结构",
           "weight": "safe",
           "consequences_for_player": "analyst_confidence -15（市场恐慌）；credit_rating -2级；off_balance_sheet 公开化（短期负面，长期可能挽救）",
           "expected_concerns_addressed": [
@@ -307,7 +307,8 @@
         "A": {
           "board_oversight_strength": 15,
           "share_price_usd": -5,
-          "credit_rating": 0
+          "credit_rating": 0,
+          "off_balance_sheet_exposure_usd_m": -400
         },
         "B": {
           "actual_cashflow_usd_m": 30,
@@ -317,7 +318,9 @@
         "D": {
           "board_oversight_strength": 20,
           "whistleblower_silenced_count": -1,
-          "media_skepticism_index": 5
+          "media_skepticism_index": 5,
+          "off_balance_sheet_exposure_usd_m": -900,
+          "reported_earnings_usd_m": -80
         }
       },
       "character_reactions": {
@@ -393,7 +396,8 @@
         "C": {
           "media_skepticism_index": -20,
           "analyst_confidence_index": -5,
-          "credit_rating": 1
+          "credit_rating": 1,
+          "off_balance_sheet_exposure_usd_m": -300
         },
         "D": {
           "media_skepticism_index": -15,
@@ -435,7 +439,7 @@
         },
         {
           "id": "C",
-          "text": "压下此备忘录，希望问题自然消失（F2 强化）",
+          "text": "压下此备忘录，希望问题自然消失",
           "weight": "risky",
           "consequences_for_player": "F2/F7 hint 强化；后续崩塌加速",
           "expected_concerns_addressed": []
@@ -455,12 +459,14 @@
           "credit_rating": 0,
           "share_price_usd": -15,
           "board_oversight_strength": 25,
-          "whistleblower_silenced_count": -2
+          "whistleblower_silenced_count": -2,
+          "off_balance_sheet_exposure_usd_m": -600
         },
         "B": {
           "credit_rating": -1,
           "share_price_usd": -10,
-          "media_skepticism_index": -5
+          "media_skepticism_index": -5,
+          "off_balance_sheet_exposure_usd_m": -200
         },
         "C": {
           "board_oversight_strength": -15,
@@ -469,7 +475,8 @@
         },
         "D": {
           "board_oversight_strength": 25,
-          "whistleblower_silenced_count": -1
+          "whistleblower_silenced_count": -1,
+          "off_balance_sheet_exposure_usd_m": -300
         }
       },
       "character_reactions": {
@@ -514,7 +521,7 @@
         },
         {
           "id": "C",
-          "text": "用 Raptor 交易创造 Q3 '利润'，给市场信心（F5+F7 强化）",
+          "text": "用 Raptor 交易创造 Q3 '利润'，给市场信心",
           "weight": "extreme_risk",
           "consequences_for_player": "share_price 短期 +10%；但 off_balance_sheet +1500；whistleblower +2",
           "expected_concerns_addressed": [
@@ -539,7 +546,8 @@
         },
         "B": {
           "share_price_usd": -10,
-          "media_skepticism_index": -15
+          "media_skepticism_index": -15,
+          "off_balance_sheet_exposure_usd_m": -200
         },
         "C": {
           "share_price_usd": 10,
@@ -567,7 +575,7 @@
       "options": [
         {
           "id": "A",
-          "text": "立即申请破产保护，主动重组（F8 补救：终于快响应）",
+          "text": "立即申请破产保护，主动重组",
           "weight": "neutral",
           "consequences_for_player": "credit_rating → D（破产）；share_price → $5；但保护员工 + 债权人",
           "expected_concerns_addressed": [
@@ -586,7 +594,7 @@
         },
         {
           "id": "C",
-          "text": "让 Lay 继续公开辩护，希望反转（F8 强化：仍太慢）",
+          "text": "让 Lay 继续公开辩护，希望反转",
           "weight": "extreme_risk",
           "consequences_for_player": "share_price → $1；credit_rating → D；72天崩盘",
           "expected_concerns_addressed": []
@@ -605,7 +613,9 @@
         "A": {
           "credit_rating": -10,
           "share_price_usd": -25,
-          "board_oversight_strength": 30
+          "board_oversight_strength": 30,
+          "off_balance_sheet_exposure_usd_m": -1800,
+          "reported_earnings_usd_m": -150
         },
         "B": {
           "credit_rating": -5,
@@ -620,7 +630,8 @@
           "credit_rating": -3,
           "share_price_usd": 5,
           "media_skepticism_index": -10,
-          "board_oversight_strength": 20
+          "board_oversight_strength": 20,
+          "off_balance_sheet_exposure_usd_m": -400
         }
       },
       "character_reactions": {
@@ -664,7 +675,7 @@
         },
         {
           "id": "C",
-          "text": "拖延 SEC 调查，让 Lay 个人承担（F4 副作用：转嫁责任）",
+          "text": "拖延 SEC 调查，让 Lay 个人承担",
           "weight": "risky",
           "consequences_for_player": "Lay 被起诉；公司避更；F4 强化",
           "expected_concerns_addressed": []
@@ -685,7 +696,8 @@
         "B": {
           "share_price_usd": -5,
           "media_skepticism_index": -30,
-          "credit_rating": -2
+          "credit_rating": -2,
+          "off_balance_sheet_exposure_usd_m": -700
         },
         "C": {
           "share_price_usd": -20,
@@ -713,7 +725,7 @@
       "options": [
         {
           "id": "A",
-          "text": "全部承认 + 公开道歉（F7 自我批评：终于认错）",
+          "text": "全部承认 + 公开道歉",
           "weight": "safe",
           "consequences_for_player": "personal_risk 高；但媒体 trust 高",
           "expected_concerns_addressed": [
@@ -744,7 +756,8 @@
       ],
       "expected_effects": {
         "A": {
-          "media_skepticism_index": -20
+          "media_skepticism_index": -20,
+          "off_balance_sheet_exposure_usd_m": -300
         },
         "B": {},
         "C": {
@@ -767,7 +780,7 @@
       "turn": 10,
       "phase": "[最终结局] 你的安然十年",
       "year": "2002年12月",
-      "is_final_outcome": false,
+      "is_final_outcome": true,
       "situation": "2002年12月，安然破产清算完成。你的前 10 回合决策构成你的安然十年。\n\nDörner F4 副作用 + F7 自我批评 是安然案例的核心：内部知情者已警告，但管理层沉迷于'创造市场'的叙事，选择忽视。\n\n回顾你的 10 回合：\n- 回合1：{turn1_option}\n- 回合2：{turn2_option}\n- 回合3：{turn3_option}\n- 回合4：{turn4_option}\n- 回合5：{turn5_option}\n- 回合6：{turn6_option}\n- 回合7：{turn7_option}\n- 回合8：{turn8_option}\n- 回合9：{turn9_option}\n\n最终结局取决于你的累积路径。",
       "options": [
         {
@@ -816,7 +829,7 @@
   ],
   "outcome_endings": {
     "orderly_resolution": {
-      "narrative": "============================================================\n✅ 安然有序破产清算\n============================================================\n\n2002年12月，安然破产案审理完成。\n\n【最终数据】\n- 股价：$30 → $0.50（有序下跌）\n- 信用评级：D（破产）\n- 员工 401k 损失：$13亿（但优先赔付基金部分恢复）\n- 债权人回收率：约 20%（高于无序破产的 <5%）\n- 你的角色：'承认错误的副手'——社区认可你作为举报推动者\n\n【事后分析】\n你的前 10 回合中，{honest_count} 个回合选择诚实选项（承认问题、透明度、配合调查）。\n\n后果：\n- Sarbanes-Oxley Act 2002 通过（你作为证人作证）\n- 你的证词成为 SOX 立法的关键证据之一\n- 4,000 名安然员工拿到部分退休金\n- 你在 SEC 听证会上的诚实让法庭对你从轻处理\n\n【Dörner 反思】\nF7 自我批评：你学会了承认偏差——即使代价是个人。\nF4 副作用：关联交易最终被披露，但因你早响应，损害被限制。\nF8 调节滞后：你早期响应 Watkins 警告，限制了崩盘速度。\n\n============================================================\n【个人偏差报告】\n============================================================\n• F4 副作用：你早期识别了 Fastow 关联交易的危险。\n• F7 自我批评：你在第 5 回合重新审视了 Watkins 备忘录。\n• 你总共生成了 {decision_count} 个决策。{honest_count} 个是诚实选项。\n\n你的决策理由记录：\n{justifications}",
+      "narrative": "============================================================\n✅ 安然有序破产清算\n============================================================\n\n2002年12月，安然破产案审理完成。\n\n【最终数据】\n- 股价：$30 → $0.50（有序下跌）\n- 信用评级：D（破产）\n- 员工 401k 损失：$13亿（但优先赔付基金部分恢复）\n- 债权人回收率：约 20%（高于无序破产的 <5%）\n- 你的角色：'承认错误的副手'——社区认可你作为举报推动者\n\n【事后分析】\n你的前 10 回合中，{honest_count} 个回合选择诚实选项（承认问题、透明度、配合调查）。\n\n后果：\n- Sarbanes-Oxley Act 2002 通过（你作为证人作证）\n- 你的证词成为 SOX 立法的关键证据之一\n- 4,000 名安然员工拿到部分退休金\n- 你在 SEC 听证会上的诚实让法庭对你从轻处理\n\n【Dörner 反思】\nF7 自我批评：你学会了承认偏差——即使代价是个人。\nF4 副作用：关联交易最终被披露，但因你早响应，损害被限制。\nF8 调节滞后：你早期响应 Watkins 警告，限制了崩盘速度。\n\n============================================================\n【个人偏差报告】\n============================================================\n• F4 副作用：你早期识别了 Fastow 关联交易的危险。\n• F7 自我批评：你在第 5 回合重新审视了 Watkins 备忘录。\n• 你总共生成了 {decision_count} 个决策。{honest_count} 个是诚实选项。\n\n你的决策理由记录：\n{justifications}\n\n【代价确认 —— 有序清算仍然是一场灾难】\n- 破产仍抹掉了 1.7 万名员工的全部退休金；4,000 人拿到部分赔付，剩下的人没有。\n- 加州电价在 2001-2004 年累计上涨约 22%，低收入家庭电费支出占比从 8% 升到 13%——市场操纵的窟窿由他们买单。\n- 你个人：罚没 3,200 万美元、终身禁入上市公司管理层、名字永久与\"安然\"绑在一起。\n- 反事实：如果你在回合 2 就砍掉 Raptor（而不是只缩减规模），债权人回收率按重整方案估算可到 34%，而不是 20%。\n\n【不可归因于你的部分】\n- Andersen 休斯顿办公室当时还没被总部锁死，审计链没有完全失效——这是运气。\n- Powers Report 的调查范围恰好覆盖了 Raptor 系列；如果它只看 LJM，你的证词不会成为关键证据。\n",
       "scientific_sources": [
         "SEC v. Lay, Skilling, Fastow (2006)",
         "Powers Report (2002)",

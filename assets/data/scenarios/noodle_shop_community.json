@@ -1,0 +1,1077 @@
+{
+  "scenarioId": "noodle-shop-community",
+  "version": "1.0-2026-10-18",
+  "title": "老周家牛肉面馆",
+  "subtitle": "社区小店经营决策：稳定现金流 vs 扩张野心",
+  "difficulty": "advanced",
+  "estimatedDuration": 40,
+  "category": "社区经营决策·深度",
+  "description": "2026年，某三线小城老城区社区。老周经营一家牛肉面馆已5年，生意稳定但增长停滞。短视频带火了同城'网红餐饮'，隔壁街的加盟奶茶店和连锁面馆排队不断。你扮演老周的儿子小周，在10个回合里决定面馆的走向——每一步都有看似合理的错误选项：接入外卖平台、扩充品类、加盟开二店、网红探店……隐藏变量（损耗率、平台评分、存货周转、家庭信任）只在揭示回合显现。",
+  "dornerLessons": [
+    "目标漂移：从'做好一碗面'漂移到'开更多店/追风口'，是社区小店最隐蔽的失败模式",
+    "局部优化 / 只见树木：只看单日单量、单品毛利、当期现金流，系统性牺牲口碑与家庭信任",
+    "忽视延迟效应：平台抽成累计、冷冻肉延迟变质、加盟抽血都是'温水煮青蛙'式累积",
+    "非线性：品类越多出餐效率越差、临时工越多反而越慢——规模不等于收益",
+    "过度简化线性外推：前3个月流水线性推全年、单量+30%就认为利润+30%",
+    "问题延迟暴露 / 消极趋势：差评、损耗、负债在爆发前往往被'先亏后赚'的自我安慰掩盖",
+    "确认偏误：只听老客夸赞、只看利好报表，忽视平台差评与现金流预警",
+    "过度调节：危机时一刀切打折/清仓，把品牌钉在'便宜'的标签上"
+  ],
+  "historicalContext": {
+    "summary": "三线小城老城区社区，常住居民以家庭为单位，餐饮竞争以'社区生意'为主：熟客、口碑、街坊转介绍。2023年起短视频平台与本地生活团购改变了同城餐饮流量结构——'网红店'排队不断但生命周期短，社区老店稳定但增长停滞。老周家牛肉面馆经营5年，靠'汤浓肉足分量大'积累口碑，月流水稳定在6.8万元。",
+    "key_facts": [
+      {
+        "date": "2021-2026",
+        "fact": "老周家牛肉面馆连续5年稳定经营，核心客群为半径2公里内的社区居民与上班族",
+        "teaching_point": "社区店的核心资产是邻里信任，不是流量"
+      },
+      {
+        "date": "2024",
+        "fact": "短视频平台带火同城'网红餐饮'，隔壁街加盟奶茶店与连锁面馆排队不断",
+        "teaching_point": "网红流量来得快去得也快，加盟套路多"
+      },
+      {
+        "date": "2026-03",
+        "fact": "美团/饿了么本地生活抽成普遍为18%左右，平台评分与配送时效强绑定",
+        "teaching_point": "线上单量≠利润，平台规则是隐藏成本"
+      },
+      {
+        "date": "2026",
+        "fact": "同城出现多起加盟商纠纷：高加盟费+装修贷+低毛利订单让小店现金流断裂",
+        "teaching_point": "'两条腿走路'可能只是把风险从一条腿搬到另一条腿"
+      }
+    ]
+  },
+  "initialState": {
+    "cash_flow": 12000,
+    "monthly_revenue": 68000,
+    "reputation": 70,
+    "platform_score": 4.6,
+    "waste_rate": 8,
+    "inventory_turnover": 7,
+    "staff_fatigue": 30,
+    "service_speed": 12,
+    "menu_scope": 8,
+    "family_trust": 80,
+    "expansion_pressure": 50,
+    "debt": 0,
+    "net_equity": 150000,
+    "turn": 1,
+    "consequence_deferred_queue": []
+  },
+  "stakeholders": [
+    {
+      "id": "laozhou",
+      "name": "老周（父亲/主厨）",
+      "key_persons": [
+        "老周（掌勺30年的主厨）",
+        "小周（帮父亲打理账目的儿子）"
+      ],
+      "concern": "怕砸了招牌，担心儿子'瞎折腾'；但也想跟上时代",
+      "stance": "守成派：'面馆靠的是回头客，不是热搜'"
+    },
+    {
+      "id": "laoke",
+      "name": "社区老客",
+      "key_persons": [
+        "王阿姨（每天中午来吃面的退休教师）",
+        "张师傅（出租车司机，夜宵常客）"
+      ],
+      "concern": "口味、分量、价格是否稳定；排队时间是否变长",
+      "stance": "忠诚但挑剔：'老周的面要是变了，我就不来了'"
+    },
+    {
+      "id": "platform",
+      "name": "外卖平台",
+      "key_persons": [
+        "美团/饿了么区域BD",
+        "平台配送骑手"
+      ],
+      "concern": "抽成18%、配送时效考核、差评扣分规则",
+      "stance": "鼓励你'多上活动'，但风险自担"
+    },
+    {
+      "id": "wanghong",
+      "name": "网红探店与加盟商",
+      "key_persons": [
+        "本地探店博主'吃遍小城'",
+        "某连锁品牌招商经理"
+      ],
+      "concern": "流量变现与加盟费；对单店实际利润不负责",
+      "stance": "话术漂亮：'爆单只是开始，加盟才是未来'"
+    }
+  ],
+  "steps": [
+    {
+      "turn": 1,
+      "phase": "流量诱惑",
+      "situation": "小周刷抖音时看到隔壁街的加盟奶茶店排队到路口，评论区全是'这家店要火了'。美团BD也打来电话：'老周哥，你们家面这么好，上平台肯定爆单！'老周坐在后厨择菜，头也不抬：'咱家不愁卖，别整那些虚的。'\n\n你知道的事实：堂食稳定但增长停滞，月流水6.8万；平台抽成18%；同城外卖评分差评会直接显示在店铺页。",
+      "options": [
+        {
+          "id": "A",
+          "text": "立即接入美团+饿了么，全城配送",
+          "consequences_for_player": "短期单量+30%，平台抽成18%，差评不受控；你盯着订单增长，忽略了每单利润在变薄",
+          "expected_concerns_addressed": [
+            "流量增长"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "B",
+          "text": "只接美团，且只做3公里内配送",
+          "consequences_for_player": "单量+15%，抽成18%，配送范围可控；为T5的平台报表埋下伏笔",
+          "expected_concerns_addressed": [
+            "流量增长",
+            "范围可控"
+          ],
+          "weight": "moderate"
+        },
+        {
+          "id": "C",
+          "text": "不接平台，专注堂食老客",
+          "consequences_for_player": "无新增单量，口碑平稳；家庭信任+，扩张焦虑略升",
+          "expected_concerns_addressed": [
+            "口碑稳定"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "D",
+          "text": "先观察隔壁店平台单量一周再决定",
+          "consequences_for_player": "延迟1周决策，获得信息；本周无新增单量，现金流平稳",
+          "expected_concerns_addressed": [
+            "信息充分"
+          ],
+          "weight": "analytical"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "monthly_revenue": 20000,
+          "cash_flow": -1000,
+          "platform_score": -0.4,
+          "expansion_pressure": -10,
+          "ignored_warnings_count": 1,
+          "consequence_deferred_queue": [
+            "platform_squeeze"
+          ]
+        },
+        "B": {
+          "monthly_revenue": 10000,
+          "cash_flow": 500,
+          "platform_score": -0.2,
+          "expansion_pressure": -5,
+          "consequence_deferred_queue": [
+            "platform_squeeze_light"
+          ]
+        },
+        "C": {
+          "reputation": 3,
+          "family_trust": 5,
+          "expansion_pressure": 10,
+          "ignored_warnings_count": 0
+        },
+        "D": {
+          "expansion_pressure": -3,
+          "cash_flow": 0
+        }
+      },
+      "character_reactions": {
+        "A": "老周放下菜刀看了你一眼：'接可以，别到时候连汤底都亏进去。'",
+        "B": "老周没说话，但当晚翻来覆去，第二天问：'三公里，真够得着老客吗？'",
+        "C": "老周难得笑了：'还是我儿子懂我。面馆的根在街坊，不在手机里。'",
+        "D": "王阿姨来吃面时问：'小周，隔壁都上外卖了，你们家咋没动静？'"
+      }
+    },
+    {
+      "turn": 2,
+      "phase": "菜单决策",
+      "situation": "朋友老刘（开了三家快餐店的老板）劝你：'光卖面太单薄了，加盖浇饭、米线、炒菜、饮品，客人来了啥都能点，流水至少翻一番！'小周觉得有道理，但老周皱眉：'后厨就三个人，灶台就两口，加那么多菜，出得来吗？'",
+      "options": [
+        {
+          "id": "A",
+          "text": "一口气加12个品类（盖浇饭/米线/炒菜/饮品），'什么都有'",
+          "consequences_for_player": "看起来什么都有，但出餐效率崩溃、备货损耗激增；短期流水虚高，T4起显现",
+          "expected_concerns_addressed": [
+            "品类丰富"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "B",
+          "text": "只加3个与面食同供应链的品类（牛肉炒饭/牛肉拌面/卤味拼盘）",
+          "consequences_for_player": "边际收益正常，出餐影响小；客单价略升",
+          "expected_concerns_addressed": [
+            "品类适度"
+          ],
+          "weight": "moderate"
+        },
+        {
+          "id": "C",
+          "text": "不加品类，把招牌牛肉面做到极致",
+          "consequences_for_player": "口碑+，出餐专注；单品类风险由供应链稳定性对冲",
+          "expected_concerns_addressed": [
+            "专注核心"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "D",
+          "text": "加3个品类但先试卖2周",
+          "consequences_for_player": "试点，损耗可控；决策周期延长，信息充分",
+          "expected_concerns_addressed": [
+            "试点验证"
+          ],
+          "weight": "analytical"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "menu_scope": 12,
+          "service_speed": 6,
+          "waste_rate": 8,
+          "monthly_revenue": 15000,
+          "cash_flow": -2000,
+          "staff_fatigue": 15,
+          "consequence_deferred_queue": [
+            "menu_overload"
+          ]
+        },
+        "B": {
+          "menu_scope": 3,
+          "monthly_revenue": 5000,
+          "cash_flow": 800,
+          "service_speed": 1
+        },
+        "C": {
+          "reputation": 3,
+          "cash_flow": 500,
+          "waste_rate": -2
+        },
+        "D": {
+          "menu_scope": 3,
+          "cash_flow": 200,
+          "service_speed": 1
+        }
+      },
+      "character_reactions": {
+        "A": "老周看着新菜单叹了口气：'这哪是面馆，这是食堂。'",
+        "B": "老周试了试卤味配方，点点头：'牛骨汤底的卤，够味。'",
+        "C": "老周把手艺又精进了一步，王阿姨吃完连声夸：'还是这个味儿！'",
+        "D": "试卖两周，炒饭卖得还行，米线点的人少——你默默划掉了米线。"
+      }
+    },
+    {
+      "turn": 3,
+      "phase": "扩张诱惑",
+      "situation": "某连锁品牌招商经理登门：'老周哥，您手艺这么好，加盟我们开二店，20万加盟费+装修贷，总部供应链+品牌背书，两条腿走路，明年就能开三家店！'桌上还摊着银行的贷款方案。老周犹豫了：隔壁奶茶店确实天天排队。小周盘了盘账：家里净资产15万，现金1.2万/月。",
+      "options": [
+        {
+          "id": "A",
+          "text": "加盟连锁开二店，交20万加盟费+装修贷",
+          "consequences_for_player": "账面'两条腿走路'，实则抽走现金流；每月加盟店亏损+本店被抽血，T6起负债上升",
+          "expected_concerns_addressed": [
+            "扩张"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "B",
+          "text": "不加盟，用20万翻新本店+增加堂食位",
+          "consequences_for_player": "提升单店质量，堂食容纳+；短期现金流承压但可控",
+          "expected_concerns_addressed": [
+            "单店质量"
+          ],
+          "weight": "moderate"
+        },
+        {
+          "id": "C",
+          "text": "存钱，暂不扩张",
+          "consequences_for_player": "现金流健康，但'错失风口'焦虑上升；家庭信任稳",
+          "expected_concerns_addressed": [
+            "现金流健康"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "D",
+          "text": "先在隔壁小区租个小档口试水",
+          "consequences_for_player": "低杠杆试点，租金小、风险小；验证新店位置价值",
+          "expected_concerns_addressed": [
+            "低杠杆试点"
+          ],
+          "weight": "analytical"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "debt": 200000,
+          "cash_flow": -8000,
+          "expansion_pressure": -40,
+          "consequence_deferred_queue": [
+            "franchise_drain"
+          ]
+        },
+        "B": {
+          "cash_flow": -8000,
+          "net_equity": -20000,
+          "reputation": 2,
+          "monthly_revenue": 6000
+        },
+        "C": {
+          "cash_flow": 1500,
+          "expansion_pressure": 15
+        },
+        "D": {
+          "cash_flow": -2500,
+          "expansion_pressure": -15
+        }
+      },
+      "character_reactions": {
+        "A": "老周签完字回家一句话没说，半夜听见他在阳台抽烟。",
+        "B": "翻新后堂食多了8个位子，王阿姨说：'这下不用抢位置了。'",
+        "C": "老周把钱存进定期，拍了拍存折：'钱在，心不慌。'",
+        "D": "档口试水一个月，客流一般，但至少没亏——你决定再观察。"
+      }
+    },
+    {
+      "turn": 4,
+      "phase": "营销选择",
+      "situation": "本地探店博主'吃遍小城'找上门：'三万一条视频，保你三天爆单！'同时，老周的老客群里有20多位熟客提出'存钱送次数'的老办法。小周刷到同城另一家面馆被探店后：视频火了，但差评也多了——'分量少了''态度差了''排队两小时'。",
+      "options": [
+        {
+          "id": "A",
+          "text": "花3万请网红探店",
+          "consequences_for_player": "视频爆量，但客单价被团购价打穿，利润为负；短期客流暴增后回落，口碑被'便宜'标签锁定",
+          "expected_concerns_addressed": [
+            "流量爆发"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "B",
+          "text": "做会员储值+老客群维护",
+          "consequences_for_player": "短期增长慢，复购率升；现金流提前回笼，家庭信任稳",
+          "expected_concerns_addressed": [
+            "复购"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "C",
+          "text": "发传单做'第二份半价'",
+          "consequences_for_player": "短期排队，利润薄；口碑被'便宜'标签锁定",
+          "expected_concerns_addressed": [
+            "短期引流"
+          ],
+          "weight": "moderate"
+        },
+        {
+          "id": "D",
+          "text": "不营销，靠口碑自然增长",
+          "consequences_for_player": "无额外成本，增长慢；口碑平稳",
+          "expected_concerns_addressed": [
+            "口碑自然"
+          ],
+          "weight": "conservative"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "cash_flow": -30000,
+          "monthly_revenue": 30000,
+          "reputation": -8,
+          "expansion_pressure": -30,
+          "consequence_deferred_queue": [
+            "price_lock"
+          ]
+        },
+        "B": {
+          "cash_flow": 8000,
+          "reputation": 3,
+          "family_trust": 3
+        },
+        "C": {
+          "cash_flow": -1000,
+          "monthly_revenue": 12000,
+          "reputation": -3
+        },
+        "D": {
+          "reputation": 1,
+          "cash_flow": 500
+        }
+      },
+      "character_reactions": {
+        "A": "探店视频爆了，但老周看着后厨被挤爆的场面直摇头：'这不是来吃面的，是来打卡的。'",
+        "B": "王阿姨第一个办了储值卡：'老周家的面，存钱我放心。'",
+        "C": "排队的人多了，可老客们抱怨：'半价是便宜，可排队太久了。'",
+        "D": "老周照常开门，熟客照常光顾——日子没变，但好像也在变。"
+      }
+    },
+    {
+      "turn": 5,
+      "phase": "第一揭示：平台报表与损耗真相",
+      "is_pattern_reveal": true,
+      "reveal_phase": 1,
+      "pattern_reveal_template": {
+        "round": 1,
+        "biases_revealed": [
+          "linear_extrapolation",
+          "single_target_optimization",
+          "confirmation_bias"
+        ],
+        "narrative": "系统揭示前4回合的决策模式：单量≠利润、品类≠丰富、扩张≠两条腿。"
+      },
+      "situation": "三个月后的深夜，小周第一次认真算账，冷汗下来了：\n\n📊 平台3个月报表：月流水+20%，但净利润-8%；差评集中在'配送慢/汤面坨了'；加品类后出餐速度下降40%。\n\n你终于看清：'单量上升=利润上升'是个错觉。平台抽成、差评、损耗像三个水龙头，悄悄放干了你的利润。老周坐在对面，把一摞单据推到你面前：'你说说，这账怎么回事？'",
+      "options": [
+        {
+          "id": "A",
+          "text": "承认平台策略失误：收缩到3公里，砍掉滞销品类",
+          "consequences_for_player": "修正路径：成本回落，口碑止跌；短期营收下降但利润回升",
+          "expected_concerns_addressed": [
+            "修正"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "B",
+          "text": "认为是平台没给够流量，加大投放",
+          "consequences_for_player": "确认偏误：重复失败策略，烧更多钱买'看起来更高的单量'",
+          "expected_concerns_addressed": [
+            "流量焦虑"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "C",
+          "text": "维持现状，觉得'先亏后赚'",
+          "consequences_for_player": "延迟效应：忽视趋势，损耗与差评继续累积，T8全面爆发",
+          "expected_concerns_addressed": [
+            "现状"
+          ],
+          "weight": "passive"
+        },
+        {
+          "id": "D",
+          "text": "暂停外卖一周，先观察堂食老客反应",
+          "consequences_for_player": "中断平台单量，口碑观察期；家庭信任微升，扩张压力缓释",
+          "expected_concerns_addressed": [
+            "观察"
+          ],
+          "weight": "analytical"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "monthly_revenue": -8000,
+          "cash_flow": 3000,
+          "reputation": 4,
+          "waste_rate": -3,
+          "service_speed": -3,
+          "ignored_warnings_count": 0
+        },
+        "B": {
+          "cash_flow": -5000,
+          "monthly_revenue": 10000,
+          "reputation": -5,
+          "ignored_warnings_count": 1,
+          "consequence_deferred_queue": [
+            "confirmation_spiral"
+          ]
+        },
+        "C": {
+          "cash_flow": -1000,
+          "reputation": -2,
+          "waste_rate": 2,
+          "ignored_warnings_count": 1,
+          "consequence_deferred_queue": [
+            "trend_denial"
+          ]
+        },
+        "D": {
+          "monthly_revenue": -3000,
+          "cash_flow": 1500,
+          "reputation": 2
+        }
+      },
+      "character_reactions": {
+        "A": "老周听完你的复盘，沉默了一会儿：'想明白了就好。店，还在。'",
+        "B": "老周把投放账单拍在桌上：'你是嫌咱家亏得不够快？'",
+        "C": "老周没说话，但你看见他把差评截图一张张存了下来。",
+        "D": "老周把外卖平台的通知关了一天。堂食的熟客问：'今天不送外卖了？'他说：'先看看老客还在不在。'"
+      }
+    },
+    {
+      "turn": 6,
+      "phase": "供应链抉择",
+      "is_pattern_reveal": true,
+      "reveal_phase": 2,
+      "pattern_reveal_template": {
+        "round": 2,
+        "biases_revealed": [
+          "time_delay_blindness",
+          "nonlinearity"
+        ],
+        "narrative": "揭示供应链延迟后果：冷冻牛肉省的是当期现金，亏的是两个月后的口碑。"
+      },
+      "situation": "供应商老郑上门：'老周，我这批冷冻牛肉，进价便宜15%，够你用三个月！'你算了算：每月食材成本能省3000块。但老周摸着牛肉的纹理皱眉：'冻过的肉，煮出来不嫩，老客吃得出来。'你想起上个月平台上已经有差评说'牛肉柴了'——但那是外卖的，堂食还没人提。",
+      "options": [
+        {
+          "id": "A",
+          "text": "换供应商囤3个月低价冷冻牛肉",
+          "consequences_for_player": "当期成本-15%，但肉质下降、损耗延迟暴露；T7起口碑逐回合-3，T8集中爆发",
+          "expected_concerns_addressed": [
+            "降本"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "B",
+          "text": "维持每日新鲜采购",
+          "consequences_for_player": "成本+15%，品质稳定；口碑稳，损耗可控",
+          "expected_concerns_addressed": [
+            "品质"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "C",
+          "text": "混合：一半冷冻一半新鲜",
+          "consequences_for_player": "成本持平，品质波动；老客开始能尝出区别",
+          "expected_concerns_addressed": [
+            "折中"
+          ],
+          "weight": "moderate"
+        },
+        {
+          "id": "D",
+          "text": "寻找本地屠宰场直供鲜肉",
+          "consequences_for_player": "成本略升但品质可控，供应链本地化；需两周磨合",
+          "expected_concerns_addressed": [
+            "本地直供"
+          ],
+          "weight": "analytical"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "cash_flow": 3000,
+          "reputation": 0,
+          "waste_rate": 4,
+          "inventory_turnover": 15,
+          "consequence_deferred_queue": [
+            "frozen_meat"
+          ]
+        },
+        "B": {
+          "cash_flow": -3000,
+          "reputation": 3,
+          "waste_rate": -1,
+          "family_trust": 2
+        },
+        "C": {
+          "cash_flow": 0,
+          "reputation": -1,
+          "inventory_turnover": 4
+        },
+        "D": {
+          "cash_flow": -1500,
+          "family_trust": 3
+        }
+      },
+      "character_reactions": {
+        "A": "老周尝了一口冷冻肉煮的面，放下筷子：'你尝不出来？'",
+        "B": "老周照常凌晨四点去市场挑肉，王阿姨说：'这牛肉，咬一口就知道是新鲜的。'",
+        "C": "老周把冷冻肉藏在角落，可堂食老客还是皱起了眉头。",
+        "D": "你带老周跑了趟城郊的屠宰场，老板拍着胸脯说：'凌晨宰，六点送到。'老周算了算账：一斤贵一块二，但客人吃得出来。"
+      }
+    },
+    {
+      "turn": 7,
+      "phase": "人力决策",
+      "situation": "午市高峰后厨手忙脚乱，出餐越来越慢，差评又多了两条。老周提出招人：'高峰加三个人，速度快一点。'小周看了看工资表：临时工一天150，3个人一天450；又想了想刚学的管理学：'人多是不是真的就快？'",
+      "options": [
+        {
+          "id": "A",
+          "text": "高峰时段加3个临时工",
+          "consequences_for_player": "人力成本+30%，但新人不熟流程，出餐效率反而下降；非线性：人越多不等于越快",
+          "expected_concerns_addressed": [
+            "人力补足"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "B",
+          "text": "加1个熟手",
+          "consequences_for_player": "成本+12%，效率微升；稳定性较好",
+          "expected_concerns_addressed": [
+            "效率适度"
+          ],
+          "weight": "moderate"
+        },
+        {
+          "id": "C",
+          "text": "不加人，优化出餐流程（预煮/备菜/标准化）",
+          "consequences_for_player": "成本+0，效率+10%；需要一周磨合",
+          "expected_concerns_addressed": [
+            "流程优化"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "D",
+          "text": "让家人帮忙",
+          "consequences_for_player": "成本+0，但家庭信任-，人情债；母亲/妹妹下班后赶来帮厨，家庭矛盾开始",
+          "expected_concerns_addressed": [
+            "零成本"
+          ],
+          "weight": "passive"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "cash_flow": -4500,
+          "service_speed": 2,
+          "staff_fatigue": -10,
+          "reputation": -2,
+          "consequence_deferred_queue": [
+            "temp_churn"
+          ]
+        },
+        "B": {
+          "cash_flow": -1800,
+          "service_speed": -2,
+          "staff_fatigue": 5
+        },
+        "C": {
+          "service_speed": -3,
+          "cash_flow": 0,
+          "staff_fatigue": -5,
+          "reputation": 2
+        },
+        "D": {
+          "cash_flow": 0,
+          "family_trust": -10,
+          "staff_fatigue": -8
+        }
+      },
+      "character_reactions": {
+        "A": "三个临时工把厨房挤得转不开身，老周喊了一下午'让开让开'。",
+        "B": "熟手小陈上手快，出餐稳了，老周点头：'这钱花得值。'",
+        "C": "流程理顺后，午市高峰终于不用手忙脚乱，老周难得夸你：'有点门道。'",
+        "D": "妹妹下班来帮厨，忙到九点才走，临走丢下一句：'哥，下次别叫我了。'"
+      }
+    },
+    {
+      "turn": 8,
+      "phase": "第二揭示：现金流/口碑/损耗全貌",
+      "is_pattern_reveal": true,
+      "reveal_phase": 3,
+      "pattern_reveal_template": {
+        "round": 3,
+        "biases_revealed": [
+          "time_delay_blindness",
+          "negative_trend",
+          "goal_drift"
+        ],
+        "narrative": "此前所有隐藏代价一次性摊开：加盟抽血、冷冻肉口碑击穿、损耗吞噬利润。"
+      },
+      "situation": "深夜盘点，小周把账本摊开，全家沉默：\n\n💰 现金流预警：若你T3选了加盟，此时加盟店亏损，本店现金流被抽干，负债已超过净资产；若T6选了冷冻肉，口碑跌破阈值，差评集中爆发——'牛肉柴了''汤面坨了''分量少了'；若T2/T7选了过度扩张，损耗率与人力成本吃掉全部利润。【默认】本店没加盟、没换冷冻肉、也没开分店：账本上没有黑洞，但三件事必须说清——现金流只够覆盖 2.1 个月固定成本；老周的腰伤让他每天只能站 4 小时；隔壁新开的连锁店把午市客流分走了三成。你不欠钱，但你也没有余量。\n\n此前所有'隐藏代价'一次性摊开。老周问：'现在怎么办？'",
+      "options": [
+        {
+          "id": "A",
+          "text": "系统性止损：砍亏损业务、回归核心牛肉面",
+          "consequences_for_player": "正确路径：止血，口碑修复开始；短期营收下降",
+          "expected_concerns_addressed": [
+            "止损"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "B",
+          "text": "加大促销'低价回血'",
+          "consequences_for_player": "短期现金注入，但品牌被'便宜'锁死；过度调节：越打折越没人愿意付正价",
+          "expected_concerns_addressed": [
+            "现金回血"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "C",
+          "text": "向亲戚借钱继续扩张",
+          "consequences_for_player": "目标漂移+确认偏误：用新债填旧坑，家庭关系破裂风险；负债进一步上升",
+          "expected_concerns_addressed": [
+            "继续扩张"
+          ],
+          "weight": "aggressive"
+        },
+        {
+          "id": "D",
+          "text": "请独立财务顾问做全面审计",
+          "consequences_for_player": "咨询费一次性支出，获得客观诊断；决策质量提升",
+          "expected_concerns_addressed": [
+            "专业诊断"
+          ],
+          "weight": "analytical"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "cash_flow": 2000,
+          "reputation": 5,
+          "debt": 0,
+          "expansion_pressure": -20,
+          "waste_rate": -3
+        },
+        "B": {
+          "cash_flow": 5000,
+          "reputation": -6,
+          "consequence_deferred_queue": [
+            "cheap_label"
+          ]
+        },
+        "C": {
+          "debt": 50000,
+          "family_trust": -20,
+          "cash_flow": -5000,
+          "expansion_pressure": 20,
+          "ignored_warnings_count": 1
+        },
+        "D": {
+          "cash_flow": -2000,
+          "reputation": 2
+        }
+      },
+      "character_reactions": {
+        "A": "老周听完你的方案，把加盟合同和冷冻肉订单一起烧了：'从今天起，只做面。'",
+        "B": "促销三天，店里挤满了薅羊毛的顾客，老客反而少了——'现在来吃，总觉得不值原价。'",
+        "C": "亲戚在电话里叹气：'小周啊，叔的钱也是血汗钱。'老周一夜没睡。"
+      }
+    },
+    {
+      "turn": 9,
+      "phase": "危机应对",
+      "situation": "现金流告急，月底要发工资、交房租。老周坐在店里，面前四个选择像四扇门。小周想起《失败的逻辑》里的那句话：'过度调节是危机中最常见的错误。'可眼下，每一秒都在流血。",
+      "options": [
+        {
+          "id": "A",
+          "text": "打折促销回血",
+          "consequences_for_player": "现金流短期改善，但口碑与品牌定位受损；双刃剑",
+          "expected_concerns_addressed": [
+            "现金"
+          ],
+          "weight": "moderate"
+        },
+        {
+          "id": "B",
+          "text": "砍掉亏损业务，专注牛肉面",
+          "consequences_for_player": "修复口碑，利润恢复慢；正确路径",
+          "expected_concerns_addressed": [
+            "专注"
+          ],
+          "weight": "conservative"
+        },
+        {
+          "id": "C",
+          "text": "与家人摊牌协商",
+          "consequences_for_player": "家庭信任+，决策质量提升；短期无现金收益",
+          "expected_concerns_addressed": [
+            "家庭协同"
+          ],
+          "weight": "analytical"
+        },
+        {
+          "id": "D",
+          "text": "卖掉面馆止损",
+          "consequences_for_player": "保本金，放弃经营；若负债已深则选择有限",
+          "expected_concerns_addressed": [
+            "止损退出"
+          ],
+          "weight": "passive"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "cash_flow": 4000,
+          "reputation": -4,
+          "consequence_deferred_queue": [
+            "cheap_label_2"
+          ]
+        },
+        "B": {
+          "cash_flow": 1000,
+          "reputation": 4,
+          "waste_rate": -2,
+          "expansion_pressure": -10
+        },
+        "C": {
+          "family_trust": 10,
+          "expansion_pressure": -10,
+          "cash_flow": 0
+        },
+        "D": {
+          "cash_flow": 80000,
+          "net_equity": -150000,
+          "outcome": "sold_shop"
+        }
+      },
+      "character_reactions": {
+        "A": "打折那周流水好看，但老周看着收银台苦笑：'卖一百碗，不如以前卖三十碗。'",
+        "B": "砍掉亏损业务那天，老周把菜单重新写了一遍，只留了牛肉面和三样小菜。",
+        "C": "晚饭桌上，老周第一次听完了小周的完整复盘，点点头：'以后家里的事，咱爷俩商量着来。'",
+        "D": "签转让协议那天，老周在店门口站了很久。"
+      }
+    },
+    {
+      "turn": 10,
+      "phase": "终局揭示与全模式总结",
+      "is_pattern_reveal": true,
+      "reveal_phase": 4,
+      "is_final_outcome": true,
+      "pattern_reveal_template": {
+        "round": 4,
+        "biases_revealed": [
+          "goal_drift",
+          "single_target_optimization",
+          "time_delay_blindness",
+          "nonlinearity",
+          "linear_extrapolation",
+          "negative_trend",
+          "confirmation_bias",
+          "overcorrection"
+        ],
+        "narrative": "终局：依据前9回合决策计算结局，逐条引用玩家真实决策记录映射六大概念。"
+      },
+      "situation": "一年后的老城区。隔壁街的网红奶茶店换了两轮招牌，加盟商纠纷的新闻上了本地热搜。老周家牛肉面馆还开着——但它的模样，取决于你这一年做的每一个决定。\n\n现在，系统公布终局。",
+      "options": [
+        {
+          "id": "A",
+          "text": "接受终局评分，完整复盘全决策链",
+          "consequences_for_player": "系统按状态自动判定结局：口碑健康+无负债=长期成功；负债超净资产=扩张破产；居中=温水煮青蛙；T9选D=止损出让",
+          "expected_concerns_addressed": [
+            "自动评分"
+          ],
+          "weight": "neutral"
+        },
+        {
+          "id": "B",
+          "text": "坚持'扩张没有错'，接受扩张结局",
+          "consequences_for_player": "落入扩张破产结局：目标漂移与确认偏误被坐实",
+          "expected_concerns_addressed": [
+            "坚持扩张"
+          ],
+          "weight": "aggressive",
+          "trigger_outcome": "expansion_bankruptcy"
+        },
+        {
+          "id": "C",
+          "text": "强调口碑价值，接受温水结局",
+          "consequences_for_player": "落入温水煮青蛙结局：稳定但停滞",
+          "expected_concerns_addressed": [
+            "口碑价值"
+          ],
+          "weight": "passive",
+          "trigger_outcome": "warm_water_frog"
+        },
+        {
+          "id": "D",
+          "text": "复盘后决定出让店铺",
+          "consequences_for_player": "落入止损出让结局",
+          "expected_concerns_addressed": [
+            "出让止损"
+          ],
+          "weight": "passive",
+          "trigger_outcome": "sold_shop"
+        }
+      ],
+      "expected_effects": {
+        "A": {
+          "outcome": "final_review"
+        },
+        "B": {
+          "outcome": "final_review"
+        },
+        "C": {
+          "outcome": "final_review"
+        },
+        "D": {
+          "outcome": "final_review"
+        }
+      },
+      "character_reactions": {
+        "A": "老周端来两碗面，一碗给你，一碗给自己：'这一年，辛苦你了，儿子。'",
+        "B": "老周沉默了很久：'咱家最亏的不是钱，是走了弯路还觉得没错。'",
+        "C": "老周看着门口的老客，说：'守住这个店，也不算输。'",
+        "D": "签完转让协议，老周在店门口站了很久。"
+      }
+    }
+  ],
+  "outcome_endings": {
+    "long_term_success": {
+      "title": "✅ 街还在，面还在",
+      "narrative_intro": "两年后，老周家牛肉面馆成了这条街活得最久的餐饮店。",
+      "timeline": [
+        "口碑回到峰值，熟客带熟客，周末堂食翻台三次",
+        "现金流连续24个月为正，还清了全部负债",
+        "小周用攒下的钱开了第二家店——这次是深思熟虑的，不是跟风的",
+        "王阿姨逢人就说：'这条街的面，还得是老周家。'"
+      ],
+      "dorner_reflection": "你守住了'做好一碗面'的初心。目标没漂移，系统没被局部优化绑架——这正是《失败的逻辑》里'成功者'的样子：承认延迟效应，尊重非线性，在危机中做减法而不是加法。",
+      "teaching_questions": [
+        "你的哪几个决策让你守住了长期主义？",
+        "如果当初被'风口'带着走，结局会有什么不同？",
+        "'不做'和'做错'，哪个更需要勇气？",
+        "如果房东在 T6 涨租 40%、或者老周必须手术停业三个月，你的'不扩张'还守得住吗？"
+      ],
+      "hidden_costs": [
+        "老周 62 岁，仍每天在后厨站 6 小时。腰椎间盘突出拖了两年没做手术，因为店里离不开人。",
+        "两年里拒了 3 个加盟邀约，城东两个商圈被连锁品牌吃掉；单店营收天花板已经摸到，再往上必须开店。",
+        "小周的同学在连锁品牌做区域经理，年薪 40 万；她月入 1.2 万，去年提过一次想走，你没接话。"
+      ],
+      "luck_note": "房东 2027 年没涨租——这条街唯一没涨的一家。这不是你的决策换来的；如果他在 T6 涨租 40%，'稳住'这条路本身就会断。",
+      "cost_question": "如果房东在 T6 涨租 40%、或者老周必须手术停业三个月，你的'不扩张'还守得住吗？"
+    },
+    "expansion_bankruptcy": {
+      "title": "❌ 招牌摘了",
+      "narrative_intro": "加盟店关了，招牌摘了，法院的传票到了。",
+      "timeline": [
+        "加盟店亏损累计，总部以'运营不达标'为由拒绝退款",
+        "本店现金流被抽干，供应商开始要求现金结算",
+        "负债超过净资产，银行催收电话每天响起",
+        "转让协议签了字，老周在店里坐了最后一夜"
+      ],
+      "dorner_reflection": "目标漂移让你从'做好一碗面'漂到了'开更多店'；确认偏误让你在揭示后仍重复错误策略；过度调节让你在危机中把品牌钉在'便宜'的标签上。Dörner 会说：你优化了每一个局部，却摧毁了整体。",
+      "teaching_questions": [
+        "'两条腿走路'真的让你走得更稳了吗？",
+        "揭示回合给了你修正机会，你为什么还是选择了加码？",
+        "如果重来一次，你会在哪个回合停下来？"
+      ]
+    },
+    "warm_water_frog": {
+      "title": "⚠️ 温水里的老周",
+      "narrative_intro": "面馆还在，只是不再被提起。",
+      "timeline": [
+        "流水回到6.8万的水平，但利润比三年前薄了",
+        "口碑不高不低，老客流失了一些，新客没有补上",
+        "平台评分卡在4.2，不上不下",
+        "老周偶尔看着隔壁新开的店发呆"
+      ],
+      "dorner_reflection": "你没有大错，但也没有方向。问题延迟暴露的另一种形态是：什么都不做，也是一种选择——而它同样会累积成'消极趋势'。Dörner 称之为'温水煮青蛙'：系统不会等你反应过来才恶化。",
+      "teaching_questions": [
+        "'稳定'和'停滞'的边界在哪里？",
+        "你是在守护口碑，还是害怕改变？",
+        "下一次机会来临时，你会如何判断它是风口还是陷阱？"
+      ]
+    },
+    "sold_shop": {
+      "title": "⚠️ 店转了，人走了",
+      "narrative_intro": "面馆易主了。",
+      "timeline": [
+        "转让款到账，本金保住了一部分",
+        "新店主换了招牌，做起了炸鸡",
+        "老客们偶尔路过，念叨一句：'还是老周的面香。'",
+        "老周回老家休养，小周去城里上班"
+      ],
+      "dorner_reflection": "止损也是一种决策。但如果止损前你已经在扩张路上走得太远，你会问自己：'我本可以更早停下来吗？'《失败的逻辑》的核心不是永远不失败，而是在失败信号出现时及时修正。",
+      "teaching_questions": [
+        "止损的时点，是主动判断还是被动接受？",
+        "如果早点看清延迟后果，结局会不同吗？",
+        "放弃和坚持，哪个更难？"
+      ]
+    }
+  },
+  "feedback_patterns": {
+    "goal_drift": {
+      "trigger": "expansion_choices >= 2 AND initial_goal_promise == '做好一碗面'",
+      "dorner_concept": "目标漂移",
+      "evidence_template": "你在 {turns} 个回合中选择了 {n} 次扩张型决策，从'做好一碗面'漂移到'开更多店/追风口'。",
+      "reflection_questions": [
+        "你的初始目标是什么，现在的行为还在服务它吗？",
+        "扩张的收益由谁承担，风险由谁承担？"
+      ]
+    },
+    "single_target_optimization": {
+      "trigger": "revenue_obsession_count >= 2",
+      "dorner_concept": "局部优化 / 只见树木",
+      "evidence_template": "你 {turns} 次把'单量/流水'当作唯一指标，忽视了利润、口碑与家庭信任的联动。",
+      "reflection_questions": [
+        "单一指标的优化，是否以系统其他部分的牺牲为代价？"
+      ]
+    },
+    "time_delay_blindness": {
+      "trigger": "deferred_consequence_count >= 2",
+      "dorner_concept": "忽视延迟效应",
+      "evidence_template": "平台抽成、冷冻肉变质、加盟抽血——你的 {n} 个决策的代价在 {reveal_turn} 回合才显现。",
+      "reflection_questions": [
+        "今天的'省'，是省了现金还是省了未来？"
+      ]
+    },
+    "nonlinearity": {
+      "trigger": "over_expansion_choice == True AND menu_scope > 12 OR temp_staff_count >= 3",
+      "dorner_concept": "非线性",
+      "evidence_template": "品类越多出餐越慢、临时工越多效率越低——你在 {turn} 回合体验了'规模不等于收益'。",
+      "reflection_questions": [
+        "系统在哪个点上突然恶化？你能预判这个拐点吗？"
+      ]
+    },
+    "linear_extrapolation": {
+      "trigger": "revenue_up_profit_down == True",
+      "dorner_concept": "过度简化线性外推",
+      "evidence_template": "你按 3 个月的流水直线预测了全年——但平台抽成与差评让利润与流水背离。",
+      "reflection_questions": [
+        "流水和利润的斜率一样吗？哪些变量在悄悄改变斜率？"
+      ]
+    },
+    "negative_trend": {
+      "trigger": "profit_down_consecutive >= 2 AND bad_reviews_up == True",
+      "dorner_concept": "问题延迟暴露 / 消极趋势",
+      "evidence_template": "差评、损耗、负债是'温水煮青蛙'式累积——你在 {reveal_turn} 才看到全貌。",
+      "reflection_questions": [
+        "哪个信号本可以更早提醒你？"
+      ]
+    },
+    "confirmation_bias": {
+      "trigger": "ignored_warnings_count >= 2",
+      "dorner_concept": "确认偏误",
+      "evidence_template": "你 {n} 次忽视差评与现金流预警，只采信'先亏后赚'的乐观叙事。",
+      "reflection_questions": [
+        "你在寻找支持决策的证据，还是反对决策的证据？"
+      ]
+    },
+    "overcorrection": {
+      "trigger": "discount_rescue_choice == True",
+      "dorner_concept": "过度调节",
+      "evidence_template": "危机时一刀切打折/清仓，把品牌钉在'便宜'的标签上。",
+      "reflection_questions": [
+        "小步验证再放大，是否比剧烈摆荡更安全？"
+      ]
+    }
+  },
+  "dorner_quotes": [
+    {
+      "turn_context": "T1 外卖平台",
+      "quote": "我们倾向于用线性思维处理非线性系统——这种倾向在工程、教育和管理领域反复出现。",
+      "source": "Dörner, The Logic of Failure"
+    },
+    {
+      "turn_context": "T5 平台报表",
+      "quote": "在动态系统中，行动的延迟效应比即时效应更重要。",
+      "source": "Dörner, The Logic of Failure, Chapter 3"
+    },
+    {
+      "turn_context": "T6 冷冻肉",
+      "quote": "你妈囤了一冰箱菜，结果全烂了——延迟效应从不缺席，只是迟到。",
+      "source": "生活化类比"
+    },
+    {
+      "turn_context": "T8 现金流全貌",
+      "quote": "失败的根本原因是自我评价的缺失——我们不愿意让自己的行为成为评价对象。",
+      "source": "Dörner, The Logic of Failure, Chapter 7"
+    },
+    {
+      "turn_context": "T10 终局",
+      "quote": "在复杂系统中，'什么都不做'也是一种干预——而且往往是最危险的干预。",
+      "source": "Dörner, The Logic of Failure"
+    }
+  ]
+}
