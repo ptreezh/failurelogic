@@ -1583,9 +1583,113 @@
     return data.outcome_endings || {};
   }
 
+  // ===== 过程记账（Spec v1.2 §6.2 / §6.2.1 · T-6）=====
+  //
+  // 要解决的是最容易被糊过去的一句话：「前 9 回合对结局有影响」。
+  // 一个只看第 10 回合的引擎，靠三行漂亮文案也能声称自己有影响，
+  // 所以这里坚持三件事：
+  //   1. 记账不改判 —— 结局 id 仍由第 10 回合决定（challenger 的四条命名与
+  //      全部既有断言因此原样成立）；
+  //   2. 档位可反推 —— 阈值全部用引擎里已有的门槛，玩家拿着两个计数就能自己算；
+  //   3. 数值进文本 —— verdict 与追加段里出现的是实际计数，不是形容词。
+  //
+  // 口径换算（诚实登记，不做黑箱）：spec §6.2.1 把 climate 的档位写成
+  // 「0.5 / 1.5」，那是 0–1 归一尺度；本引擎的 implementation_debt 是 0–100 尺度，
+  // 其 grace line 为 CLIMATE_DEBT.fiscalGrace（6）、band worst 为
+  // CLIMATE_DEBT.bandDebtWorst（32）。两处等价，故本实现取 6 / 32。
+  // noodle 的 debt 开局为 0，直接算「倍数」会退化成 0/0；
+  // 改用「1 + 负债/月营收」，开局即 1.00 倍，1.30 倍 = 债务达到一个月营收的 30%。
+  function _flLedgerNum(v) {
+    return typeof v === 'number' && !isNaN(v) ? v : 0;
+  }
+
+  function _flProcessLedger(state, scenarioId) {
+    var s = state || {};
+    var init = (_loaded[scenarioId] || {}).initialState || {};
+    var counters = [];
+    var tier = 'mid';
+    var verdict = '';
+
+    if (scenarioId === 'challenger-launch') {
+      var ar = Math.round(_flLedgerNum(s.accepted_risks_count) || 0);
+      var ds = Math.round(_flLedgerNum(s.dissent_suppressed_count) || 0);
+      var sum = ar + ds;
+      tier = sum <= 1 ? 'low' : (sum >= 5 ? 'high' : 'mid');
+      counters = [
+        { name: 'accepted_risks_count', value: ar },
+        { name: 'dissent_suppressed_count', value: ds },
+      ];
+      verdict = '前九回合接受风险 ' + ar + ' 次、压制异议 ' + ds + ' 次（合计 ' + sum + '）。';
+    } else if (scenarioId === 'climate-change-policy') {
+      var debt = typeof s.implementation_debt === 'number' ? s.implementation_debt : 0;
+      debt = Math.round(debt * 10) / 10;
+      var settle = (s._fiscal_settlement && s._fiscal_settlement.turns) || 0;
+      var grace = (CLIMATE_DEBT && CLIMATE_DEBT.fiscalGrace) || 6;
+      var worst = CLIMATE_DEBT_BAND_LIMIT || 32;
+      tier = debt <= grace ? 'low' : (debt > worst ? 'high' : 'mid');
+      counters = [
+        { name: 'implementation_debt', value: debt },
+        { name: 'settlement_turns', value: settle },
+      ];
+      verdict = '执行赤字累计 ' + debt.toFixed(1) + '/100，隐性结算 ' + settle + ' 次。';
+    } else if (scenarioId === 'enron-collapse') {
+      var exp = Math.round(_flLedgerNum(s.off_balance_sheet_exposure_usd_m) || 0);
+      var baseExp = _flLedgerNum(init.off_balance_sheet_exposure_usd_m) || 0;
+      var mult = baseExp > 0 ? Math.round((exp / baseExp) * 100) / 100 : 1;
+      tier = mult <= 1.2 ? 'low' : (mult > 1.8 ? 'high' : 'mid');
+      counters = [
+        { name: 'exposure_multiple', value: mult },
+        { name: 'off_balance_sheet_exposure_usd_m', value: exp },
+      ];
+      verdict = '表外敞口 ' + mult.toFixed(2) + ' 倍初值（' + exp + ' 百万美元）。';
+    } else if (scenarioId === 'noodle-shop-community') {
+      var debtN = Math.round(_flLedgerNum(s.debt) || 0);
+      var rev = _flLedgerNum(init.monthly_revenue) || 0;
+      var multN = rev > 0 ? Math.round((1 + debtN / rev) * 100) / 100 : 1;
+      tier = multN <= 1.3 ? 'low' : (multN > 2.0 ? 'high' : 'mid');
+      counters = [
+        { name: 'debt_multiple', value: multN },
+        { name: 'debt', value: debtN },
+      ];
+      verdict = '负债 ' + debtN + ' 元，相当于开局营收的 ' + multN.toFixed(2) + ' 倍。';
+    } else if (scenarioId === 'chip-ai-supplychain') {
+      var dr = Math.round(_flLedgerNum(s.debt_ratio) || 0);
+      var baseDr = _flLedgerNum(init.debt_ratio) || 0;
+      var multC = baseDr > 0 ? Math.round((dr / baseDr) * 100) / 100 : 1;
+      tier = multC <= 1.3 ? 'low' : (multC > 2.0 ? 'high' : 'mid');
+      counters = [
+        { name: 'cash_burn_multiple', value: multC },
+        { name: 'debt_ratio', value: dr },
+      ];
+      verdict = '资产负债率 ' + dr + '%，为开局的 ' + multC.toFixed(2) + ' 倍。';
+    } else {
+      counters = [{ name: 'turn_number', value: _flLedgerNum(s.turn_number) || 0 }];
+      verdict = '本场景未登记过程记账项。';
+    }
+
+    return {
+      pressure_tier: tier,
+      key_counters: counters,
+      verdict: verdict,
+    };
+  }
+
+  // 追加在结局文本末尾的一段。它不做总结，只把账摆出来：
+  // 同一个结局，走到它面前的姿态可以完全不同。
+  function _flLedgerSegment(scenarioId, ledger) {
+    if (!ledger) return '';
+    var closer =
+      ledger.pressure_tier === 'low'
+        ? '前九回合把余量留住了，最后这一步才可能只是一次失手。'
+        : ledger.pressure_tier === 'high'
+          ? '同样是这一步，这一次是积重难返，不是一时失手。'
+          : '余量是一点点让出去的，最后这一步只是签字。';
+    return '【代价清算】' + ledger.verdict + '\n  ' + closer;
+  }
+
   /**
    * 统一的终局解析入口。
-   * @returns {{id:string,title:string,tier:string,source:string,rewritten:boolean,inferred_id:string,scenario_id:string}}
+   * @returns {{id:string,title:string,tier:string,source:string,rewritten:boolean,inferred_id:string,scenario_id:string,process_ledger:object}}
    */
   function _flResolveOutcome(state, scenarioId) {
     var s = state || {};
@@ -1621,6 +1725,9 @@
       rewritten: declaredOk && inferredOk && declared !== inferred,
       inferred_id: inferred,
       scenario_id: scenarioId,
+      // 结局之外的第二份账：前 9 回合留下的代价。它不参与定 id，
+      // 只负责让「同一个结局」在文本上不再等价（§6.2 的整条理由就在这里）。
+      process_ledger: _flProcessLedger(s, scenarioId),
     };
   }
 
@@ -2441,7 +2548,10 @@
   async function applyChallengerTurn(state, optionId, justification) {
     const data = await loadScenario('challenger-launch');
     const currentTurn = state.turn_number || 1;
-    const step = findStep(data, currentTurn);
+    // 与 applyClimateTurn 同一口径：getScenarioStep 交给玩家的 A/B/C/D 是本次 run
+    // 洗牌后的槽位，结算必须解同一份排列。少了这一步，屏幕上「接受风险并推进」
+    // 的按钮会按原槽位的 effects 结算——T-6 要记的两个计数会记成别人的账。
+    const step = _flShuffleStepOptions(findStep(data, currentTurn), 'challenger-launch', currentTurn);
     if (!step) return state;
 
     const option = findOption(step, optionId);
@@ -2748,7 +2858,9 @@
   async function applyEnronTurn(state, optionId, justification) {
     const data = await loadScenario('enron-collapse');
     const currentTurn = state.turn_number || 1;
-    const step = findStep(data, currentTurn);
+    // 必须与 getScenarioStep 同排列（见 _flShuffleStepOptions）：
+    // 未洗牌的 step 里 A/B/C/D 与玩家屏幕上的槽位不是同一套，直接结算会错位。
+    const step = _flShuffleStepOptions(findStep(data, currentTurn), 'enron-collapse', currentTurn);
     if (!step) return state;
     const option = findOption(step, optionId);
     if (!option) return state;
@@ -3064,7 +3176,9 @@
     } else {
       // Generic fallback
       const data = await loadScenario(resolvedScenarioId);
-      const step = findStep(data, currentTurn);
+      // 与 getScenarioStep 同排列：玩家点的是洗牌后槽位上的字母，
+      // 拿原始 step 去结算等于让"屏幕上的 A"和"记账的 A"是两个选项。
+      const step = _flShuffleStepOptions(findStep(data, currentTurn), resolvedScenarioId, currentTurn);
       if (step) {
         const option = findOption(step, decisions.option);
         if (option) {
@@ -3082,7 +3196,8 @@
         const lastEntry = hist[hist.length - 1];
         if (lastEntry && lastEntry.turn === currentTurn) return;
         const scnData = _loaded[resolvedScenarioId] || {};
-        const st = findStep(scnData, currentTurn);
+        // 同上：反馈里要复述的是"玩家看到的那个选项"，不是原始槽位的同名字母。
+        const st = _flShuffleStepOptions(findStep(scnData, currentTurn), resolvedScenarioId, currentTurn);
         const op = st ? findOption(st, decisions.option) : null;
         // Keep the applied effects on the record even when the scenario's own
         // turn handler does not log them: downstream feedback needs the numbers,
@@ -3141,7 +3256,16 @@
         // ignore storage errors
       }
 
-      const feedback = generateFeedbackForTurn(newState, newState.turn_number, resolvedScenarioId);
+      // T-6：终局文本末尾补【代价清算】。挂在这里而不是五个 generate*Outcome 里，
+      // 理由和 attachFinalOutcome 一样：文本可以由五条路径各自生成，
+      // 但「代价怎么写」只该有一份规则，否则五处迟早写出五种口径。
+      let feedback = generateFeedbackForTurn(newState, newState.turn_number, resolvedScenarioId);
+      if (newState.final_outcome && newState.final_outcome.process_ledger) {
+        const ledgerSeg = _flLedgerSegment(resolvedScenarioId, newState.final_outcome.process_ledger);
+        if (ledgerSeg && feedback.indexOf('【代价清算】') < 0) {
+          feedback = feedback + '\n\n' + ledgerSeg;
+        }
+      }
       const immediateResponse = {
         status: 'processed',
         turnNumber: newState.turn_number,

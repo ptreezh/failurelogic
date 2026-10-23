@@ -2,12 +2,14 @@
 /**
  * verify-all.mjs — 一条命令跑完全部验收脚本并给出统一红/绿。
  *
- * FailureLogic-Spec v1.2 · P0-5 / T-1（8 个既有）+ T-2/T-4/T-5（4 个契约）。
+ * FailureLogic-Spec v1.2 · P0-5 / T-1（8 个既有）+ T-2/T-4/T-5/T-6/G7（6 个契约）。
  *
- * 12 个脚本 = 8 个既有回归（一行未改）+ 4 个本 Sprint 新增的契约测试：
+ * 14 个脚本 = 8 个既有回归（一行未改）+ 6 个本 Sprint 新增的契约测试：
  *   contract-outcome（G2 终局字段）、adapter-ending（G4 文本归一）、
- *   shop-declared（G5 最后一步改写）、shadow-outcome（G3 影子对照 200 局）。
- * 前三个是秒级失败点，放最前面：让"契约坏了"先响，不必等 150 秒的 UI 回归。
+ *   shop-declared（G5 最后一步改写）、shadow-outcome（G3 影子对照 200 局）、
+ *   pressure-tier（G6 前九回合档位可反推 + challenger 因果分离）、
+ *   option-slot-map（G7 屏幕槽位 = 结算/反馈同源，五场景）。
+ * 前四个是秒级失败点，放最前面：让"契约坏了"先响，不必等 150 秒的 UI 回归。
  *
  * 设计约束（不是偏好，是 spec 要求）：
  *  1. 不合并、不改写任何既有脚本的断言口径 —— 本文件只做"调度 + 汇总"，
@@ -34,6 +36,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // spec 原定 120 s 预算是针对"8 个既有脚本"写的。接入 4 个契约脚本后
 // 基准下移到 ~215 s（shadow-outcome 独占 200 局 ≈ 47 s，acceptance-climate ≈ 73 s），
+// 再加上 pressure-tier 的 7 局 ≈ 5 s，
 // 这里同步放宽到 300 s，仍只是软门槛：超了报 WARN，不改变红绿。
 const BUDGET_MS = 300000;
 
@@ -48,7 +51,7 @@ const only = opt('only').split(',').filter(Boolean);
 const skip = opt('skip').split(',').filter(Boolean);
 
 /**
- * 12 个脚本。name 与文件名保持一致，便于 --only/--skip 指认。
+ * 14 个脚本。name 与文件名保持一致，便于 --only/--skip 指认。
  * timeout 留足余量：acceptance-climate 单跑 65 s、ui-render-assert 44 s，
  * 在 CI 或低配机上会明显变慢，超时值只用于兜住"挂死"，不是性能断言。
  */
@@ -58,6 +61,8 @@ const STEPS = [
   { name: 'adapter-ending', script: 'scripts/adapter-ending.mjs', timeout: 120000 },
   { name: 'shop-declared', script: 'scripts/shop-declared.mjs', timeout: 300000 },
   { name: 'shadow-outcome', script: 'scripts/shadow-outcome.mjs', timeout: 300000 },
+  { name: 'pressure-tier', script: 'scripts/pressure-tier.mjs', timeout: 300000 },
+  { name: 'option-slot-map', script: 'scripts/option-slot-map.mjs', timeout: 300000 },
   // —— 既有回归（一行未改）——
   { name: 'gold-climate', script: 'scripts/gold-climate.mjs', timeout: 180000 },
   { name: 'acceptance-climate-scar', script: 'scripts/acceptance-climate-scar.mjs', timeout: 120000 },
