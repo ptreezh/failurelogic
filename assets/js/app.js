@@ -9,6 +9,11 @@ const APP_CONFIG = {
   apiBaseUrl: (() => {
     const hostname = window.location.hostname;
 
+    // P0 #9: no backend exists for a file:// / offline open — never invent one.
+    if (window.location.protocol === 'file:' || hostname === '') {
+      return '';
+    }
+
     // 本地开发环境 — 后端默认 8000 端口 (Dockerfile + start.py 已统一)
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
       return 'http://localhost:8000';
@@ -75,7 +80,24 @@ const ApiService = {
 
   offline: false,
 
+  // P0 #9: this build ships as a single offline page with no backend behind
+  // it. Probing http://localhost:8000 on every page load produced CORS errors,
+  // connection failures and a 1.2s stall before the offline engine took over.
+  // Offline is now the default; set window.__FL_ENABLE_API__ = true to opt in.
+  _apiDisabled() {
+    if (window.__FL_ENABLE_API__ === true) return false;
+    const proto = window.location.protocol;
+    const host = window.location.hostname;
+    return proto === 'file:' || host === '' || host === 'localhost' ||
+      host === '127.0.0.1' || host === '0.0.0.0';
+  },
+
   async _withOfflineFallback(endpoint, options, offlineFn) {
+    if (ApiService._apiDisabled()) {
+      ApiService.offline = true;
+      if (!offlineFn) throw new Error('offline mode and no fallback');
+      return offlineFn();
+    }
     if (ApiService.offline) {
       if (!offlineFn) throw new Error('offline mode and no fallback');
       return offlineFn();
@@ -172,6 +194,10 @@ const ApiService = {
   },
 
   async healthCheck() {
+    // P0 #9: 离线构建没有后端，主动探测只会留下 CORS 错误
+    if (ApiService._apiDisabled()) {
+      return { status: 'offline', message: 'offline build — no backend configured' };
+    }
     try {
       const response = await ApiService.configManager.request('/');
       return { status: 'healthy', message: 'API is responsive', data: response };
@@ -202,9 +228,14 @@ class NavigationManager {
 
   static navigateTo(page) {
     AppState.currentPage = page;
-    const basePath = this.getBasePath();
-    const targetPath = page === 'home' ? basePath : `${basePath}${page}`;
-    window.history.pushState({ page }, '', targetPath);
+    // file:// documents report origin "null" and reject pushState (the path would
+    // be resolved against the drive root, e.g. file:///D:/scenarios). Skip the URL
+    // update there; in-page navigation still works.
+    if (window.location.protocol !== 'file:') {
+      const basePath = this.getBasePath();
+      const targetPath = page === 'home' ? basePath : `${basePath}${page}`;
+      window.history.pushState({ page }, '', targetPath);
+    }
     this.renderPage(page);
     
     // Hide game modal when navigating away
@@ -284,7 +315,19 @@ class NavigationManager {
         decisionPattern: "Dörner 8种失败模式",
         duration: "30-45分钟",
         category: "历史案例·深度",
-        thumbnail: "assets/images/challenger.jpg",
+        thumbnail: "assets/images/challenger.svg",
+        // L0-1 结构化简报：与 assets/data/scenarios/challenger_launch.json 的 brief 同源，S0 断言守一致性。
+        brief: {
+          role: "NASA 发射决策链上签下“可以发射”的那个人",
+          horizon: "10 个回合，1986 年 1 月 28 日前的三十天",
+          objectives: [
+            { id: "safety", text: "不让 O 型环带着已知隐患起飞", tension: "与按期发射直接冲突：每要一份低温数据，就烧掉一个发射窗口" },
+            { id: "schedule", text: "守住 1 月 28 日的窗口与政治承诺", tension: "与安全直接冲突：每一次为保险起见延期，承诺和预算都跟着折价" },
+            { id: "standing", text: "让外界继续相信这个项目值得投入", tension: "与前两者都冲突：承认隐患要付公开代价，硬顶按期则一次失败全赔进去" },
+          ],
+          impossible: "三件事不可能同时做好：让工程师把真话说到底、守住 1 月 28 日、维持外界对项目的信心。每一回合的选择，至少牺牲掉其中一件。",
+          how_judged: "没有唯一正确答案。判定看你的决策链是否与你声称的目标自洽——尤其看你在“我已经评估过了”这句话上重复了几次。"
+        },
         initialState: {
           temperature_forecast_f: 36,
           engineer_confidence: 75,
@@ -309,7 +352,19 @@ class NavigationManager {
         decisionPattern: "Dörner 8 模式·气候治理",
         duration: "30-45分钟",
         category: "重大公共决策·深度",
-        thumbnail: "assets/images/climate.jpg",
+        thumbnail: "assets/images/climate.svg",
+        // L0-1 结构化简报：与 assets/data/scenarios/climate_change.json 的 brief 同源，S0 断言守一致性。
+        brief: {
+          role: "IPCC 执行主任，2025-2035 任期",
+          horizon: "10 个回合，十年",
+          objectives: [
+            { id: "temperature", text: "把温升按在 1.5°C 的窗口里", tension: "与经济直接冲突：减排速度真提上来，先掉的是增长数字" },
+            { id: "cooperation", text: "让 198 国继续坐在同一张桌子前", tension: "与减排时间表冲突：给穷国缓冲与赔偿，总量目标就要往后挪" },
+            { id: "headroom", text: "不把增长与民意押上赌桌", tension: "与道义承诺冲突：赔偿和转型的钱都来自纳税人，支持率当场就掉" },
+          ],
+          impossible: "三件事不可能同时做到：把温升按住、让 198 国继续合作、保住增长与民意。每一回合的选择，至少牺牲掉其中一件。",
+          how_judged: "没有唯一正确答案。判定看你的决策链是否与你声称的目标自洽——把“全球共同但有区别的责任”挂在嘴上，和真的让谁掏钱，是两回事。"
+        },
         initialState: {
           global_avg_temp_c: 1.55,
           co2_ppm: 424,
@@ -334,7 +389,19 @@ class NavigationManager {
         decisionPattern: "Dörner 8 模式·公司治理",
         duration: "30-45分钟",
         category: "历史案例·深度",
-        thumbnail: "assets/images/enron.jpg",
+        thumbnail: "assets/images/enron.svg",
+        // L0-1 结构化简报：与 assets/data/scenarios/enron_collapse.json 的 brief 同源，S0 断言守一致性。
+        brief: {
+          role: "安然 CFO 的副手，能看见全部账目，但没有最终签字权",
+          horizon: "10 个回合，2000 年 1 月到 2001 年 12 月",
+          objectives: [
+            { id: "valuation", text: "让股价与信用评级撑住", tension: "与真实报表直接冲突：表外负债一收回表内，评级和股价当场下修" },
+            { id: "substance", text: "让报表回到真实现金流", tension: "与股价冲突：承认现金缺口的那一季，市场先惩罚你" },
+            { id: "visibility", text: "让董事会与外界看得见全部", tension: "与股价冲突：审计与披露一旦启动，节奏就不再由你控制" },
+          ],
+          impossible: "三件事不可能同时成立：股价与评级撑住、账目回到真实现金流、董事会与外界看清全部。每一回合的选择，至少牺牲掉其中一件。",
+          how_judged: "没有唯一正确答案。判定看你的决策链是否与你声称的目标自洽——尤其看你把问题往后推了几次，以及每次推的时候用了什么理由。"
+        },
         initialState: {
           share_price_usd: 90,
           credit_rating: "BBB+",
@@ -345,6 +412,90 @@ class NavigationManager {
           whistleblower_silenced_count: 0,
           board_oversight_strength: 60,
           media_skepticism_index: 20,
+          turn: 1
+        }
+      },
+      {
+        id: "noodle-shop-community",
+        name: "老周家牛肉面馆",
+        description: "老周经营了二十年的牛肉面馆，是社区三代人的食堂。短视频爆火后订单翻了三倍——但每碗面都需要时间与火候。在网红流量、平台规则与社区口碑之间做10回合决策，守住现金流与匠心的底线。",
+        fullDescription: "10回合多状态模拟。13个状态变量(现金流/月流水/口碑/平台评分/损耗率/存货周转/人力疲劳/出餐效率/品类数/家庭信任/扩张压力/负债/净资产)。揭示回合覆盖目标漂移、单目标优化、时间延迟、非线性、线性外推、消极趋势、确认偏误、过度调节。",
+        difficulty: "advanced",
+        estimatedDuration: 40,
+        targetPatterns: ["goal_drift", "single_target_optimization", "time_delay_blindness", "nonlinearity", "linear_extrapolation", "negative_trend", "confirmation_bias", "overcorrection"],
+        decisionPattern: "Dörner 8 模式·社区经营",
+        duration: "40分钟",
+        category: "社区经营决策·深度",
+        thumbnail: "assets/images/noodle-shop.svg",
+        // L0-1 结构化简报：卡片上必须把「三件事不可能同时做好」说在开头，
+        // 否则玩家做出单目标优化时，学到的不是「我犯了 F5」，而是「这游戏没告诉我还要管别的」。
+        // 与 assets/data/scenarios/noodle_shop_community.json 的 brief 同源，S0 断言守一致性。
+        brief: {
+          role: "老周的儿子小周，替父亲管账、也握着这个家的决定权",
+          horizon: "10 个回合，约一年",
+          objectives: [
+            { id: "scale", text: "把生意做大", tension: "与守住出品直接冲突：量一上来，先崩的是人手和出餐" },
+            { id: "brand", text: "守住招牌与口碑", tension: "与现金直接冲突：好食材和足够人手都得先掏钱" },
+            { id: "cash", text: "别把家底赔进去", tension: "与做大直接冲突：扩张要先垫钱，家底只够试一次" }
+          ],
+          impossible: "这三件事不可能同时做好。每一回合的选择，至少牺牲掉其中一件。",
+          how_judged: "没有唯一正确答案。判定看你的决策链是否与你声称的目标自洽——失败是设计的一部分，我们要看的是你怎么失败。"
+        },
+        initialState: {
+          cash_flow: 12000,
+          monthly_revenue: 68000,
+          reputation: 70,
+          platform_score: 4.6,
+          waste_rate: 8,
+          inventory_turnover: 7,
+          staff_fatigue: 30,
+          service_speed: 12,
+          menu_scope: 8,
+          family_trust: 80,
+          expansion_pressure: 50,
+          debt: 0,
+          net_equity: 150000,
+          turn: 1
+        }
+      },
+      {
+        id: "chip-ai-supplychain",
+        name: "华芯突围：AI芯片供应链",
+        description: "2026年，华芯科技——国产AI芯片设计公司——遭遇先进制程代工与HBM双双断供。作为CEO，在10回合中决定备件囤积、HBM选型、代工转单、扩产杠杆、降价保单与技术突围。每一个合理决策都藏着延迟后果。",
+        fullDescription: "10回合多状态模拟。13个状态变量(现金流/产能利用率/良率/存货缓冲/自主化/供应链风险/订单积压/负债率/研发投入/工程师士气/市占率/政策支持度/叙事偏差)。4个揭示回合+4分支结局(技术突围/现金困局/被并购/纾困接管)。",
+        difficulty: "advanced",
+        estimatedDuration: 45,
+        targetPatterns: ["linear_extrapolation", "confirmation_bias", "single_target_optimization", "local_optimization", "time_delay_blindness", "problem_delay_exposure", "overcorrection", "self_reference"],
+        decisionPattern: "Dörner 8 模式·产业战略",
+        duration: "45分钟",
+        category: "产业战略决策·深度",
+        thumbnail: "assets/images/chip-ai.svg",
+        // L0-1 结构化简报：与 assets/data/scenarios/chip_ai_supplychain.json 的 brief 同源，S0 断言守一致性。
+        brief: {
+          role: "华芯科技 CEO",
+          horizon: "10 个回合，约两年",
+          objectives: [
+            { id: "survive", text: "活过这轮现金断点", tension: "与自主化直接冲突：钱砸进备件和产能，就没钱砸研发" },
+            { id: "autonomy", text: "把断供这件事真正解决", tension: "与现金直接冲突：转单、长协、研发攻坚全要先付钱，回报在两三年后" },
+            { id: "market", text: "保住订单、客户与资本叙事", tension: "与前两者冲突：降价保单吃毛利，讲故事托估值又把真问题盖住" },
+          ],
+          impossible: "三件事不可能同时做好：活过现金断点、把断供真正解决、保住订单与资本叙事。每一回合的选择，至少牺牲掉其中一件。",
+          how_judged: "没有唯一正确答案。判定看你的决策链是否与你声称的目标自洽——尤其看你用“撑过周期”解释过多少次。"
+        },
+        initialState: {
+          cash_flow: 8,
+          capacity_utilization: 72,
+          yield_rate: 78,
+          inventory_buffer: 30,
+          self_reliance: 35,
+          supply_chain_risk: 60,
+          order_backlog: 5,
+          debt_ratio: 40,
+          rnd_budget: 15,
+          engineer_morale: 70,
+          market_share: 12,
+          policy_standing: 55,
+          perception_bias: 0,
           turn: 1
         }
       }
@@ -358,55 +509,14 @@ class NavigationManager {
       loadingEl.style.display = 'block';
     }
 
-    // Try to load from API first with timeout, fallback to mock data
-    const API_TIMEOUT = 5000;
-    try {
-      Log.log('Attempting to load scenarios from API...');
-
-      const apiPromise = fetch(`${APP_CONFIG.apiBaseUrl}/scenarios/`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8'
-        }
-      });
-
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('API timeout after ' + API_TIMEOUT + 'ms')), API_TIMEOUT)
-      );
-
-      const response = await Promise.race([apiPromise, timeoutPromise]);
-
-      if (response.ok) {
-        const data = await response.json();
-        if (data && Array.isArray(data.scenarios)) {
-          // Update global state with API data
-          AppState.scenarios = data.scenarios;
-          Log.log('✅ Loaded scenarios from API:', data.scenarios.length);
-        } else {
-          // Fallback to mock data
-          AppState.scenarios = this.getMockScenarios();
-          Log.log('⚠️  API returned unexpected format, using mock scenarios:', AppState.scenarios.length);
-        }
-      } else {
-        Log.warn('⚠️  API request failed, status:', response.status);
-        AppState.scenarios = this.getMockScenarios();
-      }
-    } catch (error) {
-      Log.warn('⚠️  Failed to load scenarios from API, using fallback:', error.message);
-      try {
-        // Try local file as secondary fallback
-        const localResp = await fetch('assets/data/scenarios.json');
-        if (localResp.ok) {
-          const data = await localResp.json();
-          AppState.scenarios = data.scenarios || this.getMockScenarios();
-        } else {
-          AppState.scenarios = this.getMockScenarios();
-        }
-      } catch (fetchError) {
-        Log.warn('⚠️  Local fallback failed, using built-in mock scenarios:', fetchError.message);
-        AppState.scenarios = this.getMockScenarios();
-      }
-    }
+    // P0 #9: offline-first. The old code probed `${APP_CONFIG.apiBaseUrl}/scenarios/`
+    // and raced it against a 5s timeout. On 127.0.0.1 the base URL resolved to
+    // http://localhost:8000 — a different origin under the same-origin policy — so
+    // every visit produced a CORS error in the console even though the fallback
+    // succeeded. Scenario metadata ships with the bundle, so take it directly and
+    // skip the network entirely (the rendering path below is unchanged).
+    AppState.scenarios = this.getMockScenarios();
+    Log.log('ℹ️  Using built-in scenario list:', AppState.scenarios.length);
 
     // Always render scenarios, even if API failed
     // Render scenarios into the static HTML scenarios-grid element
@@ -420,10 +530,11 @@ class NavigationManager {
         loadingEl.style.display = 'none';
       }
 
-      // Update scenarios count display if present
-      const scenariosCountEl = document.querySelector('.stat-number[data-target="12"]');
-      if (scenariosCountEl) {
-        scenariosCountEl.textContent = String(AppState.scenarios.length);
+      // P0 #10: landing-page counters read real local data (see home-stats.js).
+      // They used to be overwritten from data-target="12" — a number that was
+      // never the scenario count.
+      if (window.HomeStats && typeof window.HomeStats.render === 'function') {
+        window.HomeStats.render();
       }
       
       // Make sure the scenarios grid is visible
@@ -496,7 +607,7 @@ class NavigationManager {
 
     // The 3 deep Dörner-aligned scenarios are all 'advanced' — hide the
     // difficulty badge to reduce visual noise (no choice for the player).
-    const DEEP_SCENARIOS = ['challenger-launch', 'climate-change-policy', 'enron-collapse'];
+    const DEEP_SCENARIOS = ['challenger-launch', 'climate-change-policy', 'enron-collapse', 'noodle-shop-community', 'chip-ai-supplychain'];
     const isDeep = DEEP_SCENARIOS.includes(scenario.id);
 
     // Build the card based on difficulty
@@ -536,6 +647,22 @@ class NavigationManager {
           <span class="scenario-duration">${scenario.estimatedDuration}分钟</span>
         </div>
         <p class="scenario-description">${scenario.fullDescription}</p>
+      `;
+    }
+
+    // L0-1 简报：三行目标 + 一句「不可能同时满足」。
+    // 目标不是装饰，是让后面的「你牺牲了哪个」有参照物；tension 进 title，不占版面。
+    if (scenario.brief && Array.isArray(scenario.brief.objectives) && scenario.brief.objectives.length) {
+      const b = scenario.brief;
+      const items = b.objectives.map((o) =>
+        `<li title="${o.tension || ''}">${o.text}</li>`
+      ).join('');
+      cardContent += `
+        <div class="scenario-brief">
+          <div class="brief-role">你是${b.role} · ${b.horizon}</div>
+          <ul class="brief-objectives">${items}</ul>
+          <p class="brief-impossible">${b.impossible}</p>
+        </div>
       `;
     }
 
@@ -8685,6 +8812,12 @@ class GameManager {
     } else if (scenarioId === 'enron-collapse') {
       this.startEnronGame();
       return;
+    } else if (scenarioId === 'noodle-shop-community') {
+      this.startNoodleShopGame();
+      return;
+    } else if (scenarioId === 'chip-ai-supplychain') {
+      this.startChipSupplyChainGame();
+      return;
     }
 
     // Get the selected difficulty from user preferences
@@ -11799,6 +11932,9 @@ class GameManager {
     this.showGameModal();
 
     // Reuse session if user just clicked resume, otherwise create fresh.
+    if (AppState.gameSession && AppState.gameSession.scenarioId !== 'challenger-launch') {
+      AppState.gameSession = null;
+    }
     let gameId = (AppState.gameSession && AppState.gameSession.gameId)
       || window.__challengerResumeGameId;
     console.log('[debug] startChallengerGame gameId=', gameId);
@@ -11921,6 +12057,7 @@ class GameManager {
       const html = await router.renderStartPage();
       console.log('[debug] startChallengerGame renderStartPage result length=', html && html.length);
       container.innerHTML = html || '';
+      router._scoreCurrentDecision && router._scoreCurrentDecision();
     } catch (renderError) {
       const errMsg = '场景渲染失败: ' + (renderError && renderError.message ? renderError.message : String(renderError));
       console.error('[debug] startChallengerGame render failed:', renderError);
@@ -11952,6 +12089,22 @@ class GameManager {
     await this._startDeepScenario('enron-collapse');
   }
 
+  // Noodle shop community: data-driven 10-turn Dörner deep dive. Reuses
+  // ChallengerRouter via the scenario registry in challenger-router.js.
+  static async startNoodleShopGame() {
+    Log.log('🍜 Starting Noodle Shop game...');
+    this.showGameModal();
+    await this._startDeepScenario('noodle-shop-community');
+  }
+
+  // Chip AI supply chain: data-driven 10-turn Dörner deep dive. Reuses
+  // ChallengerRouter via the scenario registry in challenger-router.js.
+  static async startChipSupplyChainGame() {
+    Log.log('🔧 Starting Chip AI Supply Chain game...');
+    this.showGameModal();
+    await this._startDeepScenario('chip-ai-supplychain');
+  }
+
   // Shared helper for the 3 deep-scenario entry points. Tries the backend
   // session-create API; on failure falls back to the mock scenario entry so
   // the player still sees the decision UI (with an offline banner from the
@@ -11962,7 +12115,13 @@ class GameManager {
       'challenger-launch': '挑战者号发射决策',
       'climate-change-policy': '全球气候政策十年',
       'enron-collapse': '安然帝国崩塌',
+      'noodle-shop-community': '老周家牛肉面馆',
+      'chip-ai-supplychain': '华芯突围：AI芯片供应链',
     };
+    // Guard: stale session from another scenario must not be reused.
+    if (AppState.gameSession && AppState.gameSession.scenarioId !== scenarioId) {
+      AppState.gameSession = null;
+    }
     const gameId = (AppState.gameSession && AppState.gameSession.gameId)
       || window.__challengerResumeGameId;
     let initialState = null;
@@ -12040,6 +12199,7 @@ class GameManager {
     }
     try {
       container.innerHTML = await router.renderStartPage();
+      router._scoreCurrentDecision && router._scoreCurrentDecision();
     } catch (renderError) {
       const errMsg = '场景渲染失败: ' + (renderError && renderError.message ? renderError.message : String(renderError));
       console.error(`[${scenarioId}] render failed:`, renderError);
@@ -14386,27 +14546,10 @@ class HistoricalCasesPage {
   }
 
   async loadHistoricalCases() {
-    try {
-      // Try to load from API with fallback to local data
-      const response = await Promise.race([
-        fetch(`${APP_CONFIG.apiBaseUrl}/historical/scenarios`),
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('API timeout after 5 seconds')), 5000)
-        )
-      ]);
-
-      if (response.ok) {
-        const data = await response.json();
-        this.cases = data.scenarios || [];
-      } else {
-        // Fallback to local data or mock data
-        this.cases = this.getDefaultHistoricalCases();
-      }
-    } catch (error) {
-      Log.warn('Failed to load historical cases from API:', error);
-      // Use default cases as fallback
-      this.cases = this.getDefaultHistoricalCases();
-    }
+    // P0 #9: same offline-first rule as the scenario list. The historical cases
+    // ship with the page, and the old probe against `${APP_CONFIG.apiBaseUrl}`
+    // only produced a CORS error plus a 5s stall before falling back here.
+    this.cases = this.getDefaultHistoricalCases();
   }
 
   getDefaultHistoricalCases() {

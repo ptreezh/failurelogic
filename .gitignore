@@ -276,3 +276,11 @@ tests/unit/run-relationship-tests.js
 # Local agent artifacts
 .kilo/
 .qwen/
+
+# Build output（dist 由 scripts/build-standalone.mjs 生成，每次 build 都会重写；
+# 单文件产物只作交付/本地双击验证，入库会让 1.3MB 的 HTML 反复进历史）
+dist/
+
+# 人工备份副本（*.bak_xxx）：保留在磁盘便于回溯，不入库
+*.bak_*
+

@@ -56,6 +56,30 @@ const skip = opt('skip').split(',').filter(Boolean);
  * 在 CI 或低配机上会明显变慢，超时值只用于兜住"挂死"，不是性能断言。
  */
 const STEPS = [
+  // —— SPEC-v2 · M0 建尺（纯无头 + 基线两条轨；秒级）——
+  // 静态轨：解析器全或无 / 台账不漂移 / 棘轮不倒退
+  { name: 'm0-tdd', script: 'scripts/m0-tdd.mjs', timeout: 120000 },
+  // 基线轨：读 m0-baseline.json 校验五态齐平、可见语义、策略敏感性。
+  // 基线由 probe-multistrategy.mjs 离线产出（15 局 ≈ 8 min），不进 CI 同步路径。
+  { name: 'm0-tdd:baseline', script: 'scripts/m0-tdd.mjs', args: ['--with-baseline'], timeout: 120000 },
+  // —— SPEC-v2 · M1 诊断层回合级（纯无头，秒级）——
+  // 强制每个规则原子交代"行为(带回合)/终局状态"，A-2 时序脱钩的守门断言。
+  { name: 'm1-tdd', script: 'scripts/m1-tdd.mjs', timeout: 120000 },
+  // ── SPEC-v2 · M1 验收对账（读台账+矩阵，秒级）──
+  // 单独一条而不是塞进 m1-tdd：m1-tdd 断言的是实现细节，这条断言的是
+  // spec §6 的验收条款本身。两者一起坏的时候，要知道是哪一层坏的。
+  { name: 'acceptance-m1', script: 'scripts/acceptance-m1.mjs', timeout: 120000 },
+  // ── SPEC-v2 · M2 跨局聚合（纯函数，不碰 storage）──
+  { name: 'm2-tdd', script: 'scripts/m2-tdd.mjs', timeout: 120000 },
+  // ── SPEC-v2 · M3 卫生门禁（先自证判得准，再查仓库）──
+  { name: 'gate-hygiene:selftest', script: 'scripts/gate-hygiene.mjs', args: ['--selftest'], timeout: 120000 },
+  { name: 'gate-hygiene', script: 'scripts/gate-hygiene.mjs', timeout: 120000 },
+  // —— V3 概念命中可信化（纯无头，秒级；坏了先响，不必等浏览器回归）——
+  { name: 'debrief-v3-tdd', script: 'scripts/debrief-v3-tdd.mjs', timeout: 120000 },
+  { name: 'debrief-disposition', script: 'scripts/debrief-disposition.mjs', timeout: 120000 },
+  // S0 教育目标对齐（scripts/s0-education-tdd.mjs）暂不并入本守门器：
+  // S0 未完成期间它必然是红的，混进来会让「当前基线是否全绿」失去信号价值。
+  // S0 验收通过后再并入。
   // —— 契约层（秒级，最先跑）——
   { name: 'contract-outcome', script: 'scripts/contract-outcome.mjs', timeout: 120000 },
   { name: 'adapter-ending', script: 'scripts/adapter-ending.mjs', timeout: 120000 },
@@ -71,7 +95,18 @@ const STEPS = [
   { name: 'build-standalone', script: 'scripts/build-standalone.mjs', timeout: 120000 },
   { name: 'dist-render-check', script: 'scripts/dist-render-check.mjs', timeout: 180000 },
   { name: 'probe-loop4-ui', script: 'scripts/probe-loop4-ui.mjs', timeout: 180000 },
+  // L1-2 的行为探针：A4.7 只能静态证明"源码里出现过撤回字样"，
+  // 这里进真浏览器按一次，量"点选不推进 / 撤回留不下痕迹 / 确认才落地"。
+  { name: 'probe-choice-gate', script: 'scripts/probe-choice-gate.mjs', timeout: 180000 },
+  // L0-2 的行为探针：A4.12 只证明"concerns 指得回目标"（数据层），
+  // 这里量仪表真的渲染、真的跟着已提交决策走、且不在选择前预告代价。
+  { name: 'probe-goal-tension', script: 'scripts/probe-goal-tension.mjs', timeout: 180000 },
   { name: 'ui-render-assert', script: 'scripts/ui-render-assert.mjs', timeout: 300000 },
+  { name: 'viz-assert', script: 'scripts/viz-assert.mjs', timeout: 300000 },
+  // debrief-assert 要跑 5 场景 × 10 回合的真实点击 + 5 张 PNG 导出。
+  // 空机 148 s，但在 acceptance-climate(76 s)+ui-render(47 s) 之后满负载时可翻倍，
+  // 300 s 会误判 timeout。这是"兜住挂死"的阈值，不是性能断言，故放宽到 600 s。
+  { name: 'debrief-assert', script: 'scripts/debrief-assert.mjs', timeout: 600000 },
 ];
 
 const selected = STEPS.filter(
@@ -97,7 +132,7 @@ for (let i = 0; i < selected.length; i++) {
   process.stdout.write(`${label} ... `);
 
   const started = Date.now();
-  const run = spawnSync(process.execPath, [path.join(ROOT, step.script)], {
+  const run = spawnSync(process.execPath, [path.join(ROOT, step.script), ...(step.args || [])], {
     cwd: ROOT,
     encoding: 'utf8',
     timeout: step.timeout,

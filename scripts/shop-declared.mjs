@@ -69,6 +69,13 @@ const data = await page.evaluate(
     }
 
     // ---- ① 终局四选项切换 ----
+    // 洗牌口径（P0 修复后）：终局按 option_orig_id 判结局，所以"只换第 10 回合"
+    // 这个前提要求四局看到的是同一张 T10 表。否则每局新 seed 会把四个槽位换成
+    // 另外四个原选项，"切换"退化成随机抽样，唯一结局数会随运气在 2-4 之间跳。
+    // 用引擎自带的显式 seed 通路（window.__FL_OPTION_SEED__）把 ① 钉死，
+    // ② 的贪心 24 局仍用随机 seed，保留"多条路线"的覆盖面。
+    const FIXED_SEED = 20251017;
+    window.__FL_OPTION_SEED__ = FIXED_SEED;
     const switched = {};
     for (const scn of SCNS) {
       switched[scn] = [];
@@ -77,6 +84,7 @@ const data = await page.evaluate(
         switched[scn].push(await playWithFinal(scn, o.id, 'neutral'));
       }
     }
+    try { delete window.__FL_OPTION_SEED__; } catch (e) { window.__FL_OPTION_SEED__ = null; }
 
     // ---- ② A 路线（坚持原路）贪心可达性 ----
     // noodle：名声优先、债务次之；chip：良率/自主率优先、负债率次之。

@@ -174,16 +174,20 @@ for (const scn of SCN) {
 // —— 第二段：challenger 因果分离（固定 T10，只切前 9 回合）——
 const causal = await page.evaluate(async () => {
   const SCNID = 'challenger-launch';
-  const FINAL_OPTION = 'B'; // launch_dodged
+  // 要固定的是"决策"，不是"槽位字母"。选项每局按下标 seed 洗牌，
+  // 所以 'B' 在这局可能是发射、下一局可能是推迟——按字母选等于每局换一个决策，
+  // 因果对照就退化成两次随机抽样。
+  const FINAL_TRIGGER = 'launch_dodged';
   const run = async (posture) => {
     const sess = await window.OfflineEngine.createGameSession(SCNID, 'auto');
     let last = null;
+    let finalPick = null;
     for (let t = 1; t <= 10; t++) {
       const st = await window.OfflineEngine.getScenarioStep(SCNID, t);
       const opts = (st && st.options) || [];
       let pick;
       if (t === 10) {
-        pick = opts.find((o) => o.id === FINAL_OPTION) || opts[0];
+        pick = opts.find((o) => o.trigger_outcome === FINAL_TRIGGER) || opts[0];
       } else if (posture === 'safe') {
         pick =
           opts.find((o) => String(o.weight || '').toLowerCase() === 'extreme_safe') ||
@@ -200,12 +204,15 @@ const causal = await page.evaluate(async () => {
         { option: pick.id, justification: '' },
         SCNID
       );
+      if (t === 10) finalPick = pick;
     }
     const fo = (last && (last.final_outcome || (last.game_state || {}).final_outcome)) || null;
     const tail = String((last && last.feedback) || '');
     const idx = tail.indexOf('【代价清算】');
     return {
       id: fo && fo.id,
+      slot: finalPick && finalPick.id,
+      trigger: finalPick && finalPick.trigger_outcome,
       tier: fo && fo.process_ledger && fo.process_ledger.pressure_tier,
       counters: fo && fo.process_ledger && fo.process_ledger.key_counters,
       ledgerSegment: idx >= 0 ? tail.slice(idx).trim() : '',
@@ -217,6 +224,19 @@ const causal = await page.evaluate(async () => {
 if (!causal.safe.id || !causal.risky.id) {
   fails.push('challenger 因果段：终局 final_outcome 缺失，无法判定');
 } else {
+  // 固定决策本身也要被验证：洗牌后若不是每个 posture 都点到了 launch_dodged，
+  // 两局的差异就可能来自"决策不同"而不是"过程不同"。
+  ['safe', 'risky'].forEach((k) => {
+    const c = causal[k];
+    if (c.trigger !== 'launch_dodged') {
+      fails.push(`challenger/${k}：T10 未命中 launch_dodged（槽位 ${c.slot} → ${c.trigger}），因果对照失效`);
+    }
+    if (c.trigger && String(c.id) !== String(c.trigger)) {
+      fails.push(
+        `challenger/${k}：结局 id=${c.id} ≠ 所点选项 trigger_outcome=${c.trigger}（终局判定与所选槽位错位）`
+      );
+    }
+  });
   if (causal.safe.id !== causal.risky.id) {
     fails.push(
       `challenger：前 9 回合改变了结局 id（${causal.safe.id} vs ${causal.risky.id}）——违反 §6.2「不改判」`

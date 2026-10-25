@@ -19,6 +19,8 @@ class APIConfigManager {
     this.apiSources = this.getAPISources();
     this.currentSourceIndex = 0;
     this.isHealthCheckRunning = false;
+    // P0 #9: 纯离线构建没有后端，探测 8000 只会刷 CORS 红字
+    this.apiDisabled = this.isApiDisabled();
 
     // Performance metrics
     this.metrics = {
@@ -38,6 +40,17 @@ class APIConfigManager {
 
     // Cached API client with keep-alive
     this.apiClient = this.createAPIClient();
+  }
+
+  // P0 #9: 这个前端是纯离线单页，没有后端可用。在 localhost / file:// 下
+  // 探测 8000 端口只会产生 CORS 报错和控制台红字。本地跑真实后端时
+  // 在 app.js 之前设置 window.__FL_ENABLE_API__ = true 即可恢复。
+  isApiDisabled() {
+    if (window.__FL_ENABLE_API__ === true) return false;
+    const proto = window.location.protocol;
+    const host = window.location.hostname;
+    return proto === 'file:' || host === '' || host === 'localhost' ||
+      host === '127.0.0.1' || host === '0.0.0.0';
   }
 
   getAPISources() {
@@ -158,7 +171,7 @@ class APIConfigManager {
   }
 
   async selectHealthiestSource() {
-    if (this.isHealthCheckRunning) {
+    if (this.apiDisabled || this.isHealthCheckRunning) {
       return;
     }
 
@@ -206,6 +219,8 @@ class APIConfigManager {
   }
 
   startHealthMonitoring() {
+    // P0 #9: 离线构建不启动定时探测，避免每 30s 一次 8000 端口请求
+    if (this.apiDisabled) return;
     setInterval(() => {
       this.selectHealthiestSource();
     }, this.options.healthCheckInterval);

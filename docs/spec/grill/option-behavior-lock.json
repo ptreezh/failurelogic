@@ -1,0 +1,892 @@
+{
+  "noodle-shop-community": {
+    "10:A": {
+      "behavior": "analyze",
+      "text": "接受终局评分，完整复盘全决策链",
+      "text_hash": "2150d5ceda6c",
+      "turn": 10
+    },
+    "10:B": {
+      "behavior": "commit",
+      "text": "坚持'扩张没有错'，接受扩张结局",
+      "text_hash": "d9eaa6e4abc6",
+      "turn": 10
+    },
+    "10:C": {
+      "behavior": "commit",
+      "text": "强调口碑价值，接受温水结局",
+      "text_hash": "c63345c58571",
+      "turn": 10
+    },
+    "10:D": {
+      "behavior": "cut_cost",
+      "text": "复盘后决定出让店铺",
+      "text_hash": "d65384786ac7",
+      "turn": 10
+    },
+    "1:A": {
+      "behavior": "expand",
+      "text": "立即接入美团+饿了么，全城配送",
+      "text_hash": "2a67add40a60",
+      "turn": 1
+    },
+    "1:B": {
+      "behavior": "expand",
+      "text": "只接美团，且只做3公里内配送",
+      "text_hash": "52f6bf91d996",
+      "turn": 1
+    },
+    "1:C": {
+      "behavior": "hold",
+      "text": "不接平台，专注堂食老客",
+      "text_hash": "48d4b2e36fb9",
+      "turn": 1
+    },
+    "1:D": {
+      "behavior": "analyze",
+      "text": "先观察隔壁店平台单量一周再决定",
+      "text_hash": "ef5baf673761",
+      "turn": 1
+    },
+    "2:A": {
+      "behavior": "expand",
+      "text": "一口气加12个品类（盖浇饭/米线/炒菜/饮品），'什么都有'",
+      "text_hash": "66ffdfcff827",
+      "turn": 2
+    },
+    "2:B": {
+      "behavior": "expand",
+      "text": "只加3个与面食同供应链的品类（牛肉炒饭/牛肉拌面/卤味拼盘）",
+      "text_hash": "5ecdca999680",
+      "turn": 2
+    },
+    "2:C": {
+      "behavior": "hold",
+      "text": "不加品类，把招牌牛肉面做到极致",
+      "text_hash": "23d6b76bab93",
+      "turn": 2
+    },
+    "2:D": {
+      "behavior": "analyze",
+      "text": "加3个品类但先试卖2周",
+      "text_hash": "7d37348485eb",
+      "turn": 2
+    },
+    "3:A": {
+      "behavior": "expand",
+      "text": "加盟连锁开二店，交20万加盟费+装修贷",
+      "text_hash": "c427e40d6ccd",
+      "turn": 3
+    },
+    "3:B": {
+      "behavior": "expand",
+      "text": "不加盟，用20万翻新本店+增加堂食位",
+      "text_hash": "3216384ed323",
+      "turn": 3
+    },
+    "3:C": {
+      "behavior": "hold",
+      "text": "存钱，暂不扩张",
+      "text_hash": "93125dfbac0f",
+      "turn": 3
+    },
+    "3:D": {
+      "behavior": "analyze",
+      "text": "先在隔壁小区租个小档口试水",
+      "text_hash": "db563178d682",
+      "turn": 3
+    },
+    "4:A": {
+      "behavior": "expand",
+      "text": "花3万请网红探店",
+      "text_hash": "f7df20e250c8",
+      "turn": 4
+    },
+    "4:B": {
+      "behavior": "commit",
+      "text": "做会员储值+老客群维护",
+      "text_hash": "b54a9b65c96e",
+      "turn": 4
+    },
+    "4:C": {
+      "behavior": "expand",
+      "text": "发传单做'第二份半价'",
+      "text_hash": "1f0f3cb30c52",
+      "turn": 4
+    },
+    "4:D": {
+      "behavior": "hold",
+      "text": "不营销，靠口碑自然增长",
+      "text_hash": "94581c9ccb3b",
+      "turn": 4
+    },
+    "5:A": {
+      "behavior": "cut_cost",
+      "text": "承认平台策略失误：收缩到3公里，砍掉滞销品类",
+      "text_hash": "b6f0eb3dc6d8",
+      "turn": 5
+    },
+    "5:B": {
+      "behavior": "ignore_warning",
+      "text": "认为是平台没给够流量，加大投放",
+      "text_hash": "a80d50576593",
+      "turn": 5
+    },
+    "5:C": {
+      "behavior": "defer",
+      "text": "维持现状，觉得'先亏后赚'",
+      "text_hash": "da8e517c771a",
+      "turn": 5
+    },
+    "5:D": {
+      "behavior": "analyze",
+      "text": "暂停外卖一周，先观察堂食老客反应",
+      "text_hash": "e0d5fa71910d",
+      "turn": 5
+    },
+    "6:A": {
+      "behavior": "cut_cost",
+      "text": "换供应商囤3个月低价冷冻牛肉",
+      "text_hash": "04584bd1d7bf",
+      "turn": 6
+    },
+    "6:B": {
+      "behavior": "hold",
+      "text": "维持每日新鲜采购",
+      "text_hash": "55de715c3565",
+      "turn": 6
+    },
+    "6:C": {
+      "behavior": "cut_cost",
+      "text": "混合：一半冷冻一半新鲜",
+      "text_hash": "dabfc64e4c6c",
+      "turn": 6
+    },
+    "6:D": {
+      "behavior": "analyze",
+      "text": "寻找本地屠宰场直供鲜肉",
+      "text_hash": "1b0d31d55bbe",
+      "turn": 6
+    },
+    "7:A": {
+      "behavior": "expand",
+      "text": "高峰时段加3个临时工",
+      "text_hash": "7e7eb47586f1",
+      "turn": 7
+    },
+    "7:B": {
+      "behavior": "expand",
+      "text": "加1个熟手",
+      "text_hash": "e3515cf3d3cd",
+      "turn": 7
+    },
+    "7:C": {
+      "behavior": "cut_cost",
+      "text": "不加人，优化出餐流程（预煮/备菜/标准化）",
+      "text_hash": "db30da7d75cc",
+      "turn": 7
+    },
+    "7:D": {
+      "behavior": "hold",
+      "text": "让家人帮忙",
+      "text_hash": "c205fe9f3893",
+      "turn": 7
+    },
+    "8:A": {
+      "behavior": "rescue",
+      "text": "系统性止损：砍亏损业务、回归核心牛肉面",
+      "text_hash": "874d3dd8c0a7",
+      "turn": 8
+    },
+    "8:B": {
+      "behavior": "rescue",
+      "text": "加大促销'低价回血'",
+      "text_hash": "97195c14d4bb",
+      "turn": 8
+    },
+    "8:C": {
+      "behavior": "ignore_warning",
+      "text": "向亲戚借钱继续扩张",
+      "text_hash": "edd6ee3dca1f",
+      "turn": 8
+    },
+    "8:D": {
+      "behavior": "analyze",
+      "text": "请独立财务顾问做全面审计",
+      "text_hash": "d51328f1935b",
+      "turn": 8
+    },
+    "9:A": {
+      "behavior": "rescue",
+      "text": "打折促销回血",
+      "text_hash": "4011de239b64",
+      "turn": 9
+    },
+    "9:B": {
+      "behavior": "rescue",
+      "text": "砍掉亏损业务，专注牛肉面",
+      "text_hash": "9a8195db7655",
+      "turn": 9
+    },
+    "9:C": {
+      "behavior": "commit",
+      "text": "与家人摊牌协商",
+      "text_hash": "a3a46347ea45",
+      "turn": 9
+    },
+    "9:D": {
+      "behavior": "cut_cost",
+      "text": "卖掉面馆止损",
+      "text_hash": "c41ec4e122a4",
+      "turn": 9
+    }
+  },
+  "challenger-launch": {
+    "1:A": {
+      "text_hash": "2c42a9eb10a0",
+      "behavior": "defer"
+    },
+    "1:B": {
+      "text_hash": "87c4d8deab96",
+      "behavior": "ignore_warning"
+    },
+    "1:C": {
+      "text_hash": "b074650c9ab6",
+      "behavior": "hold"
+    },
+    "1:D": {
+      "text_hash": "086c280b69cc",
+      "behavior": "analyze"
+    },
+    "2:A": {
+      "text_hash": "dc261b658811",
+      "behavior": "commit"
+    },
+    "2:B": {
+      "text_hash": "217fa30fc6b2",
+      "behavior": "hold"
+    },
+    "2:C": {
+      "text_hash": "59a66dceee6c",
+      "behavior": "expand"
+    },
+    "2:D": {
+      "text_hash": "8639652904d5",
+      "behavior": "commit"
+    },
+    "3:A": {
+      "text_hash": "ebc76eec4f22",
+      "behavior": "commit"
+    },
+    "3:B": {
+      "text_hash": "2ec46631836f",
+      "behavior": "hold"
+    },
+    "3:C": {
+      "text_hash": "658e3d07a065",
+      "behavior": "analyze"
+    },
+    "3:D": {
+      "text_hash": "7409a81e6a63",
+      "behavior": "ignore_warning"
+    },
+    "4:A": {
+      "text_hash": "15d79c21e19f",
+      "behavior": "defer"
+    },
+    "4:B": {
+      "text_hash": "a87de839ca13",
+      "behavior": "defer"
+    },
+    "4:C": {
+      "text_hash": "d96af9e08bda",
+      "behavior": "ignore_warning"
+    },
+    "4:D": {
+      "text_hash": "7e03ad851a77",
+      "behavior": "cut_cost"
+    },
+    "5:A": {
+      "text_hash": "ebba84c83483",
+      "behavior": "defer"
+    },
+    "5:B": {
+      "text_hash": "740ecf575e14",
+      "behavior": "hold"
+    },
+    "5:C": {
+      "text_hash": "a58ff80c1644",
+      "behavior": "ignore_warning"
+    },
+    "5:D": {
+      "text_hash": "c5348c79bb80",
+      "behavior": "commit"
+    },
+    "6:A": {
+      "text_hash": "9fa3e9d6a98c",
+      "behavior": "defer"
+    },
+    "6:B": {
+      "text_hash": "fc7005551f1c",
+      "behavior": "hold"
+    },
+    "6:C": {
+      "text_hash": "b4a1b8fcc05f",
+      "behavior": "rescue"
+    },
+    "6:D": {
+      "text_hash": "397b2c2facdc",
+      "behavior": "cut_cost"
+    },
+    "7:A": {
+      "text_hash": "ade76e7d331e",
+      "behavior": "defer"
+    },
+    "7:B": {
+      "text_hash": "db8d147541e9",
+      "behavior": "defer"
+    },
+    "7:C": {
+      "text_hash": "2ea1df4a2011",
+      "behavior": "expand"
+    },
+    "7:D": {
+      "text_hash": "2573c7a60b08",
+      "behavior": "ignore_warning"
+    },
+    "8:A": {
+      "text_hash": "57191f0be888",
+      "behavior": "defer"
+    },
+    "8:B": {
+      "text_hash": "2baea51b7eb0",
+      "behavior": "cut_cost"
+    },
+    "8:C": {
+      "text_hash": "67658fa9c1cd",
+      "behavior": "commit"
+    },
+    "8:D": {
+      "text_hash": "145ebcc89bb7",
+      "behavior": "ignore_warning"
+    },
+    "9:A": {
+      "text_hash": "ff0aae64e650",
+      "behavior": "defer"
+    },
+    "9:B": {
+      "text_hash": "8d28fd1a3306",
+      "behavior": "ignore_warning"
+    },
+    "9:C": {
+      "text_hash": "a3d564cc8bae",
+      "behavior": "analyze"
+    },
+    "9:D": {
+      "text_hash": "65bc13989759",
+      "behavior": "analyze"
+    },
+    "10:A": {
+      "text_hash": "c72f48940e31",
+      "behavior": "commit"
+    },
+    "10:B": {
+      "text_hash": "157640c74c26",
+      "behavior": "commit"
+    },
+    "10:C": {
+      "text_hash": "705b73d1542d",
+      "behavior": "analyze"
+    },
+    "10:D": {
+      "text_hash": "aab3d49169f2",
+      "behavior": "cut_cost"
+    }
+  },
+  "climate-change-policy": {
+    "1:A": {
+      "text_hash": "273502bfa274",
+      "behavior": "commit"
+    },
+    "1:B": {
+      "text_hash": "954ece084754",
+      "behavior": "hold"
+    },
+    "1:C": {
+      "text_hash": "dc20ba6d785b",
+      "behavior": "analyze"
+    },
+    "1:D": {
+      "text_hash": "aea4ded4094f",
+      "behavior": "expand"
+    },
+    "2:A": {
+      "text_hash": "5f60c77db96f",
+      "behavior": "commit"
+    },
+    "2:B": {
+      "text_hash": "9cf51b0ebf85",
+      "behavior": "commit"
+    },
+    "2:C": {
+      "text_hash": "c6fb20574e20",
+      "behavior": "hold"
+    },
+    "2:D": {
+      "text_hash": "1b22db11411b",
+      "behavior": "analyze"
+    },
+    "3:A": {
+      "text_hash": "02d2892de7af",
+      "behavior": "rescue"
+    },
+    "3:B": {
+      "text_hash": "6acb82ef57fb",
+      "behavior": "commit"
+    },
+    "3:C": {
+      "text_hash": "2696843990d2",
+      "behavior": "defer"
+    },
+    "3:D": {
+      "text_hash": "def0e8ac046a",
+      "behavior": "expand"
+    },
+    "4:A": {
+      "text_hash": "bebffc20b632",
+      "behavior": "expand"
+    },
+    "4:B": {
+      "text_hash": "74c1cc1e28fa",
+      "behavior": "rescue"
+    },
+    "4:C": {
+      "text_hash": "00e56f26d3c1",
+      "behavior": "cut_cost"
+    },
+    "4:D": {
+      "text_hash": "dee1ae539704",
+      "behavior": "defer"
+    },
+    "5:A": {
+      "text_hash": "1d3eb13a9e9c",
+      "behavior": "commit"
+    },
+    "5:B": {
+      "text_hash": "3009409f1af3",
+      "behavior": "hold"
+    },
+    "5:C": {
+      "text_hash": "858c561b380b",
+      "behavior": "expand"
+    },
+    "5:D": {
+      "text_hash": "51f0082afa01",
+      "behavior": "defer"
+    },
+    "6:A": {
+      "text_hash": "873e7ee4b8f4",
+      "behavior": "commit"
+    },
+    "6:B": {
+      "text_hash": "c0756fffe8b2",
+      "behavior": "hold"
+    },
+    "6:C": {
+      "text_hash": "4fe72ce53f6b",
+      "behavior": "commit"
+    },
+    "6:D": {
+      "text_hash": "a4e2bb2b0725",
+      "behavior": "expand"
+    },
+    "7:A": {
+      "text_hash": "013ced474d0b",
+      "behavior": "commit"
+    },
+    "7:B": {
+      "text_hash": "18d5d1243f98",
+      "behavior": "rescue"
+    },
+    "7:C": {
+      "text_hash": "2d1688a97cf2",
+      "behavior": "hold"
+    },
+    "7:D": {
+      "text_hash": "0a330844d416",
+      "behavior": "expand"
+    },
+    "8:A": {
+      "text_hash": "3fbe9cb65c02",
+      "behavior": "rescue"
+    },
+    "8:B": {
+      "text_hash": "231a8e1759ad",
+      "behavior": "expand"
+    },
+    "8:C": {
+      "text_hash": "b17c07715a09",
+      "behavior": "hold"
+    },
+    "8:D": {
+      "text_hash": "acbe4b81ecca",
+      "behavior": "expand"
+    },
+    "9:A": {
+      "text_hash": "199a700ff9ed",
+      "behavior": "expand"
+    },
+    "9:B": {
+      "text_hash": "0b973313db37",
+      "behavior": "hold"
+    },
+    "9:C": {
+      "text_hash": "14a0ea3842af",
+      "behavior": "analyze"
+    },
+    "9:D": {
+      "text_hash": "6a07317e6e87",
+      "behavior": "commit"
+    },
+    "10:A": {
+      "text_hash": "4c4f25218924",
+      "behavior": "commit"
+    },
+    "10:B": {
+      "text_hash": "b3665556431d",
+      "behavior": "hold"
+    },
+    "10:C": {
+      "text_hash": "d90c7835bc6c",
+      "behavior": "cut_cost"
+    },
+    "10:D": {
+      "text_hash": "8f8ee6f16932",
+      "behavior": "defer"
+    }
+  },
+  "enron-collapse": {
+    "1:A": {
+      "text_hash": "b7048e8d0a50",
+      "behavior": "expand"
+    },
+    "1:B": {
+      "text_hash": "00e162d2dba4",
+      "behavior": "analyze"
+    },
+    "1:C": {
+      "text_hash": "fd0077203f7c",
+      "behavior": "commit"
+    },
+    "1:D": {
+      "text_hash": "1e041461818c",
+      "behavior": "commit"
+    },
+    "2:A": {
+      "text_hash": "6fbe71b7aed2",
+      "behavior": "expand"
+    },
+    "2:B": {
+      "text_hash": "9af83adfa103",
+      "behavior": "hold"
+    },
+    "2:C": {
+      "text_hash": "377f95da6c33",
+      "behavior": "cut_cost"
+    },
+    "2:D": {
+      "text_hash": "810d500159a1",
+      "behavior": "defer"
+    },
+    "3:A": {
+      "text_hash": "cea0aaec7ba8",
+      "behavior": "commit"
+    },
+    "3:B": {
+      "text_hash": "23ee3019c438",
+      "behavior": "ignore_warning"
+    },
+    "3:C": {
+      "text_hash": "04366e0f85ac",
+      "behavior": "ignore_warning"
+    },
+    "3:D": {
+      "text_hash": "a442fdc2a12e",
+      "behavior": "analyze"
+    },
+    "4:A": {
+      "text_hash": "5dc54354d02a",
+      "behavior": "expand"
+    },
+    "4:B": {
+      "text_hash": "0aaa31e7b8e1",
+      "behavior": "hold"
+    },
+    "4:C": {
+      "text_hash": "d86883ceaec0",
+      "behavior": "commit"
+    },
+    "4:D": {
+      "text_hash": "45abd92bb27c",
+      "behavior": "rescue"
+    },
+    "5:A": {
+      "text_hash": "a7d97b763613",
+      "behavior": "analyze"
+    },
+    "5:B": {
+      "text_hash": "31a33596c7e1",
+      "behavior": "commit"
+    },
+    "5:C": {
+      "text_hash": "fe4b83e43f9e",
+      "behavior": "ignore_warning"
+    },
+    "5:D": {
+      "text_hash": "1f256088b150",
+      "behavior": "rescue"
+    },
+    "6:A": {
+      "text_hash": "a0f19a5bdff7",
+      "behavior": "ignore_warning"
+    },
+    "6:B": {
+      "text_hash": "53a2114cf0f2",
+      "behavior": "commit"
+    },
+    "6:C": {
+      "text_hash": "a81f12d8b14b",
+      "behavior": "expand"
+    },
+    "6:D": {
+      "text_hash": "bd8b57bdeff0",
+      "behavior": "rescue"
+    },
+    "7:A": {
+      "text_hash": "0da719aaea2b",
+      "behavior": "cut_cost"
+    },
+    "7:B": {
+      "text_hash": "6e6ffc29e1c2",
+      "behavior": "rescue"
+    },
+    "7:C": {
+      "text_hash": "afabdbaea49e",
+      "behavior": "ignore_warning"
+    },
+    "7:D": {
+      "text_hash": "a9e0900a21d8",
+      "behavior": "commit"
+    },
+    "8:A": {
+      "text_hash": "82a5accd9232",
+      "behavior": "rescue"
+    },
+    "8:B": {
+      "text_hash": "d5b84a87389a",
+      "behavior": "commit"
+    },
+    "8:C": {
+      "text_hash": "5a76ac118bc8",
+      "behavior": "defer"
+    },
+    "8:D": {
+      "text_hash": "155417637edd",
+      "behavior": "cut_cost"
+    },
+    "9:A": {
+      "text_hash": "cb5fedb9969b",
+      "behavior": "commit"
+    },
+    "9:B": {
+      "text_hash": "95a929c5cfd9",
+      "behavior": "hold"
+    },
+    "9:C": {
+      "text_hash": "cafabbc315dc",
+      "behavior": "ignore_warning"
+    },
+    "9:D": {
+      "text_hash": "136be0137229",
+      "behavior": "defer"
+    },
+    "10:A": {
+      "text_hash": "9ce2a4dd482d",
+      "behavior": "commit"
+    },
+    "10:B": {
+      "text_hash": "8e3e63cf0693",
+      "behavior": "hold"
+    },
+    "10:C": {
+      "text_hash": "e59912329bdd",
+      "behavior": "ignore_warning"
+    },
+    "10:D": {
+      "text_hash": "020d6e210a16",
+      "behavior": "defer"
+    }
+  },
+  "chip-ai-supplychain": {
+    "1:A": {
+      "text_hash": "ed39470760df",
+      "behavior": "expand"
+    },
+    "1:B": {
+      "text_hash": "30dd9b7bfffc",
+      "behavior": "hold"
+    },
+    "1:C": {
+      "text_hash": "9c7ac7047aaa",
+      "behavior": "commit"
+    },
+    "1:D": {
+      "text_hash": "017f7920eebc",
+      "behavior": "analyze"
+    },
+    "2:A": {
+      "text_hash": "7a11b1d11e9a",
+      "behavior": "expand"
+    },
+    "2:B": {
+      "text_hash": "a677cff08e0a",
+      "behavior": "hold"
+    },
+    "2:C": {
+      "text_hash": "67ae6a8122e0",
+      "behavior": "defer"
+    },
+    "2:D": {
+      "text_hash": "9def5d4f910d",
+      "behavior": "analyze"
+    },
+    "3:A": {
+      "text_hash": "3b6469ec82fb",
+      "behavior": "expand"
+    },
+    "3:B": {
+      "text_hash": "2adbdcd34c94",
+      "behavior": "hold"
+    },
+    "3:C": {
+      "text_hash": "558444fa199c",
+      "behavior": "cut_cost"
+    },
+    "3:D": {
+      "text_hash": "51af524a8158",
+      "behavior": "analyze"
+    },
+    "4:A": {
+      "text_hash": "60f8e69c940a",
+      "behavior": "ignore_warning"
+    },
+    "4:B": {
+      "text_hash": "a24e8275db77",
+      "behavior": "commit"
+    },
+    "4:C": {
+      "text_hash": "fb49d3ed7cab",
+      "behavior": "expand"
+    },
+    "4:D": {
+      "text_hash": "61bf6893f8b3",
+      "behavior": "analyze"
+    },
+    "5:A": {
+      "text_hash": "340113877e15",
+      "behavior": "commit"
+    },
+    "5:B": {
+      "text_hash": "2b5d7d3e5fb3",
+      "behavior": "ignore_warning"
+    },
+    "5:C": {
+      "text_hash": "b6daa008964e",
+      "behavior": "hold"
+    },
+    "5:D": {
+      "text_hash": "a759330e56ab",
+      "behavior": "analyze"
+    },
+    "6:A": {
+      "text_hash": "db577b296766",
+      "behavior": "expand"
+    },
+    "6:B": {
+      "text_hash": "96f3de429b6c",
+      "behavior": "cut_cost"
+    },
+    "6:C": {
+      "text_hash": "08366cf8eeb2",
+      "behavior": "hold"
+    },
+    "6:D": {
+      "text_hash": "1ccef2519746",
+      "behavior": "rescue"
+    },
+    "7:A": {
+      "text_hash": "0633aa29e0af",
+      "behavior": "cut_cost"
+    },
+    "7:B": {
+      "text_hash": "5cba84257854",
+      "behavior": "hold"
+    },
+    "7:C": {
+      "text_hash": "f8f607239f18",
+      "behavior": "commit"
+    },
+    "7:D": {
+      "text_hash": "81a0e5a8845a",
+      "behavior": "cut_cost"
+    },
+    "8:A": {
+      "text_hash": "e6a652d2eabc",
+      "behavior": "cut_cost"
+    },
+    "8:B": {
+      "text_hash": "a84cdbce4f60",
+      "behavior": "ignore_warning"
+    },
+    "8:C": {
+      "text_hash": "786618ea8048",
+      "behavior": "rescue"
+    },
+    "8:D": {
+      "text_hash": "c8fbb02ddaca",
+      "behavior": "analyze"
+    },
+    "9:A": {
+      "text_hash": "185c1813f7f9",
+      "behavior": "expand"
+    },
+    "9:B": {
+      "text_hash": "ca0515ab8651",
+      "behavior": "commit"
+    },
+    "9:C": {
+      "text_hash": "804dfdfd5490",
+      "behavior": "hold"
+    },
+    "9:D": {
+      "text_hash": "fcc17822b19c",
+      "behavior": "analyze"
+    },
+    "10:A": {
+      "text_hash": "a0c06d018608",
+      "behavior": "analyze"
+    },
+    "10:B": {
+      "text_hash": "62b24a2a1e58",
+      "behavior": "commit"
+    },
+    "10:C": {
+      "text_hash": "d7a2e171511b",
+      "behavior": "hold"
+    },
+    "10:D": {
+      "text_hash": "a1e8843f9794",
+      "behavior": "rescue"
+    }
+  }
+}

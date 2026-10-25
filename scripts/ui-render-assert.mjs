@@ -156,8 +156,9 @@ for (let t = 1; t <= 10; t++) {
   if (before.gauges !== 2) fails.push(`V9/T${t} gauges=${before.gauges}`);
   if (before.labelFont != null && before.labelFont < 12) fails.push(`V8/T${t} 标签字号=${before.labelFont}px < 12`);
 
-  // submit
+  // submit（L1-2 起：「选中」只挂起，还要一步显式确认）
   await page.evaluate(() => document.querySelector('.challenger-option').click());
+  await page.evaluate(() => window.challengerRouter && window.challengerRouter.confirmChoice());
   await page.waitForTimeout(1100);
   const after = await snap(page);
   btnLog.push({ t, next: after.nextH, submit: before.submitH });

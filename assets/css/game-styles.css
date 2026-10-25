@@ -1995,3 +1995,45 @@ input[type="range"]::-moz-range-thumb:hover {
   font-size: 0.8rem;
   color: #78350f;
 }
+/* ── L0-1 结构化简报（S0 试点）──────────────────────────────
+   目标必须在「开始之前」就被看见。玩家不知道有多目标时，
+   单目标优化学到的不是教训，是抱怨。 */
+.scenario-brief {
+  margin: var(--space-sm, 8px) 0 var(--space-md, 12px);
+  padding: 0.6rem 0.75rem;
+  border-left: 3px solid var(--color-primary, #2f6f4f);
+  background: rgba(0, 0, 0, 0.035);
+  border-radius: 6px;
+}
+
+.scenario-brief .brief-role {
+  font-size: 0.78rem;
+  color: var(--color-text-secondary, #666);
+  margin-bottom: 0.35rem;
+}
+
+.scenario-brief .brief-objectives {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+}
+
+.scenario-brief .brief-objectives li {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text, #1a1a1a);
+  padding: 0.12rem 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+  cursor: help;
+}
+
+.scenario-brief .brief-impossible {
+  margin: 0.5rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary, #555);
+}

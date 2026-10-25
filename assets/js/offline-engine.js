@@ -109,8 +109,43 @@
         state.outcome = value;
         continue;
       }
+      // The scenario files disagree on spelling: four of them queue a delay as
+      // `consequence_deferred_queue`, the launch scenario writes
+      // `consequence_deferred`. Only the first spelling was ever consumed, so
+      // the launch scenario's delayed consequences were dead data — planted in
+      // the JSON, never fired, never shown. Funnel both into the queue.
+      if (key === 'consequence_deferred') {
+        const list = Array.isArray(value) ? value : [value];
+        state.consequence_deferred_queue = state.consequence_deferred_queue || [];
+        state.deferred_ledger = state.deferred_ledger || [];
+        list.forEach((v) => {
+          if (!v) return;
+          state.consequence_deferred_queue.push(v);
+          state.deferred_ledger.push({
+            key: String(v),
+            source_turn: state.turn_number || 1,
+            resolved_turn: null
+          });
+        });
+        continue;
+      }
       if (!(key in state)) {
         state[key] = value;
+        // First-ever deferred consequence: the field doesn't exist yet, so the
+        // array branch below never runs. Record provenance here too.
+        if (key === 'consequence_deferred_queue') {
+          state.deferred_ledger = state.deferred_ledger || [];
+          const seeded = Array.isArray(value) ? value : [value];
+          seeded.forEach((v) => {
+            if (v) {
+              state.deferred_ledger.push({
+                key: String(v),
+                source_turn: state.turn_number || 1,
+                resolved_turn: null
+              });
+            }
+          });
+        }
         continue;
       }
       const current = state[key];
@@ -118,6 +153,18 @@
         state[key] = current + value;
       } else if (Array.isArray(current) && key === 'consequence_deferred_queue') {
         current.push(value);
+        // V2: a deferred consequence is only instructive if the player can see
+        // *when it was planted*. The queue itself stays a plain string array
+        // (old saves keep working); the provenance lives in a side ledger that
+        // the UI reads to draw the causal chain.
+        state.deferred_ledger = state.deferred_ledger || [];
+        if (value) {
+          state.deferred_ledger.push({
+            key: String(value),
+            source_turn: state.turn_number || 1,
+            resolved_turn: null
+          });
+        }
       } else if (typeof current === 'string' && key === 'credit_rating') {
         // leave string ratings alone
       } else {
@@ -1492,10 +1539,36 @@
     return (state && state.last_chosen_option) || '';
   }
 
+  // 终局条目可能是洗牌过的槽位。decision_history 里 option_id 记的是"玩家按下的
+  // 那个字母"，option_orig_id 记的是"这个字母原先是哪个选项"——判结局必须用后者，
+  // 否则洗牌后 T10 的 A/B/C/D 会按未洗牌原始 step 的字母解释，结局与所点选项错位。
+  function _flFinalHistoryEntry(state, finalTurn) {
+    var hist = (state && state.decision_history) || [];
+    var fallback = null;
+    for (var i = hist.length - 1; i >= 0; i--) {
+      var h = hist[i];
+      if (!h) continue;
+      if (!fallback) fallback = h;
+      if (finalTurn != null && h.turn === finalTurn) return h;
+    }
+    return fallback;
+  }
+
+  function _flFinalOrigOptionId(state, finalTurn) {
+    var entry = _flFinalHistoryEntry(state, finalTurn);
+    if (entry) {
+      // 旧存档降级：P0 修复前落库的 history 没有 option_orig_id，
+      // 只能按当时记下的槽位字母解释——与修复前行为一致，不臆造新结论。
+      if (entry.option_orig_id) return String(entry.option_orig_id);
+      if (entry.option_id) return String(entry.option_id);
+    }
+    return (state && state.last_chosen_option) || '';
+  }
+
   function _flDeclaredOutcomeId(state, scenarioId) {
     var step = _flFinalStepOf(scenarioId);
     if (!step) return '';
-    var optId = _flFinalOptionId(state, step.turn);
+    var optId = _flFinalOrigOptionId(state, step.turn);
     if (!optId) return '';
     var op = findOption(step, optId);
     return op && op.trigger_outcome ? String(op.trigger_outcome) : '';
@@ -1732,7 +1805,9 @@
   }
 
   function generateChallengerOutcome(state, step) {
-    const chosenOptionId = state.last_chosen_option || 'A';
+    // step 是未洗牌的原始末步，所以这里也必须用原始选项 id（option_orig_id），
+    // 不能拿玩家看到的洗牌槽位字母去查——那是同一字母的另一个选项。
+    const chosenOptionId = _flFinalOrigOptionId(state, step.turn) || 'A';
     const option = findOption(step, chosenOptionId);
     const outcomeType = option ? (option.trigger_outcome || 'launch_disaster') : 'launch_disaster';
     const data = _loaded['challenger-launch'] || {};
@@ -2464,7 +2539,9 @@
   }
 
   function generateShopOutcome(state, step, data) {
-    const chosenOptionId = state.last_chosen_option || 'A';
+    // 同 challenger：step 是未洗牌的终局步，last_chosen_option 记的是洗牌槽位，
+    // 拿它查原始 step 会读到另一个选项的 trigger_outcome（P0 同源问题）。
+    const chosenOptionId = _flFinalOrigOptionId(state, step.turn) || 'A';
     const option = findOption(step, chosenOptionId);
     // The ten turns decide the ending. A single final click may overwrite it,
     // but that rewrite is exactly the failure mode Dorner warns about, so it
@@ -2574,12 +2651,23 @@
     if (queue.length) {
       const newQueue = [];
       queue.forEach(entry => {
+        let resolved = false;
         if (entry === 'data_review_meeting' && currentTurn >= 3) {
           state.risk_acknowledged_unresolved = (state.risk_acknowledged_unresolved || 0) + 1;
+          resolved = true;
         } else if (entry === 'cross_dept_meeting' && currentTurn >= 3) {
           state.dissent_suppressed_count = (state.dissent_suppressed_count || 0) + 1;
+          resolved = true;
         } else {
           newQueue.push(entry);
+        }
+        if (resolved) {
+          // V2: stamp the ledger so the timeline can say "planted at T2, fired
+          // at T5" instead of a vague "something is still pending".
+          const led = (state.deferred_ledger || []).filter(
+            (d) => d && d.key === entry && d.resolved_turn == null
+          );
+          if (led.length) led[0].resolved_turn = currentTurn;
         }
       });
       state.consequence_deferred_queue = newQueue;
@@ -2603,8 +2691,16 @@
       option_id: optionId,
       option_text: option.text || '',
       option_consequences_for_player: option.consequences_for_player || '',
+      option_orig_id: option._orig_id || optionId,
       option_weight: option.weight || 'neutral',
       expected_concerns_addressed: option.expected_concerns_addressed || [],
+      // L0-2 · 目标冲突仪表只认已提交的决策。这三个字段是标注层（L1-0）的
+      // 设计意图，engine 不拿它们算数，只负责把它们带进 history —— 否则渲染层
+      // 只能拿 concerns 短语反推"牺牲了哪个目标"，而反推必错：短语说的是
+      // 「照顾了什么」，照顾 A 不等于牺牲 B（可同时照顾 A 和 B）。
+      behavior: option.behavior || '',
+      goal_axis: Array.isArray(option.goal_axis) ? option.goal_axis.slice() : [],
+      goal_sacrificed: Array.isArray(option.goal_sacrificed) ? option.goal_sacrificed.slice() : [],
       applied_effects: effects,
       justification: sanitized,
     });
@@ -2847,7 +2943,18 @@
       option_id: optionId,
       option_text: option.text || '',
       option_consequences_for_player: option.consequences_for_player || '',
+      option_orig_id: option._orig_id || optionId,
       option_weight: option.weight || 'neutral',
+      // 派生层（primary_focus_dimension_count）只读 history，不看选项对象；
+      // 这里少记一个字段，复盘就少一个能归因的维度。
+      expected_concerns_addressed: option.expected_concerns_addressed || [],
+      // L0-2 · 目标冲突仪表只认已提交的决策。这三个字段是标注层（L1-0）的
+      // 设计意图，engine 不拿它们算数，只负责把它们带进 history —— 否则渲染层
+      // 只能拿 concerns 短语反推"牺牲了哪个目标"，而反推必错：短语说的是
+      // 「照顾了什么」，照顾 A 不等于牺牲 B（可同时照顾 A 和 B）。
+      behavior: option.behavior || '',
+      goal_axis: Array.isArray(option.goal_axis) ? option.goal_axis.slice() : [],
+      goal_sacrificed: Array.isArray(option.goal_sacrificed) ? option.goal_sacrificed.slice() : [],
       applied_effects: eff,
       effectiveness: state.last_effectiveness,
       justification: sanitized,
@@ -2884,7 +2991,16 @@
       option_id: optionId,
       option_text: option.text || '',
       option_consequences_for_player: option.consequences_for_player || '',
+      option_orig_id: option._orig_id || optionId,
       option_weight: option.weight || 'neutral',
+      expected_concerns_addressed: option.expected_concerns_addressed || [],
+      // L0-2 · 目标冲突仪表只认已提交的决策。这三个字段是标注层（L1-0）的
+      // 设计意图，engine 不拿它们算数，只负责把它们带进 history —— 否则渲染层
+      // 只能拿 concerns 短语反推"牺牲了哪个目标"，而反推必错：短语说的是
+      // 「照顾了什么」，照顾 A 不等于牺牲 B（可同时照顾 A 和 B）。
+      behavior: option.behavior || '',
+      goal_axis: Array.isArray(option.goal_axis) ? option.goal_axis.slice() : [],
+      goal_sacrificed: Array.isArray(option.goal_sacrificed) ? option.goal_sacrificed.slice() : [],
       applied_effects: effects,
       justification: sanitized,
     });
@@ -3208,7 +3324,17 @@
           option_id: decisions.option,
           option_text: op ? op.text : '',
           option_consequences_for_player: op ? (op.consequences_for_player || '') : '',
+          option_orig_id: (op && op._orig_id) || decisions.option,
+          // 与三条专用分支保持字段齐平：派生层（warning_to_response_lag /
+          // consecutive_similar_choices / primary_focus_dimension_count）只认
+          // 这两个键，缺一个就会把"有数据"误判成"没数据"。
           weight: op ? op.weight : '',
+          option_weight: (op && op.weight) || 'neutral',
+          expected_concerns_addressed: (op && op.expected_concerns_addressed) || [],
+          // 与三条专用分支对齐：L0-2 仪表在回放路径上也要能读到目标轴。
+          behavior: (op && op.behavior) || '',
+          goal_axis: (op && Array.isArray(op.goal_axis)) ? op.goal_axis.slice() : [],
+          goal_sacrificed: (op && Array.isArray(op.goal_sacrificed)) ? op.goal_sacrificed.slice() : [],
           applied_effects: eff,
           justification: decisions.justification || '',
         });
@@ -3354,8 +3480,64 @@
   OfflineEngine._flOutcomeTitle = _flOutcomeTitle;
   OfflineEngine._flNormalizeEnding = _flNormalizeEnding;
   OfflineEngine._flRawEndings = _flRawEndings;
+  // V1 · 看得见变化：UI 需要指标的 label/unit/dec/good 与阈值表才能画
+  // delta 徽标、迷你走势和阈值条。这两张表是只读常量，暴露出来是为了让
+  // UI 不再复制一份配置——复制的那份一定会在某次平衡性调整后和引擎说谎。
+  OfflineEngine._flScenarioMetrics = SCENARIO_METRICS;
+  OfflineEngine._flScenarioThresholds = SCENARIO_THRESHOLDS;
+  // V3 根因复盘模块需要整份场景 JSON（steps 原文做反事实、feedback_patterns
+  // 做概念命中）。只暴露已加载的只读引用，不为它新开一次 fetch。
+  OfflineEngine._flScenarioData = _loaded;
   OfflineEngine._flOutcomeWhitelist = FL_OUTCOME_WHITELIST;
   OfflineEngine._flKnownUnreachable = FL_KNOWN_UNREACHABLE;
+
+  // ── L1-2 · 提交前的可撤回窗口 ──────────────────────────────────────────
+  // 按一下就把这一手落地的产品，教不了"谨慎决策"：手快点错的人和想清楚的人
+  // 得到同一个反馈，代价没有任何一处被记住。闸门只做一件最小的事——把"选中的
+  // 那一手"先挂起，等玩家显式确认才允许推进回合；确认前随时可以撤回重选。
+  // 它不推进状态、不写 history，真正落地仍由 API/引擎的 executeTurn 完成，
+  // 因此撤回是纯粹的"没发生过"，而不是"事后反悔"。
+  var _flGate = { turn: null, option_id: null, label: '' };
+
+  function _flGatePeek() {
+    return {
+      turn: _flGate.turn,
+      option_id: _flGate.option_id,
+      label: _flGate.label,
+      open: !!_flGate.option_id
+    };
+  }
+
+  function pendingChoice(turn, optionId, label) {
+    _flGate = {
+      turn: turn == null || turn === '' ? null : Number(turn),
+      option_id: optionId == null || optionId === '' ? null : String(optionId),
+      label: label == null ? '' : String(label)
+    };
+    return _flGatePeek();
+  }
+
+  function confirmSubmit(optionId) {
+    var peek = _flGatePeek();
+    if (!peek.open) return null;
+    // 传了 optionId 就要求一致：防止"看着 A 却提交了 B"这种最坏的错配。
+    if (optionId != null && String(optionId) !== peek.option_id) return null;
+    _flGate = { turn: null, option_id: null, label: '' };
+    return peek;
+  }
+
+  function revertChoice() {
+    var peek = _flGatePeek();
+    _flGate = { turn: null, option_id: null, label: '' };
+    return peek;
+  }
+
+  OfflineEngine._flChoiceGate = {
+    pendingChoice: pendingChoice,
+    peek: _flGatePeek,
+    confirmSubmit: confirmSubmit,
+    revertChoice: revertChoice
+  };
   if (typeof globalThis !== 'undefined') {
     globalThis.OfflineEngine = OfflineEngine;
   }

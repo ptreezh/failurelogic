@@ -1,0 +1,594 @@
+{
+ "updated": "2026-10-23T23:42:05.352Z",
+ "legend": {
+  "state": "场景 initialState / expected_effects 真实键",
+  "derived": "fl-debrief.js 从 decision_history 派生",
+  "attr": "场景 steps 顶层声明",
+  "unsupported": "全仓无来源；引用即噪声，必须改写或下线"
+ },
+ "tally": {
+  "state": 9,
+  "derived": 3,
+  "attr": 0,
+  "unsupported": 13
+ },
+ "derivedKeys": [
+  "warning_to_response_lag",
+  "consecutive_similar_choices",
+  "primary_focus_dimension_count"
+ ],
+ "sourceSets": {
+  "initialStateKeys": 57,
+  "expectedEffectsKeys": 55
+ },
+ "atoms": {
+  "accepted_risks_count": {
+   "source": "state",
+   "why": "initialState/expected_effects 命中：challenger_launch",
+   "usedBy": [
+    {
+     "sid": "challenger-launch",
+     "rid": "confirmation_bias"
+    }
+   ]
+  },
+  "analyst_confidence_drop_count": {
+   "source": "unsupported",
+   "why": "5 个场景的 initialState 与 expected_effects 中均无此键，引擎不会写入",
+   "usedBy": [
+    {
+     "sid": "enron-collapse",
+     "rid": "F6_confirmation"
+    }
+   ]
+  },
+  "bad_news_hidden_count": {
+   "source": "unsupported",
+   "why": "5 个场景的 initialState 与 expected_effects 中均无此键，引擎不会写入",
+   "usedBy": [
+    {
+     "sid": "chip-ai-supplychain",
+     "rid": "problem_delay_exposure"
+    }
+   ]
+  },
+  "chip_cost_optimization_count": {
+   "source": "unsupported",
+   "why": "5 个场景的 initialState 与 expected_effects 中均无此键，引擎不会写入",
+   "usedBy": [
+    {
+     "sid": "chip-ai-supplychain",
+     "rid": "local_optimization"
+    }
+   ]
+  },
+  "climate_justice_index": {
+   "source": "state",
+   "why": "initialState/expected_effects 命中：climate_change",
+   "usedBy": [
+    {
+     "sid": "climate-change-policy",
+     "rid": "F4_side_effects"
+    }
+   ]
+  },
+  "consecutive_similar_choices": {
+   "source": "derived",
+   "why": "由 decision_history 逐回合派生",
+   "usedBy": [
+    {
+     "sid": "climate-change-policy",
+     "rid": "F6_confirmation_bias"
+    }
+   ]
+  },
+  "deferred_consequence_count": {
+   "source": "unsupported",
+   "why": "5 个场景的 initialState 与 expected_effects 中均无此键，引擎不会写入",
+   "usedBy": [
+    {
+     "sid": "noodle-shop-community",
+     "rid": "time_delay_blindness"
+    },
+    {
+     "sid": "chip-ai-supplychain",
+     "rid": "time_delay_blindness"
+    }
+   ]
+  },
+  "gdp_growth_pct": {
+   "source": "state",
+   "why": "initialState/expected_effects 命中：climate_change",
+   "usedBy": [
+    {
+     "sid": "climate-change-policy",
+     "rid": "F4_side_effects"
+    }
+   ]
+  },
+  "ignored_warnings_count": {
+   "source": "state",
+   "why": "initialState/expected_effects 命中：challenger_launch、noodle_shop_community",
+   "usedBy": [
+    {
+     "sid": "challenger-launch",
+     "rid": "confirmation_bias"
+    },
+    {
+     "sid": "challenger-launch",
+     "rid": "nonlinear_threshold"
+    },
+    {
+     "sid": "noodle-shop-community",
+     "rid": "confirmation_bias"
+    }
+   ]
+  },
+  "market_share_obsession_count": {
+   "source": "unsupported",
+   "why": "5 个场景的 initialState 与 expected_effects 中均无此键，引擎不会写入",
+   "usedBy": [
+    {
+     "sid": "chip-ai-supplychain",
+     "rid": "single_target_optimization"
+    }
+   ]
+  },
+  "no_change_after_reveal": {
+   "source": "unsupported",
+   "why": "5 个场景的 initialState 与 expected_effects 中均无此键，引擎不会写入",
+   "usedBy": [
+    {
+     "sid": "climate-change-policy",
+     "rid": "F7_self_criticism"
+    }
+   ]
+  },
+  "no_response_to_watkins": {
+   "source": "unsupported",
+   "why": "5 个场景的 initialState 与 expected_effects 中均无此键，引擎不会写入",
+   "usedBy": [
+    {
+     "sid": "enron-collapse",
+     "rid": "F7_self_criticism"
+    }
+   ]
+  },
+  "off_balance_sheet_exposure_usd_m": {
+   "source": "state",
+   "why": "initialState/expected_effects 命中：enron_collapse",
+   "usedBy": [
+    {
+     "sid": "enron-collapse",
+     "rid": "F4_side_effects"
+    }
+   ]
+  },
+  "optimism_statement_count": {
+   "source": "unsupported",
+   "why": "5 个场景的 initialState 与 expected_effects 中均无此键，引擎不会写入",
+   "usedBy": [
+    {
+     "sid": "chip-ai-supplychain",
+     "rid": "self_reference"
+    }
+   ]
+  },
+  "perception_bias": {
+   "source": "state",
+   "why": "initialState/expected_effects 命中：chip_ai_supplychain",
+   "usedBy": [
+    {
+     "sid": "chip-ai-supplychain",
+     "rid": "confirmation_bias"
+    }
+   ]
+  },
+  "player_chose_linear_options": {
+   "source": "unsupported",
+   "why": "5 个场景的 initialState 与 expected_effects 中均无此键，引擎不会写入",
+   "usedBy": [
+    {
+     "sid": "climate-change-policy",
+     "rid": "F1_nonlinear"
+    }
+   ]
+  },
+  "policy_counters_policy_count": {
+   "source": "unsupported",
+   "why": "5 个场景的 initialState 与 expected_effects 中均无此键，引擎不会写入",
+   "usedBy": [
+    {
+     "sid": "climate-change-policy",
+     "rid": "F3_self_reference"
+    },
+    {
+     "sid": "enron-collapse",
+     "rid": "F3_self_reference"
+    }
+   ]
+  },
+  "primary_focus_dimension_count": {
+   "source": "derived",
+   "why": "由 decision_history 逐回合派生",
+   "usedBy": [
+    {
+     "sid": "enron-collapse",
+     "rid": "F5_single_target"
+    }
+   ]
+  },
+  "revenue_obsession_count": {
+   "source": "unsupported",
+   "why": "5 个场景的 initialState 与 expected_effects 中均无此键，引擎不会写入",
+   "usedBy": [
+    {
+     "sid": "noodle-shop-community",
+     "rid": "single_target_optimization"
+    }
+   ]
+  },
+  "single_concern_choices": {
+   "source": "unsupported",
+   "why": "5 个场景的 initialState 与 expected_effects 中均无此键，引擎不会写入",
+   "usedBy": [
+    {
+     "sid": "climate-change-policy",
+     "rid": "F5_single_target"
+    }
+   ]
+  },
+  "temperature_forecast_f": {
+   "source": "state",
+   "why": "initialState/expected_effects 命中：challenger_launch",
+   "usedBy": [
+    {
+     "sid": "challenger-launch",
+     "rid": "nonlinear_threshold"
+    }
+   ]
+  },
+  "tipping_point_proximity": {
+   "source": "state",
+   "why": "initialState/expected_effects 命中：climate_change",
+   "usedBy": [
+    {
+     "sid": "climate-change-policy",
+     "rid": "F1_nonlinear"
+    }
+   ]
+  },
+  "warning_to_action_lag": {
+   "source": "unsupported",
+   "why": "5 个场景的 initialState 与 expected_effects 中均无此键，引擎不会写入",
+   "usedBy": [
+    {
+     "sid": "enron-collapse",
+     "rid": "F8_regulation_lag"
+    }
+   ]
+  },
+  "warning_to_response_lag": {
+   "source": "derived",
+   "why": "由 decision_history 逐回合派生",
+   "usedBy": [
+    {
+     "sid": "climate-change-policy",
+     "rid": "F2_time_delay"
+    },
+    {
+     "sid": "enron-collapse",
+     "rid": "F2_time_delay"
+    }
+   ]
+  },
+  "whistleblower_silenced_count": {
+   "source": "state",
+   "why": "initialState/expected_effects 命中：climate_change、enron_collapse",
+   "usedBy": [
+    {
+     "sid": "enron-collapse",
+     "rid": "F4_side_effects"
+    }
+   ]
+  }
+ },
+ "ruleAvailability": [
+  {
+   "sid": "climate-change-policy",
+   "rid": "F1_nonlinear",
+   "expr": "tipping_point_proximity > 50 AND player_chose_linear_options >= 3",
+   "missing": [
+    "tipping_point_proximity",
+    "player_chose_linear_options"
+   ],
+   "kind": "missing_in_scenario"
+  },
+  {
+   "sid": "climate-change-policy",
+   "rid": "F3_self_reference",
+   "expr": "policy_counters_policy_count >= 2",
+   "missing": [
+    "policy_counters_policy_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "climate-change-policy",
+   "rid": "F4_side_effects",
+   "expr": "climate_justice_index < 50 AND gdp_growth_pct >= 2",
+   "missing": [
+    "climate_justice_index",
+    "gdp_growth_pct"
+   ],
+   "kind": "missing_in_scenario"
+  },
+  {
+   "sid": "climate-change-policy",
+   "rid": "F5_single_target",
+   "expr": "single_concern_choices >= 3",
+   "missing": [
+    "single_concern_choices"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "climate-change-policy",
+   "rid": "F7_self_criticism",
+   "expr": "no_change_after_reveal >= 2",
+   "missing": [
+    "no_change_after_reveal"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "enron-collapse",
+   "rid": "F3_self_reference",
+   "expr": "policy_counters_policy_count >= 1",
+   "missing": [
+    "policy_counters_policy_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "enron-collapse",
+   "rid": "F6_confirmation",
+   "expr": "analyst_confidence_drop_count >= 2",
+   "missing": [
+    "analyst_confidence_drop_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "enron-collapse",
+   "rid": "F7_self_criticism",
+   "expr": "no_response_to_watkins >= 2",
+   "missing": [
+    "no_response_to_watkins"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "enron-collapse",
+   "rid": "F8_regulation_lag",
+   "expr": "warning_to_action_lag >= 3",
+   "missing": [
+    "warning_to_action_lag"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "noodle-shop-community",
+   "rid": "single_target_optimization",
+   "expr": "revenue_obsession_count >= 2",
+   "missing": [
+    "revenue_obsession_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "noodle-shop-community",
+   "rid": "time_delay_blindness",
+   "expr": "deferred_consequence_count >= 2",
+   "missing": [
+    "deferred_consequence_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "chip-ai-supplychain",
+   "rid": "time_delay_blindness",
+   "expr": "deferred_consequence_count >= 2",
+   "missing": [
+    "deferred_consequence_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "chip-ai-supplychain",
+   "rid": "single_target_optimization",
+   "expr": "market_share_obsession_count >= 2",
+   "missing": [
+    "market_share_obsession_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "chip-ai-supplychain",
+   "rid": "local_optimization",
+   "expr": "chip_cost_optimization_count >= 2",
+   "missing": [
+    "chip_cost_optimization_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "chip-ai-supplychain",
+   "rid": "problem_delay_exposure",
+   "expr": "bad_news_hidden_count >= 2",
+   "missing": [
+    "bad_news_hidden_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "chip-ai-supplychain",
+   "rid": "self_reference",
+   "expr": "optimism_statement_count >= 2",
+   "missing": [
+    "optimism_statement_count"
+   ],
+   "kind": "no_source_anywhere"
+  }
+ ],
+ "blockedRules": [
+  {
+   "sid": "climate-change-policy",
+   "rid": "F3_self_reference",
+   "expr": "policy_counters_policy_count >= 2",
+   "missing": [
+    "policy_counters_policy_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "climate-change-policy",
+   "rid": "F5_single_target",
+   "expr": "single_concern_choices >= 3",
+   "missing": [
+    "single_concern_choices"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "climate-change-policy",
+   "rid": "F7_self_criticism",
+   "expr": "no_change_after_reveal >= 2",
+   "missing": [
+    "no_change_after_reveal"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "enron-collapse",
+   "rid": "F3_self_reference",
+   "expr": "policy_counters_policy_count >= 1",
+   "missing": [
+    "policy_counters_policy_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "enron-collapse",
+   "rid": "F6_confirmation",
+   "expr": "analyst_confidence_drop_count >= 2",
+   "missing": [
+    "analyst_confidence_drop_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "enron-collapse",
+   "rid": "F7_self_criticism",
+   "expr": "no_response_to_watkins >= 2",
+   "missing": [
+    "no_response_to_watkins"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "enron-collapse",
+   "rid": "F8_regulation_lag",
+   "expr": "warning_to_action_lag >= 3",
+   "missing": [
+    "warning_to_action_lag"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "noodle-shop-community",
+   "rid": "single_target_optimization",
+   "expr": "revenue_obsession_count >= 2",
+   "missing": [
+    "revenue_obsession_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "noodle-shop-community",
+   "rid": "time_delay_blindness",
+   "expr": "deferred_consequence_count >= 2",
+   "missing": [
+    "deferred_consequence_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "chip-ai-supplychain",
+   "rid": "time_delay_blindness",
+   "expr": "deferred_consequence_count >= 2",
+   "missing": [
+    "deferred_consequence_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "chip-ai-supplychain",
+   "rid": "single_target_optimization",
+   "expr": "market_share_obsession_count >= 2",
+   "missing": [
+    "market_share_obsession_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "chip-ai-supplychain",
+   "rid": "local_optimization",
+   "expr": "chip_cost_optimization_count >= 2",
+   "missing": [
+    "chip_cost_optimization_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "chip-ai-supplychain",
+   "rid": "problem_delay_exposure",
+   "expr": "bad_news_hidden_count >= 2",
+   "missing": [
+    "bad_news_hidden_count"
+   ],
+   "kind": "no_source_anywhere"
+  },
+  {
+   "sid": "chip-ai-supplychain",
+   "rid": "self_reference",
+   "expr": "optimism_statement_count >= 2",
+   "missing": [
+    "optimism_statement_count"
+   ],
+   "kind": "no_source_anywhere"
+  }
+ ],
+ "patchableRules": [
+  {
+   "sid": "climate-change-policy",
+   "rid": "F1_nonlinear",
+   "expr": "tipping_point_proximity > 50 AND player_chose_linear_options >= 3",
+   "missing": [
+    "tipping_point_proximity",
+    "player_chose_linear_options"
+   ],
+   "kind": "missing_in_scenario"
+  },
+  {
+   "sid": "climate-change-policy",
+   "rid": "F4_side_effects",
+   "expr": "climate_justice_index < 50 AND gdp_growth_pct >= 2",
+   "missing": [
+    "climate_justice_index",
+    "gdp_growth_pct"
+   ],
+   "kind": "missing_in_scenario"
+  }
+ ]
+}

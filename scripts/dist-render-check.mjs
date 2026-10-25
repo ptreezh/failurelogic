@@ -20,6 +20,7 @@ await p.evaluate(() => {
 });
 await p.waitForTimeout(2600);
 await p.evaluate(() => document.querySelector('.challenger-option').click());
+await p.evaluate(() => window.challengerRouter && window.challengerRouter.confirmChoice());
 await p.waitForTimeout(1200);
 
 const r = await p.evaluate(() => {

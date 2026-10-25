@@ -1,0 +1,1021 @@
+{
+ "updated": "2026-10-23T22:56:27.843Z",
+ "source": "docs/spec/grill/m0-matrix.json",
+ "policies": {
+  "scenarios": [
+   "challenger-launch",
+   "climate-change-policy",
+   "enron-collapse",
+   "noodle-shop-community",
+   "chip-ai-supplychain"
+  ],
+  "strategies": [
+   "first",
+   "last",
+   "mid",
+   "rand:11",
+   "rand:22",
+   "rand:33",
+   "rand:44"
+  ],
+  "groups": 35
+ },
+ "randomBaseline": {
+  "hit": {
+   "n": 20,
+   "mean": 0.75,
+   "min": 0,
+   "max": 2
+  },
+  "visible": {
+   "n": 20,
+   "mean": 1.2,
+   "min": 1,
+   "max": 2
+  },
+  "perScenario": {
+   "challenger-launch": {
+    "hit": {
+     "n": 4,
+     "mean": 1.5,
+     "min": 1,
+     "max": 2
+    },
+    "visible": {
+     "n": 4,
+     "mean": 2,
+     "min": 2,
+     "max": 2
+    }
+   },
+   "climate-change-policy": {
+    "hit": {
+     "n": 4,
+     "mean": 0.5,
+     "min": 0,
+     "max": 1
+    },
+    "visible": {
+     "n": 4,
+     "mean": 1,
+     "min": 1,
+     "max": 1
+    }
+   },
+   "enron-collapse": {
+    "hit": {
+     "n": 4,
+     "mean": 0.5,
+     "min": 0,
+     "max": 1
+    },
+    "visible": {
+     "n": 4,
+     "mean": 1,
+     "min": 1,
+     "max": 1
+    }
+   },
+   "noodle-shop-community": {
+    "hit": {
+     "n": 4,
+     "mean": 0.5,
+     "min": 0,
+     "max": 1
+    },
+    "visible": {
+     "n": 4,
+     "mean": 1,
+     "min": 1,
+     "max": 1
+    }
+   },
+   "chip-ai-supplychain": {
+    "hit": {
+     "n": 4,
+     "mean": 0.75,
+     "min": 0,
+     "max": 1
+    },
+    "visible": {
+     "n": 4,
+     "mean": 1,
+     "min": 1,
+     "max": 1
+    }
+   }
+  }
+ },
+ "runs": [
+  {
+   "scenario": "challenger-launch",
+   "strategy": "first",
+   "ok": true,
+   "trace": "0000000000",
+   "total": 8,
+   "visible": 2,
+   "coverage": {
+    "total": 8,
+    "hit": 1,
+    "miss": 1,
+    "unparsed": 6,
+    "visible": 2,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 0
+   },
+   "concepts": [
+    {
+     "name": "非线性阈值",
+     "hit": true,
+     "where": "第 1、2、3、4、5、7、8 回合"
+    },
+    {
+     "name": "自我确认循环",
+     "hit": false,
+     "where": "第 1、2、3、4、5、6、7、8、9、10 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "challenger-launch",
+   "strategy": "last",
+   "ok": true,
+   "trace": "3333333333",
+   "total": 8,
+   "visible": 2,
+   "coverage": {
+    "total": 8,
+    "hit": 1,
+    "miss": 1,
+    "unparsed": 6,
+    "visible": 2,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 0
+   },
+   "concepts": [
+    {
+     "name": "非线性阈值",
+     "hit": true,
+     "where": "第 1、2、3、4、5、7、8 回合"
+    },
+    {
+     "name": "自我确认循环",
+     "hit": false,
+     "where": "第 1、2、3、4、5、6、7、8、9、10 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "challenger-launch",
+   "strategy": "mid",
+   "ok": true,
+   "trace": "2222222222",
+   "total": 8,
+   "visible": 2,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 2,
+    "unparsed": 6,
+    "visible": 2,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 0
+   },
+   "concepts": [
+    {
+     "name": "自我确认循环",
+     "hit": false,
+     "where": "第 1、2、3、4、5、6、7、8、9、10 回合"
+    },
+    {
+     "name": "非线性阈值",
+     "hit": false,
+     "where": "第 1、2、3、4、5、7、8 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "climate-change-policy",
+   "strategy": "first",
+   "ok": true,
+   "trace": "0000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 3,
+    "unparsed": 1,
+    "visible": 1,
+    "constant": 1,
+    "unreached": 1,
+    "no_source": 2
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": false,
+     "where": "第 3、4 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "climate-change-policy",
+   "strategy": "last",
+   "ok": true,
+   "trace": "3333333333",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 1,
+    "miss": 2,
+    "unparsed": 1,
+    "visible": 1,
+    "constant": 1,
+    "unreached": 1,
+    "no_source": 2
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": true,
+     "where": "第 3、6、9 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "climate-change-policy",
+   "strategy": "mid",
+   "ok": true,
+   "trace": "2222222222",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 3,
+    "unparsed": 1,
+    "visible": 1,
+    "constant": 1,
+    "unreached": 1,
+    "no_source": 2
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": false,
+     "where": "第 4、5 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "enron-collapse",
+   "strategy": "first",
+   "ok": true,
+   "trace": "0000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 1,
+    "miss": 0,
+    "unparsed": 1,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 1,
+    "no_source": 5
+   },
+   "concepts": [
+    {
+     "name": "单目标优化",
+     "hit": true,
+     "where": "第 1、4、5、6、7 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "enron-collapse",
+   "strategy": "last",
+   "ok": true,
+   "trace": "3333333333",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 1,
+    "unparsed": 1,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 1,
+    "no_source": 5
+   },
+   "concepts": [
+    {
+     "name": "单目标优化",
+     "hit": false,
+     "where": "第 1、5 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "enron-collapse",
+   "strategy": "mid",
+   "ok": true,
+   "trace": "2222222222",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 1,
+    "unparsed": 1,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 1,
+    "no_source": 5
+   },
+   "concepts": [
+    {
+     "name": "单目标优化",
+     "hit": false,
+     "where": "第 2、4、6 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "noodle-shop-community",
+   "strategy": "first",
+   "ok": true,
+   "trace": "0000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 1,
+    "unparsed": 5,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 2
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": false,
+     "where": "第 1、5、8 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "noodle-shop-community",
+   "strategy": "last",
+   "ok": true,
+   "trace": "3333333333",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 1,
+    "unparsed": 5,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 2
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": false,
+     "where": "第 1、5、8 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "noodle-shop-community",
+   "strategy": "mid",
+   "ok": true,
+   "trace": "2222222222",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 1,
+    "unparsed": 5,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 2
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": false,
+     "where": "第 1、5、8 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "chip-ai-supplychain",
+   "strategy": "first",
+   "ok": true,
+   "trace": "0000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 1,
+    "unparsed": 2,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 5
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": false,
+     "where": "第 4、5、8 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "chip-ai-supplychain",
+   "strategy": "last",
+   "ok": true,
+   "trace": "3333333333",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 1,
+    "unparsed": 2,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 5
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": false,
+     "where": "第 4、5、8 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "chip-ai-supplychain",
+   "strategy": "mid",
+   "ok": true,
+   "trace": "2222222222",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 1,
+    "unparsed": 2,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 5
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": false,
+     "where": "第 4、5、8 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "challenger-launch",
+   "strategy": "rand:11",
+   "ok": true,
+   "trace": "0000000000",
+   "total": 8,
+   "visible": 2,
+   "coverage": {
+    "total": 8,
+    "hit": 2,
+    "miss": 0,
+    "unparsed": 6,
+    "visible": 2,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 0
+   },
+   "concepts": [
+    {
+     "name": "自我确认循环",
+     "hit": true,
+     "where": "第 1、2、3、4、5、6、7、8、9、10 回合"
+    },
+    {
+     "name": "非线性阈值",
+     "hit": true,
+     "where": "第 1、2、3、4、5、7、8 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "challenger-launch",
+   "strategy": "rand:22",
+   "ok": true,
+   "trace": "3000000000",
+   "total": 8,
+   "visible": 2,
+   "coverage": {
+    "total": 8,
+    "hit": 1,
+    "miss": 1,
+    "unparsed": 6,
+    "visible": 2,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 0
+   },
+   "concepts": [
+    {
+     "name": "非线性阈值",
+     "hit": true,
+     "where": "第 1、2、3、4、5、7、8 回合"
+    },
+    {
+     "name": "自我确认循环",
+     "hit": false,
+     "where": "第 1、2、3、4、5、6、7、8、9、10 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "challenger-launch",
+   "strategy": "rand:33",
+   "ok": true,
+   "trace": "2000000000",
+   "total": 8,
+   "visible": 2,
+   "coverage": {
+    "total": 8,
+    "hit": 1,
+    "miss": 1,
+    "unparsed": 6,
+    "visible": 2,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 0
+   },
+   "concepts": [
+    {
+     "name": "非线性阈值",
+     "hit": true,
+     "where": "第 1、2、3、4、5、7、8 回合"
+    },
+    {
+     "name": "自我确认循环",
+     "hit": false,
+     "where": "第 1、2、3、4、5、6、7、8、9、10 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "challenger-launch",
+   "strategy": "rand:44",
+   "ok": true,
+   "trace": "1000000000",
+   "total": 8,
+   "visible": 2,
+   "coverage": {
+    "total": 8,
+    "hit": 2,
+    "miss": 0,
+    "unparsed": 6,
+    "visible": 2,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 0
+   },
+   "concepts": [
+    {
+     "name": "自我确认循环",
+     "hit": true,
+     "where": "第 1、2、3、4、5、6、7、8、9、10 回合"
+    },
+    {
+     "name": "非线性阈值",
+     "hit": true,
+     "where": "第 1、2、3、4、5、7、8 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "climate-change-policy",
+   "strategy": "rand:11",
+   "ok": true,
+   "trace": "0000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 3,
+    "unparsed": 1,
+    "visible": 1,
+    "constant": 1,
+    "unreached": 1,
+    "no_source": 2
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": false,
+     "where": "第 4、5 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "climate-change-policy",
+   "strategy": "rand:22",
+   "ok": true,
+   "trace": "3000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 1,
+    "miss": 2,
+    "unparsed": 1,
+    "visible": 1,
+    "constant": 1,
+    "unreached": 1,
+    "no_source": 2
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": true,
+     "where": "第 4、5、6 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "climate-change-policy",
+   "strategy": "rand:33",
+   "ok": true,
+   "trace": "2000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 3,
+    "unparsed": 1,
+    "visible": 1,
+    "constant": 1,
+    "unreached": 1,
+    "no_source": 2
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": false,
+     "where": "第 5 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "climate-change-policy",
+   "strategy": "rand:44",
+   "ok": true,
+   "trace": "1000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 1,
+    "miss": 2,
+    "unparsed": 1,
+    "visible": 1,
+    "constant": 1,
+    "unreached": 1,
+    "no_source": 2
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": true,
+     "where": "第 2、4、5、6 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "enron-collapse",
+   "strategy": "rand:11",
+   "ok": true,
+   "trace": "0000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 1,
+    "miss": 0,
+    "unparsed": 1,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 1,
+    "no_source": 5
+   },
+   "concepts": [
+    {
+     "name": "单目标优化",
+     "hit": true,
+     "where": "第 2、3、4、5、6、7 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "enron-collapse",
+   "strategy": "rand:22",
+   "ok": true,
+   "trace": "3000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 1,
+    "unparsed": 1,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 1,
+    "no_source": 5
+   },
+   "concepts": [
+    {
+     "name": "单目标优化",
+     "hit": false,
+     "where": "第 4、5、6、7 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "enron-collapse",
+   "strategy": "rand:33",
+   "ok": true,
+   "trace": "2000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 1,
+    "miss": 0,
+    "unparsed": 1,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 1,
+    "no_source": 5
+   },
+   "concepts": [
+    {
+     "name": "单目标优化",
+     "hit": true,
+     "where": "第 2、3、4、6、7 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "enron-collapse",
+   "strategy": "rand:44",
+   "ok": true,
+   "trace": "1000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 1,
+    "unparsed": 1,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 1,
+    "no_source": 5
+   },
+   "concepts": [
+    {
+     "name": "单目标优化",
+     "hit": false,
+     "where": "第 4、6、7 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "noodle-shop-community",
+   "strategy": "rand:11",
+   "ok": true,
+   "trace": "0000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 1,
+    "unparsed": 5,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 2
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": false,
+     "where": "第 1、5、8 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "noodle-shop-community",
+   "strategy": "rand:22",
+   "ok": true,
+   "trace": "3000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 1,
+    "miss": 0,
+    "unparsed": 5,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 2
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": true,
+     "where": "第 1、5、8 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "noodle-shop-community",
+   "strategy": "rand:33",
+   "ok": true,
+   "trace": "2000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 1,
+    "miss": 0,
+    "unparsed": 5,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 2
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": true,
+     "where": "第 1、5、8 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "noodle-shop-community",
+   "strategy": "rand:44",
+   "ok": true,
+   "trace": "1000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 1,
+    "unparsed": 5,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 2
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": false,
+     "where": "第 1、5、8 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "chip-ai-supplychain",
+   "strategy": "rand:11",
+   "ok": true,
+   "trace": "0000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 1,
+    "miss": 0,
+    "unparsed": 2,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 5
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": true,
+     "where": "第 4、5、8 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "chip-ai-supplychain",
+   "strategy": "rand:22",
+   "ok": true,
+   "trace": "3000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 0,
+    "miss": 1,
+    "unparsed": 2,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 5
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": false,
+     "where": "第 4、5、8 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "chip-ai-supplychain",
+   "strategy": "rand:33",
+   "ok": true,
+   "trace": "2000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 1,
+    "miss": 0,
+    "unparsed": 2,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 5
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": true,
+     "where": "第 4、5、8 回合"
+    }
+   ]
+  },
+  {
+   "scenario": "chip-ai-supplychain",
+   "strategy": "rand:44",
+   "ok": true,
+   "trace": "1000000000",
+   "total": 8,
+   "visible": 1,
+   "coverage": {
+    "total": 8,
+    "hit": 1,
+    "miss": 0,
+    "unparsed": 2,
+    "visible": 1,
+    "constant": 0,
+    "unreached": 0,
+    "no_source": 5
+   },
+   "concepts": [
+    {
+     "name": "确认偏误",
+     "hit": true,
+     "where": "第 4、5、8 回合"
+    }
+   ]
+  }
+ ]
+}

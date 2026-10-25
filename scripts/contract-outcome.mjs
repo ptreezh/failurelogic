@@ -93,6 +93,7 @@ const results = await page.evaluate(
             (o) => String(o.weight || '').toLowerCase() === wanted
           );
           const pick = hit || opts[0];
+          finalPick = pick;
           try {
             last = await window.OfflineEngine.executeTurn(
               session.game_id,
@@ -114,6 +115,15 @@ const results = await page.evaluate(
             last && last.game_state ? last.game_state.final_outcome || null : null,
           turnNumber: last ? last.turnNumber : null,
           feedbackLen: last ? String(last.feedback || '').length : 0,
+          // P0 同源证据：玩家点的是洗牌后槽位（id），它原先是谁（_orig_id）才是
+          // 结算与判结局该用的身份。history 里存的必须是 _orig_id，不是槽位字母。
+          pickedSlot: finalPick ? finalPick.id : '',
+          pickedOrigId: finalPick ? finalPick._orig_id || '' : '',
+          pickedTrigger: finalPick ? finalPick.trigger_outcome || '' : '',
+          finalHistoryEntry:
+            last && last.game_state && last.game_state.decision_history
+              ? last.game_state.decision_history[last.game_state.decision_history.length - 1] || null
+              : null,
         });
       }
     }
@@ -142,12 +152,49 @@ for (const r of results) {
     console.log(`FAIL ${tag} 顶层有 id=${id}，但 game_state 内没有`);
     continue;
   }
+  // —— P0 同源断言（G7 扩展）——
+  // 屏幕上点的是洗牌后的槽位字母，结算与判结局必须用它的原始身份。
+  // 这条断言直接钉住 P0：challenger 的结局 id 由 T10 选项显式声明，
+  // 一旦判定拿洗牌字母去查未洗牌 step，id 就会与所点选项的 trigger_outcome 分岔。
+  const entry = r.finalHistoryEntry;
+  if (!entry) {
+    fails.push(`${tag} 终局无 decision_history 条目`);
+  } else {
+    if (String(entry.turn) !== '10') {
+      fails.push(`${tag} 终局 decision_history 落在 turn=${entry.turn}，应为 10`);
+    }
+    if (String(entry.option_id) !== String(r.pickedSlot)) {
+      fails.push(`${tag} history 记录槽位 ${entry.option_id} ≠ 实际所点 ${r.pickedSlot}`);
+    }
+    if (r.pickedOrigId) {
+      if (!entry.option_orig_id) {
+        fails.push(`${tag} history 缺 option_orig_id（洗牌槽位未落库原始身份）`);
+      } else if (String(entry.option_orig_id) !== String(r.pickedOrigId)) {
+        fails.push(
+          `${tag} option_orig_id=${entry.option_orig_id} ≠ 所点槽位原始身份 ${r.pickedOrigId}`
+        );
+      }
+    }
+    if (r.scenario === 'challenger-launch' && r.pickedTrigger) {
+      if (String(id) !== String(r.pickedTrigger)) {
+        fails.push(
+          `${tag} 结局 id=${id} ≠ 所点选项 trigger_outcome=${r.pickedTrigger}（终局判定与所选槽位错位）`
+        );
+      }
+    }
+  }
+
   console.log(`PASS ${tag} id=${id} inState=${idInState} turn=${r.turnNumber}`);
 }
 
 if (pageErrors.length) {
   fails.push('pageerror: ' + pageErrors[0]);
   console.log('FAIL pageerror:\n  - ' + pageErrors.slice(0, 5).join('\n  - '));
+}
+
+if (fails.length) {
+  console.log('\n失败明细：');
+  fails.slice(0, 20).forEach((f) => console.log('  - ' + f));
 }
 
 console.log(

@@ -7,6 +7,91 @@
   "estimatedDuration": 40,
   "category": "社区经营决策·深度",
   "description": "2026年，某三线小城老城区社区。老周经营一家牛肉面馆已5年，生意稳定但增长停滞。短视频带火了同城'网红餐饮'，隔壁街的加盟奶茶店和连锁面馆排队不断。你扮演老周的儿子小周，在10个回合里决定面馆的走向——每一步都有看似合理的错误选项：接入外卖平台、扩充品类、加盟开二店、网红探店……隐藏变量（损耗率、平台评分、存货周转、家庭信任）只在揭示回合显现。",
+  "brief": {
+    "role": "老周的儿子小周，替父亲管账、也握着这个家的决定权",
+    "horizon": "10 个回合，约一年",
+    "objectives": [
+      {
+        "id": "scale",
+        "text": "把生意做大",
+        "metrics": [
+          "monthly_revenue",
+          "menu_scope"
+        ],
+        "tension": "与守住出品直接冲突：量一上来，先崩的是人手和出餐",
+        "concerns": [
+          "流量增长",
+          "品类丰富",
+          "扩张",
+          "流量爆发",
+          "短期引流",
+          "流量焦虑",
+          "继续扩张",
+          "坚持扩张"
+        ]
+      },
+      {
+        "id": "brand",
+        "text": "守住招牌与口碑",
+        "metrics": [
+          "reputation",
+          "platform_score"
+        ],
+        "tension": "与现金直接冲突：好食材和足够人手都得先掏钱",
+        "concerns": [
+          "口碑稳定",
+          "品类适度",
+          "专注核心",
+          "单店质量",
+          "复购",
+          "口碑自然",
+          "品质",
+          "本地直供",
+          "人力补足",
+          "效率适度",
+          "专注",
+          "口碑价值"
+        ]
+      },
+      {
+        "id": "cash",
+        "text": "别把家底赔进去",
+        "metrics": [
+          "cash_flow",
+          "debt",
+          "net_equity"
+        ],
+        "tension": "与做大直接冲突：扩张要先垫钱，家底只够试一次",
+        "concerns": [
+          "范围可控",
+          "现金流健康",
+          "低杠杆试点",
+          "降本",
+          "流程优化",
+          "零成本",
+          "止损",
+          "现金回血",
+          "现金",
+          "家庭协同",
+          "止损退出",
+          "出让止损"
+        ]
+      }
+    ],
+    "method_concerns": [
+      "信息充分",
+      "试点验证",
+      "修正",
+      "现状",
+      "观察",
+      "折中",
+      "专业诊断",
+      "完整复盘"
+    ],
+    "impossible": "这三件事不可能同时做好。每一回合的选择，至少牺牲掉其中一件。",
+    "ends_when": "10 个回合用完，或出现不可逆结果（关店、负债、家里散了）",
+    "how_judged": "没有唯一正确答案。判定看你的决策链是否与你声称的目标自洽——失败是设计的一部分，我们要看的是你怎么失败。"
+  },
   "dornerLessons": [
     "目标漂移：从'做好一碗面'漂移到'开更多店/追风口'，是社区小店最隐蔽的失败模式",
     "局部优化 / 只见树木：只看单日单量、单品毛利、当期现金流，系统性牺牲口碑与家庭信任",
@@ -114,7 +199,15 @@
           "expected_concerns_addressed": [
             "流量增长"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "expand",
+          "goal_axis": [
+            "scale"
+          ],
+          "goal_sacrificed": [
+            "brand",
+            "cash"
+          ]
         },
         {
           "id": "B",
@@ -124,7 +217,14 @@
             "流量增长",
             "范围可控"
           ],
-          "weight": "moderate"
+          "weight": "moderate",
+          "behavior": "expand",
+          "goal_axis": [
+            "scale"
+          ],
+          "goal_sacrificed": [
+            "brand"
+          ]
         },
         {
           "id": "C",
@@ -133,7 +233,14 @@
           "expected_concerns_addressed": [
             "口碑稳定"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "hold",
+          "goal_axis": [
+            "brand"
+          ],
+          "goal_sacrificed": [
+            "scale"
+          ]
         },
         {
           "id": "D",
@@ -142,7 +249,10 @@
           "expected_concerns_addressed": [
             "信息充分"
           ],
-          "weight": "analytical"
+          "weight": "analytical",
+          "behavior": "analyze",
+          "goal_axis": [],
+          "goal_sacrificed": []
         }
       ],
       "expected_effects": {
@@ -195,7 +305,15 @@
           "expected_concerns_addressed": [
             "品类丰富"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "expand",
+          "goal_axis": [
+            "scale"
+          ],
+          "goal_sacrificed": [
+            "brand",
+            "cash"
+          ]
         },
         {
           "id": "B",
@@ -204,7 +322,14 @@
           "expected_concerns_addressed": [
             "品类适度"
           ],
-          "weight": "moderate"
+          "weight": "moderate",
+          "behavior": "expand",
+          "goal_axis": [
+            "scale"
+          ],
+          "goal_sacrificed": [
+            "brand"
+          ]
         },
         {
           "id": "C",
@@ -213,7 +338,14 @@
           "expected_concerns_addressed": [
             "专注核心"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "hold",
+          "goal_axis": [
+            "brand"
+          ],
+          "goal_sacrificed": [
+            "scale"
+          ]
         },
         {
           "id": "D",
@@ -222,7 +354,14 @@
           "expected_concerns_addressed": [
             "试点验证"
           ],
-          "weight": "analytical"
+          "weight": "analytical",
+          "behavior": "analyze",
+          "goal_axis": [
+            "scale"
+          ],
+          "goal_sacrificed": [
+            "cash"
+          ]
         }
       ],
       "expected_effects": {
@@ -273,7 +412,15 @@
           "expected_concerns_addressed": [
             "扩张"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "expand",
+          "goal_axis": [
+            "scale"
+          ],
+          "goal_sacrificed": [
+            "brand",
+            "cash"
+          ]
         },
         {
           "id": "B",
@@ -282,7 +429,15 @@
           "expected_concerns_addressed": [
             "单店质量"
           ],
-          "weight": "moderate"
+          "weight": "moderate",
+          "behavior": "expand",
+          "goal_axis": [
+            "brand",
+            "scale"
+          ],
+          "goal_sacrificed": [
+            "cash"
+          ]
         },
         {
           "id": "C",
@@ -291,7 +446,14 @@
           "expected_concerns_addressed": [
             "现金流健康"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "hold",
+          "goal_axis": [
+            "cash"
+          ],
+          "goal_sacrificed": [
+            "scale"
+          ]
         },
         {
           "id": "D",
@@ -300,7 +462,14 @@
           "expected_concerns_addressed": [
             "低杠杆试点"
           ],
-          "weight": "analytical"
+          "weight": "analytical",
+          "behavior": "analyze",
+          "goal_axis": [
+            "scale"
+          ],
+          "goal_sacrificed": [
+            "cash"
+          ]
         }
       ],
       "expected_effects": {
@@ -346,7 +515,15 @@
           "expected_concerns_addressed": [
             "流量爆发"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "expand",
+          "goal_axis": [
+            "scale"
+          ],
+          "goal_sacrificed": [
+            "cash",
+            "brand"
+          ]
         },
         {
           "id": "B",
@@ -355,7 +532,15 @@
           "expected_concerns_addressed": [
             "复购"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "commit",
+          "goal_axis": [
+            "brand",
+            "cash"
+          ],
+          "goal_sacrificed": [
+            "scale"
+          ]
         },
         {
           "id": "C",
@@ -364,7 +549,14 @@
           "expected_concerns_addressed": [
             "短期引流"
           ],
-          "weight": "moderate"
+          "weight": "moderate",
+          "behavior": "expand",
+          "goal_axis": [
+            "scale"
+          ],
+          "goal_sacrificed": [
+            "cash"
+          ]
         },
         {
           "id": "D",
@@ -373,7 +565,14 @@
           "expected_concerns_addressed": [
             "口碑自然"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "hold",
+          "goal_axis": [
+            "brand"
+          ],
+          "goal_sacrificed": [
+            "scale"
+          ]
         }
       ],
       "expected_effects": {
@@ -431,7 +630,14 @@
           "expected_concerns_addressed": [
             "修正"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "cash"
+          ],
+          "goal_sacrificed": [
+            "scale"
+          ]
         },
         {
           "id": "B",
@@ -440,7 +646,14 @@
           "expected_concerns_addressed": [
             "流量焦虑"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "scale"
+          ],
+          "goal_sacrificed": [
+            "cash"
+          ]
         },
         {
           "id": "C",
@@ -449,7 +662,12 @@
           "expected_concerns_addressed": [
             "现状"
           ],
-          "weight": "passive"
+          "weight": "passive",
+          "behavior": "defer",
+          "goal_axis": [],
+          "goal_sacrificed": [
+            "cash"
+          ]
         },
         {
           "id": "D",
@@ -458,7 +676,10 @@
           "expected_concerns_addressed": [
             "观察"
           ],
-          "weight": "analytical"
+          "weight": "analytical",
+          "behavior": "analyze",
+          "goal_axis": [],
+          "goal_sacrificed": []
         }
       ],
       "expected_effects": {
@@ -523,7 +744,14 @@
           "expected_concerns_addressed": [
             "降本"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "cash"
+          ],
+          "goal_sacrificed": [
+            "brand"
+          ]
         },
         {
           "id": "B",
@@ -532,7 +760,14 @@
           "expected_concerns_addressed": [
             "品质"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "hold",
+          "goal_axis": [
+            "brand"
+          ],
+          "goal_sacrificed": [
+            "cash"
+          ]
         },
         {
           "id": "C",
@@ -541,7 +776,14 @@
           "expected_concerns_addressed": [
             "折中"
           ],
-          "weight": "moderate"
+          "weight": "moderate",
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "cash"
+          ],
+          "goal_sacrificed": [
+            "brand"
+          ]
         },
         {
           "id": "D",
@@ -550,7 +792,14 @@
           "expected_concerns_addressed": [
             "本地直供"
           ],
-          "weight": "analytical"
+          "weight": "analytical",
+          "behavior": "analyze",
+          "goal_axis": [
+            "brand"
+          ],
+          "goal_sacrificed": [
+            "cash"
+          ]
         }
       ],
       "expected_effects": {
@@ -598,7 +847,14 @@
           "expected_concerns_addressed": [
             "人力补足"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "expand",
+          "goal_axis": [
+            "brand"
+          ],
+          "goal_sacrificed": [
+            "cash"
+          ]
         },
         {
           "id": "B",
@@ -607,7 +863,14 @@
           "expected_concerns_addressed": [
             "效率适度"
           ],
-          "weight": "moderate"
+          "weight": "moderate",
+          "behavior": "expand",
+          "goal_axis": [
+            "brand"
+          ],
+          "goal_sacrificed": [
+            "cash"
+          ]
         },
         {
           "id": "C",
@@ -616,7 +879,13 @@
           "expected_concerns_addressed": [
             "流程优化"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "cash",
+            "brand"
+          ],
+          "goal_sacrificed": []
         },
         {
           "id": "D",
@@ -625,7 +894,14 @@
           "expected_concerns_addressed": [
             "零成本"
           ],
-          "weight": "passive"
+          "weight": "passive",
+          "behavior": "hold",
+          "goal_axis": [
+            "cash"
+          ],
+          "goal_sacrificed": [
+            "brand"
+          ]
         }
       ],
       "expected_effects": {
@@ -685,7 +961,14 @@
           "expected_concerns_addressed": [
             "止损"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "rescue",
+          "goal_axis": [
+            "cash"
+          ],
+          "goal_sacrificed": [
+            "scale"
+          ]
         },
         {
           "id": "B",
@@ -694,7 +977,14 @@
           "expected_concerns_addressed": [
             "现金回血"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "rescue",
+          "goal_axis": [
+            "cash"
+          ],
+          "goal_sacrificed": [
+            "brand"
+          ]
         },
         {
           "id": "C",
@@ -703,7 +993,15 @@
           "expected_concerns_addressed": [
             "继续扩张"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "scale"
+          ],
+          "goal_sacrificed": [
+            "cash",
+            "brand"
+          ]
         },
         {
           "id": "D",
@@ -712,7 +1010,10 @@
           "expected_concerns_addressed": [
             "专业诊断"
           ],
-          "weight": "analytical"
+          "weight": "analytical",
+          "behavior": "analyze",
+          "goal_axis": [],
+          "goal_sacrificed": []
         }
       ],
       "expected_effects": {
@@ -760,7 +1061,14 @@
           "expected_concerns_addressed": [
             "现金"
           ],
-          "weight": "moderate"
+          "weight": "moderate",
+          "behavior": "rescue",
+          "goal_axis": [
+            "cash"
+          ],
+          "goal_sacrificed": [
+            "brand"
+          ]
         },
         {
           "id": "B",
@@ -769,7 +1077,14 @@
           "expected_concerns_addressed": [
             "专注"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "rescue",
+          "goal_axis": [
+            "cash"
+          ],
+          "goal_sacrificed": [
+            "brand"
+          ]
         },
         {
           "id": "C",
@@ -778,7 +1093,14 @@
           "expected_concerns_addressed": [
             "家庭协同"
           ],
-          "weight": "analytical"
+          "weight": "analytical",
+          "behavior": "commit",
+          "goal_axis": [
+            "cash"
+          ],
+          "goal_sacrificed": [
+            "brand"
+          ]
         },
         {
           "id": "D",
@@ -787,7 +1109,15 @@
           "expected_concerns_addressed": [
             "止损退出"
           ],
-          "weight": "passive"
+          "weight": "passive",
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "cash"
+          ],
+          "goal_sacrificed": [
+            "scale",
+            "brand"
+          ]
         }
       ],
       "expected_effects": {
@@ -849,9 +1179,12 @@
           "text": "接受终局评分，完整复盘全决策链",
           "consequences_for_player": "系统按状态自动判定结局：口碑健康+无负债=长期成功；负债超净资产=扩张破产；居中=温水煮青蛙；T9选D=止损出让",
           "expected_concerns_addressed": [
-            "自动评分"
+            "完整复盘"
           ],
-          "weight": "neutral"
+          "weight": "neutral",
+          "behavior": "analyze",
+          "goal_axis": [],
+          "goal_sacrificed": []
         },
         {
           "id": "B",
@@ -861,6 +1194,14 @@
             "坚持扩张"
           ],
           "weight": "aggressive",
+          "behavior": "commit",
+          "goal_axis": [
+            "scale"
+          ],
+          "goal_sacrificed": [
+            "brand",
+            "cash"
+          ],
           "trigger_outcome": "expansion_bankruptcy"
         },
         {
@@ -871,6 +1212,14 @@
             "口碑价值"
           ],
           "weight": "passive",
+          "behavior": "commit",
+          "goal_axis": [
+            "brand"
+          ],
+          "goal_sacrificed": [
+            "scale",
+            "cash"
+          ],
           "trigger_outcome": "warm_water_frog"
         },
         {
@@ -881,6 +1230,14 @@
             "出让止损"
           ],
           "weight": "passive",
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "cash"
+          ],
+          "goal_sacrificed": [
+            "scale",
+            "brand"
+          ],
           "trigger_outcome": "sold_shop"
         }
       ],
@@ -988,15 +1345,17 @@
       "reflection_questions": [
         "你的初始目标是什么，现在的行为还在服务它吗？",
         "扩张的收益由谁承担，风险由谁承担？"
-      ]
+      ],
+      "real_world_anchor": "本来只想把本职做好，年底发现一半精力在追新项目"
     },
     "single_target_optimization": {
-      "trigger": "revenue_obsession_count >= 2",
+      "trigger": "consecutive_similar_choices >= 3",
       "dorner_concept": "局部优化 / 只见树木",
       "evidence_template": "你 {turns} 次把'单量/流水'当作唯一指标，忽视了利润、口碑与家庭信任的联动。",
       "reflection_questions": [
         "单一指标的优化，是否以系统其他部分的牺牲为代价？"
-      ]
+      ],
+      "real_world_anchor": "为了季度考核数字，把返工率和同事的加班当成可牺牲项"
     },
     "time_delay_blindness": {
       "trigger": "deferred_consequence_count >= 2",
@@ -1004,7 +1363,8 @@
       "evidence_template": "平台抽成、冷冻肉变质、加盟抽血——你的 {n} 个决策的代价在 {reveal_turn} 回合才显现。",
       "reflection_questions": [
         "今天的'省'，是省了现金还是省了未来？"
-      ]
+      ],
+      "real_world_anchor": "省下的那笔体检钱，三年后变成一张住院单"
     },
     "nonlinearity": {
       "trigger": "over_expansion_choice == True AND menu_scope > 12 OR temp_staff_count >= 3",
@@ -1012,7 +1372,8 @@
       "evidence_template": "品类越多出餐越慢、临时工越多效率越低——你在 {turn} 回合体验了'规模不等于收益'。",
       "reflection_questions": [
         "系统在哪个点上突然恶化？你能预判这个拐点吗？"
-      ]
+      ],
+      "real_world_anchor": "多接一个客户还能撑，第三个开始全线延期"
     },
     "linear_extrapolation": {
       "trigger": "revenue_up_profit_down == True",
@@ -1020,7 +1381,8 @@
       "evidence_template": "你按 3 个月的流水直线预测了全年——但平台抽成与差评让利润与流水背离。",
       "reflection_questions": [
         "流水和利润的斜率一样吗？哪些变量在悄悄改变斜率？"
-      ]
+      ],
+      "real_world_anchor": "按前三个月的业绩定全年目标，第四个月就崩了"
     },
     "negative_trend": {
       "trigger": "profit_down_consecutive >= 2 AND bad_reviews_up == True",
@@ -1028,7 +1390,8 @@
       "evidence_template": "差评、损耗、负债是'温水煮青蛙'式累积——你在 {reveal_turn} 才看到全貌。",
       "reflection_questions": [
         "哪个信号本可以更早提醒你？"
-      ]
+      ],
+      "real_world_anchor": "客户的抱怨每季度多一条，年底续约时一起爆"
     },
     "confirmation_bias": {
       "trigger": "ignored_warnings_count >= 2",
@@ -1036,7 +1399,8 @@
       "evidence_template": "你 {n} 次忽视差评与现金流预警，只采信'先亏后赚'的乐观叙事。",
       "reflection_questions": [
         "你在寻找支持决策的证据，还是反对决策的证据？"
-      ]
+      ],
+      "real_world_anchor": "只看支持自己的评论，把差评说成“少数人不懂”"
     },
     "overcorrection": {
       "trigger": "discount_rescue_choice == True",
@@ -1044,7 +1408,8 @@
       "evidence_template": "危机时一刀切打折/清仓，把品牌钉在'便宜'的标签上。",
       "reflection_questions": [
         "小步验证再放大，是否比剧烈摆荡更安全？"
-      ]
+      ],
+      "real_world_anchor": "孩子考砸就报满补习班，下学期又全停掉"
     }
   },
   "dorner_quotes": [

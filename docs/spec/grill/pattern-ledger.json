@@ -1,0 +1,487 @@
+[
+ {
+  "sid": "challenger-launch",
+  "rid": "confirmation_bias",
+  "expr": "accepted_risks_count >= 3 AND ignored_warnings_count >= 2",
+  "ok": true,
+  "why": "ok",
+  "disposition": "kept",
+  "atoms": [
+   "accepted_risks_count",
+   "ignored_warnings_count"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "challenger-launch",
+  "rid": "single_target_optimization",
+  "expr": "schedule_pressure 持续被优化但 engineer_confidence 持续下降 OR risk_acknowledged_unresolved >= 2",
+  "ok": false,
+  "why": "atom_shape",
+  "atoms": [],
+  "miss": [
+   "schedule_pressure 持续被优化但 engineer_confidence 持续下降 OR risk_acknowledged_unresolved >= 2"
+  ],
+  "disposition": "pending_rewrite"
+ },
+ {
+  "sid": "challenger-launch",
+  "rid": "time_delay_blindness",
+  "expr": "前 4 个回合中没有一次选择'延期测试'或'更多数据'选项",
+  "ok": false,
+  "why": "literal_syntax",
+  "atoms": [],
+  "miss": [
+   "前 4 个回合中没有一次选择'延期测试'或'更多数据'选项"
+  ],
+  "disposition": "pending_rewrite"
+ },
+ {
+  "sid": "challenger-launch",
+  "rid": "side_effect_neglect",
+  "expr": "decision_justifications 中没有出现'另一方'或'影响'或'团队'或'未来'等关键词",
+  "ok": false,
+  "why": "literal_syntax",
+  "atoms": [],
+  "miss": [
+   "decision_justifications 中没有出现'另一方'或'影响'或'团队'或'未来'等关键词"
+  ],
+  "disposition": "pending_rewrite"
+ },
+ {
+  "sid": "challenger-launch",
+  "rid": "lack_of_self_criticism",
+  "expr": "reveal_phase 后（turn 6+）继续有 accepted_risks_count 增长",
+  "ok": false,
+  "why": "literal_syntax",
+  "atoms": [],
+  "miss": [
+   "reveal_phase 后（turn 6+）继续有 accepted_risks_count 增长"
+  ],
+  "disposition": "pending_rewrite"
+ },
+ {
+  "sid": "challenger-launch",
+  "rid": "nonlinear_threshold",
+  "expr": "temperature_forecast_f <= 32 AND ignored_warnings_count >= 1",
+  "ok": true,
+  "why": "ok",
+  "disposition": "kept",
+  "atoms": [
+   "temperature_forecast_f",
+   "ignored_warnings_count"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "challenger-launch",
+  "rid": "self_reference",
+  "expr": "public_attention >= 80 AND (schedule_pressure >= 50 OR engineer_confidence <= 50)",
+  "ok": false,
+  "why": "literal_syntax",
+  "atoms": [],
+  "miss": [
+   "public_attention >= 80 AND (schedule_pressure >= 50 OR engineer_confidence <= 50)"
+  ],
+  "disposition": "pending_rewrite"
+ },
+ {
+  "sid": "challenger-launch",
+  "rid": "regulation_lag",
+  "expr": "decision_history 最近 5 个中 ≥3 个 safe<->risk 方向切换,且 ≥4 个非中性权重",
+  "ok": false,
+  "why": "atom_shape",
+  "atoms": [],
+  "miss": [
+   "decision_history 最近 5 个中 ≥3 个 safe<->risk 方向切换,且 ≥4 个非中性权重"
+  ],
+  "disposition": "pending_rewrite"
+ },
+ {
+  "sid": "climate-change-policy",
+  "rid": "F1_nonlinear",
+  "expr": "tipping_point_proximity > 50 AND consecutive_similar_choices >= 4",
+  "ok": true,
+  "why": "ok",
+  "disposition": "rewrite: player_chose_linear_options（无源）-> consecutive_similar_choices（派生）",
+  "atoms": [
+   "tipping_point_proximity",
+   "consecutive_similar_choices"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "climate-change-policy",
+  "rid": "F2_time_delay",
+  "expr": "warning_to_response_lag >= 2",
+  "ok": true,
+  "why": "ok",
+  "disposition": "kept",
+  "atoms": [
+   "warning_to_response_lag"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "climate-change-policy",
+  "rid": "F3_self_reference",
+  "expr": "strategy_backfire_count >= 1",
+  "ok": true,
+  "why": "ok",
+  "disposition": "rewrite: policy_counters_policy_count（无源）-> strategy_backfire_count（派生）",
+  "atoms": [
+   "strategy_backfire_count"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "climate-change-policy",
+  "rid": "F4_side_effects",
+  "expr": "climate_justice_index < 50 AND gdp_growth_pct >= 2",
+  "ok": true,
+  "why": "ok",
+  "disposition": "kept",
+  "atoms": [
+   "climate_justice_index",
+   "gdp_growth_pct"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "climate-change-policy",
+  "rid": "F5_single_target",
+  "expr": "single_concern_choices >= 3",
+  "ok": true,
+  "why": "ok",
+  "disposition": "rewrite: primary_focus_dimension_count + other_dimensions_neglected -> single_concern_choices",
+  "atoms": [
+   "single_concern_choices"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "climate-change-policy",
+  "rid": "F6_confirmation_bias",
+  "expr": "consecutive_similar_choices >= 3",
+  "ok": true,
+  "why": "ok",
+  "disposition": "kept",
+  "atoms": [
+   "consecutive_similar_choices"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "climate-change-policy",
+  "rid": "F7_self_criticism",
+  "expr": "no_change_after_reveal >= 2",
+  "ok": true,
+  "why": "ok",
+  "disposition": "kept",
+  "atoms": [
+   "no_change_after_reveal"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "climate-change-policy",
+  "rid": "F8_regulation_lag",
+  "expr": "response_to_warning_avg >= 2 turns",
+  "ok": false,
+  "why": "atom_shape",
+  "atoms": [],
+  "miss": [
+   "response_to_warning_avg >= 2 turns"
+  ],
+  "disposition": "pending_rewrite"
+ },
+ {
+  "sid": "enron-collapse",
+  "rid": "F1_nonlinear",
+  "expr": "share_price_drop > 50% AND turn >= 7",
+  "ok": false,
+  "why": "literal_syntax",
+  "atoms": [],
+  "miss": [
+   "share_price_drop > 50% AND turn >= 7"
+  ],
+  "disposition": "pending_rewrite"
+ },
+ {
+  "sid": "enron-collapse",
+  "rid": "F2_time_delay",
+  "expr": "warning_to_response_lag >= 2",
+  "ok": true,
+  "why": "ok",
+  "disposition": "kept",
+  "atoms": [
+   "warning_to_response_lag"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "enron-collapse",
+  "rid": "F3_self_reference",
+  "expr": "strategy_backfire_count >= 1",
+  "ok": true,
+  "why": "ok",
+  "disposition": "rewrite: policy_counters_policy_count（无源）-> strategy_backfire_count（派生）",
+  "atoms": [
+   "strategy_backfire_count"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "enron-collapse",
+  "rid": "F4_side_effects",
+  "expr": "off_balance_sheet_exposure_usd_m > 5000 AND whistleblower_silenced_count >= 1",
+  "ok": true,
+  "why": "ok",
+  "disposition": "rewrite: off_balance_sheet/employee_trust（无源）-> off_balance_sheet_exposure_usd_m + whistleblower_silenced_count",
+  "atoms": [
+   "off_balance_sheet_exposure_usd_m",
+   "whistleblower_silenced_count"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "enron-collapse",
+  "rid": "F5_single_target",
+  "expr": "primary_focus_dimension_count >= 5",
+  "ok": true,
+  "why": "ok",
+  "disposition": "kept",
+  "atoms": [
+   "primary_focus_dimension_count"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "enron-collapse",
+  "rid": "F6_confirmation",
+  "expr": "analyst_confidence_drop_count >= 2",
+  "ok": true,
+  "why": "ok",
+  "disposition": "rewrite: analyst_attack_count（无源）-> analyst_confidence_drop_count（派生）",
+  "atoms": [
+   "analyst_confidence_drop_count"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "enron-collapse",
+  "rid": "F7_self_criticism",
+  "expr": "whistleblower_silenced_count >= 2",
+  "ok": true,
+  "why": "ok",
+  "disposition": "rewrite: no_response_to_watkins（无源）-> whistleblower_silenced_count（1:1 同义）",
+  "atoms": [
+   "whistleblower_silenced_count"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "enron-collapse",
+  "rid": "F8_regulation_lag",
+  "expr": "warning_to_response_lag >= 2",
+  "ok": true,
+  "why": "ok",
+  "disposition": "rewrite: warning_to_action_lag（无源）-> warning_to_response_lag（并扩展吹哨人信号）",
+  "atoms": [
+   "warning_to_response_lag"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "noodle-shop-community",
+  "rid": "goal_drift",
+  "expr": "expansion_choices >= 2 AND initial_goal_promise == '做好一碗面'",
+  "ok": false,
+  "why": "literal_syntax",
+  "atoms": [],
+  "miss": [
+   "expansion_choices >= 2 AND initial_goal_promise == '做好一碗面'"
+  ],
+  "disposition": "pending_rewrite"
+ },
+ {
+  "sid": "noodle-shop-community",
+  "rid": "single_target_optimization",
+  "expr": "consecutive_similar_choices >= 3",
+  "ok": true,
+  "why": "ok",
+  "disposition": "rewrite: revenue_obsession_count（无源）-> consecutive_similar_choices（派生）",
+  "atoms": [
+   "consecutive_similar_choices"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "noodle-shop-community",
+  "rid": "time_delay_blindness",
+  "expr": "deferred_consequence_count >= 2",
+  "ok": true,
+  "why": "ok",
+  "disposition": "kept",
+  "atoms": [
+   "deferred_consequence_count"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "noodle-shop-community",
+  "rid": "nonlinearity",
+  "expr": "over_expansion_choice == True AND menu_scope > 12 OR temp_staff_count >= 3",
+  "ok": false,
+  "why": "atom_shape",
+  "atoms": [],
+  "miss": [
+   "over_expansion_choice == True AND menu_scope > 12 OR temp_staff_count >= 3"
+  ],
+  "disposition": "pending_rewrite"
+ },
+ {
+  "sid": "noodle-shop-community",
+  "rid": "linear_extrapolation",
+  "expr": "revenue_up_profit_down == True",
+  "ok": false,
+  "why": "atom_shape",
+  "atoms": [],
+  "miss": [
+   "revenue_up_profit_down == True"
+  ],
+  "disposition": "pending_rewrite"
+ },
+ {
+  "sid": "noodle-shop-community",
+  "rid": "negative_trend",
+  "expr": "profit_down_consecutive >= 2 AND bad_reviews_up == True",
+  "ok": false,
+  "why": "atom_shape",
+  "atoms": [],
+  "miss": [
+   "profit_down_consecutive >= 2 AND bad_reviews_up == True"
+  ],
+  "disposition": "pending_rewrite"
+ },
+ {
+  "sid": "noodle-shop-community",
+  "rid": "confirmation_bias",
+  "expr": "ignored_warnings_count >= 2",
+  "ok": true,
+  "why": "ok",
+  "disposition": "kept",
+  "atoms": [
+   "ignored_warnings_count"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "noodle-shop-community",
+  "rid": "overcorrection",
+  "expr": "discount_rescue_choice == True",
+  "ok": false,
+  "why": "atom_shape",
+  "atoms": [],
+  "miss": [
+   "discount_rescue_choice == True"
+  ],
+  "disposition": "pending_rewrite"
+ },
+ {
+  "sid": "chip-ai-supplychain",
+  "rid": "linear_extrapolation",
+  "expr": "growth_extrapolation_count >= 2 AND market_cycle_turn == 'peak'",
+  "ok": false,
+  "why": "literal_syntax",
+  "atoms": [],
+  "miss": [
+   "growth_extrapolation_count >= 2 AND market_cycle_turn == 'peak'"
+  ],
+  "disposition": "pending_rewrite"
+ },
+ {
+  "sid": "chip-ai-supplychain",
+  "rid": "confirmation_bias",
+  "expr": "perception_bias >= 15",
+  "ok": true,
+  "why": "ok",
+  "disposition": "kept",
+  "atoms": [
+   "perception_bias"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "chip-ai-supplychain",
+  "rid": "time_delay_blindness",
+  "expr": "deferred_consequence_count >= 2",
+  "ok": true,
+  "why": "ok",
+  "disposition": "kept",
+  "atoms": [
+   "deferred_consequence_count"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "chip-ai-supplychain",
+  "rid": "single_target_optimization",
+  "expr": "consecutive_similar_choices >= 4",
+  "ok": true,
+  "why": "ok",
+  "disposition": "rewrite: market_share_obsession_count（无源）-> consecutive_similar_choices（派生）",
+  "atoms": [
+   "consecutive_similar_choices"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "chip-ai-supplychain",
+  "rid": "local_optimization",
+  "expr": "cost_cut_local_count >= 2",
+  "ok": true,
+  "why": "ok",
+  "disposition": "rewrite: chip_cost_optimization_count（无源）-> cost_cut_local_count（派生）",
+  "atoms": [
+   "cost_cut_local_count"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "chip-ai-supplychain",
+  "rid": "problem_delay_exposure",
+  "expr": "deferred_consequence_count >= 2",
+  "ok": true,
+  "why": "ok",
+  "disposition": "rewrite: bad_news_hidden_count（无源）-> deferred_consequence_count（派生）",
+  "atoms": [
+   "deferred_consequence_count"
+  ],
+  "miss": []
+ },
+ {
+  "sid": "chip-ai-supplychain",
+  "rid": "overcorrection",
+  "expr": "price_cut_rescue == True",
+  "ok": false,
+  "why": "atom_shape",
+  "atoms": [],
+  "miss": [
+   "price_cut_rescue == True"
+  ],
+  "disposition": "pending_rewrite"
+ },
+ {
+  "sid": "chip-ai-supplychain",
+  "rid": "self_reference",
+  "expr": "optimism_claim_count >= 2",
+  "ok": true,
+  "why": "ok",
+  "disposition": "rewrite: optimism_statement_count（无源）-> optimism_claim_count（派生）",
+  "atoms": [
+   "optimism_claim_count"
+  ],
+  "miss": []
+ }
+]

@@ -1,4 +1,4 @@
-/* challenger.css — compact one-screen layout for deep scenarios. */
+﻿/* challenger.css — compact one-screen layout for deep scenarios. */
 
 :root {
   --challenger-gap: 4px;
@@ -65,6 +65,79 @@
 @keyframes challenger-flash-red {
   0%   { background-color: rgba(220, 53, 69, 0.4); }
   100% { background-color: transparent; }
+}
+
+/* L0-2 · 目标冲突仪表（指标芯片上方一行三格）
+   语气是"这一手付了什么"，不是"你失败了"：牺牲格用琥珀色而不是红色，
+   红色留给指标越线的破损态（.is-breach），否则玩家会把"必要代价"读成"事故"。 */
+.fl-goal-tension {
+  border: 1px solid var(--border-color, #e5e5e5);
+  border-radius: 6px;
+  padding: 5px 7px 6px;
+  background: var(--bg-secondary, #f7f7f7);
+  margin: 0;
+}
+
+.fl-goal-tension .fgt-lead {
+  font-size: 11px;
+  color: var(--text-secondary, #666);
+  letter-spacing: 0.2px;
+  margin-bottom: 4px;
+}
+
+.fl-goal-tension .fgt-cells {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.fl-goal-tension .fgt-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 3px 6px;
+  border-radius: 5px;
+  background: var(--bg-card, #fff);
+  border: 1px solid transparent;
+  min-width: 0;
+}
+
+.fl-goal-tension .fgt-name {
+  font-size: 11.5px;
+  line-height: 1.25;
+  color: var(--text-primary, #222);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fl-goal-tension .fgt-state {
+  font-size: 10.5px;
+  line-height: 1.2;
+  color: var(--text-secondary, #888);
+}
+
+.fl-goal-tension .fgt-cell.is-sacrificed {
+  background: rgba(214, 152, 12, 0.1);
+  border-color: rgba(214, 152, 12, 0.45);
+}
+
+.fl-goal-tension .fgt-cell.is-sacrificed .fgt-state {
+  color: #9a6a00;
+  font-weight: 600;
+}
+
+.fl-goal-tension .fgt-cell.is-pushed {
+  background: rgba(40, 167, 69, 0.08);
+  border-color: rgba(40, 167, 69, 0.35);
+}
+
+.fl-goal-tension .fgt-cell.is-pushed .fgt-state {
+  color: #1e7e34;
+  font-weight: 600;
 }
 
 /* Compact cards */
@@ -161,6 +234,14 @@
   font-size: 12px;
 }
 
+.challenger-option .semif-score {
+  font-size: 10px;
+  color: var(--muted, #666);
+  min-width: 48px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
 .challenger-submit {
   display: none;
 }
@@ -193,6 +274,60 @@
   background: rgba(220, 53, 69, 0.05);
 }
 
+/* P0 #3: rich feedback body — engine templates carry ###/###/列表/分隔线标记,
+   打印在 <pre> 里等于给玩家看源码。 */
+.fb-body {
+  white-space: normal;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.fb-body p { margin: 0 0 8px 0; }
+.fb-body h4 { margin: 14px 0 6px; font-size: 13px; color: #333; }
+.fb-body ul { margin: 0 0 8px 0; padding-left: 20px; }
+.fb-body li { margin: 2px 0; }
+.fb-body hr { border: 0; border-top: 1px dashed rgba(0, 0, 0, 0.15); margin: 10px 0; }
+.fb-body .fb-head { font-weight: 600; margin-top: 12px; }
+.fb-body code {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 0 3px;
+  border-radius: 3px;
+}
+
+/* P0 #1: 反馈顶部回显"你上回合写的是 / 实际发生" */
+.feedback-echo {
+  white-space: normal;
+  background: rgba(13, 110, 253, 0.06);
+  border-left: 3px solid #0d6efd;
+  padding: 8px 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+.feedback-echo .echo-line { margin: 2px 0; }
+
+/* P0 #1: 选项区上方的决策理由输入框 */
+.justification-box {
+  margin-bottom: 10px;
+  border: 1px dashed rgba(0, 0, 0, 0.18);
+  border-radius: 6px;
+  padding: 6px 10px;
+  white-space: normal;
+}
+.justification-box > summary { cursor: pointer; font-size: 12px; color: #555; }
+.justification-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 8px;
+  padding: 8px;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.5;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 4px;
+  resize: vertical;
+}
+.justification-meta { margin-top: 4px; font-size: 11px; color: #888; }
+
 .feedback-pre {
   white-space: pre-wrap;
   word-wrap: break-word;
@@ -223,4 +358,980 @@
   .challenger-option .option-tag {
     display: none;
   }
+}
+
+/* ===== Loop 5 · legibility, touch targets, spent-turn state, rulers ===== */
+.challenger-state-grid { gap: 6px; }
+.challenger-state-grid .state-chip { font-size: 12.5px; padding: 3px 7px; }
+.challenger-state-grid .state-chip-label { font-size: 12px; }
+.challenger-option { min-height: 44px; padding: 8px 10px; }
+.challenger-option .option-tag { font-size: 11px; padding: 2px 6px; }
+.challenger-option .option-text { font-size: 13px; line-height: 1.35; }
+
+/* P0-1: a submitted turn looks finished, not disabled-by-accident. */
+.challenger-option.option-spent {
+  opacity: .55;
+  cursor: default;
+  border-color: var(--border, #ddd);
+  background: var(--bg-secondary, #f5f5f5);
+  transform: none;
+}
+.challenger-option.option-spent:hover {
+  border-color: var(--border, #ddd);
+  transform: none;
+}
+.challenger-option.option-spent.selected {
+  opacity: .85;
+  border-color: var(--primary, #4a90e2);
+  background: rgba(74, 144, 226, 0.10);
+}
+.decision-spent { position: relative; }
+.decision-spent::after {
+  content: "本回合已提交";
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 11px;
+  color: #6c757d;
+  background: var(--bg-secondary, #f5f5f5);
+  border-radius: 8px;
+  padding: 1px 6px;
+}
+
+/* B2: two rulers. The ticks carry the thresholds; the fill carries the run. */
+.climate-gauges { display: flex; flex-direction: column; gap: 6px; margin: 2px 0; }
+.gauge {
+  background: var(--bg-card, #fff);
+  border-radius: 6px;
+  padding: 6px 9px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+.gauge-head { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
+.gauge-name { font-size: 12px; color: var(--text-secondary, #666); }
+.gauge-value { font-size: 13px; font-variant-numeric: tabular-nums; }
+.gauge-hint { font-size: 11px; color: var(--muted, #999); margin-left: auto; }
+.gauge-track { position: relative; height: 8px; border-radius: 5px; background: #e9ecef; margin-bottom: 13px; }
+.gauge-fill { height: 100%; border-radius: 5px; transition: width 0.5s ease; background: #4a90e2; }
+.gauge-track.good .gauge-fill { background: #28a745; }
+.gauge-track.warn .gauge-fill { background: #e0a800; }
+.gauge-track.bad .gauge-fill { background: #dc3545; }
+.gauge-track.muted .gauge-fill { background: #adb5bd; }
+.gauge-tick { position: absolute; top: -2px; width: 0; height: 12px; border-left: 1px dashed rgba(0, 0, 0, 0.35); }
+.gauge-tick span {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  color: #6c757d;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .challenger-option { min-height: 48px; padding: 9px 10px; }
+  .challenger-options { gap: 6px; }
+  .gauge-hint { display: none; }
+
+  /* Nine chips stacked to three rows pushed the choices 240px below the fold.
+     One scrolling row keeps every value reachable and the options visible. */
+  .challenger-state-grid {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 4px;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .challenger-state-grid::-webkit-scrollbar { display: none; }
+  .challenger-state-grid .state-chip { flex: 0 0 auto; font-size: 11.5px; padding: 2px 6px; }
+  .challenger-state-grid .state-chip-label { font-size: 11px; }
+
+  .climate-gauges { flex-direction: row; gap: 6px; }
+  .gauge { flex: 1 1 0; min-width: 0; padding: 5px 7px; }
+  .gauge-head { gap: 4px; margin-bottom: 3px; }
+  .gauge-name { font-size: 11px; }
+  .gauge-value { font-size: 12px; }
+  .gauge-track { margin-bottom: 11px; }
+  .gauge-tick span { font-size: 8px; }
+
+  .challenger-decision-page .situation-card .situation-text { max-height: 108px; overflow-y: auto; }
+  .challenger-decision-page .page-header h2 { font-size: 15px; }
+  /* The optional justification box moves below the choices on phones: it is
+     skippable, the choices are not. */
+  .challenger-decision-page .decision-card { display: flex; flex-direction: column; }
+  .challenger-decision-page .decision-card .challenger-options { order: 1; }
+  .challenger-decision-page .decision-card .justification-box { order: 2; margin-top: 6px; }
+}
+
+
+/* ===== Loop 6 · 反馈分层 =====
+   The conclusion stays on screen; the mechanism folds away. A <details> keeps
+   this honest: same DOM text, native keyboard support, no state machine — and
+   V17 can expand it and compare against the engine's raw feedback. */
+.fb-body details.fb-more {
+  margin: 8px 0;
+  border: 1px dashed rgba(0, 0, 0, 0.18);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.fb-body details.fb-more > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 6px 10px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 12.5px;
+  color: #374151;
+}
+
+.fb-body details.fb-more > summary::-webkit-details-marker { display: none; }
+
+.fb-body details.fb-more > summary::before {
+  content: '▸';
+  flex: 0 0 auto;
+  font-size: 12px;
+  color: #6b7280;
+  transition: transform 0.15s ease;
+}
+
+.fb-body details.fb-more[open] > summary::before { transform: rotate(90deg); }
+
+.fb-body details.fb-more .fb-more-label {
+  flex: 1 1 auto;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fb-body details.fb-more .fb-more-meta {
+  flex: 0 0 auto;
+  font-size: 11.5px;
+  color: #6b7280;
+}
+
+.fb-body details.fb-more > .fb-more-body {
+  padding: 2px 10px 8px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.12);
+}
+
+@media (max-width: 480px) {
+  .fb-body details.fb-more > summary { font-size: 12px; }
+  .fb-body details.fb-more .fb-more-meta { font-size: 11px; }
+}
+
+/* Loop 6 · 触控一致性
+   Options were raised to 44px in Loop 5; the submit / next-turn buttons were
+   left at 30px, so the same screen offered two different touch standards and
+   the smallest target was the one you must hit to continue. */
+#challenger-next-turn,
+#challenger-submit {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Loop 6 · 移动端触控：场景列表的「开始挑战」同样只有 30px。
+   桌面端不动（鼠标精度足够），只在窄屏拉齐到 44px。 */
+@media (max-width: 480px) {
+  .scenario-card .btn,
+  .scenario-card-content .btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* Loop11 候选②：稳 ≠ 躺。safe 选项里 ask<1pp 的其实是"空转"，不是"稳"；
+   标签用伪元素渲染，innerText 不变（V2 指纹断言依赖按钮纯文本）。 */
+.challenger-option[data-stance-label]::after {
+  content: attr(data-stance-label);
+  margin-left: auto;
+  flex: 0 0 auto;
+  font-size: 11px;
+  line-height: 1.4;
+  padding: 2px 6px;
+  border-radius: 999px;
+  white-space: nowrap;
+  background: var(--bg-secondary, #f3f4f6);
+  color: #64748b;
+}
+.challenger-option[data-stance="build"]::after { background: #d1fae5; color: #047857; }
+.challenger-option[data-stance="idle"]::after { background: #fef3c7; color: #b45309; }
+.challenger-option[data-stance="drift"]::after { background: #f1f5f9; color: #94a3b8; font-weight: 400; }
+.challenger-option[data-stance="rollback"]::after { background: #fee2e2; color: #b91c1c; }
+
+/* ===== V1 · 看得见变化 =================================================
+   状态 chip 从"一行字"升级为两行小网格：上行 标签/数值/变化量，下行
+   阈值条/迷你走势。变化量和警示符号一律走伪元素 attribute / content，
+   chip 的 innerText 仍是 "label + value"——ui-render-assert 读这个指纹。 */
+:root {
+  --fl-accent-causal: #6c5ce7;
+  --fl-good: #1a7f37;
+  --fl-bad: #c62828;
+}
+
+.challenger-state-grid .state-chip {
+  display: inline-grid;
+  grid-template-columns: auto auto auto;
+  grid-template-areas:
+    "label value delta"
+    "bar   bar   spark";
+  align-items: center;
+  column-gap: 5px;
+  row-gap: 2px;
+  position: relative;
+}
+
+.challenger-state-grid .state-chip-label { grid-area: label; }
+.challenger-state-grid .state-chip-value { grid-area: value; }
+
+.challenger-state-grid .state-chip::after {
+  content: attr(data-delta);
+  grid-area: delta;
+  display: none;
+  font-size: 9.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.challenger-state-grid .state-chip[data-delta]::after { display: block; }
+.challenger-state-grid .state-chip[data-tone="good"]::after { color: var(--fl-good); }
+.challenger-state-grid .state-chip[data-tone="bad"]::after { color: var(--fl-bad); }
+
+.challenger-state-grid .state-chip.is-breach {
+  background: rgba(198, 40, 40, 0.09);
+  box-shadow: inset 0 0 0 1px rgba(198, 40, 40, 0.28);
+}
+.challenger-state-grid .state-chip.is-breach::before {
+  content: "\26A0";
+  position: absolute;
+  top: -6px;
+  right: -5px;
+  font-size: 9px;
+  line-height: 1;
+  color: var(--fl-bad);
+}
+
+.chip-bar {
+  grid-area: bar;
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 40px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+.chip-bar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--zone-start, 100%);
+  width: calc(var(--zone-end, 100%) - var(--zone-start, 100%));
+  background: rgba(198, 40, 40, 0.25);
+}
+.chip-bar > b {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 2px;
+  background: var(--fl-accent-causal);
+  opacity: 0.75;
+  transition: width 0.45s ease;
+}
+.challenger-state-grid .state-chip.is-breach .chip-bar > b {
+  background: var(--fl-bad);
+  opacity: 0.9;
+}
+
+.chip-spark { grid-area: spark; overflow: visible; }
+.chip-spark polyline {
+  fill: none;
+  stroke: var(--fl-accent-causal);
+  stroke-width: 1.3;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  opacity: 0.85;
+}
+.challenger-state-grid .state-chip[data-tone="bad"] .chip-spark polyline { stroke: var(--fl-bad); }
+
+/* 选项左侧风险色条：不抢 ::after（那个位置是 stance 标签） */
+.challenger-option[data-weight] { border-left-width: 3px; }
+.challenger-option[data-weight="safe"] { border-left-color: rgba(26, 127, 55, 0.55); }
+.challenger-option[data-weight="neutral"] { border-left-color: rgba(108, 117, 125, 0.35); }
+.challenger-option[data-weight="risky"] { border-left-color: rgba(198, 40, 40, 0.6); }
+
+/* 变化归因卡：一行一条，颜色只说好坏，不再让人心算正负 */
+.delta-cards-wrap {
+  margin: 8px 0 10px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  background: rgba(108, 92, 231, 0.05);
+  border: 1px solid rgba(108, 92, 231, 0.16);
+}
+.delta-cards-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 7px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #4b3fa8;
+}
+.delta-cause { font-weight: 400; font-size: 10.5px; color: #7b7f96; }
+.delta-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 6px;
+}
+.delta-card {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  grid-template-areas:
+    "name arrow num"
+    "range range verdict";
+  align-items: center;
+  column-gap: 4px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #fff;
+  border-left: 3px solid #cbd5e1;
+}
+.delta-card[data-tone="bad"] { border-left-color: var(--fl-bad); }
+.delta-card[data-tone="good"] { border-left-color: var(--fl-good); }
+.delta-name { grid-area: name; font-size: 11px; color: #4b5568; }
+.delta-arrow { grid-area: arrow; font-size: 11px; font-weight: 700; }
+.delta-num { grid-area: num; font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.delta-card[data-tone="bad"] .delta-num,
+.delta-card[data-tone="bad"] .delta-arrow { color: var(--fl-bad); }
+.delta-card[data-tone="good"] .delta-num,
+.delta-card[data-tone="good"] .delta-arrow { color: var(--fl-good); }
+.delta-range { grid-area: range; font-size: 9.5px; color: #8b93a7; font-variant-numeric: tabular-nums; }
+.delta-verdict { grid-area: verdict; font-size: 9.5px; font-weight: 700; padding: 0 5px; border-radius: 999px; }
+.delta-card[data-tone="bad"] .delta-verdict { color: var(--fl-bad); background: rgba(198, 40, 40, 0.1); }
+.delta-card[data-tone="good"] .delta-verdict { color: var(--fl-good); background: rgba(26, 127, 55, 0.1); }
+.delta-raw { margin-top: 6px; }
+.delta-raw summary { font-size: 10px; color: #8b93a7; cursor: pointer; }
+.delta-raw pre {
+  margin: 5px 0 0;
+  padding: 6px 8px;
+  border-radius: 5px;
+  background: rgba(15, 23, 42, 0.04);
+  font-size: 10.5px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  color: #4b5568;
+}
+
+/* 历史回合抽屉：← / → 翻，Esc 关 */
+.turn-history {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 60;
+  width: min(320px, calc(100vw - 32px));
+  max-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+  overflow: hidden;
+}
+.turn-history-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+.th-count { margin-left: auto; font-size: 10.5px; color: #8b93a7; }
+.th-close { border: none; background: none; cursor: pointer; font-size: 15px; line-height: 1; color: #8b93a7; padding: 0 2px; }
+.turn-history-list {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+}
+.turn-history-item {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  grid-template-areas:
+    "turn opt text"
+    "turn effect effect"
+    "turn reason reason";
+  gap: 1px 6px;
+  padding: 6px 7px;
+  border-radius: 6px;
+  font-size: 11px;
+  background: rgba(15, 23, 42, 0.025);
+}
+.turn-history-item.is-active { background: rgba(108, 92, 231, 0.1); box-shadow: inset 0 0 0 1px rgba(108, 92, 231, 0.25); }
+.th-turn { grid-area: turn; font-weight: 700; font-size: 10px; color: #6c5ce7; }
+.th-opt { grid-area: opt; font-weight: 700; color: #4b5568; }
+.th-text { grid-area: text; color: #2d3444; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.th-effect { grid-area: effect; font-size: 10px; color: #8b93a7; }
+.th-reason { grid-area: reason; font-size: 10px; color: #a0a6b8; font-style: italic; }
+.turn-history-hint { padding: 5px 10px; font-size: 9.5px; color: #a0a6b8; border-top: 1px solid rgba(15, 23, 42, 0.06); }
+
+@media (max-width: 640px) {
+  .delta-cards { grid-template-columns: 1fr; }
+  .turn-history { left: 8px; right: 8px; width: auto; bottom: 8px; max-height: 50vh; }
+  .challenger-state-grid .state-chip { font-size: 11px; }
+}
+
+/* ===== V1 · 视觉微调（后置覆盖） ======================================
+   1) 箭头只说方向，颜色只说好坏。两者都上色时，"↓ 但结果是改善"会被读成
+      自相矛盾的信号。
+   2) 越线后的红区与填充同起点，颜色要够实，否则看不出自己已经踩线。
+   3) chip 底部多留 1px，手机端进度条不再贴边。 */
+.delta-card[data-tone] .delta-arrow { color: #8b93a7; }
+.delta-raw { display: none; }
+.chip-bar::before {
+  background: rgba(198, 40, 40, 0.6);
+  box-shadow: inset 1px 0 0 rgba(198, 40, 40, 1);
+}
+.chip-bar { height: 4px; }
+.challenger-state-grid .state-chip { padding-bottom: 4px; }
+.challenger-keyhint {
+  margin: 6px 2px 0;
+  font-size: 10px;
+  color: #9aa3b8;
+  letter-spacing: .2px;
+}
+@media (max-width: 640px) { .challenger-keyhint { display: none; } }
+
+/* L0-2 · 手机上三格会挤成"名字全被截断"，宁可缩字号也不换行：
+   换行会让仪表占掉两行高度，而它下面是玩家真正要读的指标。 */
+@media (max-width: 640px) {
+  .fl-goal-tension { padding: 4px 6px 5px; }
+  .fl-goal-tension .fgt-name { font-size: 11px; }
+  .fl-goal-tension .fgt-state { font-size: 10px; }
+  .fl-goal-tension .fgt-cells { gap: 4px; }
+}
+
+/* ===== V2 · 单回合因果链 ===============================================
+   决定 → 直接影响 → 埋下的延迟后果，一条链读完。未显现的后果走虚线与
+   琥珀色标签 —— "这笔账还没到我手上"本身就是要教的东西。 */
+.causal-chain {
+  margin: 10px 0 12px;
+  padding: 9px 10px 10px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(108, 92, 231, 0.06), rgba(108, 92, 231, 0.02));
+  border: 1px solid rgba(108, 92, 231, 0.18);
+}
+.causal-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 7px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #4b5568;
+}
+.causal-head-note { font-weight: 400; font-size: 10px; color: #8b93a7; }
+.causal-row {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+}
+.causal-node {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.causal-node.is-effect { border-color: rgba(108, 92, 231, 0.3); }
+.causal-node.is-pending { border-style: dashed; border-color: rgba(180, 83, 9, 0.45); background: rgba(180, 83, 9, 0.04); }
+.causal-node.is-resolved { border-color: rgba(26, 127, 55, 0.35); }
+.cn-tag {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .4px;
+  color: #8b93a7;
+}
+.causal-node.is-decision .cn-tag { color: #4b5568; }
+.causal-node.is-delay.is-pending .cn-tag { color: #b45309; }
+.causal-node.is-delay.is-resolved .cn-tag { color: #1a7f37; }
+.cn-text { font-size: 11.5px; line-height: 1.35; color: #2c3444; word-break: break-word; }
+.cn-sub { font-size: 9.5px; color: #8b93a7; }
+.causal-node.is-delay.is-pending .cn-sub { color: #b45309; }
+.causal-effects { display: flex; flex-direction: column; gap: 2px; }
+.causal-effect { display: flex; justify-content: space-between; gap: 6px; font-size: 11px; }
+.causal-effect b { font-weight: 600; color: #4b5568; }
+.causal-effect i {
+  font-style: normal;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #2c3444;
+  white-space: nowrap;
+}
+.causal-link {
+  flex: 0 0 24px;
+  position: relative;
+  min-width: 24px;
+}
+.causal-link::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  right: 9px;
+  top: 50%;
+  height: 2px;
+  background: rgba(108, 92, 231, 0.55);
+}
+.causal-link::after {
+  content: "";
+  position: absolute;
+  right: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left: 6px solid rgba(108, 92, 231, 0.75);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+.causal-link.is-pending::before {
+  background: repeating-linear-gradient(90deg, rgba(180, 83, 9, 0.65) 0 4px, transparent 4px 8px);
+}
+.causal-link.is-pending::after { border-left-color: rgba(180, 83, 9, 0.8); }
+
+@media (max-width: 640px) {
+  .causal-row { flex-direction: column; gap: 0; }
+  .causal-link { flex: 0 0 15px; min-width: 0; }
+  .causal-link::before {
+    left: 18px; right: auto; top: 1px; bottom: 1px;
+    width: 2px; height: auto;
+    background: linear-gradient(180deg, rgba(108, 92, 231, 0.55), rgba(108, 92, 231, 0.25));
+  }
+  .causal-link::after {
+    right: auto; left: 14px; top: auto; bottom: 0; transform: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid rgba(108, 92, 231, 0.75);
+  }
+  .causal-link.is-pending::before {
+    background: repeating-linear-gradient(180deg, rgba(180, 83, 9, 0.65) 0 4px, transparent 4px 8px);
+  }
+  .causal-link.is-pending::after { border-top-color: rgba(180, 83, 9, 0.8); }
+}
+
+/* ===== V2 · 未结清的账 ================================================= */
+.deferred-ledger {
+  margin: 8px 0 4px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  border: 1px dashed rgba(180, 83, 9, 0.4);
+  background: rgba(180, 83, 9, 0.05);
+}
+.ledger-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #b45309;
+  margin-bottom: 5px;
+}
+.ledger-count { font-weight: 400; font-size: 10px; color: #9a6a2f; }
+.ledger-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.ledger-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.ledger-turn {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #9a6a2f;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.ledger-text { color: #2c3444; min-width: 0; word-break: break-word; }
+.ledger-status {
+  font-size: 9.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: #b45309;
+}
+.ledger-row.is-resolved .ledger-status { color: #1a7f37; }
+.ledger-row.is-resolved .ledger-text { color: #6b7280; }
+.ledger-row.is-resolved .ledger-turn { color: #8b93a7; }
+
+@media (max-width: 640px) {
+  .ledger-row { grid-template-columns: auto auto; }
+  .ledger-text { grid-column: 1 / -1; order: 3; }
+}
+
+
+/* ===== V3 · 看得见根因 — 终局复盘 ===================================== */
+.fl-debrief-host { margin: 26px 0 10px; }
+
+.fl-debrief {
+  border: 1px solid #e2e7ef;
+  border-radius: 14px;
+  background: #fbfcfe;
+  padding: 22px 24px 18px;
+}
+.fl-debrief .fl-db-head h3 {
+  margin: 0 0 6px;
+  font-size: 20px;
+  color: #141c26;
+  letter-spacing: .2px;
+}
+.fl-debrief .fl-db-sub {
+  margin: 0;
+  font-size: 12.5px;
+  color: #6b7684;
+}
+.fl-debrief .fl-db-layers { margin-top: 20px; }
+.fl-debrief .fl-db-layer { margin-top: 20px; }
+.fl-debrief .fl-db-layer:first-child { margin-top: 0; }
+.fl-debrief .fl-db-layer h4 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1b2431;
+  padding-left: 10px;
+  border-left: 3px solid #d9887c;
+  line-height: 1.2;
+}
+.fl-debrief .fl-db-layer-named h4 { border-left-color: #7d93b2; }
+.fl-debrief .fl-db-layer-next h4 { border-left-color: #8b9d6b; }
+
+.fl-debrief .fl-db-did { margin: 0; padding: 0 0 0 4px; list-style: none; }
+.fl-debrief .fl-db-did > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  background: #fff;
+  border: 1px solid #e8ecf3;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #2b3542;
+  line-height: 1.55;
+}
+.fl-debrief .fl-db-did-turn {
+  flex: 0 0 auto;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #7c8798;
+  font-variant-numeric: tabular-nums;
+}
+.fl-debrief .fl-db-did-text { flex: 1 1 220px; min-width: 0; }
+.fl-debrief .fl-db-did-eff {
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 600;
+  color: #c0392b;
+  font-variant-numeric: tabular-nums;
+}
+.fl-debrief .fl-db-did-sac {
+  flex: 0 0 auto;
+  font-size: 11.5px;
+  color: #8b5a3c;
+  background: #fbf3ed;
+  border: 1px solid #f0ddcd;
+  border-radius: 999px;
+  padding: 1px 9px;
+}
+
+.fl-debrief .fl-db-named {
+  background: #fff;
+  border: 1px solid #e8ecf3;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+.fl-debrief .fl-db-named-name {
+  margin: 0 0 6px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #1b2431;
+}
+.fl-debrief .fl-db-named-quote {
+  margin: 0 0 8px;
+  padding: 2px 0 2px 12px;
+  border-left: 2px solid #cfd9e6;
+  font-size: 12.5px;
+  color: #4a5563;
+  line-height: 1.6;
+}
+.fl-debrief .fl-db-named-quote cite {
+  display: block;
+  margin-top: 4px;
+  font-size: 11.5px;
+  font-style: normal;
+  color: #9aa3b0;
+}
+.fl-debrief .fl-db-named-evi {
+  margin: 0;
+  font-size: 12.5px;
+  color: #2b3542;
+  line-height: 1.6;
+}
+
+.fl-debrief .fl-db-next-cf {
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  background: #f5f8f3;
+  border: 1px solid #e2ead9;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #2b3542;
+  line-height: 1.6;
+}
+.fl-debrief .fl-db-next-q {
+  margin: 0 0 10px;
+  padding-left: 20px;
+  font-size: 13px;
+  color: #4a5563;
+  line-height: 1.75;
+}
+.fl-debrief .fl-db-next-anchor {
+  margin: 0;
+  font-size: 12.5px;
+  color: #8b5a3c;
+  background: #fbf3ed;
+  border-radius: 8px;
+  padding: 8px 12px;
+  line-height: 1.6;
+}
+
+.fl-debrief .fl-db-details { margin-top: 22px; }
+.fl-debrief .fl-db-details > summary {
+  cursor: pointer;
+  font-size: 12.5px;
+  color: #6b7684;
+  padding: 8px 0;
+  border-top: 1px dashed #e2e7ef;
+  outline: none;
+}
+.fl-debrief .fl-db-details > summary:hover { color: #2b3542; }
+
+.fl-debrief .fl-db-sec { margin-top: 22px; }
+.fl-debrief .fl-db-sec h4 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1b2431;
+  padding-left: 10px;
+  border-left: 3px solid #d9887c;
+  line-height: 1.2;
+}
+.fl-debrief .fl-db-tree {
+  background: #fff;
+  border: 1px solid #e8ecf3;
+  border-radius: 12px;
+  padding: 8px 6px;
+}
+.fl-debrief .fl-db-svg { display: block; width: 100%; height: auto; }
+.fl-debrief .fl-db-svg text { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; }
+
+.fl-db-n-ending rect { fill: #f2f5fa; stroke: #9aa6b8; stroke-width: 1.3; }
+.fl-db-n-cause rect { fill: #fdf3f1; stroke: #d9887c; stroke-width: 1.3; }
+.fl-db-n-decision rect { fill: #ffffff; stroke: #cfd6e0; stroke-width: 1.2; }
+
+.fl-db-t-head { font-size: 12px; font-weight: 600; fill: #6b7684; }
+.fl-db-n-cause .fl-db-t-head { fill: #a3543f; }
+.fl-db-t-title { font-size: 14.5px; font-weight: 700; fill: #1b2431; }
+.fl-db-t-meta { font-size: 12px; fill: #7c8798; }
+.fl-db-t-body { font-size: 12.5px; fill: #2b3542; }
+.fl-db-t-delta { font-size: 11.5px; font-weight: 600; fill: #c0392b; }
+
+.fl-debrief .fl-db-ledger {
+  border: 1px solid #e8ecf3;
+  border-left: 4px solid #c9a227;
+  border-radius: 10px;
+  background: #fff;
+  padding: 14px 16px;
+}
+.fl-debrief .fl-db-ledger.fl-db-tier-high { border-left-color: #c0392b; }
+.fl-debrief .fl-db-ledger.fl-db-tier-low { border-left-color: #1f8a70; }
+.fl-debrief .fl-db-tier {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .4px;
+  color: #6b7684;
+  margin-bottom: 6px;
+}
+.fl-debrief .fl-db-tier-high .fl-db-tier { color: #c0392b; }
+.fl-debrief .fl-db-tier-low .fl-db-tier { color: #1f8a70; }
+.fl-debrief .fl-db-verdict { margin: 0; font-size: 14px; color: #2b3542; line-height: 1.6; }
+.fl-debrief .fl-db-counters { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.fl-debrief .fl-db-counters li { font-size: 12.5px; color: #5b6676; }
+.fl-debrief .fl-db-counters b { color: #1b2431; margin-left: 6px; }
+
+.fl-debrief .fl-db-pending { list-style: none; margin: 0; padding: 0; }
+.fl-debrief .fl-db-pending li {
+  display: flex; align-items: baseline; gap: 10px;
+  padding: 9px 12px; margin-bottom: 8px;
+  background: #fff8ee; border: 1px solid #f3e2c7; border-radius: 9px;
+  font-size: 13px; color: #4a5563;
+}
+.fl-debrief .fl-db-pending b { color: #a3543f; }
+
+.fl-debrief .fl-db-concept {
+  background: #fff; border: 1px solid #e8ecf3; border-radius: 10px;
+  padding: 12px 14px; margin-bottom: 10px;
+}
+.fl-debrief .fl-db-concept.hit { border-color: #e6b7ae; background: #fdf7f5; }
+.fl-debrief .fl-db-crow { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.fl-debrief .fl-db-cname { font-size: 13.5px; font-weight: 700; color: #1b2431; }
+.fl-debrief .fl-db-ctag { font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: #eef1f6; color: #6b7684; }
+.fl-debrief .fl-db-concept.hit .fl-db-ctag { background: #f7dfda; color: #a9362a; }
+.fl-debrief .fl-db-cbar { position: relative; height: 6px; border-radius: 3px; background: #eef1f6; margin: 9px 0 7px; }
+.fl-debrief .fl-db-cbar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; background: #b9c3d1; }
+.fl-debrief .fl-db-concept.hit .fl-db-cbar i { background: #d9887c; }
+.fl-debrief .fl-db-concept.missing { border-style: dashed; opacity: .78; }
+.fl-debrief .fl-db-concept.missing .fl-db-ctag { background: #f2f3f5; color: #8d95a1; font-weight: 600; }
+.fl-debrief .fl-db-concept.unparsed .fl-db-ctag { background: #f5f1e8; color: #8a7a4e; }
+.fl-debrief .fl-db-ccover { margin: 0 0 12px; font-size: 12.5px; line-height: 1.6; color: #6b7684; }
+.fl-debrief .fl-db-cbar u {
+  position: absolute; top: -3px; bottom: -3px; width: 2px; background: #1b2431; opacity: .55;
+}
+.fl-debrief .fl-db-cmeta { font-size: 11.5px; color: #8b95a3; font-family: Consolas, monospace; }
+.fl-debrief .fl-db-creading { font-size: 12.5px; color: #4a5563; margin-top: 7px; line-height: 1.6; }
+/* 回合出处：概念能不能上屏，取决于它指不指得回具体回合。 */
+.fl-debrief .fl-db-cwhere {
+  margin-left: auto; font-size: 11.5px; color: #8b95a3;
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.fl-debrief .fl-db-concept.constant .fl-db-ctag { background: #f5f1e8; color: #8a7a4e; }
+.fl-debrief .fl-db-concept.constant { border-style: dashed; opacity: .78; }
+.fl-debrief .fl-db-folded {
+  margin: 14px 0 0; padding-top: 12px; border-top: 1px dashed #e8ecf3;
+  font-size: 12px; line-height: 1.65; color: #8b95a3;
+}
+
+/* ── L2-1 静态教材卡：八条全列，命中才展开证据 ─────────────────────── */
+.fl-debrief .fl-db-ccard {
+  background: #fff; border: 1px solid #e8ecf3; border-left: 3px solid #dfe4ec;
+  border-radius: 10px; padding: 12px 14px; margin-bottom: 10px;
+}
+/* 命中的卡上色，未命中的留白但不隐藏：教材本身就是教学内容。 */
+.fl-debrief .fl-db-ccard.hit { border-color: #e6b7ae; border-left-color: #c0392b; background: #fdf7f5; }
+.fl-debrief .fl-db-ccard.off { opacity: .92; }
+.fl-debrief .fl-db-cchead { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.fl-debrief .fl-db-cidx {
+  font-size: 11px; font-weight: 700; color: #a8b1bf;
+  font-variant-numeric: tabular-nums; letter-spacing: .5px;
+}
+.fl-debrief .fl-db-cidx + .fl-db-cname { flex: 1; }
+.fl-debrief .fl-db-ctag-hit { background: #f7dfda; color: #a9362a; }
+.fl-debrief .fl-db-ctag-off { background: #eef1f6; color: #7c8697; }
+.fl-debrief .fl-db-clesson { margin: 0 0 6px; font-size: 13px; line-height: 1.7; color: #2b3542; }
+.fl-debrief .fl-db-cquote {
+  margin: 0 0 6px; padding: 4px 0 4px 12px; border-left: 2px solid #dfe4ec;
+  font-size: 12.5px; line-height: 1.65; color: #5b6676;
+}
+.fl-debrief .fl-db-cquote cite { display: block; margin-top: 3px; font-style: normal; font-size: 11.5px; color: #8b95a3; }
+.fl-debrief .fl-db-canchor { margin: 0 0 6px; font-size: 12px; line-height: 1.65; color: #6b7684; }
+.fl-debrief .fl-db-cevidence { margin-top: 8px; padding-top: 8px; border-top: 1px dashed #e8ecf3; }
+.fl-debrief .fl-db-cevidence p { margin: 4px 0 0; font-size: 12.5px; line-height: 1.65; color: #4a5563; }
+.fl-debrief .fl-db-cnone { margin: 6px 0 0; font-size: 12px; color: #8b95a3; }
+
+.fl-debrief .fl-db-cf { list-style: none; margin: 0; padding: 0; }
+.fl-debrief .fl-db-cf li { padding: 10px 0; border-bottom: 1px dashed #e8ecf3; }
+.fl-debrief .fl-db-cf li:last-child { border-bottom: none; }
+.fl-debrief .fl-db-cfhead { font-size: 12.5px; font-weight: 700; color: #1b2431; margin-bottom: 4px; }
+.fl-debrief .fl-db-cfbody { font-size: 13px; color: #4a5563; line-height: 1.65; }
+
+.fl-debrief .fl-db-hint { margin: 8px 0 0; font-size: 11.5px; color: #8b95a3; }
+.fl-debrief .fl-db-empty { margin: 0; font-size: 13px; color: #6b7684; }
+.fl-debrief .fl-db-actions { margin-top: 22px; display: flex; justify-content: flex-end; }
+
+@media (max-width: 640px) {
+  .fl-debrief { padding: 16px 14px 14px; }
+  .fl-debrief .fl-db-head h3 { font-size: 17px; }
+  .fl-debrief .fl-db-tree { padding: 4px 2px; }
+}
+
+/* =============================================================================
+ * L1-1 · 姿态徽标：从左色条升级成看得懂的两个字
+ * 文案来自 FLDebrief.stanceLabel（唯一出口），这里只负责画。
+ * 用伪元素而不是真节点：按钮的 innerText 是若干断言的文本指纹，
+ * 往里塞字会让"连续相同首选项"这类判断一起失准。
+ * =========================================================================*/
+.challenger-option[data-weight-label]::before {
+  content: attr(data-weight-label);
+  order: 99;
+  flex: 0 0 auto;
+  font-size: 10px;
+  line-height: 1.5;
+  font-weight: 600;
+  padding: 0 5px;
+  border-radius: 8px;
+  white-space: nowrap;
+  color: #64748b;
+  background: #f1f5f9;
+}
+.challenger-option[data-weight="safe"]::before { color: #047857; background: #d1fae5; }
+.challenger-option[data-weight="neutral"]::before { color: #64748b; background: #f1f5f9; }
+.challenger-option[data-weight="risky"]::before { color: #b91c1c; background: #fee2e2; }
+
+/* =============================================================================
+ * L1-2 · 提交前的确认条：选中 ≠ 落地，撤回是真的没发生过
+ * =========================================================================*/
+.challenger-confirm-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 4px;
+  padding: 8px 10px;
+  border: 1px solid rgba(74, 144, 226, 0.35);
+  border-radius: 8px;
+  background: rgba(74, 144, 226, 0.07);
+}
+.challenger-confirm-bar[hidden] { display: none; }
+.challenger-confirm-bar .cfb-text { font-size: 12.5px; color: #1f2d3d; }
+.challenger-confirm-bar .cfb-text b { color: var(--primary, #4a90e2); }
+.challenger-confirm-bar .cfb-brief { margin-left: 2px; color: #5b6472; }
+.challenger-confirm-bar .cfb-hint { font-size: 11px; color: #8a93a0; }
+.challenger-confirm-bar .cfb-actions { margin-left: auto; display: flex; gap: 6px; }
+.challenger-confirm-bar .cfb-btn {
+  font: inherit;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.challenger-confirm-bar .cfb-confirm { background: var(--primary, #4a90e2); color: #fff; }
+.challenger-confirm-bar .cfb-revert { background: #fff; border-color: #cfd8e3; color: #475569; }
+
+@media (max-width: 640px) {
+  .challenger-confirm-bar { gap: 6px; padding: 7px 9px; }
+  .challenger-confirm-bar .cfb-actions { width: 100%; margin-left: 0; }
+  .challenger-confirm-bar .cfb-btn { flex: 1; }
 }
