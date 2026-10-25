@@ -85,6 +85,33 @@
   margin-bottom: 4px;
 }
 
+/* L0-2b · 局内角色锚（本局你是谁 · 跨多久）
+   与三目标条同容器、置顶一行：它和"这三个目标"同属本局元信息，不该另起一张卡。
+   窄屏自动折行，不做 nowrap —— 角色句最长 27 字（enron 的 CFO 副手），截断会把
+   "没有最终签字权"这种关键限定吃掉，而那句正是这一局的悲剧核心。 */
+.fl-goal-tension .fgt-role {
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--text-secondary, #666);
+  margin-bottom: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed var(--border-color, #e5e5e5);
+}
+
+.fl-goal-tension .fgt-role .fgt-role-who {
+  color: var(--text-primary, #222);
+  font-weight: 600;
+}
+
+.fl-goal-tension .fgt-role .fgt-role-sep {
+  margin: 0 4px;
+  color: var(--text-muted, #bbb);
+}
+
+.fl-goal-tension .fgt-role .fgt-role-span {
+  color: var(--text-secondary, #666);
+}
+
 .fl-goal-tension .fgt-cells {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

@@ -263,6 +263,54 @@ if (shell.some((x) => x !== '')) {
 }
 notes.push('无 brief 场景：仪表不出空壳');
 
+// ── 7. 角色锚：brief.role · brief.horizon 必须落在局内回合标题下 ──────────
+// 这两句原本只出现在场景卡上（玩家点进来就再也看不见"我是谁、跨多久"），
+// 而悲剧前提恰恰长在这里：challenger 的"没有最终签字权"、enron 的"副手"。
+// 断言三件事：出现、与 brief 逐字对齐、排在"第 N 手 · 代价"之上。
+const ra = await page.evaluate((sid) => {
+  const brief = (((window.OfflineEngine._flScenarioData || {})[sid] || {}).brief) || {};
+  const el = document.querySelector('.fgt-role');
+  const lead = document.querySelector('#challenger-goal-tension .fgt-lead');
+  const norm = (x) => String(x || '').replace(/\s+/g, '');
+  return {
+    exists: !!el,
+    text: norm(el ? el.textContent : ''),
+    want: norm((brief.role || '') + (brief.role && brief.horizon ? '·' : '') + (brief.horizon || '')),
+    beforeLead: !!(el && lead && (el.compareDocumentPosition(lead) & Node.DOCUMENT_POSITION_FOLLOWING)),
+    overflow: el ? Math.round(el.scrollWidth - el.clientWidth) : -1,
+    inTable: !!(el && el.closest('#challenger-goal-tension')),
+  };
+}, SID);
+if (!ra.exists) fails.push('局内没有角色锚（.fgt-role 缺失）—— brief.role/horizon 仍只活在场景卡上');
+else {
+  if (ra.text !== ra.want) fails.push(`角色锚文本「${ra.text}」与 brief 声明「${ra.want}」不一致`);
+  if (!ra.beforeLead) fails.push('角色锚没排在"第 N 手 · 代价"之上（玩家读完代价才看到自己是谁）');
+  if (!ra.inTable) fails.push('角色锚跑出了目标冲突仪表，成了孤立浮层');
+  if (ra.overflow > 0) fails.push(`角色锚横向溢出 ${ra.overflow}px`);
+}
+notes.push(`角色锚：${ra.text || '(缺失)'}`);
+
+// 空壳红线：brief 没写 role/horizon 时，不许吐一行空的"·"。
+const roleShell = await page.evaluate(() => {
+  const table = window.OfflineEngine._flScenarioData;
+  const sid = '__probe-no-role';
+  const r = Object.create(window.ChallengerRouter.prototype);
+  r.scenarioId = sid;
+  r.gameState = { decision_history: [] };
+  const objs = [{ id: 'a', text: '甲' }, { id: 'b', text: '乙' }, { id: 'c', text: '丙' }];
+  table[sid] = { brief: { objectives: objs } };
+  const a = r._renderGoalTension();
+  table[sid] = { brief: { objectives: objs, role: '只有角色' } };
+  const b = r._renderGoalTension();
+  table[sid] = { brief: { objectives: objs, horizon: '只有视野' } };
+  const c = r._renderGoalTension();
+  delete table[sid];
+  return { a: a.indexOf('fgt-role') < 0, b: /只有角色/.test(b) && b.indexOf('fgt-role-sep') < 0, c: /只有视野/.test(c) && c.indexOf('fgt-role-sep') < 0 };
+});
+if (!roleShell.a) fails.push('brief 无 role/horizon 时角色锚仍渲染出空行');
+if (!roleShell.b || !roleShell.c) fails.push('只填 role 或只填 horizon 时角色锚拼接出错（多余的 · 分隔符）');
+notes.push('角色锚空壳：缺字段不吐空行，半字段不留孤立分隔符');
+
 // noodle 在 375px 下的溢出与文字截断
 const mob = await browser.newPage({ viewport: { width: 375, height: 812 } });
 await mob.goto(`http://127.0.0.1:${PORT}/index.html`, { waitUntil: 'domcontentloaded' });

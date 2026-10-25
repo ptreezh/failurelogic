@@ -1144,6 +1144,21 @@
       return b.objectives.filter((o) => o && o.id && o.text);
     }
 
+    // ===== L0-2b · 局内角色锚 ==============================================
+    // brief.role / brief.horizon 此前只活在场景卡片上：玩家点进回合就只剩
+    // 三格目标与一堆指标，不知道"我是谁、在替谁承担这十回合的后果"。快照
+    // 恢复（findResumableSnapshots）更是直接跳到第 N 回合，卡片被完全绕过。
+    // 只取 role 与 horizon 两项：ends_when/how_judged/method_concerns 属规则
+    // 说明，塞进每回合顶部会和剧情抢注意力；impossible 已有独立提示，不重复。
+    _briefMeta() {
+      const table = (window.OfflineEngine && window.OfflineEngine._flScenarioData) || null;
+      const data = table ? table[this.scenarioId] : null;
+      const b = data && data.brief;
+      if (!b) return { role: '', horizon: '' };
+      const str = (v) => (typeof v === 'string' ? v.trim() : '');
+      return { role: str(b.role), horizon: str(b.horizon) };
+    }
+
     _renderGoalTension() {
       const objs = this._goalObjectives();
       // 没写 brief 的场景（S1 尚未铺开的 4 个）不出空壳 —— 一个全是
@@ -1171,10 +1186,20 @@
       // 这种纯序号说法，就不必去猜 lastTurnNumber 的语义（它是 0-based 还是
       // 已提交计数，改一次就错一次），也不用为时态维护两套分支。
       const lturn = last ? (last.turn != null ? last.turn : hist.length) : null;
+      // 角色锚：只在有值时才吐 HTML，缺字段的老场景（brief 未铺满）不会出现空行。
+      const meta = this._briefMeta();
+      const roleLine = (meta.role || meta.horizon)
+        ? '<div class="fgt-role" id="challenger-role-anchor" data-fl-role-anchor="1">'
+          + (meta.role ? '<span class="fgt-role-who">' + this._escape(meta.role) + '</span>' : '')
+          + (meta.role && meta.horizon ? '<span class="fgt-role-sep" aria-hidden="true">·</span>' : '')
+          + (meta.horizon ? '<span class="fgt-role-span">' + this._escape(meta.horizon) + '</span>' : '')
+          + '</div>'
+        : '';
       const lead = !last
         ? '还没做选择 · 这三件事不可能同时做好'
         : '第 ' + this._escape(String(lturn)) + ' 手 · 代价';
       return '<div class="fl-goal-tension" id="challenger-goal-tension" data-fl-goal-tension="1">'
+        + roleLine
         + '<div class="fgt-lead">' + lead + '</div>'
         + '<ul class="fgt-cells">' + cells + '</ul>'
         + '</div>';
