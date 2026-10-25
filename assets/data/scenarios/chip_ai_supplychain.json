@@ -607,7 +607,7 @@
     },
     {
       "turn": 5,
-      "phase": "第一揭示：线性外推与确认偏误",
+      "phase": "第一揭示：只按旧增速推，只看好消息",
       "is_pattern_reveal": true,
       "reveal_phase": 1,
       "pattern_reveal_template": {
@@ -639,7 +639,7 @@
         {
           "id": "B",
           "text": "加大媒体投放，'信心比黄金重要'",
-          "consequences_for_player": "确认偏误：继续用叙事掩盖数据，perception_bias 再+",
+          "consequences_for_player": "只看好消息：继续用叙事掩盖数据，感知失真再加深",
           "expected_concerns_addressed": [
             "信心"
           ],

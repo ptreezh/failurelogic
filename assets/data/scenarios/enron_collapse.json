@@ -373,10 +373,10 @@
     },
     {
       "turn": 3,
-      "phase": "[渐进揭示 T3] F5 单目标优化",
+      "phase": "[渐进揭示 3] 只优化一个指标",
       "year": "2000年9月",
       "is_pattern_reveal": true,
-      "situation": "你的副手在做季度复盘时给你一份数据：\n\n'2000年Q2 报告：收入增长 50%，但运营现金流同比下降 12%。Fastow 的 Raptor 系列 SPE 贡献了 5.4 亿的'利润'，但这些利润都是应收账款（其他公司欠安然的'预付款'），而非真实现金。'\n\n你前 2 回合的选择：\n- 回合1：你选了 {turn1_option}（扩大 LJM 至 3 亿）\n- 回合2：你选了 {turn2_option}\n\n回溯分析：\n\n🔴 F5 单目标优化：你在看'报告收入'和'股价'，但忽略了'real cashflow'和'off_balance_sheet'。报告利润不是真实现金。\n\nDörner F5 单目标优化：'我们倾向于把复杂系统简化为单一指标（报告收入 + 股价），然后优化这个指标。'\n\nEnron 的 Raptor 系列 SPE（Fastow 设计的 4 家合伙企业）正是 F5 的典型案例：它们贡献账面利润，但现金流完全不存在。\n\n【Dörner 模式揭示 · 第 1 阶段 · 回合 4】\n\n你是否在前 2 回合犯了 F5 单目标优化？",
+      "situation": "你的副手在做季度复盘时给你一份数据：\n\n'2000年Q2 报告：收入增长 50%，但运营现金流同比下降 12%。Fastow 的 Raptor 系列 SPE 贡献了 5.4 亿的'利润'，但这些利润都是应收账款（其他公司欠安然的'预付款'），而非真实现金。'\n\n你前 2 回合的选择：\n- 回合1：你选了 {turn1_option}（扩大 LJM 至 3 亿）\n- 回合2：你选了 {turn2_option}\n\n回溯分析：\n\n🔴 只优化一个指标：你在看'报告收入'和'股价'，但忽略了'real cashflow'和'off_balance_sheet'。报告利润不是真实现金。\n\n把复杂系统简化成单一指标（报告收入 + 股价）、然后优化它——当时就是这么做的。\n\nEnron 的 Raptor 系列 SPE（Fastow 设计的 4 家合伙企业）正是那个被优化的单一指标：它们贡献账面利润，但现金流完全不存在。\n\n【模式回看 · 第 1 阶段 · 回合 4】\n\n你是否在前 2 回合只优化了一个指标？",
       "options": [
         {
           "id": "A",
@@ -416,7 +416,7 @@
           "id": "C",
           "text": "忽视此警告——报告利润是 GAAP 标准",
           "weight": "risky",
-          "consequences_for_player": "F7 自我批评缺失 hint 强化",
+          "consequences_for_player": "听不进反对意见的信号被强化",
           "expected_concerns_addressed": [],
           "behavior": "ignore_warning",
           "goal_axis": [
@@ -474,16 +474,16 @@
       "pattern_reveal_template": {
         "round": 1,
         "biases_revealed": [
-          "F5 单目标优化"
+          "F5_single_target"
         ],
-        "narrative": "你前 2 回合聚焦于 {primary_focus}（报告利润 + 股价），忽略了 9 个状态变量中的 other 维度。这是 Dörner F5 的典型表现。Enron 的'创造市场'叙事就是 F5 在公司层面的应用。"
+        "narrative": "你前 2 回合聚焦于 {primary_focus}（报告利润 + 股价），忽略了 9 个状态变量中的 other 维度。这是'只优化一个指标'的典型表现。Enron 的'创造市场'叙事，就是它在公司层面的应用。"
       }
     },
     {
       "turn": 4,
       "phase": "California 电力危机",
       "year": "2001年1月",
-      "situation": "2001年1月，加州电力市场危机。安然在加州的能源批发业务因州长 Davis 的'价格管制'而面临 10 亿美元潜在亏损。\n\nLay 和 Skilling 选择攻击加州政府（公开呼吁'取消价格管制'），这让安然成为政治焦点。分析师开始怀疑安然在加州的会计处理——他们似乎'在涨电价时卖期货，在跌电价时买现货'，人为操纵利润。\n\n你的两难：\n- 攻击加州政府：维护股价，但招致监管 + 媒体关注（F6 确认偏误风险）\n- 妥协：短期股价下跌，但避免成为监管目标\n\n你需要决定：",
+      "situation": "2001年1月，加州电力市场危机。安然在加州的能源批发业务因州长 Davis 的'价格管制'而面临 10 亿美元潜在亏损。\n\nLay 和 Skilling 选择攻击加州政府（公开呼吁'取消价格管制'），这让安然成为政治焦点。分析师开始怀疑安然在加州的会计处理——他们似乎'在涨电价时卖期货，在跌电价时买现货'，人为操纵利润。\n\n你的两难：\n- 攻击加州政府：维护股价，但招致监管 + 媒体关注（只看支持自己的证据的风险）\n- 妥协：短期股价下跌，但避免成为监管目标\n\n你需要决定：",
       "options": [
         {
           "id": "A",
@@ -584,10 +584,10 @@
     },
     {
       "turn": 5,
-      "phase": "[渐进揭示 T5] F2 时间延迟 + F7 自我批评缺失",
+      "phase": "[渐进揭示 5] 时间的延迟 + 自我批评缺位",
       "year": "2001年6月",
       "is_pattern_reveal": true,
-      "situation": "你收到一封 6 个月前（2000年12月）Sherron Watkins（VP, 内部员工）写给 Lay 的备忘录，Lay 当时让你'处理'。你当时没重视——现在你重新读它：\n\n'我很担心我们将在会计丑闻的浪潮中崩塌。我担心 Raptor 系列 SPE 的会计处理是错误的——他们从安然买资产后再卖给安然，制造虚假利润。我担心我们没有披露与 Fastow 的关联交易的真实规模。'\n\n这份 6 个月前的警告已被压下 6 个月。Lay 当时的反应：'我会处理，Sherron，不用担心。'\n\n你前 4 回合选择：{turn1_option} → {turn2_option} → {turn3_option} → {turn4_option}\n\n回溯分析：\n\n🔴 F2 时间延迟：Watkins 2000年12月的警告到 2001年6月你才重新发现——6 个月延迟。\n🔴 F7 自我批评缺失：Lay 让你'处理'时，你是否当时就把 Watkins 的警告当真？\n\nDörner 写道：'我们倾向于听取好消息，压下坏消息——直到坏消息自己爆炸。'\n\n【Dörner 模式揭示 · 第 2 阶段 · 回合 6】\n\n你现在应该做什么？",
+      "situation": "你收到一封 6 个月前（2000年12月）Sherron Watkins（VP, 内部员工）写给 Lay 的备忘录，Lay 当时让你'处理'。你当时没重视——现在你重新读它：\n\n'我很担心我们将在会计丑闻的浪潮中崩塌。我担心 Raptor 系列 SPE 的会计处理是错误的——他们从安然买资产后再卖给安然，制造虚假利润。我担心我们没有披露与 Fastow 的关联交易的真实规模。'\n\n这份 6 个月前的警告已被压下 6 个月。Lay 当时的反应：'我会处理，Sherron，不用担心。'\n\n你前 4 回合选择：{turn1_option} → {turn2_option} → {turn3_option} → {turn4_option}\n\n回溯分析：\n\n🔴 时间的延迟：Watkins 2000年12月的警告到 2001年6月你才重新发现——6 个月延迟。\n🔴 自我批评缺位：Lay 让你'处理'时，你是否当时就把 Watkins 的警告当真？\n\n人倾向于听取好消息、压下坏消息——直到坏消息自己爆炸。\n\n【模式回看 · 第 2 阶段 · 回合 6】\n\n你现在应该做什么？",
       "options": [
         {
           "id": "A",
@@ -628,7 +628,7 @@
           "id": "C",
           "text": "压下此备忘录，希望问题自然消失",
           "weight": "risky",
-          "consequences_for_player": "F2/F7 hint 强化；后续崩塌加速",
+          "consequences_for_player": "警告被继续压下；后续崩塌加速",
           "expected_concerns_addressed": [],
           "behavior": "ignore_warning",
           "goal_axis": [
@@ -690,10 +690,10 @@
       "pattern_reveal_template": {
         "round": 2,
         "biases_revealed": [
-          "F2 时间延迟",
-          "F7 自我批评缺失"
+          "F2_time_delay",
+          "F7_self_criticism"
         ],
-        "narrative": "Watkins 2000年12月的警告被压下 6 个月。Lay 让你'处理'时，你是否当时把警告当真？你的前 4 回合中，{time_delay_count} 个回合表现出 F2 时间延迟偏差，{self_criticism_count} 个回合选择回避反思（F7）。"
+        "narrative": "Watkins 2000年12月的警告被压下 6 个月。Lay 让你'处理'时，你是否当时把警告当真？你的前 4 回合中，{time_delay_count} 个回合把后果推给了未来，{self_criticism_count} 个回合选择回避反思。"
       }
     },
     {
@@ -800,10 +800,10 @@
     },
     {
       "turn": 7,
-      "phase": "[渐进揭示 T7] F1 非线性 + F8 调节滞后",
+      "phase": "[渐进揭示 7] 加速不是线性的 + 反应太慢",
       "year": "2001年10月",
       "is_pattern_reveal": true,
-      "situation": "2001年10月，Fastow 突然'辞职'（Lay 让他辞职以隔离责任，但实际是 SPE 即将曝光）。同日 Andersen（外部审计师）开始独立调查 Raptor 系列。\n\n股价单日跌 25% 到 30 美元。\n\n你前 6 回合选择：{turn1_option} → {turn2_option} → {turn3_option} → {turn4_option} → {turn5_option} → {turn6_option}\n\n回溯分析：\n\n🔴 F1 非线性：股价 90 → 30，单月下跌 67%。Dörner F1：临界点附近是指数加速，不是线性。\n🔴 F8 调节滞后：Andersen 介入前 6 个月 Watkins 已警告，但 Lay 让 Fastow 拖延。\n\nDörner 写道：'在临界点附近，系统的反应不再是线性的。我们要么在临界点之前行动，要么在临界点之后行动——但临界点之后行动的成本是指数级的。'\n\n你前 6 回合中：\n- {f1_count} 个回合选择忽视现金流信号（F1 强化）\n- {f8_count} 个回合在警告公开后才响应（F8 强化）\n\n【Dörner 模式揭示 · 第 3 阶段 · 回合 8】\n\n现在你需要决定：",
+      "situation": "2001年10月，Fastow 突然'辞职'（Lay 让他辞职以隔离责任，但实际是 SPE 即将曝光）。同日 Andersen（外部审计师）开始独立调查 Raptor 系列。\n\n股价单日跌 25% 到 30 美元。\n\n你前 6 回合选择：{turn1_option} → {turn2_option} → {turn3_option} → {turn4_option} → {turn5_option} → {turn6_option}\n\n回溯分析：\n\n🔴 加速不是线性的：股价 90 → 30，单月下跌 67%。临界点附近是指数加速，不是线性。\n🔴 反应太慢：Andersen 介入前 6 个月 Watkins 已警告，但 Lay 让 Fastow 拖延。\n\n在临界点附近，系统的反应不再是线性的：临界点之前行动成本低，之后行动成本是指数级的。\n\n你前 6 回合中：\n- {f1_count} 个回合选择忽视现金流信号\n- {f8_count} 个回合在警告公开后才响应\n\n【模式回看 · 第 3 阶段 · 回合 8】\n\n现在你需要决定：",
       "options": [
         {
           "id": "A",
@@ -904,10 +904,10 @@
       "pattern_reveal_template": {
         "round": 3,
         "biases_revealed": [
-          "F1 非线性",
-          "F8 调节滞后"
+          "F1_nonlinear",
+          "F8_regulation_lag"
         ],
-        "narrative": "你前 6 回合中，{f1_count} 个回合选择假设风险线性，{f8_count} 个回合在警告公开后才响应。安然股价 90→30 是 F1 非线性的经典案例：单点失败触发指数级崩盘。"
+        "narrative": "你前 6 回合中，{f1_count} 个回合选择假设风险线性，{f8_count} 个回合在警告公开后才响应。安然股价 90→30 是加速非线性的经典案例：单点失败触发指数级崩盘。"
       }
     },
     {
@@ -953,7 +953,7 @@
           "id": "C",
           "text": "拖延 SEC 调查，让 Lay 个人承担",
           "weight": "risky",
-          "consequences_for_player": "Lay 被起诉；公司避更；F4 强化",
+          "consequences_for_player": "Lay 被起诉；公司避更",
           "expected_concerns_addressed": [],
           "behavior": "defer",
           "goal_axis": [
@@ -1102,7 +1102,7 @@
       "phase": "[最终结局] 你的安然十年",
       "year": "2002年12月",
       "is_final_outcome": true,
-      "situation": "2002年12月，安然破产清算完成。你的前 10 回合决策构成你的安然十年。\n\nDörner F4 副作用 + F7 自我批评 是安然案例的核心：内部知情者已警告，但管理层沉迷于'创造市场'的叙事，选择忽视。\n\n回顾你的 10 回合：\n- 回合1：{turn1_option}\n- 回合2：{turn2_option}\n- 回合3：{turn3_option}\n- 回合4：{turn4_option}\n- 回合5：{turn5_option}\n- 回合6：{turn6_option}\n- 回合7：{turn7_option}\n- 回合8：{turn8_option}\n- 回合9：{turn9_option}\n\n最终结局取决于你的累积路径。",
+      "situation": "2002年12月，安然破产清算完成。你的前 10 回合决策构成你的安然十年。\n\n没想到的副作用 + 自我批评缺位，是安然案例的核心：内部知情者已警告，但管理层沉迷于'创造市场'的叙事，选择忽视。\n\n回顾你的 10 回合：\n- 回合1：{turn1_option}\n- 回合2：{turn2_option}\n- 回合3：{turn3_option}\n- 回合4：{turn4_option}\n- 回合5：{turn5_option}\n- 回合6：{turn6_option}\n- 回合7：{turn7_option}\n- 回合8：{turn8_option}\n- 回合9：{turn9_option}\n\n最终结局取决于你的累积路径。",
       "options": [
         {
           "id": "A",
@@ -1226,7 +1226,7 @@
         "F1 非线性",
         "F8 调节滞后"
       ],
-      "narrative": "你前 6 回合中，{f1_count} 个回合选择假设风险线性，{f8_count} 个回合在警告公开后才响应。安然股价 90→30 是 F1 非线性的经典案例。"
+      "narrative": "你前 6 回合中，{f1_count} 个回合选择假设风险线性，{f8_count} 个回合在警告公开后才响应。安然股价 90→30 是加速非线性的经典案例。"
     },
     "T10_summary": {
       "round": 4,

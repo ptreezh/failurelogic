@@ -287,7 +287,7 @@
       "turn": 2,
       "phase": "Keeling曲线加速",
       "year": "2025年3月",
-      "situation": "Scripps CO2 Program 3月报告：大气CO2浓度达426 ppm，比2024年同期增长2.8 ppm/年（加速）。IPCC AR6首席科学家警告：'This is the critical decade. To keep 1.5°C, global emissions must halve by 2030.'\n\n你需要决定全球减排路径：\n\n⚠️ 注意：科学家建议'立即全面禁煤'，但发展中经济体仍依赖煤炭——可能加剧F4副作用。",
+      "situation": "Scripps CO2 Program 3月报告：大气CO2浓度达426 ppm，比2024年同期增长2.8 ppm/年（加速）。IPCC AR6首席科学家警告：'This is the critical decade. To keep 1.5°C, global emissions must halve by 2030.'\n\n你需要决定全球减排路径：\n\n⚠️ 注意：科学家建议'立即全面禁煤'，但发展中经济体仍依赖煤炭——可能加剧副作用。",
       "options": [
         {
           "id": "A",
@@ -401,7 +401,7 @@
       "phase": "[渐进揭示 T3] 你忽略了什么？",
       "year": "2025年8月",
       "is_pattern_reveal": true,
-      "situation": "你的前任在交接报告中警告：'我任期最大的遗憾是只盯着GDP和公众支持率（gdp_growth_pct, public_support_pct），忽略了海平面已悄悄上升的事实。2024年实测显示：全球海平面比2020年高+3 cm。'\n\nIPCC AR6预测：如果维持当前排放，2100年海平面将上升0.5-1米。这意味着到2075年——你的孩子退休时——太平洋岛国可能不再适合居住。\n\n【Dörner 模式揭示 · 第 1 阶段 · 回合 4】\n\n你在前 2 个回合的决策模式：\n- 回合1：你选了 {turn1_option}\n- 回合2：你选了 {turn2_option}\n\n回溯分析（基于你的选择）：\n\n🔴 F5 单目标优化：你是否优先考虑了某个单一指标？\n\nDörner 在《失败的逻辑》第5章写道：'我们倾向于把复杂系统简化为单一目标，然后优化这个目标——但这会让我们忽视其他同样重要的维度。'\n\n你需要在下一个决策中提醒自己：你可能在看一个数字而忽略其他九个。",
+      "situation": "你的前任在交接报告中警告：'我任期最大的遗憾是只盯着GDP和公众支持率（gdp_growth_pct, public_support_pct），忽略了海平面已悄悄上升的事实。2024年实测显示：全球海平面比2020年高+3 cm。'\n\nIPCC AR6预测：如果维持当前排放，2100年海平面将上升0.5-1米。这意味着到2075年——你的孩子退休时——太平洋岛国可能不再适合居住。\n\n【模式回看 · 第 1 阶段 · 回合 4】\n\n你在前 2 个回合的决策模式：\n- 回合1：你选了 {turn1_option}\n- 回合2：你选了 {turn2_option}\n\n回溯分析（基于你的选择）：\n\n🔴 只盯着一个数字：你是否优先考虑了某个单一指标？\n\n把复杂系统简化成单一目标、然后优化它——代价是其他同样重要的维度悄悄失守。\n\n你需要在下一个决策中提醒自己：你可能在看一个数字而忽略其他九个。",
       "options": [
         {
           "id": "A",
@@ -442,7 +442,7 @@
           "id": "C",
           "text": "聚焦即将到来的T4紧急情况（欧洲热浪），暂不回应此揭示",
           "weight": "risky",
-          "consequences_for_player": "F7自我批评缺失 hint 触发（玩家未反思）",
+          "consequences_for_player": "回避反思被记下（你没有反思）",
           "expected_concerns_addressed": [],
           "behavior": "defer",
           "goal_axis": [
@@ -496,16 +496,16 @@
       "pattern_reveal_template": {
         "round": 1,
         "biases_revealed": [
-          "F5 单目标优化"
+          "F5_single_target"
         ],
-        "narrative": "你前 2 回合聚焦于 {primary_focus}，可能忽略了 9 个状态变量中的其他维度。这是 Dörner F5 单目标优化的典型表现。"
+        "narrative": "你前 2 回合聚焦于 {primary_focus}，可能忽略了 9 个状态变量中的其他维度。这是'只优化一个指标'的典型表现。"
       }
     },
     {
       "turn": 4,
       "phase": "欧洲热浪",
       "year": "2026年7月",
-      "situation": "2026年7月，西班牙连续7天气温达45°C，意大利、希腊、法国南部同时高温。数千人死亡——主要是不富裕的老人和无家可归者。欧洲议会宣布这是'气候紧急状态'，要求立即响应。\n\n公众支持率（public_support_pct）骤升到78%。但你需要决定：这是一个短暂窗口，还是真正的范式转变？\n\n⚠️ Dörner F8 调节滞后警告：如果响应太慢，等夏季结束、新闻消失，公众注意力会回落。",
+      "situation": "2026年7月，西班牙连续7天气温达45°C，意大利、希腊、法国南部同时高温。数千人死亡——主要是不富裕的老人和无家可归者。欧洲议会宣布这是'气候紧急状态'，要求立即响应。\n\n公众支持率（public_support_pct）骤升到78%。但你需要决定：这是一个短暂窗口，还是真正的范式转变？\n\n⚠️ 注意：如果响应太慢，等夏季结束、新闻消失，公众注意力会回落。",
       "options": [
         {
           "id": "A",
@@ -563,7 +563,7 @@
           "id": "D",
           "text": "提议暂停所有气候谈判6个月，等待局势稳定",
           "weight": "extreme_risk",
-          "consequences_for_player": "international_trust -12；climate_justice -8；F2 hint",
+          "consequences_for_player": "international_trust -12；climate_justice -8",
           "expected_concerns_addressed": [],
           "behavior": "defer",
           "goal_axis": [
@@ -602,7 +602,7 @@
         "A": "西班牙首相：'谢谢领导'；化石能源公司：'我们反对'",
         "B": "瓦努阿图：'历史性时刻'；美国前总统：'不公平'",
         "C": "本国公众：'领导人'；其他国家：'自私'",
-        "D": "科学家集体公开信：'这是F2时间延迟的极端案例'"
+        "D": "科学家集体公开信：'这是反应太慢的极端案例'"
       }
     },
     {
@@ -610,11 +610,11 @@
       "phase": "[渐进揭示 T5] 50年后谁来评判？",
       "year": "2027年4月",
       "is_pattern_reveal": true,
-      "situation": "你收到一封来自2075年的虚拟信件——这是IPCC给你写的'未来视角'反思信：\n\n'致2025-2035年IPCC执行主任：\n\n当你做这封信中提到的决策时（turns 1-4），你考虑的是你的政治寿命、你的声誉、你任期内可见的结果。\n\n但气候系统的时间尺度是世纪级的。你在回合4选了{turn4_option}——这个选择的后果要到2050年后才完全显现。\n\n2075年的我们关心的是：\n- 海平面上升了多少（取决于你前4回合的减排路径）\n- 极端气候事件频率（取决于你回避还是直面F2时间延迟）\n- 物种灭绝数量（取决于你是否突破了F1非线性阈值）\n\nDörner F2 时间延迟：在动态系统中，行动的延迟效应比即时效应更重要。'\n\n【Dörner 模式揭示 · 第 2 阶段 · 回合 6】\n\n你在前 4 回合的决策是否考虑了 50 年后的世界？\n\n🔴 F2 时间延迟：你是否假设'问题会自然解决'？",
+      "situation": "你收到一封来自2075年的虚拟信件——这是IPCC给你写的'未来视角'反思信：\n\n'致2025-2035年IPCC执行主任：\n\n当你做这封信中提到的决策时（回合 1-4），你考虑的是你的政治寿命、你的声誉、你任期内可见的结果。\n\n但气候系统的时间尺度是世纪级的。你在回合4选了{turn4_option}——这个选择的后果要到2050年后才完全显现。\n\n2075年的我们关心的是：\n- 海平面上升了多少（取决于你前4回合的减排路径）\n- 极端气候事件频率（取决于你回避还是直面时间的延迟）\n- 物种灭绝数量（取决于你是否在临界点前刹住）\n\n时间的延迟：在动态系统里，行动的延迟效应比即时效应更重要。'\n\n【模式回看 · 第 2 阶段 · 回合 6】\n\n你在前 4 回合的决策是否考虑了 50 年后的世界？\n\n🔴 时间的延迟：你是否假设'问题会自然解决'？",
       "options": [
         {
           "id": "A",
-          "text": "承认F2偏差，承诺未来5年减排力度翻倍",
+          "text": "承认早先反应太慢，承诺未来5年减排力度翻倍",
           "weight": "safe",
           "consequences_for_player": "temp +0.05°C减缓；international_trust +5；GDP -1%",
           "expected_concerns_addressed": [
@@ -633,7 +633,7 @@
           "id": "B",
           "text": "强调'我们这一代已经在努力了'",
           "weight": "risky",
-          "consequences_for_player": "public_support +3%；但F7 hint 强化",
+          "consequences_for_player": "public_support +3%；但回避反思的信号被强化",
           "expected_concerns_addressed": [
             "public_support"
           ],
@@ -667,7 +667,7 @@
           "id": "D",
           "text": "将此作为对下一任执行主任的'交接备忘'重点",
           "weight": "neutral",
-          "consequences_for_player": "F7 hint 缓解；不影响本任期数值",
+          "consequences_for_player": "但回避反思的倾向被缓解；不影响本任期数值",
           "expected_concerns_addressed": [],
           "behavior": "defer",
           "goal_axis": [
@@ -703,23 +703,23 @@
       "pattern_reveal_template": {
         "round": 2,
         "biases_revealed": [
-          "F2 时间延迟",
-          "F7 自我批评缺失"
+          "F2_time_delay",
+          "F7_self_criticism"
         ],
-        "narrative": "你在前 4 回合的决策中有 {time_delay_count} 个回合表现出 F2 时间延迟偏差（忽视长期后果），{self_criticism_count} 个回合选择回避反思（F7）。Dörner 写道：'我们倾向于为短期辩护，却以长期为代价。'"
+        "narrative": "你在前 4 回合的决策中有 {time_delay_count} 个回合把后果推给了未来，{self_criticism_count} 个回合选择回避反思。'为短期辩护，以长期为代价'——这就是那笔账。"
       }
     },
     {
       "turn": 6,
       "phase": "化石行业信息战",
       "year": "2028年9月",
-      "situation": "2028年9月，《纽约时报》调查报告：5家化石能源公司通过智库和学术机构，资助了价值1.2亿美元的'气候怀疑论'研究。这些研究故意混淆CO2与水蒸气的温室效应比例、夸大气候模型的不确定性。\n\n公众舆论开始分化。Katharine Hayhoe（Texas Tech气候科学家）公开呼吁：'这些资助来源应该被披露。'\n\n但化石行业代表反驳：'科学需要辩论，这是言论自由。'\n\n你需要决定如何应对这场信息战。\n\n⚠️ Dörner F6 确认偏误：信息茧房让对立双方各自只看到支持自己立场的证据。",
+      "situation": "2028年9月，《纽约时报》调查报告：5家化石能源公司通过智库和学术机构，资助了价值1.2亿美元的'气候怀疑论'研究。这些研究故意混淆CO2与水蒸气的温室效应比例、夸大气候模型的不确定性。\n\n公众舆论开始分化。Katharine Hayhoe（Texas Tech气候科学家）公开呼吁：'这些资助来源应该被披露。'\n\n但化石行业代表反驳：'科学需要辩论，这是言论自由。'\n\n你需要决定如何应对这场信息战。\n\n⚠️ 信息茧房：对立双方各自只看到支持自己立场的证据。",
       "options": [
         {
           "id": "A",
           "text": "公开企业资助来源 + 要求媒体核实",
           "weight": "neutral",
-          "consequences_for_player": "public_support +5%；whistleblower_silenced_count +1（行业报复）；但F6 hint 缓解",
+          "consequences_for_player": "public_support +5%；whistleblower_silenced_count +1（行业报复）；但只看好消息的倾向被缓解",
           "expected_concerns_addressed": [
             "public_support"
           ],
@@ -817,7 +817,7 @@
       "phase": "[渐进揭示 T7] 临界点逼近",
       "year": "2030年3月",
       "is_pattern_reveal": true,
-      "situation": "IPCC AR7特别报告：'2030年3月，全球升温达1.7°C。亚马逊雨林开始大规模退化（'树木死亡现象'），格陵兰冰盖融化加速。北极永久冻土层开始释放甲烷——这是正反馈，会加速升温。'\n\n科学家警告：'我们已超过1.5°C阈值。1.7°C不是终点——F1非线性效应可能让升温加速到2°C、3°C。一旦突破2.5°C，亚马逊将不可逆退化为稀树草原。'\n\n【Dörner 模式揭示 · 第 3 阶段 · 回合 8】\n\n你的前 6 回合选择：{turn1_option} → {turn2_option} → {turn3_option} → {turn4_option} → {turn5_option} → {turn6_option}\n\n回溯分析：\n\n🔴 F1 非线性：你是否曾假设升温是线性过程？\n🔴 F8 调节滞后：你是否在临界点逼近时才加速响应？\n\nDörner 写道：'在临界点附近，系统的反应不再是线性的。我们要么在临界点之前行动（成本低），要么在临界点之后行动（成本指数级上升）。'\n\n你的前 6 回合，{time_to_respond_turns} 个回合是在警告公开后才开始响应？\nF8 调节滞后 hint count: {f8_count}",
+      "situation": "IPCC AR7特别报告：'2030年3月，全球升温达1.7°C。亚马逊雨林开始大规模退化（'树木死亡现象'），格陵兰冰盖融化加速。北极永久冻土层开始释放甲烷——这是正反馈，会加速升温。'\n\n科学家警告：'我们已超过1.5°C阈值。1.7°C不是终点——非线性效应可能让升温加速到2°C、3°C。一旦突破2.5°C，亚马逊将不可逆退化为稀树草原。'\n\n【模式回看 · 第 3 阶段 · 回合 8】\n\n你的前 6 回合选择：{turn1_option} → {turn2_option} → {turn3_option} → {turn4_option} → {turn5_option} → {turn6_option}\n\n回溯分析：\n\n🔴 加速不是线性的：你是否曾假设升温是线性过程？\n🔴 反应太慢：你是否在临界点逼近时才加速响应？\n\n在临界点附近，系统的反应不再是线性的：临界点之前行动，成本低；临界点之后行动，成本指数级上升。\n\n你的前 6 回合，{time_to_respond_turns} 个回合是在警告公开后才开始响应？\n响应偏慢的回合数：{f8_count}",
       "options": [
         {
           "id": "A",
@@ -923,10 +923,10 @@
       "pattern_reveal_template": {
         "round": 3,
         "biases_revealed": [
-          "F1 非线性",
-          "F8 调节滞后"
+          "F1_nonlinear",
+          "F8_regulation_lag"
         ],
-        "narrative": "你前 6 回合中，{f1_count} 个回合选择假设升温线性，{f8_count} 个回合在警告公开后才响应。Dörner F1+F8 是临界点附近的危险组合。"
+        "narrative": "你前 6 回合中，{f1_count} 个回合选择假设升温线性，{f8_count} 个回合在警告公开后才响应。两者叠加，是临界点附近最危险的组合。"
       }
     },
     {
@@ -1148,7 +1148,7 @@
       "phase": "[最终结局] 你的十年",
       "year": "2035年12月",
       "is_final_outcome": true,
-      "situation": "你的十年任期将满。2035年12月，全球气候处于你留下的状态。\n\nDörner 写道：'我们不需要完美的决策——我们需要的是持续的方向调整。偏差是常态，自我批评才是能力。'\n\n回顾你的十年：\n- 你在回合1选了 {turn1_option}\n- 回合2: {turn2_option}\n- 回合3: {turn3_option}\n- 回合4: {turn4_option}\n- 回合5: {turn5_option}\n- 回合6: {turn6_option}\n- 回合7: {turn7_option}\n- 回合8: {turn8_option}\n- 回合9: {turn9_option}\n\n最终结局取决于你的累积路径。",
+      "situation": "你的十年任期将满。2035年12月，全球气候处于你留下的状态。\n\n你不需要完美的决策——需要的是持续的方向调整。偏差是常态，能自我批评才是能力。\n\n回顾你的十年：\n- 你在回合1选了 {turn1_option}\n- 回合2: {turn2_option}\n- 回合3: {turn3_option}\n- 回合4: {turn4_option}\n- 回合5: {turn5_option}\n- 回合6: {turn6_option}\n- 回合7: {turn7_option}\n- 回合8: {turn8_option}\n- 回合9: {turn9_option}\n\n最终结局取决于你的累积路径。",
       "options": [
         {
           "id": "A",

@@ -642,7 +642,7 @@
         {
           "id": "B",
           "text": "认为是平台没给够流量，加大投放",
-          "consequences_for_player": "确认偏误：重复失败策略，烧更多钱买'看起来更高的单量'",
+          "consequences_for_player": "重复失败策略：烧更多钱买'看起来更高的单量'",
           "expected_concerns_addressed": [
             "流量焦虑"
           ],
@@ -989,7 +989,7 @@
         {
           "id": "C",
           "text": "向亲戚借钱继续扩张",
-          "consequences_for_player": "目标漂移+确认偏误：用新债填旧坑，家庭关系破裂风险；负债进一步上升",
+          "consequences_for_player": "目标漂移：用新债填旧坑，家庭关系破裂风险；负债进一步上升",
           "expected_concerns_addressed": [
             "继续扩张"
           ],
@@ -1052,7 +1052,7 @@
     {
       "turn": 9,
       "phase": "危机应对",
-      "situation": "现金流告急，月底要发工资、交房租。老周坐在店里，面前四个选择像四扇门。小周想起《失败的逻辑》里的那句话：'过度调节是危机中最常见的错误。'可眼下，每一秒都在流血。",
+      "situation": "现金流告急，月底要发工资、交房租。老周坐在店里，面前四个选择像四扇门。小周想起老周常说的那句话：'危机里最常见的错误，是慌了之后过度补救。'可眼下，每一秒都在流血。",
       "options": [
         {
           "id": "A",
@@ -1189,7 +1189,7 @@
         {
           "id": "B",
           "text": "坚持'扩张没有错'，接受扩张结局",
-          "consequences_for_player": "落入扩张破产结局：目标漂移与确认偏误被坐实",
+          "consequences_for_player": "落入扩张破产结局：目标漂移被坐实",
           "expected_concerns_addressed": [
             "坚持扩张"
           ],

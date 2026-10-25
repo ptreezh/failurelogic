@@ -81,6 +81,9 @@ const STEPS = [
   // S0 未完成期间它必然是红的，混进来会让「当前基线是否全绿」失去信号价值。
   // S0 验收通过后再并入。
   // —— 契约层（秒级，最先跑）——
+  // P0 术语门禁：局内只留观察、命名归 debrief。纯读 JSON，几百毫秒，
+  // 放在契约层最前面 —— 文案回填是最高频的一类漂移，坏了要第一个响。
+  { name: 'gate-scenario-lexicon', script: 'scripts/gate-scenario-lexicon.mjs', timeout: 60000 },
   { name: 'contract-outcome', script: 'scripts/contract-outcome.mjs', timeout: 120000 },
   { name: 'adapter-ending', script: 'scripts/adapter-ending.mjs', timeout: 120000 },
   { name: 'shop-declared', script: 'scripts/shop-declared.mjs', timeout: 300000 },
