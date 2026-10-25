@@ -7,6 +7,92 @@
   "estimatedDuration": 45,
   "category": "产业战略决策·深度",
   "description": "2026年，某国产AI芯片设计公司'华芯科技'。美国制裁升级，先进制程代工与HBM内存双双被断供，海外大客户订单回流又骤减。你扮演华芯CEO，在10个回合里决定公司命运：囤货备件、HBM选型、代工转单、扩产杠杆、良率攻坚、降价保单、EDA并购……每个看似正确的经营决策都藏着延迟后果——现金流被存货吃掉、杠杆在周期底部爆掉、良率焦虑掩盖结构性问题。",
+  "brief": {
+    "role": "华芯科技 CEO",
+    "horizon": "10 个回合，约两年",
+    "objectives": [
+      {
+        "id": "survive",
+        "text": "活过这轮现金断点",
+        "metrics": [
+          "cash_flow",
+          "debt_ratio",
+          "inventory_buffer"
+        ],
+        "tension": "与自主化直接冲突：钱砸进备件和产能，就没钱砸研发",
+        "concerns": [
+          "现金安全",
+          "现金流",
+          "融资",
+          "保订单",
+          "卸包袱",
+          "纾困",
+          "撑周期",
+          "规模",
+          "去杠杆"
+        ]
+      },
+      {
+        "id": "autonomy",
+        "text": "把断供这件事真正解决",
+        "metrics": [
+          "supply_chain_risk",
+          "self_reliance",
+          "yield_rate",
+          "capacity_utilization"
+        ],
+        "tension": "与现金直接冲突：转单、长协、研发攻坚全要先付钱，回报在两三年后",
+        "concerns": [
+          "供应链安全",
+          "自主可控",
+          "短期稳定",
+          "双轨",
+          "政策红利",
+          "分批转单",
+          "研发攻坚",
+          "直面数据",
+          "现状",
+          "工具链",
+          "技术突围",
+          "独立",
+          "数据透明"
+        ]
+      },
+      {
+        "id": "market",
+        "text": "保住订单、客户与资本叙事",
+        "metrics": [
+          "market_share",
+          "order_backlog",
+          "policy_standing"
+        ],
+        "tension": "与前两者冲突：降价保单吃毛利，讲故事托估值又把真问题盖住",
+        "concerns": [
+          "信心",
+          "诚实",
+          "订单",
+          "差异化",
+          "技术溢价",
+          "稳健",
+          "坚持叙事"
+        ]
+      }
+    ],
+    "method_concerns": [
+      "折中",
+      "数据驱动",
+      "条件评估",
+      "专家评审",
+      "独立验证",
+      "外部诊断",
+      "尽调",
+      "客户分析",
+      "复盘"
+    ],
+    "impossible": "三件事不可能同时做好：活过现金断点、把断供真正解决、保住订单与资本叙事。每一回合的选择，至少牺牲掉其中一件。",
+    "ends_when": "10 个回合用完，或现金流断裂、被并购、纾困接管",
+    "how_judged": "没有唯一正确答案。判定看你的决策链是否与你声称的目标自洽——尤其看你用“撑过周期”解释过多少次。"
+  },
   "dornerLessons": [
     "线性外推陷阱：把断供前的增速线性外推到制裁期，高估需求曲线",
     "确认偏误：只采信'国产替代乐观'的媒体叙事，忽视良率与现金流的硬数据",
@@ -114,7 +200,14 @@
           "expected_concerns_addressed": [
             "供应链安全"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "expand",
+          "goal_axis": [
+            "autonomy"
+          ],
+          "goal_sacrificed": [
+            "survive"
+          ]
         },
         {
           "id": "B",
@@ -123,7 +216,14 @@
           "expected_concerns_addressed": [
             "折中"
           ],
-          "weight": "moderate"
+          "weight": "moderate",
+          "behavior": "hold",
+          "goal_axis": [
+            "survive"
+          ],
+          "goal_sacrificed": [
+            "autonomy"
+          ]
         },
         {
           "id": "C",
@@ -132,7 +232,14 @@
           "expected_concerns_addressed": [
             "现金安全"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "commit",
+          "goal_axis": [
+            "autonomy"
+          ],
+          "goal_sacrificed": [
+            "survive"
+          ]
         },
         {
           "id": "D",
@@ -141,7 +248,14 @@
           "expected_concerns_addressed": [
             "数据驱动"
           ],
-          "weight": "analytical"
+          "weight": "analytical",
+          "behavior": "analyze",
+          "goal_axis": [
+            "survive"
+          ],
+          "goal_sacrificed": [
+            "autonomy"
+          ]
         }
       ],
       "expected_effects": {
@@ -188,7 +302,15 @@
           "expected_concerns_addressed": [
             "自主可控"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "expand",
+          "goal_axis": [
+            "autonomy"
+          ],
+          "goal_sacrificed": [
+            "market",
+            "survive"
+          ]
         },
         {
           "id": "B",
@@ -197,7 +319,15 @@
           "expected_concerns_addressed": [
             "双轨"
           ],
-          "weight": "moderate"
+          "weight": "moderate",
+          "behavior": "hold",
+          "goal_axis": [
+            "survive",
+            "autonomy"
+          ],
+          "goal_sacrificed": [
+            "market"
+          ]
         },
         {
           "id": "C",
@@ -206,7 +336,15 @@
           "expected_concerns_addressed": [
             "短期稳定"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "defer",
+          "goal_axis": [
+            "survive",
+            "market"
+          ],
+          "goal_sacrificed": [
+            "autonomy"
+          ]
         },
         {
           "id": "D",
@@ -215,7 +353,14 @@
           "expected_concerns_addressed": [
             "数据透明"
           ],
-          "weight": "analytical"
+          "weight": "analytical",
+          "behavior": "analyze",
+          "goal_axis": [
+            "autonomy"
+          ],
+          "goal_sacrificed": [
+            "market"
+          ]
         }
       ],
       "expected_effects": {
@@ -265,7 +410,15 @@
           "expected_concerns_addressed": [
             "政策红利"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "expand",
+          "goal_axis": [
+            "autonomy"
+          ],
+          "goal_sacrificed": [
+            "market",
+            "survive"
+          ]
         },
         {
           "id": "B",
@@ -274,7 +427,15 @@
           "expected_concerns_addressed": [
             "分批转单"
           ],
-          "weight": "moderate"
+          "weight": "moderate",
+          "behavior": "hold",
+          "goal_axis": [
+            "survive",
+            "autonomy"
+          ],
+          "goal_sacrificed": [
+            "market"
+          ]
         },
         {
           "id": "C",
@@ -283,7 +444,14 @@
           "expected_concerns_addressed": [
             "独立"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "market"
+          ],
+          "goal_sacrificed": [
+            "autonomy"
+          ]
         },
         {
           "id": "D",
@@ -292,7 +460,14 @@
           "expected_concerns_addressed": [
             "条件评估"
           ],
-          "weight": "analytical"
+          "weight": "analytical",
+          "behavior": "analyze",
+          "goal_axis": [
+            "survive"
+          ],
+          "goal_sacrificed": [
+            "autonomy"
+          ]
         }
       ],
       "expected_effects": {
@@ -340,7 +515,14 @@
           "expected_concerns_addressed": [
             "信心"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "market"
+          ],
+          "goal_sacrificed": [
+            "autonomy"
+          ]
         },
         {
           "id": "B",
@@ -349,7 +531,14 @@
           "expected_concerns_addressed": [
             "诚实"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "commit",
+          "goal_axis": [
+            "market"
+          ],
+          "goal_sacrificed": [
+            "survive"
+          ]
         },
         {
           "id": "C",
@@ -358,7 +547,14 @@
           "expected_concerns_addressed": [
             "研发攻坚"
           ],
-          "weight": "moderate"
+          "weight": "moderate",
+          "behavior": "expand",
+          "goal_axis": [
+            "autonomy"
+          ],
+          "goal_sacrificed": [
+            "survive"
+          ]
         },
         {
           "id": "D",
@@ -367,7 +563,15 @@
           "expected_concerns_addressed": [
             "独立验证"
           ],
-          "weight": "analytical"
+          "weight": "analytical",
+          "behavior": "analyze",
+          "goal_axis": [
+            "autonomy",
+            "market"
+          ],
+          "goal_sacrificed": [
+            "survive"
+          ]
         }
       ],
       "expected_effects": {
@@ -423,7 +627,14 @@
           "expected_concerns_addressed": [
             "直面数据"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "commit",
+          "goal_axis": [
+            "autonomy"
+          ],
+          "goal_sacrificed": [
+            "market"
+          ]
         },
         {
           "id": "B",
@@ -432,7 +643,15 @@
           "expected_concerns_addressed": [
             "信心"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "market"
+          ],
+          "goal_sacrificed": [
+            "autonomy",
+            "survive"
+          ]
         },
         {
           "id": "C",
@@ -441,7 +660,15 @@
           "expected_concerns_addressed": [
             "现状"
           ],
-          "weight": "passive"
+          "weight": "passive",
+          "behavior": "hold",
+          "goal_axis": [
+            "survive"
+          ],
+          "goal_sacrificed": [
+            "autonomy",
+            "market"
+          ]
         },
         {
           "id": "D",
@@ -450,7 +677,14 @@
           "expected_concerns_addressed": [
             "专家评审"
           ],
-          "weight": "analytical"
+          "weight": "analytical",
+          "behavior": "analyze",
+          "goal_axis": [
+            "autonomy"
+          ],
+          "goal_sacrificed": [
+            "market"
+          ]
         }
       ],
       "expected_effects": {
@@ -509,7 +743,14 @@
           "expected_concerns_addressed": [
             "规模"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "expand",
+          "goal_axis": [
+            "market"
+          ],
+          "goal_sacrificed": [
+            "survive"
+          ]
         },
         {
           "id": "B",
@@ -518,7 +759,14 @@
           "expected_concerns_addressed": [
             "现金流"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "survive"
+          ],
+          "goal_sacrificed": [
+            "market"
+          ]
         },
         {
           "id": "C",
@@ -527,7 +775,15 @@
           "expected_concerns_addressed": [
             "订单"
           ],
-          "weight": "moderate"
+          "weight": "moderate",
+          "behavior": "hold",
+          "goal_axis": [
+            "survive",
+            "market"
+          ],
+          "goal_sacrificed": [
+            "autonomy"
+          ]
         },
         {
           "id": "D",
@@ -536,7 +792,14 @@
           "expected_concerns_addressed": [
             "融资"
           ],
-          "weight": "moderate"
+          "weight": "moderate",
+          "behavior": "rescue",
+          "goal_axis": [
+            "survive"
+          ],
+          "goal_sacrificed": [
+            "autonomy"
+          ]
         }
       ],
       "expected_effects": {
@@ -587,7 +850,14 @@
           "expected_concerns_addressed": [
             "保订单"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "market"
+          ],
+          "goal_sacrificed": [
+            "survive"
+          ]
         },
         {
           "id": "B",
@@ -596,7 +866,14 @@
           "expected_concerns_addressed": [
             "差异化"
           ],
-          "weight": "moderate"
+          "weight": "moderate",
+          "behavior": "hold",
+          "goal_axis": [
+            "market"
+          ],
+          "goal_sacrificed": [
+            "survive"
+          ]
         },
         {
           "id": "C",
@@ -605,7 +882,15 @@
           "expected_concerns_addressed": [
             "技术溢价"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "commit",
+          "goal_axis": [
+            "autonomy",
+            "market"
+          ],
+          "goal_sacrificed": [
+            "survive"
+          ]
         },
         {
           "id": "D",
@@ -614,7 +899,14 @@
             "客户分析"
           ],
           "weight": "analytical",
-          "consequences_for_player": "砍单当期报表好看，但产能填满率掉下来以后，想把订单追回来要先重新爬坡，产线恢复至少一个季度；被砍掉的客户下一次招标会把你排在备选。"
+          "consequences_for_player": "砍单当期报表好看，但产能填满率掉下来以后，想把订单追回来要先重新爬坡，产线恢复至少一个季度；被砍掉的客户下一次招标会把你排在备选。",
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "survive"
+          ],
+          "goal_sacrificed": [
+            "market"
+          ]
         }
       ],
       "expected_effects": {
@@ -674,7 +966,15 @@
           "expected_concerns_addressed": [
             "去杠杆"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "survive"
+          ],
+          "goal_sacrificed": [
+            "market",
+            "autonomy"
+          ]
         },
         {
           "id": "B",
@@ -683,7 +983,15 @@
           "expected_concerns_addressed": [
             "撑周期"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "market"
+          ],
+          "goal_sacrificed": [
+            "survive",
+            "autonomy"
+          ]
         },
         {
           "id": "C",
@@ -692,7 +1000,14 @@
           "expected_concerns_addressed": [
             "卸包袱"
           ],
-          "weight": "passive"
+          "weight": "passive",
+          "behavior": "rescue",
+          "goal_axis": [
+            "survive"
+          ],
+          "goal_sacrificed": [
+            "autonomy"
+          ]
         },
         {
           "id": "D",
@@ -701,7 +1016,14 @@
           "expected_concerns_addressed": [
             "外部诊断"
           ],
-          "weight": "analytical"
+          "weight": "analytical",
+          "behavior": "analyze",
+          "goal_axis": [
+            "survive"
+          ],
+          "goal_sacrificed": [
+            "market"
+          ]
         }
       ],
       "expected_effects": {
@@ -751,7 +1073,14 @@
           "expected_concerns_addressed": [
             "工具链"
           ],
-          "weight": "moderate"
+          "weight": "moderate",
+          "behavior": "expand",
+          "goal_axis": [
+            "autonomy"
+          ],
+          "goal_sacrificed": [
+            "survive"
+          ]
         },
         {
           "id": "B",
@@ -760,7 +1089,15 @@
           "expected_concerns_addressed": [
             "技术突围"
           ],
-          "weight": "aggressive"
+          "weight": "aggressive",
+          "behavior": "commit",
+          "goal_axis": [
+            "autonomy"
+          ],
+          "goal_sacrificed": [
+            "survive",
+            "market"
+          ]
         },
         {
           "id": "C",
@@ -769,7 +1106,15 @@
           "expected_concerns_addressed": [
             "稳健"
           ],
-          "weight": "conservative"
+          "weight": "conservative",
+          "behavior": "hold",
+          "goal_axis": [
+            "survive"
+          ],
+          "goal_sacrificed": [
+            "autonomy",
+            "market"
+          ]
         },
         {
           "id": "D",
@@ -778,7 +1123,14 @@
           "expected_concerns_addressed": [
             "尽调"
           ],
-          "weight": "analytical"
+          "weight": "analytical",
+          "behavior": "analyze",
+          "goal_axis": [
+            "autonomy"
+          ],
+          "goal_sacrificed": [
+            "survive"
+          ]
         }
       ],
       "expected_effects": {
@@ -835,12 +1187,15 @@
       "options": [
         {
           "id": "A",
-          "text": "接受终局评分，完整复盘全决策链",
-          "consequences_for_player": "系统按状态自动判定结局：现金流健康+自研突破=自主突围；负债爆表=现金困局/出局",
+          "text": "接受结局，完整复盘全决策链",
+          "consequences_for_player": "现金、负债与自研进度同时摆上桌：撑住了是自主突围，负债爆表就是现金困局或出局",
           "expected_concerns_addressed": [
-            "自动评分"
+            "复盘"
           ],
-          "weight": "neutral"
+          "weight": "neutral",
+          "behavior": "analyze",
+          "goal_axis": [],
+          "goal_sacrificed": []
         },
         {
           "id": "B",
@@ -850,7 +1205,15 @@
             "坚持叙事"
           ],
           "weight": "aggressive",
-          "trigger_outcome": "cash_trap"
+          "trigger_outcome": "cash_trap",
+          "behavior": "commit",
+          "goal_axis": [
+            "market"
+          ],
+          "goal_sacrificed": [
+            "survive",
+            "autonomy"
+          ]
         },
         {
           "id": "C",
@@ -860,7 +1223,14 @@
             "稳健"
           ],
           "weight": "passive",
-          "trigger_outcome": "exit"
+          "trigger_outcome": "exit",
+          "behavior": "hold",
+          "goal_axis": [
+            "survive"
+          ],
+          "goal_sacrificed": [
+            "market"
+          ]
         },
         {
           "id": "D",
@@ -870,7 +1240,14 @@
             "纾困"
           ],
           "weight": "passive",
-          "trigger_outcome": "bailout"
+          "trigger_outcome": "bailout",
+          "behavior": "rescue",
+          "goal_axis": [
+            "survive"
+          ],
+          "goal_sacrificed": [
+            "autonomy"
+          ]
         }
       ],
       "expected_effects": {
@@ -971,6 +1348,7 @@
   },
   "feedback_patterns": {
     "linear_extrapolation": {
+      "real_world_anchor": "开业首月排队，按这速度订了全年食材",
       "trigger": "growth_extrapolation_count >= 2 AND market_cycle_turn == 'peak'",
       "dorner_concept": "线性外推陷阱",
       "evidence_template": "你把断供前的增速线性外推到制裁期，在 {turn} 回合按旧斜率规划了产能。",
@@ -980,6 +1358,7 @@
       ]
     },
     "confirmation_bias": {
+      "real_world_anchor": "老板只看老顾客好评，新客差评进不了周会",
       "trigger": "perception_bias >= 15",
       "dorner_concept": "确认偏误",
       "evidence_template": "你 {n} 次选择用媒体叙事覆盖良率数据，perception_bias 累积至 {p}。",
@@ -988,6 +1367,7 @@
       ]
     },
     "time_delay_blindness": {
+      "real_world_anchor": "拖了半年的渗水，修时整面墙要拆",
       "trigger": "deferred_consequence_count >= 2",
       "dorner_concept": "时间延迟",
       "evidence_template": "备件囤积、良率爬坡、扩产承诺的代价在 {reveal_turn} 回合才集中引爆。",
@@ -996,7 +1376,8 @@
       ]
     },
     "single_target_optimization": {
-      "trigger": "market_share_obsession_count >= 2",
+      "real_world_anchor": "为压成本换便宜原料，返工率涨了三成",
+      "trigger": "consecutive_similar_choices >= 4",
       "dorner_concept": "单目标优化",
       "evidence_template": "你 {n} 次把'市占率/扩产'当作唯一指标，牺牲了现金流与研发质量。",
       "reflection_questions": [
@@ -1004,7 +1385,8 @@
       ]
     },
     "local_optimization": {
-      "trigger": "chip_cost_optimization_count >= 2",
+      "real_world_anchor": "每个部门都达标，流程还是卡在交接",
+      "trigger": "cost_cut_local_count >= 2",
       "dorner_concept": "局部优化 / 只见树木",
       "evidence_template": "你拆解了每颗芯片的成本，却看不到整条供应链的脆弱性。",
       "reflection_questions": [
@@ -1012,7 +1394,8 @@
       ]
     },
     "problem_delay_exposure": {
-      "trigger": "bad_news_hidden_count >= 2",
+      "real_world_anchor": "投诉先压着不回，半年后集中退单",
+      "trigger": "deferred_consequence_count >= 2",
       "dorner_concept": "问题延迟暴露",
       "evidence_template": "良率与供应链风险在媒体乐观期被掩盖，在 {reveal_turn} 回合集中爆发。",
       "reflection_questions": [
@@ -1020,6 +1403,7 @@
       ]
     },
     "overcorrection": {
+      "real_world_anchor": "一次超支就全面砍预算，项目直接停摆",
       "trigger": "price_cut_rescue == True",
       "dorner_concept": "过度调节",
       "evidence_template": "危机时靠全线降价保单、加杠杆维持扩产，把公司锁死在死亡螺旋。",
@@ -1028,7 +1412,8 @@
       ]
     },
     "self_reference": {
-      "trigger": "optimism_statement_count >= 2",
+      "real_world_anchor": "按自己习惯排值班表，没人愿意换班",
+      "trigger": "optimism_claim_count >= 2",
       "dorner_concept": "自指 / 系统反应",
       "evidence_template": "你的每一份乐观声明都反向影响了投资人与客户的信心——叙事制造了它试图描述的信任。",
       "reflection_questions": [

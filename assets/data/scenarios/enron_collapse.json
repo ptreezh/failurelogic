@@ -7,6 +7,57 @@
   "estimatedDuration": 45,
   "category": "企业决策失败",
   "description": "你是安然(Enron)公司CFO/CFO的副手，在2000年1月到2001年12月这一关键22个月中做出10个决策。安然的崩塌是Dörner F4（副作用忽视）+ F7（自我批评缺失）的经典案例——内部知情者已发出警告，但公司沉迷于'创造市场'的叙事。",
+  "brief": {
+    "role": "安然 CFO 的副手，能看见全部账目，但没有最终签字权",
+    "horizon": "10 个回合，2000 年 1 月到 2001 年 12 月",
+    "objectives": [
+      {
+        "id": "valuation",
+        "text": "让股价与信用评级撑住",
+        "metrics": [
+          "share_price_usd",
+          "credit_rating"
+        ],
+        "tension": "与真实报表直接冲突：表外负债一收回表内，评级和股价当场下修",
+        "concerns": [
+          "share_price_usd",
+          "credit_rating"
+        ]
+      },
+      {
+        "id": "substance",
+        "text": "让报表回到真实现金流",
+        "metrics": [
+          "actual_cashflow_usd_m",
+          "off_balance_sheet_exposure_usd_m",
+          "reported_earnings_usd_m"
+        ],
+        "tension": "与股价冲突：承认现金缺口的那一季，市场先惩罚你",
+        "concerns": [
+          "actual_cashflow",
+          "off_balance_sheet_exposure"
+        ]
+      },
+      {
+        "id": "visibility",
+        "text": "让董事会与外界看得见全部",
+        "metrics": [
+          "board_oversight_strength",
+          "media_skepticism_index",
+          "whistleblower_silenced_count"
+        ],
+        "tension": "与股价冲突：审计与披露一旦启动，节奏就不再由你控制",
+        "concerns": [
+          "board_oversight_strength",
+          "media_skepticism_index"
+        ]
+      }
+    ],
+    "method_concerns": [],
+    "impossible": "三件事不可能同时成立：股价与评级撑住、账目回到真实现金流、董事会与外界看清全部。每一回合的选择，至少牺牲掉其中一件。",
+    "ends_when": "10 个回合用完，或信用评级跌到投机级",
+    "how_judged": "没有唯一正确答案。判定看你的决策链是否与你声称的目标自洽——尤其看你把问题往后推了几次，以及每次推的时候用了什么理由。"
+  },
   "dornerLessons": [
     "F1 非线性效应：单笔10亿美元的虚假交易 → 整体资产负债表崩塌（不是渐进）",
     "F2 时间延迟：Fastow的SPE（特别目的实体）1997年开始 → 2001年10月才被披露（4年延迟）",
@@ -131,6 +182,14 @@
           "expected_concerns_addressed": [
             "off_balance_sheet_exposure",
             "credit_rating"
+          ],
+          "behavior": "expand",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "substance",
+            "visibility"
           ]
         },
         {
@@ -141,6 +200,14 @@
           "expected_concerns_addressed": [
             "board_oversight_strength",
             "off_balance_sheet_exposure"
+          ],
+          "behavior": "analyze",
+          "goal_axis": [
+            "substance",
+            "visibility"
+          ],
+          "goal_sacrificed": [
+            "valuation"
           ]
         },
         {
@@ -150,6 +217,14 @@
           "consequences_for_player": "board_oversight +15；analyst_confidence -5（短期不确定性）；Fastow 可能离职",
           "expected_concerns_addressed": [
             "board_oversight_strength"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "visibility",
+            "substance"
+          ],
+          "goal_sacrificed": [
+            "valuation"
           ]
         },
         {
@@ -160,6 +235,13 @@
           "expected_concerns_addressed": [
             "credit_rating",
             "off_balance_sheet_exposure"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "substance"
+          ],
+          "goal_sacrificed": [
+            "valuation"
           ]
         }
       ],
@@ -203,6 +285,14 @@
           "expected_concerns_addressed": [
             "share_price_usd",
             "off_balance_sheet_exposure"
+          ],
+          "behavior": "expand",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "substance",
+            "visibility"
           ]
         },
         {
@@ -213,6 +303,13 @@
           "expected_concerns_addressed": [
             "share_price_usd",
             "off_balance_sheet_exposure"
+          ],
+          "behavior": "hold",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "substance"
           ]
         },
         {
@@ -223,6 +320,13 @@
           "expected_concerns_addressed": [
             "actual_cashflow",
             "share_price_usd"
+          ],
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "substance"
+          ],
+          "goal_sacrificed": [
+            "valuation"
           ]
         },
         {
@@ -230,7 +334,14 @@
           "text": "推迟决定，要求 6 个月尽职调查",
           "weight": "safe",
           "consequences_for_player": "share_price -3%；时间买确定性",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "defer",
+          "goal_axis": [
+            "substance"
+          ],
+          "goal_sacrificed": [
+            "valuation"
+          ]
         }
       ],
       "expected_effects": {
@@ -275,6 +386,14 @@
           "expected_concerns_addressed": [
             "board_oversight_strength",
             "share_price_usd"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "visibility",
+            "substance"
+          ],
+          "goal_sacrificed": [
+            "valuation"
           ]
         },
         {
@@ -284,6 +403,13 @@
           "consequences_for_player": "Fastow 配合；但 structural 问题难改",
           "expected_concerns_addressed": [
             "actual_cashflow"
+          ],
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "substance"
           ]
         },
         {
@@ -291,7 +417,15 @@
           "text": "忽视此警告——报告利润是 GAAP 标准",
           "weight": "risky",
           "consequences_for_player": "F7 自我批评缺失 hint 强化",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "substance",
+            "visibility"
+          ]
         },
         {
           "id": "D",
@@ -300,6 +434,14 @@
           "consequences_for_player": "board_oversight +20；whistleblower_silenced 缓解（让质疑进入流程）",
           "expected_concerns_addressed": [
             "board_oversight_strength"
+          ],
+          "behavior": "analyze",
+          "goal_axis": [
+            "substance",
+            "visibility"
+          ],
+          "goal_sacrificed": [
+            "valuation"
           ]
         }
       ],
@@ -350,6 +492,13 @@
           "consequences_for_player": "media_skepticism +25（媒体反击）；analyst_confidence -10",
           "expected_concerns_addressed": [
             "share_price_usd"
+          ],
+          "behavior": "expand",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "visibility"
           ]
         },
         {
@@ -360,6 +509,13 @@
           "expected_concerns_addressed": [
             "share_price_usd",
             "media_skepticism_index"
+          ],
+          "behavior": "hold",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "visibility"
           ]
         },
         {
@@ -370,6 +526,14 @@
           "expected_concerns_addressed": [
             "media_skepticism_index",
             "credit_rating"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "visibility",
+            "substance"
+          ],
+          "goal_sacrificed": [
+            "valuation"
           ]
         },
         {
@@ -380,6 +544,13 @@
           "expected_concerns_addressed": [
             "media_skepticism_index",
             "share_price_usd"
+          ],
+          "behavior": "rescue",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "substance"
           ]
         }
       ],
@@ -426,6 +597,14 @@
           "expected_concerns_addressed": [
             "credit_rating",
             "share_price_usd"
+          ],
+          "behavior": "analyze",
+          "goal_axis": [
+            "substance",
+            "visibility"
+          ],
+          "goal_sacrificed": [
+            "valuation"
           ]
         },
         {
@@ -435,6 +614,14 @@
           "consequences_for_player": "credit_rating -1；share_price -10%；但分析师会尊重诚实",
           "expected_concerns_addressed": [
             "credit_rating"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "visibility",
+            "substance"
+          ],
+          "goal_sacrificed": [
+            "valuation"
           ]
         },
         {
@@ -442,7 +629,15 @@
           "text": "压下此备忘录，希望问题自然消失",
           "weight": "risky",
           "consequences_for_player": "F2/F7 hint 强化；后续崩塌加速",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "substance",
+            "visibility"
+          ]
         },
         {
           "id": "D",
@@ -451,6 +646,13 @@
           "consequences_for_player": "board_oversight +25；whistleblower_silenced 化解；Lay 不悦",
           "expected_concerns_addressed": [
             "board_oversight_strength"
+          ],
+          "behavior": "rescue",
+          "goal_axis": [
+            "visibility"
+          ],
+          "goal_sacrificed": [
+            "valuation"
           ]
         }
       ],
@@ -507,6 +709,13 @@
           "consequences_for_player": "share_price -15%；analyst_confidence -15（反效果）",
           "expected_concerns_addressed": [
             "share_price_usd"
+          ],
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "visibility"
           ]
         },
         {
@@ -517,6 +726,14 @@
           "expected_concerns_addressed": [
             "share_price_usd",
             "media_skepticism_index"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "substance",
+            "visibility"
+          ],
+          "goal_sacrificed": [
+            "valuation"
           ]
         },
         {
@@ -526,6 +743,14 @@
           "consequences_for_player": "share_price 短期 +10%；但 off_balance_sheet +1500；whistleblower +2",
           "expected_concerns_addressed": [
             "share_price_usd"
+          ],
+          "behavior": "expand",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "substance",
+            "visibility"
           ]
         },
         {
@@ -536,6 +761,13 @@
           "expected_concerns_addressed": [
             "credit_rating",
             "share_price_usd"
+          ],
+          "behavior": "rescue",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "substance"
           ]
         }
       ],
@@ -581,6 +813,13 @@
           "expected_concerns_addressed": [
             "share_price_usd",
             "credit_rating"
+          ],
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "substance"
+          ],
+          "goal_sacrificed": [
+            "valuation"
           ]
         },
         {
@@ -590,6 +829,13 @@
           "consequences_for_player": "merge 失败（2001-11-28 Dynegy 退出）；但仍晚于最优时机",
           "expected_concerns_addressed": [
             "credit_rating"
+          ],
+          "behavior": "rescue",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "substance"
           ]
         },
         {
@@ -597,7 +843,15 @@
           "text": "让 Lay 继续公开辩护，希望反转",
           "weight": "extreme_risk",
           "consequences_for_player": "share_price → $1；credit_rating → D；72天崩盘",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "visibility",
+            "substance"
+          ]
         },
         {
           "id": "D",
@@ -606,6 +860,13 @@
           "consequences_for_player": "share_price +5%（市场欢迎新领导）；credit_rating 仍 D；但道德挽回",
           "expected_concerns_addressed": [
             "share_price_usd"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "visibility"
+          ],
+          "goal_sacrificed": [
+            "valuation"
           ]
         }
       ],
@@ -662,6 +923,13 @@
           "consequences_for_player": "media_skepticism -20；员工 trust +30；credit_rating -1",
           "expected_concerns_addressed": [
             "media_skepticism_index"
+          ],
+          "behavior": "rescue",
+          "goal_axis": [
+            "visibility"
+          ],
+          "goal_sacrificed": [
+            "valuation"
           ]
         },
         {
@@ -671,6 +939,14 @@
           "consequences_for_player": "share_price -5%；media_skepticism -30；credit_rating -2",
           "expected_concerns_addressed": [
             "media_skepticism_index"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "visibility",
+            "substance"
+          ],
+          "goal_sacrificed": [
+            "valuation"
           ]
         },
         {
@@ -678,14 +954,29 @@
           "text": "拖延 SEC 调查，让 Lay 个人承担",
           "weight": "risky",
           "consequences_for_player": "Lay 被起诉；公司避更；F4 强化",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "defer",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "visibility"
+          ]
         },
         {
           "id": "D",
           "text": "将剩余资产快速出售给其他能源公司（含关联交易）",
           "weight": "extreme_risk",
           "consequences_for_player": "短视：合规风险 +5 年起诉",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "substance",
+            "visibility"
+          ]
         }
       ],
       "expected_effects": {
@@ -730,6 +1021,14 @@
           "consequences_for_player": "personal_risk 高；但媒体 trust 高",
           "expected_concerns_addressed": [
             "media_skepticism_index"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "visibility",
+            "substance"
+          ],
+          "goal_sacrificed": [
+            "valuation"
           ]
         },
         {
@@ -737,21 +1036,43 @@
           "text": "部分承认：承认 CFO 错误，但否认 CEO 知情",
           "weight": "neutral",
           "consequences_for_player": "Fastow 承担；Lay 可能脱责",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "hold",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "visibility"
+          ]
         },
         {
           "id": "C",
           "text": "否认所有指控，推卸给下属和审计师",
           "weight": "extreme_risk",
           "consequences_for_player": "后续起诉加重；社会反感",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "substance",
+            "visibility"
+          ]
         },
         {
           "id": "D",
           "text": "援引第 5 修正案（不自证其罪），拒绝回答实质问题",
           "weight": "neutral",
           "consequences_for_player": "避免自证；公众反感",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "defer",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "visibility"
+          ]
         }
       ],
       "expected_effects": {
@@ -788,28 +1109,58 @@
           "text": "主动承担（接受刑事处罚，承担债权人赔偿）",
           "weight": "extreme_safe",
           "consequences_for_player": "触发 orderly_resolution 结局（条件：诚实+早响应）",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "commit",
+          "goal_axis": [
+            "visibility",
+            "substance"
+          ],
+          "goal_sacrificed": [
+            "valuation"
+          ]
         },
         {
           "id": "B",
           "text": "承认失误但避免刑事责任",
           "weight": "neutral",
           "consequences_for_player": "触发 partial_collapse 结局",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "hold",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "substance"
+          ]
         },
         {
           "id": "C",
           "text": "推卸责任，责怪下属和市场",
           "weight": "risky",
           "consequences_for_player": "触发 total_collapse 结局",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "substance",
+            "visibility"
+          ]
         },
         {
           "id": "D",
           "text": "沉默，让律师处理",
           "weight": "extreme_risk",
           "consequences_for_player": "触发 total_collapse 结局 + 个人刑责",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "defer",
+          "goal_axis": [
+            "valuation"
+          ],
+          "goal_sacrificed": [
+            "visibility"
+          ]
         }
       ],
       "expected_effects": {
@@ -914,6 +1265,7 @@
   ],
   "feedback_patterns": {
     "F1_nonlinear": {
+      "real_world_anchor": "借新还旧撑两年，第三家银行抽贷当天就断",
       "trigger": "share_price_drop > 50% AND turn >= 7",
       "dorner_concept": "非线性崩盘",
       "evidence_template": "股价从 $90 跌到 $30 是临界点附近的指数加速。",
@@ -924,6 +1276,7 @@
       ]
     },
     "F2_time_delay": {
+      "real_world_anchor": "每年省一次牙科检查，五年后种三颗牙",
       "trigger": "warning_to_response_lag >= 2",
       "dorner_concept": "时间延迟偏差",
       "evidence_template": "Watkins 2000年12月警告 → 你 2001年6月才重新审视（6 个月）。",
@@ -934,7 +1287,8 @@
       ]
     },
     "F3_self_reference": {
-      "trigger": "policy_counters_policy_count >= 1",
+      "real_world_anchor": "把工作日作息套到假期，全家跟着乱",
+      "trigger": "strategy_backfire_count >= 1",
       "dorner_concept": "自反性陷阱",
       "evidence_template": "你的'创造市场'叙事让审计师无法质疑——创造了反作用。",
       "reflection_questions": [
@@ -943,7 +1297,8 @@
       ]
     },
     "F4_side_effects": {
-      "trigger": "off_balance_sheet > 5000 AND employee_trust < 50",
+      "real_world_anchor": "靠咖啡提神，晚上失眠白天更困",
+      "trigger": "off_balance_sheet_exposure_usd_m > 5000 AND whistleblower_silenced_count >= 1",
       "dorner_concept": "副作用忽视",
       "evidence_template": "你的决策让 off_balance_sheet 暴露 {x} 亿美元，员工 401k 承担风险。",
       "reflection_questions": [
@@ -953,6 +1308,7 @@
       ]
     },
     "F5_single_target": {
+      "real_world_anchor": "只抓出勤，人到了不干活也没人管",
       "trigger": "primary_focus_dimension_count >= 5",
       "dorner_concept": "单目标优化",
       "evidence_template": "你聚焦于报告利润 + 股价，忽略了现金流 + 关联交易。",
@@ -963,7 +1319,8 @@
       ]
     },
     "F6_confirmation": {
-      "trigger": "analyst_attack_count >= 2",
+      "real_world_anchor": "只听老客户夸，新客户流失半年才发现",
+      "trigger": "analyst_confidence_drop_count >= 2",
       "dorner_concept": "确认偏误",
       "evidence_template": "你攻击了 Olson 等分析师——但他们看到了你没看到的。",
       "reflection_questions": [
@@ -972,7 +1329,8 @@
       ]
     },
     "F7_self_criticism": {
-      "trigger": "no_response_to_watkins >= 2",
+      "real_world_anchor": "项目失败归因市场，没人提自己的排期",
+      "trigger": "whistleblower_silenced_count >= 2",
       "dorner_concept": "自我批评缺失",
       "evidence_template": "Watkins 警告后你未重新审视——直到 6 个月后崩盘。",
       "reflection_questions": [
@@ -981,7 +1339,8 @@
       ]
     },
     "F8_regulation_lag": {
-      "trigger": "warning_to_action_lag >= 3",
+      "real_world_anchor": "孩子一哭就改规则，最后规则一天一变",
+      "trigger": "warning_to_response_lag >= 2",
       "dorner_concept": "调节滞后",
       "evidence_template": "警告公开后你平均 {lag} 个回合才响应。",
       "reflection_questions": [

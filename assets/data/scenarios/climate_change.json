@@ -7,6 +7,56 @@
   "estimatedDuration": 45,
   "category": "重大公共决策",
   "description": "你是联合国政府间气候变化专门委员会（IPCC）执行主任，任期2025-2035。在10个关键决策点中，平衡经济增速、公众支持、国际信任与代际气候正义。",
+  "brief": {
+    "role": "IPCC 执行主任，2025-2035 任期",
+    "horizon": "10 个回合，十年",
+    "objectives": [
+      {
+        "id": "temperature",
+        "text": "把温升按在 1.5°C 的窗口里",
+        "metrics": [
+          "renewable_share_pct",
+          "tipping_point_proximity",
+          "global_avg_temp_c"
+        ],
+        "tension": "与经济直接冲突：减排速度真提上来，先掉的是增长数字",
+        "concerns": [
+          "renewable_share",
+          "tipping_point"
+        ]
+      },
+      {
+        "id": "cooperation",
+        "text": "让 198 国继续坐在同一张桌子前",
+        "metrics": [
+          "international_trust",
+          "climate_justice_index"
+        ],
+        "tension": "与减排时间表冲突：给穷国缓冲与赔偿，总量目标就要往后挪",
+        "concerns": [
+          "international_trust",
+          "climate_justice"
+        ]
+      },
+      {
+        "id": "headroom",
+        "text": "不把增长与民意押上赌桌",
+        "metrics": [
+          "gdp_growth_pct",
+          "public_support_pct"
+        ],
+        "tension": "与道义承诺冲突：赔偿和转型的钱都来自纳税人，支持率当场就掉",
+        "concerns": [
+          "gdp_growth",
+          "public_support"
+        ]
+      }
+    ],
+    "method_concerns": [],
+    "impossible": "三件事不可能同时做到：把温升按住、让 198 国继续合作、保住增长与民意。每一回合的选择，至少牺牲掉其中一件。",
+    "ends_when": "10 个回合用完，或温升越过不可逆阈值",
+    "how_judged": "没有唯一正确答案。判定看你的决策链是否与你声称的目标自洽——把“全球共同但有区别的责任”挂在嘴上，和真的让谁掏钱，是两回事。"
+  },
   "dornerLessons": [
     "F1 非线性效应：升温超过1.5°C后，临界点加速触发",
     "F2 时间延迟：你今天的决策，50年后才显现完整后果",
@@ -143,6 +193,13 @@
           "expected_concerns_addressed": [
             "international_trust",
             "public_support"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "cooperation"
+          ],
+          "goal_sacrificed": [
+            "headroom"
           ]
         },
         {
@@ -152,6 +209,13 @@
           "consequences_for_player": "保GDP增长 +1%；但国际信任度 -15，公众支持率 -5%",
           "expected_concerns_addressed": [
             "gdp_growth"
+          ],
+          "behavior": "hold",
+          "goal_axis": [
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "cooperation"
           ]
         },
         {
@@ -162,6 +226,14 @@
           "expected_concerns_addressed": [
             "international_trust",
             "gdp_growth"
+          ],
+          "behavior": "analyze",
+          "goal_axis": [
+            "temperature",
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "cooperation"
           ]
         },
         {
@@ -171,6 +243,14 @@
           "consequences_for_player": "公众支持率 +6%；但国际信任度 -3（绕过主权原则）",
           "expected_concerns_addressed": [
             "public_support"
+          ],
+          "behavior": "expand",
+          "goal_axis": [
+            "temperature",
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "cooperation"
           ]
         }
       ],
@@ -217,6 +297,14 @@
           "expected_concerns_addressed": [
             "renewable_share",
             "tipping_point"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "temperature"
+          ],
+          "goal_sacrificed": [
+            "headroom",
+            "cooperation"
           ]
         },
         {
@@ -227,6 +315,14 @@
           "expected_concerns_addressed": [
             "renewable_share",
             "climate_justice"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "temperature",
+            "cooperation"
+          ],
+          "goal_sacrificed": [
+            "headroom"
           ]
         },
         {
@@ -236,6 +332,14 @@
           "consequences_for_player": "renewable_share +5；但climate_justice -10（穷国受害）",
           "expected_concerns_addressed": [
             "renewable_share"
+          ],
+          "behavior": "hold",
+          "goal_axis": [
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "temperature",
+            "cooperation"
           ]
         },
         {
@@ -247,6 +351,14 @@
             "renewable_share",
             "climate_justice",
             "gdp_growth"
+          ],
+          "behavior": "analyze",
+          "goal_axis": [
+            "temperature",
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "cooperation"
           ]
         }
       ],
@@ -299,6 +411,13 @@
           "expected_concerns_addressed": [
             "international_trust",
             "climate_justice"
+          ],
+          "behavior": "rescue",
+          "goal_axis": [
+            "cooperation"
+          ],
+          "goal_sacrificed": [
+            "headroom"
           ]
         },
         {
@@ -309,6 +428,14 @@
           "expected_concerns_addressed": [
             "gdp_growth",
             "public_support"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "headroom",
+            "temperature"
+          ],
+          "goal_sacrificed": [
+            "cooperation"
           ]
         },
         {
@@ -316,7 +443,14 @@
           "text": "聚焦即将到来的T4紧急情况（欧洲热浪），暂不回应此揭示",
           "weight": "risky",
           "consequences_for_player": "F7自我批评缺失 hint 触发（玩家未反思）",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "defer",
+          "goal_axis": [
+            "temperature"
+          ],
+          "goal_sacrificed": [
+            "cooperation"
+          ]
         },
         {
           "id": "D",
@@ -326,6 +460,14 @@
           "expected_concerns_addressed": [
             "international_trust",
             "climate_justice"
+          ],
+          "behavior": "expand",
+          "goal_axis": [
+            "cooperation",
+            "temperature"
+          ],
+          "goal_sacrificed": [
+            "headroom"
           ]
         }
       ],
@@ -374,6 +516,13 @@
             "renewable_share",
             "public_support",
             "gdp_growth"
+          ],
+          "behavior": "expand",
+          "goal_axis": [
+            "temperature"
+          ],
+          "goal_sacrificed": [
+            "headroom"
           ]
         },
         {
@@ -384,6 +533,13 @@
           "expected_concerns_addressed": [
             "international_trust",
             "climate_justice"
+          ],
+          "behavior": "rescue",
+          "goal_axis": [
+            "cooperation"
+          ],
+          "goal_sacrificed": [
+            "headroom"
           ]
         },
         {
@@ -393,6 +549,14 @@
           "consequences_for_player": "public_support +4%；但international_trust -8；climate_justice -5",
           "expected_concerns_addressed": [
             "public_support"
+          ],
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "cooperation",
+            "temperature"
           ]
         },
         {
@@ -400,7 +564,15 @@
           "text": "提议暂停所有气候谈判6个月，等待局势稳定",
           "weight": "extreme_risk",
           "consequences_for_player": "international_trust -12；climate_justice -8；F2 hint",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "defer",
+          "goal_axis": [
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "temperature",
+            "cooperation"
+          ]
         }
       ],
       "expected_effects": {
@@ -448,6 +620,13 @@
           "expected_concerns_addressed": [
             "international_trust",
             "gdp_growth"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "temperature"
+          ],
+          "goal_sacrificed": [
+            "headroom"
           ]
         },
         {
@@ -457,6 +636,13 @@
           "consequences_for_player": "public_support +3%；但F7 hint 强化",
           "expected_concerns_addressed": [
             "public_support"
+          ],
+          "behavior": "hold",
+          "goal_axis": [
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "temperature"
           ]
         },
         {
@@ -467,6 +653,14 @@
           "expected_concerns_addressed": [
             "international_trust",
             "climate_justice"
+          ],
+          "behavior": "expand",
+          "goal_axis": [
+            "cooperation",
+            "temperature"
+          ],
+          "goal_sacrificed": [
+            "headroom"
           ]
         },
         {
@@ -474,7 +668,15 @@
           "text": "将此作为对下一任执行主任的'交接备忘'重点",
           "weight": "neutral",
           "consequences_for_player": "F7 hint 缓解；不影响本任期数值",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "defer",
+          "goal_axis": [
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "temperature",
+            "cooperation"
+          ]
         }
       ],
       "expected_effects": {
@@ -520,6 +722,13 @@
           "consequences_for_player": "public_support +5%；whistleblower_silenced_count +1（行业报复）；但F6 hint 缓解",
           "expected_concerns_addressed": [
             "public_support"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "cooperation"
+          ],
+          "goal_sacrificed": [
+            "headroom"
           ]
         },
         {
@@ -530,6 +739,13 @@
           "expected_concerns_addressed": [
             "gdp_growth",
             "renewable_share"
+          ],
+          "behavior": "hold",
+          "goal_axis": [
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "temperature"
           ]
         },
         {
@@ -539,6 +755,13 @@
           "consequences_for_player": "GDP -2%（诉讼成本）；国际示范效应；whistleblower_silenced +2",
           "expected_concerns_addressed": [
             "gdp_growth"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "cooperation"
+          ],
+          "goal_sacrificed": [
+            "headroom"
           ]
         },
         {
@@ -548,6 +771,14 @@
           "consequences_for_player": "GDP +1%；但public_support -4%（被视为'被收买'）；whistleblower_silenced +3",
           "expected_concerns_addressed": [
             "gdp_growth"
+          ],
+          "behavior": "expand",
+          "goal_axis": [
+            "temperature",
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "cooperation"
           ]
         }
       ],
@@ -598,6 +829,14 @@
             "tipping_point",
             "international_trust",
             "gdp_growth"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "temperature"
+          ],
+          "goal_sacrificed": [
+            "headroom",
+            "cooperation"
           ]
         },
         {
@@ -609,6 +848,13 @@
             "climate_justice",
             "renewable_share",
             "gdp_growth"
+          ],
+          "behavior": "rescue",
+          "goal_axis": [
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "temperature"
           ]
         },
         {
@@ -616,7 +862,15 @@
           "text": "维持现状路线，等下一次选举后再调整",
           "weight": "extreme_risk",
           "consequences_for_player": "tipping_point +15；temp +0.2°C",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "hold",
+          "goal_axis": [
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "temperature",
+            "cooperation"
+          ]
         },
         {
           "id": "D",
@@ -626,6 +880,14 @@
           "expected_concerns_addressed": [
             "international_trust",
             "climate_justice"
+          ],
+          "behavior": "expand",
+          "goal_axis": [
+            "cooperation"
+          ],
+          "goal_sacrificed": [
+            "headroom",
+            "temperature"
           ]
         }
       ],
@@ -682,6 +944,13 @@
             "climate_justice",
             "international_trust",
             "gdp_growth"
+          ],
+          "behavior": "rescue",
+          "goal_axis": [
+            "cooperation"
+          ],
+          "goal_sacrificed": [
+            "headroom"
           ]
         },
         {
@@ -693,6 +962,14 @@
             "climate_justice",
             "gdp_growth",
             "international_trust"
+          ],
+          "behavior": "expand",
+          "goal_axis": [
+            "cooperation",
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "temperature"
           ]
         },
         {
@@ -700,7 +977,15 @@
           "text": "拒绝，坚持'共同但有区别的责任'",
           "weight": "risky",
           "consequences_for_player": "climate_justice -15；international_trust -10",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "hold",
+          "goal_axis": [
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "cooperation",
+            "temperature"
+          ]
         },
         {
           "id": "D",
@@ -711,6 +996,14 @@
             "climate_justice",
             "international_trust",
             "gdp_growth"
+          ],
+          "behavior": "expand",
+          "goal_axis": [
+            "temperature",
+            "cooperation"
+          ],
+          "goal_sacrificed": [
+            "headroom"
           ]
         }
       ],
@@ -758,6 +1051,14 @@
             "gdp_growth",
             "renewable_share",
             "international_trust"
+          ],
+          "behavior": "expand",
+          "goal_axis": [
+            "temperature",
+            "cooperation"
+          ],
+          "goal_sacrificed": [
+            "headroom"
           ]
         },
         {
@@ -765,7 +1066,15 @@
           "text": "拒绝，主张国家主权",
           "weight": "risky",
           "consequences_for_player": "international_trust -10；renewable_share -5",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "hold",
+          "goal_axis": [
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "cooperation",
+            "temperature"
+          ]
         },
         {
           "id": "C",
@@ -776,6 +1085,14 @@
             "international_trust",
             "renewable_share",
             "gdp_growth"
+          ],
+          "behavior": "analyze",
+          "goal_axis": [
+            "cooperation",
+            "temperature"
+          ],
+          "goal_sacrificed": [
+            "headroom"
           ]
         },
         {
@@ -785,6 +1102,14 @@
           "consequences_for_player": "international_trust -5；GDP +1%（贸易战）；renewable_share -3",
           "expected_concerns_addressed": [
             "gdp_growth"
+          ],
+          "behavior": "commit",
+          "goal_axis": [
+            "cooperation",
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "temperature"
           ]
         }
       ],
@@ -830,28 +1155,60 @@
           "text": "坚持激进减排路径（'1.5°C必须实现'）",
           "weight": "extreme_safe",
           "consequences_for_player": "触发 one_point_five 结局（条件：激进选项计数 >= 4）",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "commit",
+          "goal_axis": [
+            "temperature"
+          ],
+          "goal_sacrificed": [
+            "headroom",
+            "cooperation"
+          ]
         },
         {
           "id": "B",
           "text": "平衡路径（在减排与发展间）",
           "weight": "neutral",
           "consequences_for_player": "触发 two_degrees 结局（条件：激进 2-3 个回合）",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "hold",
+          "goal_axis": [
+            "headroom",
+            "cooperation"
+          ],
+          "goal_sacrificed": [
+            "temperature"
+          ]
         },
         {
           "id": "C",
           "text": "经济优先，气候让步",
           "weight": "risky",
           "consequences_for_player": "触发 three_degrees 结局（条件：经济优先 >= 5）",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "temperature",
+            "cooperation"
+          ]
         },
         {
           "id": "D",
           "text": "维持现状，让各国自行决定",
           "weight": "extreme_risk",
           "consequences_for_player": "触发 coordination_collapse 结局（条件：拖延/退出 >= 5）",
-          "expected_concerns_addressed": []
+          "expected_concerns_addressed": [],
+          "behavior": "defer",
+          "goal_axis": [
+            "headroom"
+          ],
+          "goal_sacrificed": [
+            "temperature",
+            "cooperation"
+          ]
         }
       ],
       "expected_effects": {},
@@ -971,7 +1328,8 @@
   ],
   "feedback_patterns": {
     "F1_nonlinear": {
-      "trigger": "tipping_point_proximity > 50 AND player_chose_linear_options >= 3",
+      "real_world_anchor": "团队 30 人到 60 人还行，到 90 人沟通全堵",
+      "trigger": "tipping_point_proximity > 50 AND consecutive_similar_choices >= 4",
       "dorner_concept": "非线性阈值",
       "evidence_template": "你在前 {turns} 个回合中，{linear_count} 个选项基于'线性'假设。但升温在临界点附近是指数加速的。",
       "reflection_questions": [
@@ -981,6 +1339,7 @@
       ]
     },
     "F2_time_delay": {
+      "real_world_anchor": "省下电梯保养费，两年后停运整修",
       "trigger": "warning_to_response_lag >= 2",
       "dorner_concept": "时间延迟偏差",
       "evidence_template": "你在 {warning_count} 个警告公开后，平均 {avg_lag} 个回合才响应。气候系统的时间尺度是世纪级的。",
@@ -991,7 +1350,8 @@
       ]
     },
     "F3_self_reference": {
-      "trigger": "policy_counters_policy_count >= 2",
+      "real_world_anchor": "按自己小时候的规矩管孩子，孩子只会躲",
+      "trigger": "strategy_backfire_count >= 1",
       "dorner_concept": "自反性陷阱",
       "evidence_template": "你的 {count} 个决策触发了反向效应。'今天的解决方案'成为'明天的问题'。",
       "reflection_questions": [
@@ -1001,6 +1361,7 @@
       ]
     },
     "F4_side_effects": {
+      "real_world_anchor": "为省电关掉走廊灯，保洁摔伤赔得更多",
       "trigger": "climate_justice_index < 50 AND gdp_growth_pct >= 2",
       "dorner_concept": "副作用忽视",
       "evidence_template": "你的决策让 climate_justice 跌至 {cj_score}，但 gdp_growth 维持在 {gdp}%。谁承担了代价？",
@@ -1011,7 +1372,8 @@
       ]
     },
     "F5_single_target": {
-      "trigger": "primary_focus_dimension_count >= 5 AND other_dimensions_neglected >= 3",
+      "real_world_anchor": "只看销售额，退货和投诉堆到年底",
+      "trigger": "single_concern_choices >= 3",
       "dorner_concept": "单目标优化",
       "evidence_template": "你在 {turns} 个回合中聚焦于 {focus}（优化了 {focus_change}），但其他 {neglected} 个维度恶化了。",
       "reflection_questions": [
@@ -1021,6 +1383,7 @@
       ]
     },
     "F6_confirmation_bias": {
+      "real_world_anchor": "只翻好评，把差评当成同行刷的",
       "trigger": "consecutive_similar_choices >= 3",
       "dorner_concept": "确认偏误",
       "evidence_template": "你连续 {n} 个回合选了类似立场的选项。你的信息来源是什么？",
@@ -1031,6 +1394,7 @@
       ]
     },
     "F7_self_criticism": {
+      "real_world_anchor": "季度复盘只剩 KPI，没一条说自己的判断错了",
       "trigger": "no_change_after_reveal >= 2",
       "dorner_concept": "自我批评缺失",
       "evidence_template": "你在 {reveals} 个揭示节点选择了维持原有策略。偏差是常态，自我批评才是能力。",
@@ -1041,6 +1405,7 @@
       ]
     },
     "F8_regulation_lag": {
+      "real_world_anchor": "员工一抱怨就改制度，三个月改了五版",
       "trigger": "response_to_warning_avg >= 2 turns",
       "dorner_concept": "调节滞后",
       "evidence_template": "你的政策推出速度跟不上变化速度。警告公开后平均 {lag} 个回合才响应。",

@@ -7,6 +7,53 @@
   "estimatedDuration": 45,
   "category": "重大工程决策",
   "description": "1986年1月，挑战者号航天飞机计划发射。工程师们对低温下O型密封圈的性能提出严重担忧，但发射日期面临巨大压力：你需要平衡工程安全、预算、媒体关注和政治承诺。10个回合内做出你的决定——每一个选择都将影响后续的信息流、信任度和风险敞口。",
+  "brief": {
+    "role": "NASA 发射决策链上签下“可以发射”的那个人",
+    "horizon": "10 个回合，1986 年 1 月 28 日前的三十天",
+    "objectives": [
+      {
+        "id": "safety",
+        "text": "不让 O 型环带着已知隐患起飞",
+        "metrics": [
+          "engineer_confidence",
+          "ignored_warnings_count",
+          "dissent_suppressed_count"
+        ],
+        "tension": "与按期发射直接冲突：每要一份低温数据，就烧掉一个发射窗口",
+        "concerns": [
+          "engineering"
+        ]
+      },
+      {
+        "id": "schedule",
+        "text": "守住 1 月 28 日的窗口与政治承诺",
+        "metrics": [
+          "schedule_pressure",
+          "budget_used_pct"
+        ],
+        "tension": "与安全直接冲突：每一次为保险起见延期，承诺和预算都跟着折价",
+        "concerns": [
+          "management"
+        ]
+      },
+      {
+        "id": "standing",
+        "text": "让外界继续相信这个项目值得投入",
+        "metrics": [
+          "public_attention",
+          "team_morale"
+        ],
+        "tension": "与前两者都冲突：承认隐患要付公开代价，硬顶按期则一次失败全赔进去",
+        "concerns": [
+          "media"
+        ]
+      }
+    ],
+    "method_concerns": [],
+    "impossible": "三件事不可能同时做好：让工程师把真话说到底、守住 1 月 28 日、维持外界对项目的信心。每一回合的选择，至少牺牲掉其中一件。",
+    "ends_when": "10 个回合用完，或倒计时归零（发射、中止、无限期推迟）",
+    "how_judged": "没有唯一正确答案。判定看你的决策链是否与你声称的目标自洽——尤其看你在“我已经评估过了”这句话上重复了几次。"
+  },
   "dornerLessons": [
     "非线性 / 复杂性低估：低温对O型环的影响不是线性的——温度每下降 10°F，失效概率不是×2，而是指数级放大",
     "时间延迟：1985年7月Boisjoly就已提交关键警告备忘录；我们今天的'紧急决定'其实是6个月前决定的延迟后果",
@@ -134,21 +181,42 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "defer",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule"
+          ]
         },
         {
           "id": "B",
           "text": "要求工程师出具'书面保证'即可按时发射",
           "consequences_for_player": "工程师陷入两难：签则违背专业判断；不签则被指责'阻碍国家计划'",
           "expected_concerns_addressed": [],
-          "weight": "risky"
+          "weight": "risky",
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "schedule"
+          ],
+          "goal_sacrificed": [
+            "safety"
+          ]
         },
         {
           "id": "C",
           "text": "搁置备忘录，要求'额外数据'再议",
           "consequences_for_player": "表面'理性'但实质是拖延；工程师感到被忽略；时间流逝，发射日期逼近",
           "expected_concerns_addressed": [],
-          "weight": "neutral"
+          "weight": "neutral",
+          "behavior": "hold",
+          "goal_axis": [
+            "schedule"
+          ],
+          "goal_sacrificed": [
+            "safety"
+          ]
         },
         {
           "id": "D",
@@ -158,7 +226,14 @@
             "engineering",
             "management"
           ],
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "analyze",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule"
+          ]
         }
       ],
       "expected_effects": {
@@ -212,14 +287,28 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "commit",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule"
+          ]
         },
         {
           "id": "B",
           "text": "保持低调，让政治层自行处理——你专注于技术",
           "consequences_for_player": "技术决策被政治压力裹挟；管理层可能利用你的沉默作为'同意'的证据",
           "expected_concerns_addressed": [],
-          "weight": "extreme_risk"
+          "weight": "extreme_risk",
+          "behavior": "hold",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "standing"
+          ]
         },
         {
           "id": "C",
@@ -229,7 +318,15 @@
             "engineering",
             "media"
           ],
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "expand",
+          "goal_axis": [
+            "safety",
+            "standing"
+          ],
+          "goal_sacrificed": [
+            "schedule"
+          ]
         },
         {
           "id": "D",
@@ -238,7 +335,15 @@
           "expected_concerns_addressed": [
             "management"
           ],
-          "weight": "extreme_risk"
+          "weight": "extreme_risk",
+          "behavior": "commit",
+          "goal_axis": [
+            "schedule",
+            "standing"
+          ],
+          "goal_sacrificed": [
+            "safety"
+          ]
         }
       ],
       "expected_effects": {
@@ -285,14 +390,28 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "neutral"
+          "weight": "neutral",
+          "behavior": "commit",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule"
+          ]
         },
         {
           "id": "B",
           "text": "保持中立，要求'更多分析'以避免冲突",
           "consequences_for_player": "表面安全但实质是偏袒管理层——'更多分析'永远得不到发射不需要的结论",
           "expected_concerns_addressed": [],
-          "weight": "neutral"
+          "weight": "neutral",
+          "behavior": "hold",
+          "goal_axis": [
+            "standing"
+          ],
+          "goal_sacrificed": [
+            "safety"
+          ]
         },
         {
           "id": "C",
@@ -301,7 +420,14 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "analyze",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule"
+          ]
         },
         {
           "id": "D",
@@ -310,7 +436,14 @@
           "expected_concerns_addressed": [
             "management"
           ],
-          "weight": "extreme_risk"
+          "weight": "extreme_risk",
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "schedule"
+          ],
+          "goal_sacrificed": [
+            "safety"
+          ]
         }
       ],
       "expected_effects": {
@@ -359,7 +492,14 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "defer",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule"
+          ]
         },
         {
           "id": "B",
@@ -369,7 +509,14 @@
             "engineering",
             "management"
           ],
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "defer",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule"
+          ]
         },
         {
           "id": "C",
@@ -378,7 +525,14 @@
           "expected_concerns_addressed": [
             "management"
           ],
-          "weight": "extreme_risk"
+          "weight": "extreme_risk",
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "schedule"
+          ],
+          "goal_sacrificed": [
+            "safety"
+          ]
         },
         {
           "id": "D",
@@ -387,7 +541,15 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule",
+            "standing"
+          ]
         }
       ],
       "expected_effects": {
@@ -446,7 +608,14 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "defer",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule"
+          ]
         },
         {
           "id": "B",
@@ -455,7 +624,14 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "hold",
+          "goal_axis": [
+            "standing"
+          ],
+          "goal_sacrificed": [
+            "safety"
+          ]
         },
         {
           "id": "C",
@@ -464,7 +640,14 @@
           "expected_concerns_addressed": [
             "management"
           ],
-          "weight": "extreme_risk"
+          "weight": "extreme_risk",
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "schedule"
+          ],
+          "goal_sacrificed": [
+            "safety"
+          ]
         },
         {
           "id": "D",
@@ -473,7 +656,14 @@
           "expected_concerns_addressed": [
             "management"
           ],
-          "weight": "extreme_risk"
+          "weight": "extreme_risk",
+          "behavior": "commit",
+          "goal_axis": [
+            "schedule"
+          ],
+          "goal_sacrificed": [
+            "safety"
+          ]
         }
       ],
       "expected_effects": {
@@ -538,14 +728,28 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "neutral"
+          "weight": "neutral",
+          "behavior": "defer",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule"
+          ]
         },
         {
           "id": "B",
           "text": "私下接受他的备忘录，但不在决策层面行动",
           "consequences_for_player": "你获得了'保险'——但没有改变发射决定；Boisjoly 会感到被两面派对待",
           "expected_concerns_addressed": [],
-          "weight": "neutral"
+          "weight": "neutral",
+          "behavior": "hold",
+          "goal_axis": [
+            "standing"
+          ],
+          "goal_sacrificed": [
+            "safety"
+          ]
         },
         {
           "id": "C",
@@ -554,7 +758,14 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "neutral"
+          "weight": "neutral",
+          "behavior": "rescue",
+          "goal_axis": [
+            "standing"
+          ],
+          "goal_sacrificed": [
+            "safety"
+          ]
         },
         {
           "id": "D",
@@ -563,7 +774,15 @@
           "expected_concerns_addressed": [
             "management"
           ],
-          "weight": "neutral"
+          "weight": "neutral",
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "schedule"
+          ],
+          "goal_sacrificed": [
+            "safety",
+            "standing"
+          ]
         }
       ],
       "expected_effects": {
@@ -622,7 +841,14 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "defer",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule"
+          ]
         },
         {
           "id": "B",
@@ -631,7 +857,14 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "defer",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule"
+          ]
         },
         {
           "id": "C",
@@ -641,7 +874,15 @@
             "engineering",
             "management"
           ],
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "expand",
+          "goal_axis": [
+            "safety",
+            "schedule"
+          ],
+          "goal_sacrificed": [
+            "standing"
+          ]
         },
         {
           "id": "D",
@@ -650,7 +891,14 @@
           "expected_concerns_addressed": [
             "management"
           ],
-          "weight": "extreme_risk"
+          "weight": "extreme_risk",
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "schedule"
+          ],
+          "goal_sacrificed": [
+            "safety"
+          ]
         }
       ],
       "expected_effects": {
@@ -707,7 +955,14 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "neutral"
+          "weight": "neutral",
+          "behavior": "defer",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule"
+          ]
         },
         {
           "id": "B",
@@ -716,7 +971,15 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule",
+            "standing"
+          ]
         },
         {
           "id": "C",
@@ -725,7 +988,14 @@
           "expected_concerns_addressed": [
             "management"
           ],
-          "weight": "extreme_risk"
+          "weight": "extreme_risk",
+          "behavior": "commit",
+          "goal_axis": [
+            "schedule"
+          ],
+          "goal_sacrificed": [
+            "safety"
+          ]
         },
         {
           "id": "D",
@@ -734,7 +1004,15 @@
           "expected_concerns_addressed": [
             "management"
           ],
-          "weight": "extreme_risk"
+          "weight": "extreme_risk",
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "schedule",
+            "standing"
+          ],
+          "goal_sacrificed": [
+            "safety"
+          ]
         }
       ],
       "expected_effects": {
@@ -799,7 +1077,14 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "neutral"
+          "weight": "neutral",
+          "behavior": "defer",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule"
+          ]
         },
         {
           "id": "B",
@@ -808,7 +1093,14 @@
           "expected_concerns_addressed": [
             "management"
           ],
-          "weight": "extreme_risk"
+          "weight": "extreme_risk",
+          "behavior": "ignore_warning",
+          "goal_axis": [
+            "schedule"
+          ],
+          "goal_sacrificed": [
+            "safety"
+          ]
         },
         {
           "id": "C",
@@ -817,7 +1109,14 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "analyze",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule"
+          ]
         },
         {
           "id": "D",
@@ -826,7 +1125,14 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "analyze",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "standing"
+          ]
         }
       ],
       "expected_effects": {
@@ -883,7 +1189,14 @@
             "management"
           ],
           "trigger_outcome": "launch_disaster",
-          "weight": "extreme_risk"
+          "weight": "extreme_risk",
+          "behavior": "commit",
+          "goal_axis": [
+            "schedule"
+          ],
+          "goal_sacrificed": [
+            "safety"
+          ]
         },
         {
           "id": "B",
@@ -893,7 +1206,14 @@
             "engineering"
           ],
           "trigger_outcome": "launch_dodged",
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "commit",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule"
+          ]
         },
         {
           "id": "C",
@@ -903,7 +1223,14 @@
             "engineering"
           ],
           "trigger_outcome": "last_minute_evaluation",
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "analyze",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule"
+          ]
         },
         {
           "id": "D",
@@ -913,7 +1240,15 @@
             "engineering"
           ],
           "trigger_outcome": "infinite_delay",
-          "weight": "extreme_safe"
+          "weight": "extreme_safe",
+          "behavior": "cut_cost",
+          "goal_axis": [
+            "safety"
+          ],
+          "goal_sacrificed": [
+            "schedule",
+            "standing"
+          ]
         }
       ],
       "expected_effects": {
@@ -1014,6 +1349,7 @@
   },
   "feedback_patterns": {
     "confirmation_bias": {
+      "real_world_anchor": "只转发生效的报告，三次失败都说样本太小",
       "trigger": "accepted_risks_count >= 3 AND ignored_warnings_count >= 2",
       "dorner_concept": "自我确认循环",
       "evidence_template": "你在前 {turns} 个回合中接受了 {accepted} 次风险评估，忽视了 {ignored} 次具体警告。",
@@ -1024,6 +1360,7 @@
       ]
     },
     "single_target_optimization": {
+      "real_world_anchor": "为赶交付节点，把测试工位砍掉一半",
       "trigger": "schedule_pressure 持续被优化但 engineer_confidence 持续下降 OR risk_acknowledged_unresolved >= 2",
       "dorner_concept": "单目标优化",
       "evidence_template": "你优化了 {optimized_count} 次进度指标，但代价是 {damaged_count} 次其他指标的损害。",
@@ -1034,6 +1371,7 @@
       ]
     },
     "time_delay_blindness": {
+      "real_world_anchor": "省下每年一次体检，五年后一次住院全花掉",
       "trigger": "前 4 个回合中没有一次选择'延期测试'或'更多数据'选项",
       "dorner_concept": "时间延迟误判",
       "evidence_template": "你在前 4 个回合中没有一次选择'延期'。Boisjoly 6 个月前的警告被压缩为'紧急情况'。",
@@ -1044,6 +1382,7 @@
       ]
     },
     "side_effect_neglect": {
+      "real_world_anchor": "为提出勤率取消午休，下午错单率翻倍",
       "trigger": "decision_justifications 中没有出现'另一方'或'影响'或'团队'或'未来'等关键词",
       "dorner_concept": "副作用忽视",
       "evidence_template": "你在 {count} 个决策中很少提到副作用——决策时没有考虑多方影响。",
@@ -1054,6 +1393,7 @@
       ]
     },
     "lack_of_self_criticism": {
+      "real_world_anchor": "复盘只写别人的失误，自己那一栏空着",
       "trigger": "reveal_phase 后（turn 6+）继续有 accepted_risks_count 增长",
       "dorner_concept": "自我批评缺失",
       "evidence_template": "系统在第 {first_reveal_turn} 回合揭示了你的偏差，但你在接下来的 {subsequent_count} 个决策中仍然重复。",
@@ -1064,6 +1404,7 @@
       ]
     },
     "nonlinear_threshold": {
+      "real_world_anchor": "加班到第三周还撑得住，第四周集体请假",
       "dorner_concept": "非线性阈值",
       "evidence_template": "预报温度 {temperature}°F 已进入 O 型环临界区（≤32°F）。你仍忽视 {ignored_warnings} 条工程警告。Boisjoly 1985 备忘录:温度每下降 10°F,失效概率不是×2,而是指数级放大。",
       "reflection_questions": [
@@ -1074,6 +1415,7 @@
       "trigger": "temperature_forecast_f <= 32 AND ignored_warnings_count >= 1"
     },
     "self_reference": {
+      "real_world_anchor": "用自己熟悉的速度排班，新人上周就掉队",
       "dorner_concept": "自指反馈",
       "evidence_template": "你的每一个公开声明都反过来影响了 NASA 管理层的姿态:{public_attention}% 公众关注 + {schedule_pressure}% 进度压力,系统响应了 {reactions} 次,但没有稳定。",
       "reflection_questions": [
@@ -1084,6 +1426,7 @@
       "trigger": "public_attention >= 80 AND (schedule_pressure >= 50 OR engineer_confidence <= 50)"
     },
     "regulation_lag": {
+      "real_world_anchor": "空调忽冷忽热，一会儿关一会儿开，室温没变",
       "dorner_concept": "调节滞后",
       "evidence_template": "你在最近 {recent_turns} 个决策中切换了 {oscillations} 次方向,从\"安全优先\"到\"按时发射\"反复振荡,但系统真实状态没有改变。Dörner:振荡的控制者比一致的保守者表现更差,因为系统来不及稳定。",
       "reflection_questions": [

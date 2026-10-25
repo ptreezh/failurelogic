@@ -37,8 +37,8 @@ const browser = await chromium.launch();
 
 async function runScenario(scn) {
   const tag = scn.id;
-// S0 只对 noodle 强制现实锚定；其余场景 S1 铺开时再加进来。
-const ANCHOR_REQUIRED = new Set(['noodle-shop-community']);
+// S0 先对 noodle 强制现实锚定，S1 四场景铺开后五场景全部强制。
+const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', 'climate-change', 'enron-collapse', 'chip-ai-supplychain']);
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, acceptDownloads: true });
   const pageErrors = [];
   page.on('pageerror', (e) => pageErrors.push(String(e).slice(0, 200)));
@@ -218,8 +218,8 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community']);
     // L2-3 现实锚定：数据里写了不等于玩家看得见。锚定是 T4「这说的是我」的唯一落点，
     // 缺了它终局就退回「1986 年 NASA 犯过错」，玩家学不到自己。数据齐但渲染丢了，
     // A4.5 照样绿——所以这一条必须在 DOM 上验。
-    // 只对 S0 已铺锚定的场景强制：其余 4 场景属 S1，缺锚定不能把基线拖红，
-    // 否则「全绿」这个信号在铺开前永远是假的。
+    // 五个场景均已铺锚定：任一场景缺锚定或超 30 字都计红，
+    // 「全绿」只代表玩家真的能在复盘里看到自己。
     if (ANCHOR_REQUIRED.has(tag)) {
       const noAnchor = snap.concepts.filter((c) => !c.anchor).map((c) => c.name);
       if (noAnchor.length) fails.push(`${tag} 概念卡缺现实锚定：${noAnchor.join('、')}`);

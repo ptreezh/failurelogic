@@ -11,7 +11,7 @@
  *   3. 挂起态：只选中不确认 → 仪表一动不动（不做事前预警，见下方红线段）；
  *   4. 确认后：牺牲格 / 押注格 / 未涉及格 与所选选项的标注逐一对上；
  *   5. 换一回合：仪表跟着上一手刷新，不留上一回合的牺牲项；
- *   6. 未写 brief 的场景不出现空壳三格；手机上不横向溢出。
+ *   6. S1 场景真出三格且与自身 brief 对齐；brief 缺失时不出现空壳三格；手机上不横向溢出。
  *
  * 设计红线（量在 3 号检查里）：仪表只读已提交的 decision_history。
  * 若哪天有人改成"选中就预告代价"，玩家会在点下去之前就知道自己在牺牲什么，
@@ -199,7 +199,10 @@ if (nx) {
   notes.push('无下一回合按钮，跳过刷新检查');
 }
 
-// ── 6. 未写 brief 的场景不出空壳 + 手机端不溢出 ────────────────────────────
+// ── 6. S1 场景仪表真出三格 + 无 brief 场景不出空壳 + 手机端不溢出 ────────
+// 这里原本拿「气候场景没写 brief」当空壳样本用；S1 铺开后五场景都有 brief，
+// 于是拆成两件事：气候必须真出三格（且 id 与它自己的 brief 对齐），
+// 空壳红线改用合成数据直接量渲染函数 —— 不依赖哪个场景恰好缺数据。
 const mobile = await browser.newPage({ viewport: { width: 375, height: 812 } });
 await mobile.goto(`http://127.0.0.1:${PORT}/index.html`, { waitUntil: 'domcontentloaded' });
 await mobile.waitForTimeout(1000);
@@ -215,13 +218,51 @@ if (!climate) {
   notes.push('未找到气候场景卡，跳过空壳检查');
 } else {
   await mobile.waitForTimeout(2600);
-  const c = await mobile.evaluate(() => ({
-    empty: !!document.querySelector('.fl-goal-tension'),
-    docOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-  }));
-  if (c.empty) fails.push('未声明 brief 的场景出现了空壳三格（全部"未涉及"会误导玩家）');
-  notes.push('无 brief 场景：仪表不出空壳');
+  const c = await mobile.evaluate(() => {
+    const box = document.querySelector('.fl-goal-tension');
+    const want = (((window.OfflineEngine._flScenarioData['climate-change-policy'] || {}).brief || {}).objectives || [])
+      .map((o) => o.id);
+    return {
+      box: !!box,
+      ids: box ? [...box.querySelectorAll('.fgt-cell')].map((n) => n.dataset.objective) : [],
+      states: box ? [...box.querySelectorAll('.fgt-cell .fgt-state')].map((n) => n.textContent.trim()) : [],
+      want,
+      docOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    };
+  });
+  if (!c.box) fails.push('气候场景有 brief 却没出目标冲突仪表');
+  else {
+    if (c.ids.join(',') !== c.want.join(',')) {
+      fails.push(`气候仪表目标 ${c.ids.join('/')} 与 brief 声明 ${c.want.join('/')} 不一致`);
+    }
+    if (c.states.some((t) => t !== '未涉及')) {
+      fails.push(`气候开局仪表不是全「未涉及」：${c.states.join('/')}`);
+    }
+  }
+  if (c.docOverflow !== 0) fails.push(`气候场景 375px 横向溢出 ${c.docOverflow}px`);
+  notes.push(`S1 场景仪表：${c.ids.length} 格 · 开局状态 ${c.states.join('/')}`);
 }
+// 空壳红线：brief 缺失 / objectives 为空时渲染函数必须返回空串。
+const shell = await mobile.evaluate(() => {
+  const table = window.OfflineEngine._flScenarioData;
+  const sid = '__probe-no-brief';
+  table[sid] = {};
+  const r = Object.create(window.ChallengerRouter.prototype);
+  r.scenarioId = sid;
+  r.gameState = { decision_history: [] };
+  const a = r._renderGoalTension();
+  table[sid] = { brief: { objectives: [] } };
+  const b = r._renderGoalTension();
+  table[sid] = { brief: { objectives: [{ id: '', text: '缺 id' }] } };
+  const c = r._renderGoalTension();
+  delete table[sid];
+  return [a, b, c];
+});
+if (shell.some((x) => x !== '')) {
+  fails.push('brief 缺失/objectives 为空时仪表仍渲染出空壳三格');
+}
+notes.push('无 brief 场景：仪表不出空壳');
+
 // noodle 在 375px 下的溢出与文字截断
 const mob = await browser.newPage({ viewport: { width: 375, height: 812 } });
 await mob.goto(`http://127.0.0.1:${PORT}/index.html`, { waitUntil: 'domcontentloaded' });
