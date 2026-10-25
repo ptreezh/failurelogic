@@ -6,7 +6,10 @@
 // (API 探测关闭 / 完成局数落盘 / 终局不再出现"未填写")。v1.0.14 = Sprint 0
 // (终局契约 final_outcome / 结局归一 / 【代价清算】过程记账 / 选项槽位与结算同源)。
 // v1.0.15 = V3 概念命中可信化（解析器全或无 / 五态口径 / 派生三指标 / 可见门禁）。
-const CACHE_NAME = 'failure-logic-v1.0.15';
+// v1.0.16 = 局内角色锚（brief.role · brief.horizon 落到回合标题下）。
+// 老访客的 JS 走 stale-while-revalidate，不 bump 这里的话首次打开仍是旧包、
+// 看不到这一行 —— 所以按 P0 约定跟着代码一起改版本号。
+const CACHE_NAME = 'failure-logic-v1.0.16';
 const BASE_PATH = (() => {
   const path = self.location.pathname;
   const m = path.match(/^(\/[^\/]+\/)/);
