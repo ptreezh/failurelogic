@@ -1,0 +1,107 @@
+[
+  {
+    "turn": 1,
+    "scenario": "enron-collapse",
+    "inject": [
+      "2000年2月，Fastow希望扩大LJM合伙企业规模",
+      "从1999年的1亿美元提升到2000年的3亿美元",
+      "LJM功能：买下安然想要剥离的不良资产",
+      "Fastow在LJM中持有30%+权益",
+      "董事会审计委员会在1999年批准了Fastow的LJM"
+    ],
+    "suppress": [
+      "安然将在2001年12月2日申请破产保护（未来）",
+      "资产$498亿，成为美国历史上最大破产案（未来）",
+      "Sherron Watkins备忘录将在2001年8月发出（未来）",
+      "Andersen将销毁审计文档（未来）",
+      "员工401k损失约13亿美元（未来）"
+    ],
+    "suppress_placeholder": "[未来事件]",
+    "uncertain": [
+      "LJM交易的真实经济实质"
+    ],
+    "uncertain_marker": "[待审计]"
+  },
+  {
+    "turn": 3,
+    "scenario": "enron-collapse",
+    "inject": [
+      "2000年Q2报告：收入增长50%",
+      "运营现金流同比下降12%",
+      "Fastow的Raptor系列SPE贡献了5.4亿的'利润'",
+      "这些利润都是应收账款（其他公司欠安然的预付款）"
+    ],
+    "suppress": [
+      "2001年Q1现金流-6亿（未来）",
+      "2001年Q2现金流-4亿（未来）",
+      "Raptor系列让安然自己欠自己5.4亿（未来揭露）",
+      "股价将从90美元跌到30美元（未来）"
+    ],
+    "suppress_placeholder": "[未来财务数据]",
+    "uncertain": [
+      "Raptor交易是否会最终被认定为虚假"
+    ],
+    "uncertain_marker": "[待定]"
+  },
+  {
+    "turn": 5,
+    "scenario": "enron-collapse",
+    "inject": [
+      "你收到6个月前（2000年12月）Sherron Watkins写给Lay的备忘录",
+      "Watkins担心Raptor系列SPE的会计处理是错误的",
+      "她担心没有披露与Fastow的关联交易的真实规模",
+      "Lay当时的反应：'我会处理，Sherron，不用担心'"
+    ],
+    "suppress": [
+      "Watkins备忘录将在2001年8月被公开（未来）",
+      "Lay将边缘化Watkins，未进入董事会（未来）",
+      "安然将在2001年10月崩溃（未来）"
+    ],
+    "suppress_placeholder": "[后续发展]",
+    "uncertain": [
+      "Watkins备忘录的真实影响力"
+    ],
+    "uncertain_marker": "[未知]"
+  },
+  {
+    "turn": 7,
+    "scenario": "enron-collapse",
+    "inject": [
+      "2001年10月，Fastow突然辞职",
+      "Lay让他辞职以隔离责任",
+      "Andersen开始独立调查Raptor系列",
+      "股价单日跌25%到30美元"
+    ],
+    "suppress": [
+      "Andersen将销毁数千页审计文档（未来）",
+      "SEC将启动正式调查（未来）",
+      "员工401k损失约13亿美元（未来）",
+      "安然将在2001年12月申请破产（未来）"
+    ],
+    "suppress_placeholder": "[后续发展]",
+    "uncertain": [
+      "Andersen调查是否会发现关键证据"
+    ],
+    "uncertain_marker": "[未知]"
+  },
+  {
+    "turn": 10,
+    "scenario": "enron-collapse",
+    "inject": [
+      "2002年12月，安然破产清算完成",
+      "你作为前高管需要作证",
+      "你的10回合决策构成你的安然十年"
+    ],
+    "suppress": [
+      "股价最终跌到$0.50（结局）",
+      "员工退休金损失13亿美元（结局）",
+      "安然有序破产清算（结局判定）",
+      "你将在Powers Report听证会作证（未来）"
+    ],
+    "suppress_placeholder": "[结局/未来]",
+    "uncertain": [
+      "刑事处罚的最终结果"
+    ],
+    "uncertain_marker": "[未知]"
+  }
+]

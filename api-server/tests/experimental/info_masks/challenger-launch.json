@@ -1,0 +1,97 @@
+[
+  {
+    "turn": 1,
+    "scenario": "challenger-launch",
+    "inject": [
+      "距离原定发射日还有30天",
+      "1985年7月31日Boisjoly提交了关键备忘录",
+      "1985年11月NASA工程评审将O型环焦化列为重大关切",
+      "Thiokol工程师团队提交了新备忘录",
+      "O型环设计温度范围40-100°F",
+      "之前7次飞行最低温度53°F，已出现焦化",
+      "当前预报温度36°F"
+    ],
+    "suppress": [
+      "实际发射温度28°F",
+      "O型环金属接触温度≤22°F",
+      "7名宇航员的名字",
+      "Rogers Commission调查结论",
+      "Feynman冰水实验",
+      "Boisjoly 1990年参议院证词",
+      "挑战者号在48000英尺高空解体",
+      "Dörner在《失败的逻辑》中写道"
+    ],
+    "suppress_placeholder": "[事后才知道的信息]",
+    "uncertain": [
+      "低温下O型环失效概率的具体数值"
+    ],
+    "uncertain_marker": "[有争议]"
+  },
+  {
+    "turn": 4,
+    "scenario": "challenger-launch",
+    "inject": [
+      "发射日预测温度18°F",
+      "之前最低发射温度53°F",
+      "差距35°F超出所有工程测试范围",
+      "工程师从未在53°F以下测试过",
+      "工程师强烈建议推迟"
+    ],
+    "suppress": [
+      "实际发射台温度28°F",
+      "工程师估算金属温度≤22°F",
+      "冰柱警告",
+      "7名宇航员已入舱",
+      "McAuliffe的学生正在观看直播"
+    ],
+    "suppress_placeholder": "[发射日才知道]",
+    "uncertain": [
+      "O型环在18°F下的实际失效概率"
+    ],
+    "uncertain_marker": "[未验证]"
+  },
+  {
+    "turn": 6,
+    "scenario": "challenger-launch",
+    "inject": [
+      "Boisjoly私下找到你",
+      "他说如果发射出错不希望名字在事故报告里",
+      "他递给你手写备忘录草稿",
+      "他曾在发射前夜私下请求过退出任务"
+    ],
+    "suppress": [
+      "Boisjoly在1990年参议院作证的内容",
+      "第二天早上他会照常履行发射职责",
+      "他的手在颤抖"
+    ],
+    "suppress_placeholder": "[后续发展]",
+    "uncertain": [
+      "Boisjoly的真实意图"
+    ],
+    "uncertain_marker": "[无法确认]"
+  },
+  {
+    "turn": 10,
+    "scenario": "challenger-launch",
+    "inject": [
+      "7名宇航员已就位",
+      "发射台温度26°F",
+      "工程师估算金属温度≤22°F",
+      "Boisjoly在他的岗位上"
+    ],
+    "suppress": [
+      "11:38:13 O型环失效",
+      "11:38:35 氢气泄漏警告",
+      "11:38:51 火焰开始外泄",
+      "11:38:73 挑战者号在48000英尺高空解体",
+      "7名宇航员全部遇难",
+      "Rogers Commission最终结论",
+      "Feynman冰水实验演示"
+    ],
+    "suppress_placeholder": "[结局未发生]",
+    "uncertain": [
+      "O型环在≤22°F下的确切失效时间"
+    ],
+    "uncertain_marker": "[未知]"
+  }
+]

@@ -1,0 +1,103 @@
+[
+  {
+    "turn": 1,
+    "scenario": "climate-change-policy",
+    "inject": [
+      "美国第二次宣布退出Paris Accord",
+      "195国中的130国公开谴责，30国观望，35国支持",
+      "你是IPCC执行主任，任期2025-2035",
+      "需要平衡经济增速、公众支持、国际信任与代际气候正义"
+    ],
+    "suppress": [
+      "2023年全球平均气温比工业化前高1.45°C（事后确认）",
+      "大气CO2浓度达424 ppm（当前实测）",
+      "美国将在2032年选举后可能重新加入Paris Accord（未来事件）",
+      "中国将在2033年宣布碳中和提前到2055年（未来事件）",
+      "1.5°C目标最终实现（结局信息）"
+    ],
+    "suppress_placeholder": "[未来/事后信息]",
+    "uncertain": [
+      "美国新一届政府是否会重新加入Paris Accord"
+    ],
+    "uncertain_marker": "[未知]"
+  },
+  {
+    "turn": 2,
+    "scenario": "climate-change-policy",
+    "inject": [
+      "Scripps CO2 Program报告：大气CO2浓度达426 ppm",
+      "比2024年同期增长2.8 ppm/年（加速）",
+      "IPCC AR6首席科学家警告：To keep 1.5°C, global emissions must halve by 2030"
+    ],
+    "suppress": [
+      "2030年3月全球升温达1.7°C（未来）",
+      "亚马逊雨林开始大规模退化（未来）",
+      "格陵兰冰盖融化加速（未来）",
+      "北极永久冻土层开始释放甲烷（未来）"
+    ],
+    "suppress_placeholder": "[未来观测]",
+    "uncertain": [
+      "全球排放是否能在2030年前减半"
+    ],
+    "uncertain_marker": "[未验证]"
+  },
+  {
+    "turn": 5,
+    "scenario": "climate-change-policy",
+    "inject": [
+      "前任在交接报告中警告只盯着GDP和公众支持率",
+      "2024年实测显示全球海平面比2020年高+3 cm",
+      "IPCC AR6预测：如果维持当前排放，2100年海平面将上升0.5-1米"
+    ],
+    "suppress": [
+      "2075年的虚拟信件内容（虚构未来）",
+      "太平洋岛国到2075年可能不再适合居住（未来预测）"
+    ],
+    "suppress_placeholder": "[未来视角]",
+    "uncertain": [
+      "海平面上升的确切时间表"
+    ],
+    "uncertain_marker": "[模型预测]"
+  },
+  {
+    "turn": 7,
+    "scenario": "climate-change-policy",
+    "inject": [
+      "IPCC AR7特别报告发布",
+      "升温已超过1.5°C阈值",
+      "亚马逊雨林开始大规模退化",
+      "格陵兰冰盖融化加速",
+      "北极永久冻土层开始释放甲烷"
+    ],
+    "suppress": [
+      "1.7°C不是终点——F1非线性效应可能让升温加速到2°C、3°C（未来预测）",
+      "一旦突破2.5°C，亚马逊将不可逆退化为稀树草原（临界点预测）"
+    ],
+    "suppress_placeholder": "[临界点预测]",
+    "uncertain": [
+      "非线性效应的确切加速曲线"
+    ],
+    "uncertain_marker": "[模型不确定]"
+  },
+  {
+    "turn": 10,
+    "scenario": "climate-change-policy",
+    "inject": [
+      "你的十年任期将满",
+      "2035年12月",
+      "你需要回顾十年决策"
+    ],
+    "suppress": [
+      "全球升温1.45°C（结局数据）",
+      "CO2浓度415 ppm（结局数据）",
+      "巴黎协定1.5°C目标实现（结局判定）",
+      "海平面上升0.3米（结局数据）",
+      "极端气候事件减少40%（结局数据）"
+    ],
+    "suppress_placeholder": "[结局数据]",
+    "uncertain": [
+      "长期气候反馈效应的最终状态"
+    ],
+    "uncertain_marker": "[未知]"
+  }
+]
