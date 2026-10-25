@@ -284,3 +284,44 @@ dist/
 # 人工备份副本（*.bak_xxx）：保留在磁盘便于回溯，不入库
 *.bak_*
 
+
+# ============ 本地开发残留（2026-10 收尾清理）============
+# 根级一次性运行输出（构建/探针 stdout 重定向产物）
+/out_*.txt
+/temp_*.txt
+/build_err.txt
+/test-refresh*.txt
+/test-results/
+
+# 开发临时目录：本地验证截图、会话缓存、解包产物
+/tmp/
+/tests/frames-online/
+/tests/e2e/test-results/
+
+# 一次性调试探针脚本（scripts/_tmp_* 已在上方覆盖）
+scripts/_m1dbg*.mjs
+/tests/e2e/*-debug.spec.js
+/tests/e2e/debug-*.js
+/tests/e2e/test-all-scenarios-e2e.js
+
+# 上游 vendored 源码（SemIf 为其仓库拷贝，含本地 build 产物）
+/SemIf/
+
+# workbuddy 打包产物
+/workbuddy-package/
+
+# 历史审计归档：保留在磁盘供回溯，不入库（如需留档请移入 docs/）
+/archive/
+
+# 脚本自动生成的报告（重跑即重建）
+/docs/debrief-concept-coverage.md
+/docs/debrief-pattern-disposition.md
+
+# 实验跑批结果（设计与脚本已入库，结果可复现不存档）
+/api-server/tests/*_result*.json
+/api-server/tests/experimental/results/
+
+# 后端尚未注册路由/引擎的场景数据（api-server/start.py 仅注册 3 场景）
+# 待补路由后删除下面两行并入库存档
+/api-server/data/scenarios/chip_ai_supplychain.json
+/api-server/data/scenarios/noodle_shop_community.json
