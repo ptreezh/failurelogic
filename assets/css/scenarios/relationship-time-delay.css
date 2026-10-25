@@ -1,0 +1,8 @@
+/*
+ * scenarios/relationship-time-delay.css — 占位文件
+ * 原文件缺失（历史遗留 404）：index.html 一直引用此路径但从未存在。
+ * 补充为空占位以保证：
+ *   1) sw.js 离线缓存清单可正常 addAll 安装；
+ *   2) build-standalone.mjs 可完整内联主站 CSS，单文件不再出现 404。
+ * 具体样式如后续需要，可在本文件内补充。
+ */

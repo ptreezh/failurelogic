@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1120"/>
+      <stop offset="1" stop-color="#1d4ed8"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#bg)"/>
+  <circle cx="540" cy="70" r="42" fill="#fde68a" opacity="0.9"/>
+  <g transform="translate(240,120)">
+    <rect x="0" y="0" width="160" height="160" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="4"/>
+    <rect x="30" y="30" width="100" height="100" rx="4" fill="#0f172a" stroke="#7dd3fc" stroke-width="2"/>
+    <path d="M30,55 L0,40 M30,80 L0,80 M30,105 L0,120 M130,55 L160,40 M130,80 L160,80 M130,105 L160,120 M55,30 L40,0 M80,30 L80,0 M105,30 L120,0 M55,130 L40,160 M80,130 L80,160 M105,130 L120,160" stroke="#38bdf8" stroke-width="5"/>
+    <circle cx="80" cy="80" r="34" fill="#1d4ed8"/>
+    <text x="80" y="88" text-anchor="middle" font-family="Consolas, monospace" font-size="18" font-weight="700" fill="#e0f2fe">AI</text>
+  </g>
+  <text x="320" y="305" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="700" fill="#e0f2fe">Chip AI Supply Chain</text>
+  <text x="320" y="335" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#93c5fd">供应链 · 华芯突围 · 制裁下的战略决策</text>
+</svg>
