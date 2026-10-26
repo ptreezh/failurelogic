@@ -35,11 +35,11 @@ const fails = [];
 const notes = [];
 const browser = await chromium.launch();
 
-async function runScenario(scn) {
+async function runScenario(scn, ctx) {
   const tag = scn.id;
 // S0 先对 noodle 强制现实锚定，S1 四场景铺开后五场景全部强制。
 const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', 'climate-change', 'enron-collapse', 'chip-ai-supplychain']);
-  const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, acceptDownloads: true });
+  const page = await ctx.newPage();
   const pageErrors = [];
   page.on('pageerror', (e) => pageErrors.push(String(e).slice(0, 200)));
 
@@ -317,16 +317,50 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
   await page.close();
 }
 
-for (const scn of SCENARIOS) {
+// 五场景互不共享状态（各自独立 context + page + 独立 temp 目录外的 PNG 文件），
+// 本就是一个天然可并行的只读验收：串行只是历史写法，单轮 10 回合的硬等待占了绝大部分墙钟。
+// 并发度默认 3：单机 CPU 争用下再往上加，页面渲染变慢会让回合内的固定等待不够用，
+// 反而把「等待不足」误报成断言失败。需要压更狠可用 DEBRIEF_CONCURRENCY 覆盖。
+const CONCURRENCY = Math.max(1, Math.min(SCENARIOS.length, Number(process.env.DEBRIEF_CONCURRENCY) || 3));
+
+async function runOne(scn) {
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, acceptDownloads: true });
   try {
-    await runScenario(scn);
+    await runScenario(scn, ctx);
   } catch (e) {
     fails.push(`${scn.id} 运行异常：${String(e).slice(0, 160)}`);
+  } finally {
+    await ctx.close().catch(() => {});
   }
 }
 
+let cursor = 0;
+await Promise.all(
+  Array.from({ length: CONCURRENCY }, async () => {
+    while (cursor < SCENARIOS.length) {
+      const scn = SCENARIOS[cursor++];
+      await runOne(scn);
+    }
+  })
+);
+
 await browser.close();
 srv.kill();
+
+// 并发跑完后 notes/fails 是按完成先后交错的；按 SCENARIOS 原始顺序重排，
+// 让日志与串行时逐字一致（断言口径不变，只是稳定输出顺序）。
+const scnRank = (line) => {
+  const i = SCENARIOS.findIndex((s) => String(line).startsWith(s.id + ' '));
+  return i < 0 ? SCENARIOS.length : i;
+};
+const stable = (arr) => arr.map((v, i) => [v, i]).sort((a, b) => scnRank(a[0]) - scnRank(b[0]) || a[1] - b[1]).map((p) => p[0]);
+
+const orderedNotes = stable(notes);
+const orderedFails = stable(fails);
+notes.length = 0;
+notes.push(...orderedNotes);
+fails.length = 0;
+fails.push(...orderedFails);
 
 notes.forEach((n) => console.log('  · ' + n));
 if (fails.length) {
