@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Loop 5 · UI render assertions (V1–V10)
  *
  * Why this file exists: every acceptance run so far drove OfflineEngine
@@ -16,16 +16,61 @@
  */
 import { chromium } from 'playwright';
 import { spawn } from 'node:child_process';
+import http from 'node:http';
 
 const ROOT = 'D:/AIDevelop/failureLogic';
 const PORT = 8531;
 const srv = spawn('python', ['-m', 'http.server', String(PORT), '--bind', '127.0.0.1'], { cwd: ROOT, stdio: 'ignore' });
-await new Promise((r) => setTimeout(r, 1600));
+
+// 服务起没起是"能不能连"的问题，不是"睡了 1.6 秒大概就好"的问题：轮询到端口应答即走，
+// 冷启动时省掉的正是白等的那一段。
+await (async function waitServer() {
+  const deadline = Date.now() + 20000;
+  while (Date.now() < deadline) {
+    const ok = await new Promise((res) => {
+      const req = http.get({ host: '127.0.0.1', port: PORT, path: '/index.html', timeout: 800 }, (r) => {
+        r.resume();
+        res(r.statusCode === 200);
+      });
+      req.on('error', () => res(false));
+      req.on('timeout', () => { req.destroy(); res(false); });
+    });
+    if (ok) return;
+    await new Promise((r) => setTimeout(r, 100));
+  }
+  throw new Error(`http server on ${PORT} did not come up`);
+})();
 
 const fails = [];
 const notes = [];
 const fbLog = [];
 const browser = await chromium.launch();
+
+// FL_UI_TIMING=1 时打印分阶段耗时；默认静默，日志与改造前逐字一致。
+const TIMING = process.env.FL_UI_TIMING === '1';
+const t00 = Number(process.hrtime.bigint()) / 1e6;
+const now = () => Number(process.hrtime.bigint()) / 1e6;
+const marks = [];
+const mark = (k) => { if (TIMING) marks.push([k, Math.round(now() - t00)]); };
+
+// 两帧后再继续：让 class / 布局的同步副作用落地，避免读到半渲染的中间态。
+const settle = (page) =>
+  page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r(true)))));
+
+// 回合就绪 = 选项容器带 data-turn=N 且子项已渲染。用页面自己的状态机当信号，
+// 而不是等一个猜出来的毫秒数：猜短了读到中间态（假红），猜长了每回合白等。
+async function waitTurnReady(page, turn, timeout = 30000) {
+  await page.waitForFunction(
+    (t) => {
+      const box = document.getElementById('challenger-options');
+      if (!box || Number(box.getAttribute('data-turn')) !== t) return false;
+      return box.querySelectorAll('.challenger-option').length > 0;
+    },
+    turn,
+    { timeout }
+  );
+  await settle(page);
+}
 
 const hash = (str) => {
   let h = 5381;
@@ -123,15 +168,43 @@ async function enterClimate(page) {
   await page.addInitScript(() => {
     try { localStorage.removeItem('fl_fb_details_open'); } catch (e) { /* ignore */ }
   });
+  // 平滑滚动 + 入场动画会把"元素已就绪"变成"元素还在动"：Playwright 的真实点击必须等
+  // 元素连续两帧位置不变，于是每回合在多处白等几百毫秒。被验收的是终态 DOM 与尺寸，
+  // 动画不在验收范围内，这里把 scrollIntoView 的 smooth 降为 auto，点击语义不变。
+  await page.addInitScript(() => {
+    const orig = Element.prototype.scrollIntoView;
+    Element.prototype.scrollIntoView = function (arg) {
+      if (arg && typeof arg === 'object' && arg.behavior === 'smooth') {
+        return orig.call(this, Object.assign({}, arg, { behavior: 'auto' }));
+      }
+      return orig.call(this, arg);
+    };
+  });
   await page.goto(`http://127.0.0.1:${PORT}/index.html`, { waitUntil: 'domcontentloaded' });
-  await page.waitForTimeout(1200);
+  await page.addStyleTag({
+    content:
+      '*,*::before,*::after{animation-duration:1ms!important;animation-delay:0s!important;' +
+      'transition-duration:1ms!important;transition-delay:0s!important}'
+  });
+  await page.waitForFunction(() => !!window.OfflineEngine, null, { timeout: 30000 });
   await page.click('#start-journey');
-  await page.waitForTimeout(900);
+  // 等场景列表真的画出气候卡，而不是睡 0.9 秒后赌它已经在了。
+  await page.waitForFunction(
+    () => [...document.querySelectorAll('.scenario-card')].some((n) => /气候/.test(n.innerText)),
+    null,
+    { timeout: 25000 }
+  );
   await page.evaluate(() => {
     const card = [...document.querySelectorAll('.scenario-card')].find((n) => /气候/.test(n.innerText));
     card.querySelector('.btn-primary,button').click();
   });
-  await page.waitForTimeout(2600);
+  // 第 1 回合选项就位才是"进场景成功"，不再干等 2.6 秒。
+  await waitTurnReady(page, 1);
+  // 但"选项渲染出来了"不等于"排版定了"：字体是异步加载的，加载完行高会变，
+  // 而本脚本要断言的正是高度（44/48px 触控目标）。等字体就绪再量，
+  // 否则量到的是中间态 —— 移动端 55px 会读到 48px，正好压在阈值线上。
+  await page.evaluate(() => (document.fonts ? document.fonts.ready : true));
+  await settle(page);
 }
 
 // ===== Desktop pass: V1–V7, V9 =====
@@ -157,9 +230,39 @@ for (let t = 1; t <= 10; t++) {
   if (before.labelFont != null && before.labelFont < 12) fails.push(`V8/T${t} 标签字号=${before.labelFont}px < 12`);
 
   // submit（L1-2 起：「选中」只挂起，还要一步显式确认）
+  const tSub = now();
   await page.evaluate(() => document.querySelector('.challenger-option').click());
+  // 「选中」只挂起：等确认条真的可见再确认，而不是赌挂起已经渲染完。
+  await page
+    .waitForFunction(
+      () => {
+        const bar = document.getElementById('challenger-confirm-bar');
+        return !!(bar && !bar.hidden && document.getElementById('challenger-confirm'));
+      },
+      null,
+      { timeout: 20000 }
+    )
+    .catch(() => {});
   await page.evaluate(() => window.challengerRouter && window.challengerRouter.confirmChoice());
-  await page.waitForTimeout(1100);
+  // 提交是异步的（executeTurn → 写回 gameState → 渲染反馈）：等它真的落地 ——
+  // 要么出现「进入第 N+1 回合」按钮，要么整块选项被终局页替换。
+  // 光有 next-turn 按钮还不够：反馈区是同一轮里另一次渲染写入的，
+  // 只等按钮会偶发读到"按钮已出、反馈还没字"的中间态（V18 假红）。
+  await page
+    .waitForFunction(
+      () => {
+        const nx = document.getElementById('challenger-next-turn');
+        if (!nx) return !document.getElementById('challenger-options');
+        const fb = document.getElementById('challenger-feedback-display');
+        if (!fb) return true;
+        return (fb.innerText || '').trim().length > 0;
+      },
+      null,
+      { timeout: 40000 }
+    )
+    .catch(() => {});
+  await settle(page);
+  mark(`T${t}.submit=${Math.round(now() - tSub)}`);
   const after = await snap(page);
   btnLog.push({ t, next: after.nextH, submit: before.submitH });
   const fbs = await fbSnap(page);
@@ -192,7 +295,7 @@ for (let t = 1; t <= 10; t++) {
         const d = document.querySelector('.fb-body details.fb-more');
         if (d) d.open = true;
       });
-      await page.waitForTimeout(200);
+      await settle(page);
     }
   }
 
@@ -209,13 +312,16 @@ for (let t = 1; t <= 10; t++) {
   }
   if (!after.locked) fails.push(`V3/T${t} locked 未置位`);
 
+  // 误点必须被拒绝。这里要证明的是"什么都没发生"，没有可等的事件，
+  // 所以只留够两次渲染的量（点击处理同步、拒绝同步），而不是固定 0.7 秒。
   const lastBefore = after.last;
   await page.evaluate(() => {
     const opts = [...document.querySelectorAll('.challenger-option')];
     opts[1] && opts[1].click();
     if (window.challengerRouter) window.challengerRouter.selectOption('B'); // bypass the disabled attribute
   });
-  await page.waitForTimeout(700);
+  await settle(page);
+  await page.waitForTimeout(300);
   const afterStray = await snap(page);
   if (afterStray.last !== lastBefore) {
     fails.push(`V3/T${t} 误点后 lastTurnNumber ${lastBefore}→${afterStray.last}`);
@@ -239,9 +345,14 @@ for (let t = 1; t <= 10; t++) {
     fails.push(`V7/T${t} 选项高度=${before.optionHeight}px < 44`);
   }
 
+  const tNext = now();
   await page.evaluate(() => document.getElementById('challenger-next-turn').click());
-  await page.waitForTimeout(1200);
+  // 下一回合的选项带 data-turn=N+1 出现，才算真的翻页；等它就绪，不再睡 1.2 秒。
+  await waitTurnReady(page, t + 1);
+  mark(`T${t}.next=${Math.round(now() - tNext)}`);
 }
+
+mark('desktop-turns');
 
 // V2: option set must change between turns (guards against a frozen render)
 const dup = hashes.filter((h, i) => i > 0 && h === hashes[i - 1]).length;
@@ -256,10 +367,56 @@ if (finalTemp != null && finalTemp < 2.30 && /突破\s*3\s*°C|升温突破3/.te
 }
 
 // ===== Mobile pass: V7 =====
-const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
-mobile.on('pageerror', (e) => pageErrors.push('[mobile] ' + String(e).slice(0, 160)));
-await enterClimate(mobile);
-const mob = await snap(mobile);
+// Mobile pass 与场景卡 pass 是两条互不依赖的链路（各自独立 page、各自独立断言），
+// 串行跑只是排队白等浏览器空闲。并行后两段共同耗时取最大值而非求和。
+const [mob, cardH] = await Promise.all([
+  (async () => {
+    const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
+    mobile.on('pageerror', (e) => pageErrors.push('[mobile] ' + String(e).slice(0, 160)));
+    await enterClimate(mobile);
+    const s = await snap(mobile);
+    await mobile.close();
+    return s;
+  })(),
+  (async () => {
+    // V25: scenario-list 开始挑战 on mobile must also clear 44px
+    const cards = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
+    await cards.addInitScript(() => {
+      const orig = Element.prototype.scrollIntoView;
+      Element.prototype.scrollIntoView = function (arg) {
+        if (arg && typeof arg === 'object' && arg.behavior === 'smooth') {
+          return orig.call(this, Object.assign({}, arg, { behavior: 'auto' }));
+        }
+        return orig.call(this, arg);
+      };
+    });
+    await cards.goto(`http://127.0.0.1:${PORT}/index.html`, { waitUntil: 'domcontentloaded' });
+    await cards.addStyleTag({
+      content:
+        '*,*::before,*::after{animation-duration:1ms!important;animation-delay:0s!important;' +
+        'transition-duration:1ms!important;transition-delay:0s!important}'
+    });
+    await cards.waitForFunction(() => !!window.OfflineEngine, null, { timeout: 30000 });
+    await cards.click('#start-journey');
+    // 卡片与其按钮都画出来才量高度；元素没渲染时 getBoundingClientRect 会全 0，
+    // 那是"还没画"，不是"按钮太小"。
+    await cards.waitForFunction(
+      () => {
+        const list = [...document.querySelectorAll('.scenario-card')];
+        return list.length > 0 && list.every((c) => c.querySelector('button'));
+      },
+      null,
+      { timeout: 25000 }
+    );
+    await settle(cards);
+    const h = await cards.evaluate(() => [...document.querySelectorAll('.scenario-card')]
+      .map((c) => Math.round(c.querySelector('button').getBoundingClientRect().height)));
+    await cards.close();
+    return h;
+  })()
+]);
+mark('mobile+cards');
+
 if (mob.firstOptTop != null && mob.firstOptTop > 844) {
   fails.push(`V7/mobile 首选项 top=${Math.round(mob.firstOptTop)} 超出首屏`);
 }
@@ -268,17 +425,8 @@ if (mob.optionHeight != null && mob.optionHeight < 48) {
 }
 if (mob.gauges !== 2) fails.push(`V9/mobile gauges=${mob.gauges}`);
 
-// V25: scenario-list 开始挑战 on mobile must also clear 44px
-const cards = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
-await cards.goto(`http://127.0.0.1:${PORT}/index.html`, { waitUntil: 'domcontentloaded' });
-await cards.waitForTimeout(1100);
-await cards.click('#start-journey');
-await cards.waitForTimeout(900);
-const cardH = await cards.evaluate(() => [...document.querySelectorAll('.scenario-card')]
-  .map((c) => Math.round(c.querySelector('button').getBoundingClientRect().height)));
 if (cardH.some((h) => h < 44)) fails.push(`V25/mobile 场景卡按钮高=${cardH.join(',')} < 44`);
 console.log('CARDH ' + JSON.stringify(cardH));
-await cards.close();
 
 if (pageErrors.length) fails.push(`pageerror: ${pageErrors.slice(0, 3).join(' | ')}`);
 
@@ -290,6 +438,7 @@ console.log('BTN ' + JSON.stringify(btnLog));
 console.log('FB ' + JSON.stringify(fbLog));
 console.log('MOBILE ' + JSON.stringify({ top: Math.round(mob.firstOptTop), h: mob.optionHeight, gauges: mob.gauges }));
 console.log('FINAL_TEMP ' + finalTemp);
+if (TIMING) console.log('TIMING ' + JSON.stringify(marks.map(([k, v]) => k + '=' + v)));
 console.log(fails.length ? 'FAIL\n - ' + fails.join('\n - ') : 'PASS all render assertions');
 
 await browser.close();
