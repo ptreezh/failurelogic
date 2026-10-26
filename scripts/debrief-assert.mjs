@@ -35,6 +35,30 @@ const fails = [];
 const notes = [];
 const browser = await chromium.launch();
 
+// 固定 waitForTimeout 是"猜时间"：猜短了会读到中间态（误报），猜长了每一回合都在
+// 白等。这里改成等页面自己给出的就绪信号 —— 状态机是确定的：
+//   回合渲染 → 选项挂起(#challenger-confirm-bar 非 hidden) → 提交出反馈(#challenger-next-turn)
+//   → 下一回合选项(#challenger-options[data-turn=N]) → 终局(#challenger-options 被替换)
+// 条件比固定等待严格：不是"大概稳了"，而是"这一步真的完成了"，且满足即刻放行。
+// 每步之后再走两帧，让 class/布局的同步副作用落地，避免点击落在未稳定的元素上。
+const settle = (page) =>
+  page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r(true)))));
+
+async function waitTurnReady(page, turn) {
+  await page.waitForFunction(
+    (t) => {
+      const box = document.getElementById('challenger-options');
+      if (!box) return false;
+      // data-turn 必须正好是目标回合：否则会在上一回合的残留 DOM 上误判就绪。
+      if (Number(box.getAttribute('data-turn')) !== t) return false;
+      return box.querySelectorAll('.challenger-option').length > 0;
+    },
+    turn,
+    { timeout: 30000 }
+  );
+  await settle(page);
+}
+
 async function runScenario(scn, ctx) {
   const tag = scn.id;
 // S0 先对 noodle 强制现实锚定，S1 四场景铺开后五场景全部强制。
@@ -46,15 +70,33 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
   await page.goto(`http://127.0.0.1:${PORT}/index.html`, { waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => !!window.OfflineEngine, null, { timeout: 30000 });
   await page.click('#start-journey');
-  await page.waitForTimeout(1000);
+  // 等场景列表真的渲染出目标卡片，而不是等 1 秒后去赌它已经在了。
+  const cardSrc = scn.card.source.replace(/^\/|\/$/g, '');
+  const cardsReady = await page
+    .waitForFunction(
+      (src) => {
+        const re = new RegExp(src, 'i');
+        return [...document.querySelectorAll('.scenario-card')].some((n) => re.test(n.innerText));
+      },
+      cardSrc,
+      { timeout: 25000 }
+    )
+    .then(() => true)
+    .catch(() => false);
+  if (!cardsReady) {
+    fails.push(`${tag} 找不到场景卡片`);
+    await page.close();
+    return;
+  }
   const entered = await page.evaluate((src) => {
     const re = new RegExp(src, 'i');
     const card = [...document.querySelectorAll('.scenario-card')].find((n) => re.test(n.innerText));
     if (!card) return false;
     card.querySelector('.btn-primary,button').click();
     return true;
-  }, scn.card.source.replace(/^\/|\/$/g, ''));
-  await page.waitForTimeout(2600);
+  }, cardSrc);
+  // 等第 1 回合的选项就位，而不是干等 2.6 秒。
+  if (entered) await waitTurnReady(page, 1);
   if (!entered) {
     fails.push(`${tag} 找不到场景卡片`);
     await page.close();
@@ -70,12 +112,32 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
     }
     await opts[opts.length - 1].click();
     // L1-2 之后「选中」不再等于「提交」：点一下只挂起，必须显式确认。
+    // 先把「挂起」这一步等实（确认条出现且确认按钮可点），再确认。
+    await page.waitForFunction(
+      () => {
+        const bar = document.getElementById('challenger-confirm-bar');
+        return !!(bar && !bar.hidden && document.getElementById('challenger-confirm'));
+      },
+      null,
+      { timeout: 20000 }
+    );
     await page.evaluate(() => window.challengerRouter && window.challengerRouter.confirmChoice());
-    await page.waitForTimeout(1100);
+    // 提交是异步的（executeTurn → 写回 gameState → 渲染反馈）。等它真的落地：
+    // 要么出现「进入第 N+1 回合」按钮，要么整块选项被终局页替换。
+    await page.waitForFunction(
+      () => {
+        if (document.getElementById('challenger-next-turn')) return true;
+        return !document.getElementById('challenger-options');
+      },
+      null,
+      { timeout: 40000 }
+    );
+    await settle(page);
     const nx = await page.$('#challenger-next-turn');
     if (nx) {
       await nx.click();
-      await page.waitForTimeout(1100);
+      // 下一回合的选项带着 data-turn=N+1 出现，才是真的翻页成功。
+      await waitTurnReady(page, t + 1);
     }
   }
 
@@ -319,9 +381,15 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
 
 // 五场景互不共享状态（各自独立 context + page + 独立 temp 目录外的 PNG 文件），
 // 本就是一个天然可并行的只读验收：串行只是历史写法，单轮 10 回合的硬等待占了绝大部分墙钟。
-// 并发度默认 3：单机 CPU 争用下再往上加，页面渲染变慢会让回合内的固定等待不够用，
-// 反而把「等待不足」误报成断言失败。需要压更狠可用 DEBRIEF_CONCURRENCY 覆盖。
-const CONCURRENCY = Math.max(1, Math.min(SCENARIOS.length, Number(process.env.DEBRIEF_CONCURRENCY) || 3));
+// 并发度此前压到 3，是因为固定等待一旦被 CPU 争用拖慢就会静默误报。回合内改为条件等待后，
+// 争用只会让就绪信号晚到（每步都有 20~40s 上限兜底，超时即报红，不会变成假绿），
+// 于是并发度可以按核数放开：32 核实测 5 并发 34~37s（并发 3 为 62.7s，全固定等待时 74.8s）。
+const CPU = (os.cpus() || []).length || 4;
+const DEFAULT_CONCURRENCY = Math.min(SCENARIOS.length, Math.max(3, Math.floor(CPU / 4)));
+const CONCURRENCY = Math.max(
+  1,
+  Math.min(SCENARIOS.length, Number(process.env.DEBRIEF_CONCURRENCY) || DEFAULT_CONCURRENCY)
+);
 
 async function runOne(scn) {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, acceptDownloads: true });
