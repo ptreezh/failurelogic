@@ -29,6 +29,8 @@
  *   node scripts/verify-all.mjs --skip=acceptance-climate     # 调试用，验收不许跳过
  *   node scripts/verify-all.mjs --verbose
  *   node scripts/verify-all.mjs --jobs=4      # 默认并发 4；锁/依赖自动串行
+ *   node scripts/verify-all.mjs --order=fifo  # 退回按声明顺序起跑（对照实验用）
+ *   node scripts/verify-all.mjs --heavy=2     # 限制同时跑的重脚本数（核少时才考虑）
  *   node scripts/verify-all.mjs --serial      # 退回逐条串行，排查竞态用
  */
 
@@ -124,6 +126,60 @@ const AUTO_JOBS = Math.min(4, Math.max(2, Math.floor(os.cpus().length / 4)));
 const JOBS = SERIAL_MODE ? 1 : Math.max(1, parseInt(opt('jobs', String(AUTO_JOBS)), 10) || AUTO_JOBS);
 
 /**
+ * —— 调度策略：长脚本优先（LPT）+ 重脚本并发上限 ——
+ *
+ * 并发跑 28 个脚本时，总耗时不是"耗时之和 / jobs"，而是**关键路径**。
+ * 起跑顺序若是声明顺序，长脚本往往排在后面：等前面一批短脚本把槽位腾出来，
+ * 最长的那条才开始跑，尾部就形成一条没人陪跑的长尾。
+ * 反过来先把最长的压上去（longest processing time first），尾部只剩零碎短脚本，
+ * makespan 才接近下界。
+ *
+ * 另一半曾试过"重脚本并发上限"（只放 N 个浏览器同时跑），本机实测是**反效果**：
+ * 限制到 2 时 4 个槽位有两格只能塞几秒就完的轻脚本，重脚本却在门口排队，
+ * 关键路径反而拉到 85.5s；不限时 44~53s。32 核机器上 4 路 Playwright 并不过载，
+ * 所以默认不限制（--heavy=N 保留给核数少的机器，实测后再定）。
+ *
+ * 排序只决定"谁先跑"，不改变任何断言口径、不改汇总顺序；--order=fifo 退回旧行为。
+ */
+const ORDER = opt('order', 'lpt') === 'fifo' ? 'fifo' : 'lpt';
+// 重脚本判定阈值（秒，经验耗时）。低于它的是纯无头脚本，占不满一个核。
+const HEAVY_MIN = Math.max(1, parseFloat(opt('heavy-min', '8')) || 8);
+// 默认 = JOBS，即"不额外限制"；设小才会真正卡住重脚本的并发。
+const HEAVY_SLOTS = SERIAL_MODE
+  ? 1
+  : Math.max(1, Math.min(JOBS, parseInt(opt('heavy', String(JOBS)), 10) || JOBS));
+
+/**
+ * 经验耗时（秒，本机 jobs=4 实测，随机器浮动）。只用于排序与重轻分级，
+ * 不参与红绿判定；量级对就够 —— LPT 只关心相对大小。
+ * 改了某个脚本的等待方式后，这里同步改一下即可，忘了也不影响正确性。
+ */
+const WEIGHT = {
+  'debrief-assert': 45,
+  'viz-assert': 32,
+  'probe-goal-tension': 22,
+  'acceptance-climate': 15,
+  'probe-choice-gate': 14,
+  'ui-render-assert': 13,
+  'shadow-outcome': 13,
+  'shop-declared': 9,
+  'dist-render-check': 7,
+  'contract-outcome': 5,
+  'adapter-ending': 4.5,
+  'gold-climate': 4.5,
+  'option-slot-map': 4.3,
+  'probe-loop4-ui': 4,
+  'acceptance-climate-scar': 3.6,
+  'acceptance-climate-epilogue': 2.8,
+  'pressure-tier': 2.6,
+  'build-standalone': 0.2,
+};
+for (const s of STEPS) {
+  s.weight = WEIGHT[s.name] || 1;
+  s.heavy = s.weight >= HEAVY_MIN;
+}
+
+/**
  * 串行独占阶段：卫生门禁 + 纯无头秒级断言（合计 ≈ 1.5 s）。
  * 让它们先串行跑完再放并发，是为了让 gate-hygiene 看到的工作区与改造前
  * 完全一致 —— 并发阶段会写 dist/ 等产物，不能让它撞上卫生检查。
@@ -155,6 +211,10 @@ if (only.length || skip.length) {
 }
 if (JOBS > 1) {
   console.log(`[verify-all] 并发调度：jobs=${JOBS}（串行独占阶段 ${selected.filter((s) => SERIAL_PHASE.has(s.name)).length} 个，其余按依赖/端口锁并行）`);
+  console.log(
+    `[verify-all] 起跑顺序：${ORDER === 'lpt' ? '长脚本优先 LPT' : '声明顺序 FIFO'}；` +
+      `重脚本（≥${HEAVY_MIN}s）并发上限 ${HEAVY_SLOTS}`
+  );
 }
 
 const pad = (s, n) => String(s).padEnd(n, ' ');
@@ -241,21 +301,46 @@ async function main() {
   // —— 阶段 2：按依赖 + 端口锁并发 ——
   // deps 里出现但没被本次选中的脚本（--only 场景）视为已满足。
   await new Promise((resolve) => {
+    let heavyActive = 0;
     const pump = () => {
       while (active < JOBS) {
-        const k = pending.findIndex((s) => {
+        // 先把"现在真的能起跑"的都找出来（依赖满足、端口锁空闲），再谈顺序。
+        const runnable = [];
+        for (let i = 0; i < pending.length; i++) {
+          const s = pending[i];
           const depsOk = (s.deps || []).every(
             (d) => done.has(d) || !STEPS.some((x) => x.name === d)
           );
           const lockOk = !s.lock || !locks.has(s.lock);
-          return depsOk && lockOk;
-        });
-        if (k === -1) break;
-        const step = pending.splice(k, 1)[0];
+          if (depsOk && lockOk) runnable.push(i);
+        }
+        if (!runnable.length) break;
+
+        // 重脚本槽位已满：先拿轻脚本填空，一个浏览器都不多起。
+        // 若此刻只剩重脚本可跑，就停在这里等某条跑完回调再泵 —— 不是死锁，
+        // 因为 heavyActive >= HEAVY_SLOTS >= 1 意味着 active > 0。
+        let pool = runnable;
+        if (heavyActive >= HEAVY_SLOTS) {
+          const light = runnable.filter((i) => !pending[i].heavy);
+          if (!light.length) break;
+          pool = light;
+        }
+
+        // LPT：同为可跑时先上最长的；耗时相同按声明顺序，保证可复现。
+        let pick = pool[0];
+        if (ORDER !== 'fifo') {
+          for (const i of pool) {
+            if (pending[i].weight > pending[pick].weight) pick = i;
+          }
+        }
+
+        const step = pending.splice(pick, 1)[0];
         active += 1;
+        if (step.heavy) heavyActive += 1;
         if (step.lock) locks.add(step.lock);
         execStep(step).then((r) => {
           active -= 1;
+          if (step.heavy) heavyActive -= 1;
           done.add(step.name);
           if (step.lock) locks.delete(step.lock);
           report(r);
