@@ -59,16 +59,48 @@ async function waitTurnReady(page, turn) {
   await settle(page);
 }
 
+// FL_DEBRIEF_TIMING=1 时打印分阶段耗时；默认静默，保证常规日志仍与串行时逐字一致。
+// 没有度量就只能靠猜，而"猜时间"正是这个脚本上一版最大的浪费来源。
+const TIMING = process.env.FL_DEBRIEF_TIMING === '1';
+const now = () => Number(process.hrtime.bigint()) / 1e6;
+
 async function runScenario(scn, ctx) {
   const tag = scn.id;
+  const t0 = now();
+  const mark = {};
+  const tick = (k) => { mark[k] = Math.round(now() - t0); };
+  const turnMs = [];
+  const phaseSum = { select: 0, pending: 0, submit: 0, next: 0 };
 // S0 先对 noodle 强制现实锚定，S1 四场景铺开后五场景全部强制。
 const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', 'climate-change', 'enron-collapse', 'chip-ai-supplychain']);
   const page = await ctx.newPage();
   const pageErrors = [];
   page.on('pageerror', (e) => pageErrors.push(String(e).slice(0, 200)));
 
+  await page.addInitScript(() => {
+    // 平滑滚动会把"元素已就绪"变成"元素还在移动"：Playwright 的真实点击必须等元素停稳，
+    // 每回合在「点选项」「进入下一回合」两处各付几百毫秒到一秒，而验收目标是复盘 DOM 与
+    // 导出 PNG，不是滚动动画。这里只把 scrollIntoView 的 behavior:smooth 降为 auto，
+    // 点击仍是真元素、真事件、真冒泡，交互语义不变。
+    const orig = Element.prototype.scrollIntoView;
+    Element.prototype.scrollIntoView = function (arg) {
+      if (arg && typeof arg === 'object' && arg.behavior === 'smooth') {
+        return orig.call(this, Object.assign({}, arg, { behavior: 'auto' }));
+      }
+      return orig.call(this, arg);
+    };
+  });
   await page.goto(`http://127.0.0.1:${PORT}/index.html`, { waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => !!window.OfflineEngine, null, { timeout: 30000 });
+  // Playwright 点击前要确认元素"稳定"（连续两帧位置不变）。页面里的入场/反馈动画会让
+  // 这个判定一直等到动画播完，每回合在「点选项」「进下一回合」两处白等几百毫秒。
+  // 被验收的是复盘终态 DOM 与导出的 PNG，动画不在验收范围内，这里统一压到 1ms。
+  await page.addStyleTag({
+    content:
+      '*,*::before,*::after{animation-duration:1ms!important;animation-delay:0s!important;' +
+      'transition-duration:1ms!important;transition-delay:0s!important}'
+  });
+  tick('boot');
   await page.click('#start-journey');
   // 等场景列表真的渲染出目标卡片，而不是等 1 秒后去赌它已经在了。
   const cardSrc = scn.card.source.replace(/^\/|\/$/g, '');
@@ -88,6 +120,7 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
     await page.close();
     return;
   }
+  tick('cards');
   const entered = await page.evaluate((src) => {
     const re = new RegExp(src, 'i');
     const card = [...document.querySelectorAll('.scenario-card')].find((n) => re.test(n.innerText));
@@ -97,6 +130,7 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
   }, cardSrc);
   // 等第 1 回合的选项就位，而不是干等 2.6 秒。
   if (entered) await waitTurnReady(page, 1);
+  tick('turn1');
   if (!entered) {
     fails.push(`${tag} 找不到场景卡片`);
     await page.close();
@@ -105,12 +139,17 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
 
   // 10 回合，一律选最靠后的一项（最激进）——为了让主因有东西可追。
   for (let t = 1; t <= 10; t++) {
+    const tTurn = now();
+    const phase = {};
+    const p0 = now();
     const opts = await page.$$('.challenger-option');
     if (!opts.length) {
       fails.push(`${tag} T${t} 没有可点的选项`);
       break;
     }
     await opts[opts.length - 1].click();
+    phase.select = Math.round(now() - p0);
+    const p1 = now();
     // L1-2 之后「选中」不再等于「提交」：点一下只挂起，必须显式确认。
     // 先把「挂起」这一步等实（确认条出现且确认按钮可点），再确认。
     await page.waitForFunction(
@@ -122,6 +161,8 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
       { timeout: 20000 }
     );
     await page.evaluate(() => window.challengerRouter && window.challengerRouter.confirmChoice());
+    phase.pending = Math.round(now() - p1);
+    const p2 = now();
     // 提交是异步的（executeTurn → 写回 gameState → 渲染反馈）。等它真的落地：
     // 要么出现「进入第 N+1 回合」按钮，要么整块选项被终局页替换。
     await page.waitForFunction(
@@ -133,13 +174,19 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
       { timeout: 40000 }
     );
     await settle(page);
+    phase.submit = Math.round(now() - p2);
+    const p3 = now();
     const nx = await page.$('#challenger-next-turn');
     if (nx) {
       await nx.click();
       // 下一回合的选项带着 data-turn=N+1 出现，才是真的翻页成功。
       await waitTurnReady(page, t + 1);
     }
+    phase.next = Math.round(now() - p3);
+    Object.keys(phaseSum).forEach((k) => { phaseSum[k] += phase[k] || 0; });
+    turnMs.push(Math.round(now() - tTurn));
   }
+  tick('turnsEnd');
 
   const mounted = await page
     .waitForFunction(() => {
@@ -154,6 +201,8 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
     await page.close();
     return;
   }
+
+  tick('mount');
 
   const snap = await page.evaluate(() => {
     const clean = (s) => String(s || '').replace(/\s+/g, ' ').trim();
@@ -236,6 +285,8 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
       overflowX: document.documentElement.scrollWidth - document.documentElement.clientWidth
     };
   });
+
+  tick('snap');
 
   if (!snap.hasRoot) fails.push(`${tag} 终局页没有 .fl-debrief 容器`);
   if (snap.sections !== 5) fails.push(`${tag} 复盘分节 ${snap.sections} 个（应为 5）`);
@@ -366,6 +417,7 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
   } catch (e) {
     fails.push(`${tag} 导出 PNG 失败：${String(e).slice(0, 120)}`);
   }
+  tick('png');
 
   [...new Set(pageErrors)].forEach((e) => fails.push(`${tag} 页内异常：${e}`));
   if (snap.overflowX > 2) fails.push(`${tag} 终局页横向溢出 ${snap.overflowX}px`);
@@ -375,6 +427,20 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
     `概念 ${snap.concepts.length}(命中 ${snap.concepts.filter((c) => c.hit).length}/缺指标 ${snap.concepts.filter((c) => c.missing).length})｜` +
     `未结清 ${snap.pendingRows}｜反事实 ${snap.cfRows}｜${snap.endingTitle}`
   );
+
+  tick('total');
+  if (TIMING) {
+    const span = (a, b) => Math.max(0, mark[b] - mark[a]);
+    const avg = turnMs.length ? Math.round(turnMs.reduce((x, y) => x + y, 0) / turnMs.length) : 0;
+    console.log(
+      `[timing] ${tag} boot=${mark.boot} cards=${span('boot', 'cards')} turn1=${span('cards', 'turn1')} ` +
+      `turns=${span('turn1', 'turnsEnd')}(${turnMs.length} 回合 avg ${avg} max ${Math.max(0, ...turnMs)}) ` +
+      `mount=${span('turnsEnd', 'mount')} snap=${span('mount', 'snap')} png=${span('snap', 'png')} ` +
+      `total=${mark.total} | 每回合 avg: select=${Math.round(phaseSum.select / (turnMs.length || 1))} ` +
+      `pending=${Math.round(phaseSum.pending / (turnMs.length || 1))} submit=${Math.round(phaseSum.submit / (turnMs.length || 1))} ` +
+      `next=${Math.round(phaseSum.next / (turnMs.length || 1))}`
+    );
+  }
 
   await page.close();
 }
