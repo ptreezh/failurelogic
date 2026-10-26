@@ -14,8 +14,9 @@
  * 设计约束（不是偏好，是 spec 要求）：
  *  1. 不合并、不改写任何既有脚本的断言口径 —— 本文件只做"调度 + 汇总"，
  *     既有脚本一行不动，失败明细仍由各脚本自己打印。
- *  2. 顺序即依赖：build-standalone 必须早于 dist-render-check，
- *     gold-climate 早于 acceptance-climate（后者复用前者的基线预期）。
+ *  2. 依赖显式声明：跨脚本的前后关系写成 deps（build-standalone → dist-render-check，
+ *     gold-climate → acceptance-climate），共用端口的脚本写成 lock（8481 三兄弟、8262 两个），
+ *     调度器按 deps + lock 并行，不再靠数组顺序串成一条线。
  *  3. 以退出码为唯一硬判据（8 个脚本末尾都是 process.exit(fails.length ? 1 : 0)），
  *     输出里的 PASS 标记只作为附加信息，不参与判定、也不做正则猜测。
  *  4. 全绿目标 ≤ 120 s（spec G 门槛）。超时记为 WARN 而非 FAIL：
@@ -27,9 +28,12 @@
  *   node scripts/verify-all.mjs --only=gold-climate,dist-render-check
  *   node scripts/verify-all.mjs --skip=acceptance-climate     # 调试用，验收不许跳过
  *   node scripts/verify-all.mjs --verbose
+ *   node scripts/verify-all.mjs --jobs=4      # 默认并发 4；锁/依赖自动串行
+ *   node scripts/verify-all.mjs --serial      # 退回逐条串行，排查竞态用
  */
 
-import { spawnSync } from 'node:child_process';
+import { spawn } from 'node:child_process';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -40,21 +44,6 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // 这里同步放宽到 300 s，仍只是软门槛：超了报 WARN，不改变红绿。
 const BUDGET_MS = 300000;
 
-const argv = process.argv.slice(2);
-const flag = (name) => argv.includes('--' + name);
-const opt = (name, fallback = '') => {
-  const hit = argv.find((a) => a.startsWith('--' + name + '='));
-  return hit ? hit.slice(name.length + 3) : fallback;
-};
-const VERBOSE = flag('verbose');
-const only = opt('only').split(',').filter(Boolean);
-const skip = opt('skip').split(',').filter(Boolean);
-
-/**
- * 14 个脚本。name 与文件名保持一致，便于 --only/--skip 指认。
- * timeout 留足余量：acceptance-climate 单跑 65 s、ui-render-assert 44 s，
- * 在 CI 或低配机上会明显变慢，超时值只用于兜住"挂死"，不是性能断言。
- */
 const STEPS = [
   // —— SPEC-v2 · M0 建尺（纯无头 + 基线两条轨；秒级）——
   // 静态轨：解析器全或无 / 台账不漂移 / 棘轮不倒退
@@ -86,17 +75,20 @@ const STEPS = [
   { name: 'gate-scenario-lexicon', script: 'scripts/gate-scenario-lexicon.mjs', timeout: 60000 },
   { name: 'contract-outcome', script: 'scripts/contract-outcome.mjs', timeout: 120000 },
   { name: 'adapter-ending', script: 'scripts/adapter-ending.mjs', timeout: 120000 },
-  { name: 'shop-declared', script: 'scripts/shop-declared.mjs', timeout: 300000 },
+  // 与 pressure-tier 共用 8262 端口：调度层用同一把锁，二者不同时跑。
+  { name: 'shop-declared', script: 'scripts/shop-declared.mjs', timeout: 300000, lock: 'port-8262' },
   { name: 'shadow-outcome', script: 'scripts/shadow-outcome.mjs', timeout: 300000 },
-  { name: 'pressure-tier', script: 'scripts/pressure-tier.mjs', timeout: 300000 },
+  { name: 'pressure-tier', script: 'scripts/pressure-tier.mjs', timeout: 300000, lock: 'port-8262' },
   { name: 'option-slot-map', script: 'scripts/option-slot-map.mjs', timeout: 300000 },
   // —— 既有回归（一行未改）——
   { name: 'gold-climate', script: 'scripts/gold-climate.mjs', timeout: 180000 },
-  { name: 'acceptance-climate-scar', script: 'scripts/acceptance-climate-scar.mjs', timeout: 120000 },
-  { name: 'acceptance-climate-epilogue', script: 'scripts/acceptance-climate-epilogue.mjs', timeout: 120000 },
-  { name: 'acceptance-climate', script: 'scripts/acceptance-climate.mjs', timeout: 420000 },
+  // 8481 端口三兄弟：各自起 http.server(8481)，同一时刻只允许一个。
+  { name: 'acceptance-climate-scar', script: 'scripts/acceptance-climate-scar.mjs', timeout: 120000, lock: 'port-8481' },
+  { name: 'acceptance-climate-epilogue', script: 'scripts/acceptance-climate-epilogue.mjs', timeout: 120000, lock: 'port-8481' },
+  // 复用 gold-climate 产出的基线预期：显式声明依赖，不再靠数组顺序。
+  { name: 'acceptance-climate', script: 'scripts/acceptance-climate.mjs', timeout: 420000, deps: ['gold-climate'], lock: 'port-8481' },
   { name: 'build-standalone', script: 'scripts/build-standalone.mjs', timeout: 120000 },
-  { name: 'dist-render-check', script: 'scripts/dist-render-check.mjs', timeout: 180000 },
+  { name: 'dist-render-check', script: 'scripts/dist-render-check.mjs', timeout: 180000, deps: ['build-standalone'] },
   { name: 'probe-loop4-ui', script: 'scripts/probe-loop4-ui.mjs', timeout: 180000 },
   // L1-2 的行为探针：A4.7 只能静态证明"源码里出现过撤回字样"，
   // 这里进真浏览器按一次，量"点选不推进 / 撤回留不下痕迹 / 确认才落地"。
@@ -112,6 +104,43 @@ const STEPS = [
   { name: 'debrief-assert', script: 'scripts/debrief-assert.mjs', timeout: 600000 },
 ];
 
+const argv = process.argv.slice(2);
+const flag = (name) => argv.includes('--' + name);
+const opt = (name, fallback = '') => {
+  const hit = argv.find((a) => a.startsWith('--' + name + '='));
+  return hit ? hit.slice(name.length + 3) : fallback;
+};
+const VERBOSE = flag('verbose');
+const only = opt('only').split(',').filter(Boolean);
+const skip = opt('skip').split(',').filter(Boolean);
+// 并发度：默认随核数走 —— 每个 Chromium 实例要 2~3 个线程，按"线程数 / 4"
+// 给并发，再夹在 [2, 4]：本机（i9-14900HX / 32 线程）= 4，2 核小 CI = 2。
+// 实测本机 28 个脚本从 525 s 压到 195 s，且全绿；单脚本耗时与串行持平
+// （acceptance-climate 65.8 s vs 串行 126.9 s：串行时前序 Playwright 残留
+// 进程压着后序脚本，并发反而更快）。
+// --serial 或 --jobs=1 回到"一条一条跑"的旧行为，用于排查竞态。
+const SERIAL_MODE = flag('serial');
+const AUTO_JOBS = Math.min(4, Math.max(2, Math.floor(os.cpus().length / 4)));
+const JOBS = SERIAL_MODE ? 1 : Math.max(1, parseInt(opt('jobs', String(AUTO_JOBS)), 10) || AUTO_JOBS);
+
+/**
+ * 串行独占阶段：卫生门禁 + 纯无头秒级断言（合计 ≈ 1.5 s）。
+ * 让它们先串行跑完再放并发，是为了让 gate-hygiene 看到的工作区与改造前
+ * 完全一致 —— 并发阶段会写 dist/ 等产物，不能让它撞上卫生检查。
+ */
+const SERIAL_PHASE = new Set([
+  'm0-tdd',
+  'm0-tdd:baseline',
+  'm1-tdd',
+  'acceptance-m1',
+  'm2-tdd',
+  'gate-hygiene:selftest',
+  'gate-hygiene',
+  'debrief-v3-tdd',
+  'debrief-disposition',
+  'gate-scenario-lexicon',
+]);
+
 const selected = STEPS.filter(
   (s) => (!only.length || only.includes(s.name)) && !skip.includes(s.name)
 );
@@ -124,86 +153,167 @@ if (!selected.length) {
 if (only.length || skip.length) {
   console.log(`[verify-all] 非完整运行：只跑 ${selected.length}/${STEPS.length} 个脚本（验收不得使用）`);
 }
+if (JOBS > 1) {
+  console.log(`[verify-all] 并发调度：jobs=${JOBS}（串行独占阶段 ${selected.filter((s) => SERIAL_PHASE.has(s.name)).length} 个，其余按依赖/端口锁并行）`);
+}
 
 const pad = (s, n) => String(s).padEnd(n, ' ');
+const orderOf = new Map(selected.map((s, i) => [s.name, i + 1]));
 const results = [];
 const t0 = Date.now();
 
-for (let i = 0; i < selected.length; i++) {
-  const step = selected[i];
-  const label = `[${i + 1}/${selected.length}] ${pad(step.name, 26)}`;
-  process.stdout.write(`${label} ... `);
-
-  const started = Date.now();
-  const run = spawnSync(process.execPath, [path.join(ROOT, step.script), ...(step.args || [])], {
-    cwd: ROOT,
-    encoding: 'utf8',
-    timeout: step.timeout,
-    maxBuffer: 32 * 1024 * 1024,
-    env: { ...process.env, FORCE_COLOR: '0', NO_COLOR: '1' },
+/**
+ * 起一个子进程跑单个脚本，收集输出与耗时。
+ * 判定口径与改造前完全一致：退出码为唯一硬判据，超时记为 TIMEOUT。
+ */
+function execStep(step) {
+  return new Promise((resolve) => {
+    const started = Date.now();
+    const child = spawn(process.execPath, [path.join(ROOT, step.script), ...(step.args || [])], {
+      cwd: ROOT,
+      env: { ...process.env, FORCE_COLOR: '0', NO_COLOR: '1' },
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    let stdout = '';
+    let stderr = '';
+    let timedOut = false;
+    // 只留尾部：并行时多个脚本的输出同时回流，全量缓存没有价值还会吃内存。
+    const keep = (buf, chunk) => (buf + String(chunk)).slice(-400 * 1024);
+    child.stdout.on('data', (d) => (stdout = keep(stdout, d)));
+    child.stderr.on('data', (d) => (stderr = keep(stderr, d)));
+    const timer = setTimeout(() => {
+      timedOut = true;
+      try {
+        child.kill('SIGKILL');
+      } catch {
+        /* 进程可能已退出 */
+      }
+    }, step.timeout);
+    child.on('close', (code) => {
+      clearTimeout(timer);
+      const rc = typeof code === 'number' ? code : -1;
+      resolve({
+        step,
+        ok: !timedOut && rc === 0,
+        rc,
+        timedOut,
+        ms: Date.now() - started,
+        stdout,
+        stderr,
+        tail: lastLines(stdout + (stderr ? '\n[stderr]\n' + stderr : ''), 24),
+      });
+    });
   });
-  const ms = Date.now() - started;
+}
 
-  const stdout = run.stdout || '';
-  const stderr = run.stderr || '';
-  const timedOut = run.error && run.error.code === 'ETIMEDOUT';
-  const rc = typeof run.status === 'number' ? run.status : -1;
-  const ok = !timedOut && rc === 0;
-
-  // 只做信息性统计，不参与判定：脚本内部已用 process.exit 表达结论。
-  const passMarks = (stdout.match(/^\s*PASS\b/gm) || []).length;
-  const failMarks = (stdout.match(/^\s*FAIL\b/gm) || []).length;
-
-  results.push({
-    name: step.name,
-    ok,
-    rc,
-    timedOut,
-    ms,
-    passMarks,
-    failMarks,
-    stdout,
-    stderr,
-    tail: lastLines(stdout + (stderr ? '\n[stderr]\n' + stderr : ''), 24),
-  });
-
-  const status = timedOut ? `TIMEOUT >${Math.round(step.timeout / 1000)}s` : ok ? 'PASS' : `FAIL rc=${rc}`;
-  process.stdout.write(`${status}  ${(ms / 1000).toFixed(1)}s\n`);
-
-  if (!ok) {
-    // 失败当下就把明细打出来：等 8 个脚本跑完再回溯，成本太高。
-    console.log(indent(results[results.length - 1].tail, '      '));
+function report(r) {
+  const idx = orderOf.get(r.step.name);
+  const head = `[${idx}/${selected.length}] ${pad(r.step.name, 26)}`;
+  const status = r.timedOut
+    ? `TIMEOUT >${Math.round(r.step.timeout / 1000)}s`
+    : r.ok
+      ? 'PASS'
+      : `FAIL rc=${r.rc}`;
+  results.push(r);
+  // 并行时各脚本的启动/完成顺序是乱序的，所以整行一次性落盘，避免行内交错。
+  process.stdout.write(`${head} ... ${status}  ${(r.ms / 1000).toFixed(1)}s\n`);
+  if (!r.ok) {
+    console.log(indent(r.tail, '      '));
   } else if (VERBOSE) {
-    console.log(indent(results[results.length - 1].tail, '      '));
+    console.log(indent(r.tail, '      '));
   }
 }
 
-const totalMs = Date.now() - t0;
-const failed = results.filter((r) => !r.ok);
+async function main() {
+  const serial = selected.filter((s) => SERIAL_PHASE.has(s.name));
+  const parallel = selected.filter((s) => !SERIAL_PHASE.has(s.name));
+  const done = new Set();
+  const locks = new Set();
+  const pending = parallel.slice();
+  let active = 0;
 
-console.log('\n' + '='.repeat(72));
-console.log('verify-all 汇总');
-console.log('='.repeat(72));
-for (const r of results) {
-  const status = r.timedOut ? 'TIMEOUT' : r.ok ? 'PASS   ' : 'FAIL   ';
-  const marks = `${r.passMarks}P/${r.failMarks}F`;
-  console.log(`  ${status} ${pad(r.name, 28)} ${pad((r.ms / 1000).toFixed(1) + 's', 9)} ${marks}`);
-}
-console.log('-'.repeat(72));
-console.log(`  脚本 ${results.length - failed.length}/${results.length} 通过，总耗时 ${(totalMs / 1000).toFixed(1)}s`);
-if (totalMs > BUDGET_MS) {
-  console.log(`  WARN 超出 spec 的 120 s 预算（软门槛，非 FAIL）：${(totalMs / 1000).toFixed(1)}s`);
-}
-console.log('='.repeat(72));
+  // —— 阶段 1：串行独占 ——
+  for (const step of serial) {
+    report(await execStep(step));
+    done.add(step.name);
+  }
 
-if (failed.length) {
-  console.log('\n失败脚本：');
-  failed.forEach((r) => console.log(`  - ${r.name}（${r.timedOut ? 'timeout' : 'rc=' + r.rc}）`));
-  process.exit(1);
+  // —— 阶段 2：按依赖 + 端口锁并发 ——
+  // deps 里出现但没被本次选中的脚本（--only 场景）视为已满足。
+  await new Promise((resolve) => {
+    const pump = () => {
+      while (active < JOBS) {
+        const k = pending.findIndex((s) => {
+          const depsOk = (s.deps || []).every(
+            (d) => done.has(d) || !STEPS.some((x) => x.name === d)
+          );
+          const lockOk = !s.lock || !locks.has(s.lock);
+          return depsOk && lockOk;
+        });
+        if (k === -1) break;
+        const step = pending.splice(k, 1)[0];
+        active += 1;
+        if (step.lock) locks.add(step.lock);
+        execStep(step).then((r) => {
+          active -= 1;
+          done.add(step.name);
+          if (step.lock) locks.delete(step.lock);
+          report(r);
+          pump();
+        });
+      }
+      if (active === 0 && pending.length) {
+        // 调度死锁（依赖写错 / 锁写错）：直接点名，别静默挂住。
+        console.error(`\n[verify-all] 调度死锁：以下脚本的依赖无法满足 —— ${pending.map((s) => s.name).join(', ')}`);
+        process.exit(2);
+      }
+      if (active === 0 && !pending.length) resolve();
+    };
+    pump();
+  });
+
+  summary();
 }
 
-console.log('\nALL GREEN');
-process.exit(0);
+function summary() {
+  const totalMs = Date.now() - t0;
+  const byName = new Map(results.map((r) => [r.step.name, r]));
+  console.log('\n' + '='.repeat(72));
+  console.log('verify-all 汇总');
+  console.log('='.repeat(72));
+  // 按 STEPS 声明顺序输出，不按完成顺序：读表的人关心的是"哪个环节红了"。
+  for (const s of selected) {
+    const r = byName.get(s.name);
+    if (!r) continue;
+    const status = r.timedOut ? 'TIMEOUT' : r.ok ? 'PASS   ' : 'FAIL   ';
+    const passMarks = (r.stdout.match(/^\s*PASS\b/gm) || []).length;
+    const failMarks = (r.stdout.match(/^\s*FAIL\b/gm) || []).length;
+    console.log(
+      `  ${status} ${pad(r.step.name, 28)} ${pad((r.ms / 1000).toFixed(1) + 's', 9)} ${passMarks}P/${failMarks}F`
+    );
+  }
+  const failed = results.filter((r) => !r.ok);
+  console.log('-'.repeat(72));
+  console.log(
+    `  脚本 ${results.length - failed.length}/${results.length} 通过，总耗时 ${(totalMs / 1000).toFixed(1)}s（jobs=${JOBS}）`
+  );
+  if (totalMs > BUDGET_MS) {
+    console.log(`  WARN 超出 spec 的 ${Math.round(BUDGET_MS / 1000)} s 预算（软门槛，非 FAIL）：${(totalMs / 1000).toFixed(1)}s`);
+  }
+  console.log('='.repeat(72));
+
+  if (failed.length) {
+    console.log('\n失败脚本：');
+    failed.forEach((r) => console.log(`  - ${r.step.name}（${r.timedOut ? 'timeout' : 'rc=' + r.rc}）`));
+    process.exit(1);
+  }
+
+  console.log('\nALL GREEN');
+  process.exit(0);
+}
+
+main();
+
 
 function lastLines(text, n) {
   const lines = String(text).replace(/\r/g, '').split('\n').filter((l) => l.trim().length);
