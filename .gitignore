@@ -325,6 +325,3 @@ scripts/_m1dbg*.mjs
 # 待补路由后删除下面两行并入库存档
 /api-server/data/scenarios/chip_ai_supplychain.json
 /api-server/data/scenarios/noodle_shop_community.json
-
-# 本地会话临时产物
-temp/
