@@ -511,7 +511,7 @@
       worse_names: focus.worseNames.slice(0, 3).join('、') || '暂未出现',
       reveal_turn: turnNumber,
       turn: turnNumber,
-      delay_turns: delayHits.map(function (d) { return 'Turn ' + d.turn; }).join('、') || '（无）',
+      delay_turns: delayHits.map(function (d) { return '第 ' + d.turn + ' 回合'; }).join('、') || '（无）',
       honest_count: honestHits.length,
     };
   }
@@ -689,7 +689,7 @@
     if (rigid) {
       label = '策略僵硬';
       detail = '你的 ' + n + ' 个决策里 ' + counts[main] + ' 个同属一类（一致性 ' + pct + '%）。' +
-        '关键不在一致，而在于：游戏在 Turn ' + revealTurns.join('/') + ' 把模式告诉你之后，' +
+        '关键不在一致，而在于：游戏在第 ' + revealTurns.join('、') + ' 回合把模式告诉你之后，' +
         '你在接下来的 ' + checked + ' 次仍有同类选项的选择里一次都没有转向。' +
         '——这是 F7 自我批评缺失的判据：不是"你坚持了"，是"你被告知之后仍然没有重新检查"。';
     } else if (consistency >= 0.6 && switches > 0) {
@@ -729,7 +729,7 @@
     if (history.length) {
       parts.push('📌 先看你实际做过的选择（不是你以为你做过的）：');
       history.slice(-4).forEach(function (d) {
-        parts.push('  Turn ' + d.turn + ' (' + d.option_id + ')：' + _flClamp(d.option_text, 44));
+        parts.push('  第 ' + d.turn + ' 回合 (' + d.option_id + ')：' + _flClamp(d.option_text, 44));
         const eff = _flEffectLine(d.applied_effects, scenarioId);
         if (eff) parts.push('      → ' + eff);
       });
@@ -1440,7 +1440,7 @@
       priorDecisions.forEach(d => {
         const text = String(d.option_text || d.decisions && d.decisions.option || '?').slice(0, 60);
         const conseq = String(d.option_consequences_for_player || '').slice(0, 70);
-        let line = '  • Turn ' + (d.turn || '?') + ' (' + (d.option_id || '?') + '): "' + text + '..."';
+        let line = '  • 第 ' + (d.turn || '?') + ' 回合（' + (d.option_id || '?') + '）："' + text + '..."';
         if (conseq) line += '\n      → ' + conseq + '...';
         parts.push(line);
       });
@@ -1870,7 +1870,7 @@
     parts.push('你的决策理由记录（如果写了）：');
     const justifications = state.decision_justifications || {};
     Object.keys(justifications).sort((a, b) => parseInt(a) - parseInt(b)).forEach(turn => {
-      parts.push('  Turn ' + turn + ': ' + justifications[turn]);
+      parts.push('  第 ' + turn + ' 回合：' + justifications[turn]);
     });
     // P0 #1: 理由框是可选输入，没写就不该在终局留下"（未填写）"这种像是
     // 用户漏填的痕迹——改成一句教学提示，说明写了才有前后对照。
@@ -1915,7 +1915,7 @@
     // 决策理由记录
     let just = '（本局没有留下决策理由记录）';
     const reasons = history.filter(h => h && h.justification && String(h.justification).trim())
-      .map(h => '  • Turn ' + h.turn + ': ' + h.justification);
+      .map(h => '  • 第 ' + h.turn + ' 回合：' + h.justification);
     if (reasons.length) just = reasons.join('\n');
     // 激进 / 诚实选项计数（关键词近似，教育场景可接受）
     const radicalKw = ['全面禁煤', '碳预算立即归零', '1.5°C抢救计划', '激进减排路径', '紧急发布1万亿', '全面禁止', '立即归零', '紧急启动', '坚持激进'];
@@ -2490,7 +2490,7 @@
 
   function generateGenericFeedback(state, turnNumber) {
     const parts = [];
-    parts.push('Turn ' + turnNumber + ' 已完成。');
+    parts.push('第 ' + turnNumber + ' 回合已完成。');
     return parts.join('\n');
   }
 
