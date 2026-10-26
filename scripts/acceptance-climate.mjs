@@ -53,14 +53,19 @@ const srv = DIST ? null : spawn('python', ['-m', 'http.server', String(PORT), '-
 if (!DIST) await new Promise(r => setTimeout(r, 1400));
 
 const browser = await chromium.launch();
-const page = await browser.newPage();
 const pageErrors = [];
-page.on('pageerror', e => pageErrors.push(String(e).slice(0, 160)));
-// A renderer crash used to surface as a naked "Target page closed". Name it.
-page.on('crash', () => pageErrors.push('renderer crash'));
-page.on('console', m => { if (m.type() === 'error') pageErrors.push('console: ' + m.text().slice(0, 120)); });
-await page.goto(BASE, { waitUntil: 'domcontentloaded' });
-await page.waitForFunction(() => !!window.OfflineEngine);
+
+// 200 局是纯引擎计算（每局 10 回合，全程不碰 DOM），单 page 只能一条一条算。
+// 局与局之间没有任何共享状态（种子走 window.__FL_OPTION_SEED__，会话走 createGameSession），
+// 所以切开分给多个 page 并行，逐局结果与串行完全一致——只是把墙钟除以并行度。
+async function openWorkerPage() {
+  const page = await browser.newPage();
+  page.on('pageerror', e => pageErrors.push(String(e).slice(0, 160)));
+  // A renderer crash used to surface as a naked "Target page closed". Name it.
+  page.on('crash', () => pageErrors.push('renderer crash'));
+  page.on('console', m => { if (m.type() === 'error') pageErrors.push('console: ' + m.text().slice(0, 120)); });
+  await page.goto(BASE, { waitUntil: 'domcontentloaded' });
+  await page.waitForFunction(() => !!window.OfflineEngine);
 
 // ---- inject once, call per run ----
 await page.evaluate((scn) => {
@@ -124,10 +129,23 @@ await page.evaluate((scn) => {
     }
   };
 }, SCN);
+  return page;
+}
 
 const realSeed = () => 1 + Math.floor(Math.random() * 2147483645);
-const runs = { random: [], planned: [], neutral: [], safe: [], risky: [], first: [] };
-const one = async (seed, kind) => {
+
+// 任务表与串行时的产出顺序逐条对应：结果按同一 index 回填，
+// 聚合口径（runs[kind] 的条数与顺序）不受并行影响。
+const jobs = [];
+for (let i = 0; i < RANDOM_RUNS; i++) jobs.push({ bucket: 'random', kind: 'random', seed: 1000 + i * 7 });
+for (const kind of ['planned', 'neutral', 'safe', 'risky', 'first']) {
+  for (let i = 0; i < 20; i++) jobs.push({ bucket: kind, kind, seed: 2000 + i * 13 });
+}
+if (REAL_SEEDS) {
+  for (let i = 0; i < RANDOM_RUNS; i++) jobs.push({ bucket: 'realRandom', kind: 'random', seed: realSeed() });
+}
+
+const one = async (page, seed, kind) => {
   try {
     return await page.evaluate(([s, k]) => window.__flAccept.play(s, k), [seed, kind]);
   } catch (e) {
@@ -135,14 +153,29 @@ const one = async (seed, kind) => {
   }
 };
 
-for (let i = 0; i < RANDOM_RUNS; i++) runs.random.push(await one(1000 + i * 7, 'random'));
-for (const kind of ['planned', 'neutral', 'safe', 'risky', 'first']) {
-  for (let i = 0; i < 20; i++) runs[kind].push(await one(2000 + i * 13, kind));
-}
-if (REAL_SEEDS) {
-  runs.realRandom = [];
-  for (let i = 0; i < RANDOM_RUNS; i++) runs.realRandom.push(await one(realSeed(), 'random'));
-}
+// 并行度默认 8：一局约 0.55s，8 路已把 111s 压到十几秒；
+// 再往上加就是单核吞吐互抢，收益递减。调试可用 FL_CLIMATE_WORKERS 覆盖。
+const WORKERS = Math.max(1, Math.min(jobs.length, Number(process.env.FL_CLIMATE_WORKERS) || 8));
+
+const results = new Array(jobs.length);
+let cursor = 0;
+await Promise.all(Array.from({ length: Math.min(WORKERS, jobs.length) }, async () => {
+  const page = await openWorkerPage();
+  try {
+    for (;;) {
+      const i = cursor++;
+      if (i >= jobs.length) break;
+      const job = jobs[i];
+      results[i] = await one(page, job.seed, job.kind);
+    }
+  } finally {
+    await page.close().catch(() => {});
+  }
+}));
+
+const runs = { random: [], planned: [], neutral: [], safe: [], risky: [], first: [] };
+if (REAL_SEEDS) runs.realRandom = [];
+jobs.forEach((job, i) => runs[job.bucket].push(results[i]));
 
 // A crashed run must fail loudly instead of skewing a percentage.
 const crashed = [];

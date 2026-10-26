@@ -47,28 +47,27 @@ const srv = spawn('python', ['-m', 'http.server', String(PORT), '--bind', '127.0
 await new Promise((r) => setTimeout(r, 1200));
 
 const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 const pageErrors = [];
-page.on('pageerror', (e) => pageErrors.push(String(e).slice(0, 200)));
 
-await page.goto(`http://127.0.0.1:${PORT}/index.html`, { waitUntil: 'domcontentloaded' });
-await page.waitForFunction(() => !!window.OfflineEngine);
+// 200 局是纯引擎计算（每局 10 回合，全程不碰 DOM），单 page 只能一局一局算。
+// 局与局之间不共享状态（每次 createGameSession 新建会话），所以按 (场景 × 姿态)
+// 切开分给多个 page 并行，聚合口径不变。
+async function openWorkerPage() {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  page.on('pageerror', (e) => pageErrors.push(String(e).slice(0, 200)));
+  await page.goto(`http://127.0.0.1:${PORT}/index.html`, { waitUntil: 'domcontentloaded' });
+  await page.waitForFunction(() => !!window.OfflineEngine);
+  return page;
+}
 
-const probe = await page.evaluate(
-  async ({ runs, postures, titleMap }) => {
-    const SCN = [
-      'challenger-launch',
-      'climate-change-policy',
-      'enron-collapse',
-      'noodle-shop-community',
-      'chip-ai-supplychain',
-    ];
+async function runProbe(page, combos) {
+  return page.evaluate(
+  async ({ combos, runs, titleMap }) => {
     const rows = [];
     const hasResolver = typeof window.OfflineEngine._flResolveOutcome === 'function';
     if (!hasResolver) return { hasResolver: false, rows };
 
-    for (const scn of SCN) {
-      for (const posture of postures) {
+    for (const { scn, posture } of combos) {
         for (let i = 0; i < runs; i++) {
           const sess = await window.OfflineEngine.createGameSession(scn, 'auto');
           let last = null;
@@ -124,12 +123,42 @@ const probe = await page.evaluate(
             fbLen: fb.length,
           });
         }
-      }
     }
     return { hasResolver: true, rows, whitelist: window.OfflineEngine._flOutcomeWhitelist || {} };
   },
-  { runs: RUNS, postures: POSTURES, titleMap: CHALLENGER_TITLE_TO_ID }
-);
+  { combos, runs: RUNS, titleMap: CHALLENGER_TITLE_TO_ID }
+  );
+}
+
+// 场景 × 姿态切开，交给多个 page 并行；rows 合并后与原串行聚合口径一致。
+const SCN_ALL = [
+  'challenger-launch',
+  'climate-change-policy',
+  'enron-collapse',
+  'noodle-shop-community',
+  'chip-ai-supplychain',
+];
+const combos = [];
+for (const scn of SCN_ALL) for (const posture of POSTURES) combos.push({ scn, posture });
+
+const WORKERS = Math.max(1, Math.min(combos.length, Number(process.env.FL_SHADOW_WORKERS) || 8));
+const slices = Array.from({ length: WORKERS }, () => []);
+combos.forEach((c, i) => slices[i % WORKERS].push(c));
+
+const parts = await Promise.all(slices.filter((s) => s.length).map(async (slice) => {
+  const page = await openWorkerPage();
+  try {
+    return await runProbe(page, slice);
+  } finally {
+    await page.close().catch(() => {});
+  }
+}));
+
+const probe = {
+  hasResolver: parts.every((p) => p.hasResolver),
+  rows: parts.flatMap((p) => p.rows),
+  whitelist: (parts.find((p) => p.whitelist && Object.keys(p.whitelist).length) || {}).whitelist,
+};
 
 const fails = [];
 if (!probe.hasResolver) {
