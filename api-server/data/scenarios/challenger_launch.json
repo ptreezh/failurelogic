@@ -538,7 +538,7 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "neutral"
+          "weight": "extreme_safe"
         },
         {
           "id": "B",
@@ -554,7 +554,7 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "neutral"
+          "weight": "risky"
         },
         {
           "id": "D",
@@ -563,7 +563,7 @@
           "expected_concerns_addressed": [
             "management"
           ],
-          "weight": "neutral"
+          "weight": "extreme_risk"
         }
       ],
       "expected_effects": {
