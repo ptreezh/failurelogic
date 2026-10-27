@@ -41,8 +41,72 @@ const browser = await chromium.launch();
 //   → 下一回合选项(#challenger-options[data-turn=N]) → 终局(#challenger-options 被替换)
 // 条件比固定等待严格：不是"大概稳了"，而是"这一步真的完成了"，且满足即刻放行。
 // 每步之后再走两帧，让 class/布局的同步副作用落地，避免点击落在未稳定的元素上。
-const settle = (page) =>
-  page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r(true)))));
+// 两帧改为一次宏任务：多 page 并发时非焦点页的 rAF 会被节流（实测双 rAF 的 p90 到
+// 600~1900ms），而这里只需要"让同步副作用落地"，setTimeout(0) 就够，且不受帧调度影响。
+const settle = (page) => page.evaluate(() => new Promise((r) => setTimeout(() => r(true), 0)));
+
+// 真实鼠标点击，但不付 Playwright 的"帧稳定性"等待（那一步按 rAF 轮询"连续两帧位置不变"，
+// 正是上面说的长尾）。改由 CDP 直发鼠标事件，坐标取自 DOM.getContentQuads —— 它是**裁剪后**
+// 的可见四边形，被滚动容器裁掉的部分会自然消失，因此比 getBoundingClientRect 的中点更准。
+// 事件仍是 Input.dispatchMouseEvent 的真鼠标序列，不是 element.click()；点不到（无可见 quad）
+// 直接返回失败让调用方报红，不会静默假绿。
+// ch = { cdp, rootId }：document 节点在本脚本里只 goto 一次，缓存掉 DOM.getDocument 往返。
+async function clickViaCdp(ch, selector, index) {
+  const { cdp } = ch;
+  if (!ch.rootId) ch.rootId = (await cdp.send('DOM.getDocument', { depth: 0 })).root.nodeId;
+  let nodeIds;
+  try {
+    ({ nodeIds } = await cdp.send('DOM.querySelectorAll', { nodeId: ch.rootId, selector }));
+  } catch {
+    ch.rootId = (await cdp.send('DOM.getDocument', { depth: 0 })).root.nodeId;
+    ({ nodeIds } = await cdp.send('DOM.querySelectorAll', { nodeId: ch.rootId, selector }));
+  }
+  if (!nodeIds.length) return { ok: false, why: 'no-node', n: 0 };
+  const nodeId = nodeIds[index === undefined ? nodeIds.length - 1 : index];
+  if (!nodeId) return { ok: false, why: 'bad-index', n: nodeIds.length };
+  await cdp.send('DOM.scrollIntoViewIfNeeded', { nodeId }).catch(() => {});
+  const { quads } = await cdp.send('DOM.getContentQuads', { nodeId });
+  if (!quads || !quads.length) return { ok: false, why: 'no-quad', n: nodeIds.length };
+  const area = (q) => Math.abs((q[2] - q[0]) * (q[5] - q[1]) - (q[4] - q[2]) * (q[3] - q[1]));
+  const q = quads.slice().sort((a, b) => area(b) - area(a))[0];
+  const x = (q[0] + q[2] + q[4] + q[6]) / 4;
+  const y = (q[1] + q[3] + q[5] + q[7]) / 4;
+  await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y, button: 'none' });
+  await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', x, y, button: 'left', clickCount: 1 });
+  await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x, y, button: 'left', clickCount: 1 });
+  return { ok: true, x: Math.round(x), y: Math.round(y), n: nodeIds.length };
+}
+
+// 「点一下只挂起」：确认条真的挂起来才算点击生效。超时不抛错，交给调用方决定重试还是报红。
+const barReady = (page, timeout) =>
+  page
+    .waitForFunction(
+      () => {
+        const bar = document.getElementById('challenger-confirm-bar');
+        return !!(bar && !bar.hidden && document.getElementById('challenger-confirm'));
+      },
+      null,
+      { timeout }
+    )
+    .then(() => true)
+    .catch(() => false);
+
+// 「翻到第 N 回合了吗」：终局页没有翻页按钮，视为已到；否则 data-turn 必须正好等于 N。
+// CDP 派发的鼠标事件不受 Playwright 的 actionability 约束，点空也不会报错，所以每次点击都要
+// 用这个来做回执核对，避免"点了但没翻过去"被后续的 waitTurnReady 掩盖成普通超时。
+const atTurn = (page, turn, timeout) =>
+  page
+    .waitForFunction(
+      (t) => {
+        if (!document.getElementById('challenger-next-turn')) return true;
+        const box = document.getElementById('challenger-options');
+        return !!(box && Number(box.getAttribute('data-turn')) === t);
+      },
+      turn,
+      { timeout }
+    )
+    .then(() => true)
+    .catch(() => false);
 
 async function waitTurnReady(page, turn) {
   await page.waitForFunction(
@@ -51,7 +115,14 @@ async function waitTurnReady(page, turn) {
       if (!box) return false;
       // data-turn 必须正好是目标回合：否则会在上一回合的残留 DOM 上误判就绪。
       if (Number(box.getAttribute('data-turn')) !== t) return false;
-      return box.querySelectorAll('.challenger-option').length > 0;
+      const opts = box.querySelectorAll('.challenger-option');
+      if (!opts.length) return false;
+      // 选项是逐条入场的（JS 定时器 + visibility，不是能被 CSS 压掉的动画）：
+      // 只数"有几个"会早一步 —— 最后一枚已进 DOM 但还 hidden，此时点它就是点空。
+      // 要点的正是末位选项，所以等它真的可交互。
+      const last = opts[opts.length - 1];
+      const cs = getComputedStyle(last);
+      return cs.visibility !== 'hidden' && Number(cs.opacity) > 0.05;
     },
     turn,
     { timeout: 30000 }
@@ -74,6 +145,8 @@ async function runScenario(scn, ctx) {
 // S0 先对 noodle 强制现实锚定，S1 四场景铺开后五场景全部强制。
 const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', 'climate-change', 'enron-collapse', 'chip-ai-supplychain']);
   const page = await ctx.newPage();
+  const cdp = await ctx.newCDPSession(page);
+  const ch = { cdp, rootId: null };
   const pageErrors = [];
   page.on('pageerror', (e) => pageErrors.push(String(e).slice(0, 200)));
 
@@ -98,10 +171,18 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
   await page.addStyleTag({
     content:
       '*,*::before,*::after{animation-duration:1ms!important;animation-delay:0s!important;' +
-      'transition-duration:1ms!important;transition-delay:0s!important}'
+      'transition-duration:1ms!important;transition-delay:0s!important;' +
+      // 插件的 scroll-behavior 也可能引入平滑滚动，一并压掉（只影响验收页的滚动手感）
+      'html,body{scroll-behavior:auto!important}'
   });
   tick('boot');
-  await page.click('#start-journey');
+  // 首页按钮同为真点击，CDP 直发，省掉 Playwright 的稳定帧等待。
+  const started = await clickViaCdp(ch, '#start-journey');
+  if (!started.ok) {
+    fails.push(`${tag} 开始按钮不可点击（${started.why}）`);
+    await page.close();
+    return;
+  }
   // 等场景列表真的渲染出目标卡片，而不是等 1 秒后去赌它已经在了。
   const cardSrc = scn.card.source.replace(/^\/|\/$/g, '');
   const cardsReady = await page
@@ -142,24 +223,40 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
     const tTurn = now();
     const phase = {};
     const p0 = now();
-    const opts = await page.$$('.challenger-option');
-    if (!opts.length) {
-      fails.push(`${tag} T${t} 没有可点的选项`);
-      break;
-    }
-    await opts[opts.length - 1].click();
+    let picked = await clickViaCdp(ch, '.challenger-option');
     phase.select = Math.round(now() - p0);
     const p1 = now();
     // L1-2 之后「选中」不再等于「提交」：点一下只挂起，必须显式确认。
-    // 先把「挂起」这一步等实（确认条出现且确认按钮可点），再确认。
-    await page.waitForFunction(
-      () => {
+    // 点击有没有落到选项上不靠坐标猜，直接看结果 —— 确认条挂起来才算点中。
+    // 入场差一帧时补点一次；两次都不行才报红（不静默重试，失败原因写进 fails）。
+    let barShown = picked.ok && (await barReady(page, 4000));
+    if (picked.ok && !barShown) {
+      const pr = now();
+      picked = await clickViaCdp(ch, '.challenger-option');
+      phase.select += Math.round(now() - pr);
+      barShown = picked.ok && (await barReady(page, 6000));
+    }
+    if (!picked.ok) {
+      fails.push(`${tag} T${t} 末位选项不可点击（${picked.why}，可见选项 ${picked.n || 0} 个）`);
+      break;
+    }
+    if (!barShown) {
+      const diag = await page.evaluate(() => {
         const bar = document.getElementById('challenger-confirm-bar');
-        return !!(bar && !bar.hidden && document.getElementById('challenger-confirm'));
-      },
-      null,
-      { timeout: 20000 }
-    );
+        const all = [...document.querySelectorAll('.challenger-option')];
+        const last = all[all.length - 1];
+        return {
+          bar: !!bar,
+          hidden: bar ? bar.hidden : null,
+          confirmBtn: !!document.getElementById('challenger-confirm'),
+          selected: (window.challengerRouter || {}).selectedOption,
+          opts: all.length,
+          lastVis: last ? getComputedStyle(last).visibility : null
+        };
+      });
+      fails.push(`${tag} T${t} 两次点击后确认条仍未出现：${JSON.stringify(diag)} ${JSON.stringify(picked)}`);
+      break;
+    }
     await page.evaluate(() => window.challengerRouter && window.challengerRouter.confirmChoice());
     phase.pending = Math.round(now() - p1);
     const p2 = now();
@@ -176,9 +273,23 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
     await settle(page);
     phase.submit = Math.round(now() - p2);
     const p3 = now();
-    const nx = await page.$('#challenger-next-turn');
-    if (nx) {
-      await nx.click();
+    // 翻页按钮同样走 CDP，点击后用 data-turn 校验是否真的翻过去，没翻成就补点一次。
+    const nxNode = await cdp.send('DOM.querySelectorAll', { nodeId: ch.rootId, selector: '#challenger-next-turn' }).catch(() => ({ nodeIds: [] }));
+    if ((nxNode.nodeIds || []).length) {
+      const first = await clickViaCdp(ch, '#challenger-next-turn');
+      if (!first.ok) {
+        fails.push(`${tag} T${t} 下一回合按钮不可点击（${first.why}）`);
+        break;
+      }
+      // 首点未翻过就补点一次；两次都翻不过再交给 waitTurnReady 超时报红，不静默继续。
+      if (!(await atTurn(page, t + 1, 2500))) {
+        const again = await clickViaCdp(ch, '#challenger-next-turn');
+        if (!again.ok) {
+          fails.push(`${tag} T${t} 下一回合补点失败（${again.why}）`);
+          break;
+        }
+        await atTurn(page, t + 1, 8000);
+      }
       // 下一回合的选项带着 data-turn=N+1 出现，才是真的翻页成功。
       await waitTurnReady(page, t + 1);
     }
@@ -203,6 +314,23 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
   }
 
   tick('mount');
+
+  // data-mounted=1 只说明容器挂上了，树本身是随后按数据算坐标画进 SVG 的，可能还差一帧；
+  // 并发时非焦点页的 rAF 被节流，这一帧会拖得很晚，快照就会抓到"半张图"（历史偶发 rect=3）。
+  // 所以等到图形真的成形再抓，超时就按原样抓——判定口径一个字没改，仍是 rect<4 报红，
+  // 只是把"没画完"和"没画对"分开，并在报红时带上 hist/causes 证据。
+  await page
+    .waitForFunction(
+      () => {
+        const svg = document.querySelector('.fl-db-svg');
+        if (!svg) return true; // 没有 SVG 的局交给后续断言去说
+        return svg.querySelectorAll('rect').length >= 4 && svg.querySelectorAll('path').length >= 1;
+      },
+      null,
+      { timeout: 4000 }
+    )
+    .catch(() => {});
+  await settle(page);
 
   const snap = await page.evaluate(() => {
     const clean = (s) => String(s || '').replace(/\s+/g, ' ').trim();
@@ -291,7 +419,11 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
   if (!snap.hasRoot) fails.push(`${tag} 终局页没有 .fl-debrief 容器`);
   if (snap.sections !== 5) fails.push(`${tag} 复盘分节 ${snap.sections} 个（应为 5）`);
   if (snap.svgRects < 4 || snap.svgLines < 1) {
-    fails.push(`${tag} 根因树未成形（rect=${snap.svgRects} path=${snap.svgLines}）`);
+    // 带上"这一局到底记了几步"，用来区分两种原因：渲染没画完 vs 决策链本身没记全。
+    fails.push(
+      `${tag} 根因树未成形（rect=${snap.svgRects} path=${snap.svgLines}）` +
+        `｜hist=${JSON.stringify(snap.histTurns)}｜causes=${snap.causes.length}｜dec=${JSON.stringify(snap.decTurns)}`
+    );
   }
   if (snap.causes.length < 1) fails.push(`${tag} 根因树没有主因（0 个）`);
   if (snap.causes.length > 4) fails.push(`${tag} 根因树主因 ${snap.causes.length} 个（>4，主次未分）`);
@@ -405,7 +537,9 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
   try {
     const [download] = await Promise.all([
       page.waitForEvent('download', { timeout: 25000 }),
-      page.click('[data-fl-db-export]')
+      clickViaCdp(ch, '[data-fl-db-export]').then((r) => {
+        if (!r.ok) throw new Error(`导出按钮不可点击：${r.why}`);
+      })
     ]);
     const pngPath = path.join(OUT, `debrief-${tag}-${Date.now()}.png`);
     await download.saveAs(pngPath);
@@ -445,13 +579,16 @@ const ANCHOR_REQUIRED = new Set(['noodle-shop-community', 'challenger-launch', '
   await page.close();
 }
 
-// 五场景互不共享状态（各自独立 context + page + 独立 temp 目录外的 PNG 文件），
-// 本就是一个天然可并行的只读验收：串行只是历史写法，单轮 10 回合的硬等待占了绝大部分墙钟。
-// 并发度此前压到 3，是因为固定等待一旦被 CPU 争用拖慢就会静默误报。回合内改为条件等待后，
-// 争用只会让就绪信号晚到（每步都有 20~40s 上限兜底，超时即报红，不会变成假绿），
-// 于是并发度可以按核数放开：32 核实测 5 并发 34~37s（并发 3 为 62.7s，全固定等待时 74.8s）。
-const CPU = (os.cpus() || []).length || 4;
-const DEFAULT_CONCURRENCY = Math.min(SCENARIOS.length, Math.max(3, Math.floor(CPU / 4)));
+// 五场景互不共享状态（各自独立 context + page + 各自的 PNG 文件名），本就是一个天然可并行的
+// 只读验收：串行只是历史写法。并发度此前压到 3，是因为固定等待一旦被 CPU 争用拖慢就会静默
+// 误报；回合内改成条件等待后，争用只会让就绪信号晚到（每步都有 4~40s 上限兜底，超时即报红，
+// 不会变成假绿），所以并发度可以放开。但放开到 5 实测反而更慢 —— 见下。
+// 并发默认取 3：5 个场景分两波跑完，末波只 2 个，粒度最平衡。
+// 为什么不再按核数放开到 5 —— 本机有两组测量（独立跑 / verify-all jobs=4）都显示 5 并发不更快，
+// 且它会和调度层的 jobs 相乘超订（4 脚本 × 5 页面 = 20 个上下文抢同一批渲染线程）。
+// 这台机器上还长期跑着开发服务，墙钟抖动足以盖掉 10% 以内的差异，所以取结构上更稳的那个值，
+// 而不是追某个测出来的秒数。要压测就显式 DEBRIEF_CONCURRENCY=1..5。
+const DEFAULT_CONCURRENCY = Math.min(SCENARIOS.length, 3);
 const CONCURRENCY = Math.max(
   1,
   Math.min(SCENARIOS.length, Number(process.env.DEBRIEF_CONCURRENCY) || DEFAULT_CONCURRENCY)
