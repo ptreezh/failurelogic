@@ -728,7 +728,7 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "neutral",
+          "weight": "extreme_safe",
           "behavior": "defer",
           "goal_axis": [
             "safety"
@@ -758,7 +758,7 @@
           "expected_concerns_addressed": [
             "engineering"
           ],
-          "weight": "neutral",
+          "weight": "risky",
           "behavior": "rescue",
           "goal_axis": [
             "standing"
@@ -774,7 +774,7 @@
           "expected_concerns_addressed": [
             "management"
           ],
-          "weight": "neutral",
+          "weight": "extreme_risk",
           "behavior": "cut_cost",
           "goal_axis": [
             "schedule"

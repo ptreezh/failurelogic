@@ -75,6 +75,10 @@ const STEPS = [
   // P0 术语门禁：局内只留观察、命名归 debrief。纯读 JSON，几百毫秒，
   // 放在契约层最前面 —— 文案回填是最高频的一类漂移，坏了要第一个响。
   { name: 'gate-scenario-lexicon', script: 'scripts/gate-scenario-lexicon.mjs', timeout: 60000 },
+  // 姿态可分辨性门禁：一个回合若四选项同档位，玩家侧徽标刻度失效、引擎三项指标
+  // 输入失真、posture 对照只能靠兜底硬撑。纯读 JSON，几百毫秒 —— 紧跟术语门禁，
+  // 两者都是"数据回填把人写坏"这一类的第一道警报。
+  { name: 'gate-posture-coverage', script: 'scripts/gate-posture-coverage.mjs', timeout: 60000 },
   { name: 'contract-outcome', script: 'scripts/contract-outcome.mjs', timeout: 120000 },
   { name: 'adapter-ending', script: 'scripts/adapter-ending.mjs', timeout: 120000 },
   // 与 pressure-tier 共用 8262 端口：调度层用同一把锁，二者不同时跑。
